@@ -1,0 +1,125 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5em;
+}
+
+html,
+body {
+    color: #a3a3a3;
+    background-color: #00172e;
+    font-family: sans-serif;
+}
+.menu a {
+    text-decoration: none;
+    color: unset;
+}
+.menu {
+    font-family: fantasy;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 5rem;
+    background-color: #000836;
+    white-space: nowrap;
+}
+.main {
+    margin-top: 5rem;
+    padding: 1rem;
+}
+.menu-wrapper {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    margin: 1em;
+}
+.option {
+    position: relative;
+    background-color: #115191;
+    width: fit-content;
+    padding: 0.1em 0.5em;
+    margin: 0 0.2em;
+    border-radius: 15px;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 1px 1px 8px 0px #0009;
+}
+.option::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: 1px 1px 8px 0px #0000;
+    opacity: 0;
+}
+.option-list {
+    transform: translate3d(0, -10%, 0);
+    border-radius: 9px;
+    font-size: 1rem;
+    color: #fff;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: fit-content;
+    opacity: 0;
+    background-color: #115191;
+    list-style-type: none;
+    transition: all 250ms ease-in-out;
+/*     pointer-events: visibleStroke; */
+    visibility: hidden;
+    box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 1);
+    z-index: -1;
+}
+.option-list > li {
+    white-space: nowrap;
+    padding: 0.125em 0.2em;
+}
+.option-list > li:hover {
+    color: #fff;
+}
+.option:hover {
+    color: #fff;
+}
+.option:hover::after {
+    opacity: 1;
+}
+.option:hover .option-list {
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+}
+section {
+    color: rgb(212, 212, 212);
+}
+section a {
+    color: lightskyblue;
+    text-decoration: none;
+}
+section a:visited {
+    color: lightskyblue;
+}
+section a:hover {
+    text-decoration: underline;
+}
+section > ul {
+    margin: 1rem;
+}
+section > ul > li {
+    font-weight: bolder;
+    font-size: 120%;
+}
+section > ul > ul {
+    margin-left: 1rem;
+}
+span.anchor {
+    position: relative;
+    top: -5rem;
+    visibility: hidden;
+}
