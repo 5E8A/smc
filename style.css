@@ -11,6 +11,7 @@ body {
     color: #a3a3a3;
     background-color: #00172e;
     font-family: sans-serif;
+    font-size: large;
 }
 .menu a {
     text-decoration: none;
@@ -70,7 +71,7 @@ body {
     background-color: #115191;
     list-style-type: none;
     transition: all 250ms ease-in-out;
-/*     pointer-events: visibleStroke; */
+    /*     pointer-events: visibleStroke; */
     visibility: hidden;
     box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 1);
     z-index: -1;
