@@ -29,6 +29,7 @@ body {
 .main {
     margin-top: 5rem;
     padding: 1rem;
+    margin-bottom: 2rem;
 }
 .menu-wrapper {
     list-style: none;
