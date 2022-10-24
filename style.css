@@ -141,6 +141,12 @@ footer {
     font-family: "Segoe UI";
     font-weight: bold;
 }
+.download-button:visited {
+    color: white;
+}
+.download-button:link {
+    color: white;
+}
 .link-list {
     height: 2.5rem;
 }
