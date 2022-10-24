@@ -131,3 +131,22 @@ footer {
     place-items: center;
     background: #00172e;
 }
+.download-button {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
+.link-list {
+    height: 2.5rem;
+}
+.download-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
