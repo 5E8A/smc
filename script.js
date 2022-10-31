@@ -24,9 +24,13 @@ const changePage = (page) => {
     container.append(iframe);
 };
 
-const updateDownload = () => {
-    let link = document.querySelector(".link-list").value;
+const updateDownload = (moreInfo = false) => {
+    let link = document.querySelector(".link-list").selectedOptions[0].getAttribute("link");
     document.querySelector(".download-button").setAttribute("href", link);
+    if (moreInfo) {
+        let extra = document.querySelector(".link-list").selectedOptions[0].getAttribute("extra");
+        document.querySelector(".download-extra-info").textContent = extra;
+    }
 };
 
 changePage("home");
