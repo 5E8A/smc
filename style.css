@@ -23,16 +23,19 @@ body {
     white-space: nowrap;
     user-select: none;
 }
+
 .main {
     margin-top: 5rem;
     padding: 1rem;
     margin-bottom: 2rem;
 }
+
 .menu-wrapper {
     list-style: none;
     display: flex;
     flex-direction: row;
-    margin: 1em;
+    margin-top: 1rem;
+    margin-left: 1rem;
     float: left;
 }
 .option {
@@ -137,7 +140,7 @@ footer {
     background: limegreen;
     color: white;
     border-radius: 0.5rem;
-    letter-spacing: 0.1rem;
+    letter-spacing: 0.07rem;
     text-transform: uppercase;
     font-family: "Segoe UI";
     font-weight: bold;
@@ -149,13 +152,19 @@ footer {
     color: white;
 }
 .link-list {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
     height: 2.5rem;
 }
 .download-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 .language-selection {
     font-family: inherit;
@@ -177,6 +186,7 @@ footer {
 }
 .language-selection:hover {
     color: white;
+
 }
 .language-selection::after {
     font-size: large;
@@ -189,4 +199,16 @@ footer {
     border-radius: 5px;
     box-shadow: 1px 1px 8px 0px #0000;
     opacity: 0;
+}
+.Discord-Badge {
+    scale: 70%;
+    position: absolute;
+    margin-left: 18.4rem;
+    margin-top: -3.2rem;
+}
+.curseforge-button {
+  position: flex;
+  margin-top: 0.43rem;
+  margin-left: -1.4rem;
+  scale: 80%;
 }
