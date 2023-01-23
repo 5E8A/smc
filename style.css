@@ -200,12 +200,6 @@ footer {
     box-shadow: 1px 1px 8px 0px #0000;
     opacity: 0;
 }
-.Discord-Badge {
-    scale: 70%;
-    position: absolute;
-    margin-left: 18.4rem;
-    margin-top: -3.2rem;
-}
 .curseforge-button {
   position: flex;
   margin-top: 0.43rem;
