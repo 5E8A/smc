@@ -49,6 +49,10 @@ body {
     cursor: pointer;
     box-shadow: 1px 1px 8px 0px #0009;
 }
+.option-2 {
+    margin-left: 39rem;
+    opacity: 0;
+}
 .option::after {
     content: "";
     position: absolute;
@@ -205,4 +209,8 @@ footer {
   margin-top: 0.43rem;
   margin-left: -1.4rem;
   scale: 80%;
+}
+.flag-counter {
+    opacity: 0;
+
 }
