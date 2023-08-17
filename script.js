@@ -50,5 +50,52 @@ const updateDownload = (moreInfo = false) => {
         document.querySelector(".download-extra-info").textContent = extra;
     }
 };
-
+const updateDownload1 = (moreInfo = false) => {
+    let link = document.querySelector(".link-list-1").selectedOptions[0].getAttribute("link");
+    document.querySelector(".download-button-1").setAttribute("href", link);
+    if (moreInfo) {
+        let extra1 = document.querySelector(".link-list-1").selectedOptions[0].getAttribute("extra1");
+        document.querySelector(".download-extra-info-1").textContent = extra1;
+    }
+};
+const updateDownload2 = (moreInfo = false) => {
+    let link = document.querySelector(".link-list-2").selectedOptions[0].getAttribute("link");
+    document.querySelector(".download-button-2").setAttribute("href", link);
+    if (moreInfo) {
+        let extra2 = document.querySelector(".link-list-2").selectedOptions[0].getAttribute("extra2");
+        document.querySelector(".download-extra-info-2").textContent = extra2;
+    }
+};
+const updateDownload3 = (moreInfo = false) => {
+    let link = document.querySelector(".link-list-3").selectedOptions[0].getAttribute("link");
+    document.querySelector(".download-button-3").setAttribute("href", link);
+    if (moreInfo) {
+        let extra3 = document.querySelector(".link-list-3").selectedOptions[0].getAttribute("extra3");
+        document.querySelector(".download-extra-info-3").textContent = extra3;
+    }
+};
+const updateDownload4 = (moreInfo = false) => {
+    let link = document.querySelector(".link-list-4").selectedOptions[0].getAttribute("link");
+    document.querySelector(".download-button-4").setAttribute("href", link);
+    if (moreInfo) {
+        let extra4 = document.querySelector(".link-list-4").selectedOptions[0].getAttribute("extra4");
+        document.querySelector(".download-extra-info-4").textContent = extra4;
+    }
+};
+const updateDownload5 = (moreInfo = false) => {
+    let link = document.querySelector(".link-list-5").selectedOptions[0].getAttribute("link");
+    document.querySelector(".download-button-5").setAttribute("href", link);
+    if (moreInfo) {
+        let extra5 = document.querySelector(".link-list-5").selectedOptions[0].getAttribute("extra5");
+        document.querySelector(".download-extra-info-5").textContent = extra5;
+    }
+};
+const updateDownload6 = (moreInfo = false) => {
+    let link = document.querySelector(".link-list-6").selectedOptions[0].getAttribute("link");
+    document.querySelector(".download-button-6").setAttribute("href", link);
+    if (moreInfo) {
+        let extra6 = document.querySelector(".link-list-6").selectedOptions[0].getAttribute("extra6");
+        document.querySelector(".download-extra-info-6").textContent = extra6;
+    }
+};
 changePage("home");

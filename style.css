@@ -50,8 +50,8 @@ body {
     box-shadow: 1px 1px 8px 0px #0009;
 }
 .option-2 {
-    margin-left: 39rem;
-    opacity: 0;
+    margin-left: 34rem;
+    opacity: 1;
 }
 .option::after {
     content: "";
@@ -149,13 +149,145 @@ footer {
     font-family: "Segoe UI";
     font-weight: bold;
 }
+.download-button-1 {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.07rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
+.download-button-2 {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.07rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
+.download-button-3 {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.07rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
+.download-button-4 {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.07rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
+.download-button-5 {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.07rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
+.download-button-6 {
+    padding: 0.5rem;
+    background: limegreen;
+    color: white;
+    border-radius: 0.5rem;
+    letter-spacing: 0.07rem;
+    text-transform: uppercase;
+    font-family: "Segoe UI";
+    font-weight: bold;
+}
 .download-button:visited {
+    color: white;
+}
+.download-button-1:visited {
+    color: white;
+}
+.download-button-2:visited {
+    color: white;
+}
+.download-button-3:visited {
+    color: white;
+}
+.download-button-4:visited {
+    color: white;
+}
+.download-button-5:visited {
+    color: white;
+}
+.download-button-6:visited {
     color: white;
 }
 .download-button:link {
     color: white;
 }
 .link-list {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
+    height: 2.5rem;
+}
+.link-list-1 {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
+    height: 2.5rem;
+}
+.link-list-2 {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
+    height: 2.5rem;
+}
+.link-list-3 {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
+    height: 2.5rem;
+}
+.link-list-4 {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
+    height: 2.5rem;
+}
+.link-list-5 {
+    border-color: white;
+    border-radius: 0.5rem;
+    font-size: large;
+    font-family: sans-serif;
+    color: white;
+    background-color: #0a2c4e;
+    height: 2.5rem;
+}
+.link-list-6 {
     border-color: white;
     border-radius: 0.5rem;
     font-size: large;
