@@ -98,4 +98,15 @@ const updateDownload6 = (moreInfo = false) => {
         document.querySelector(".download-extra-info-6").textContent = extra6;
     }
 };
-changePage("home");
+
+    function checkPswd() {
+        var confirmPassword = "dupadupa523";
+        var password = document.getElementById("pswd").value;
+        if (password == confirmPassword) {
+             changePage("secret");
+        }
+        else{
+            alert("Wrong Password");
+        }
+    }
+    changePage("home");
