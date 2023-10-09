@@ -50,7 +50,7 @@ body {
     box-shadow: 1px 1px 8px 0px #0009;
 }
 .option-2 {
-    margin-left: 34rem;
+    margin-left: 39rem;
     opacity: 1;
 }
 .option::after {
@@ -336,12 +336,18 @@ footer {
     box-shadow: 1px 1px 8px 0px #0000;
     opacity: 0;
 }
-.curseforge-button {
-  position: flex;
-  margin-top: 0.43rem;
-  margin-left: -1.4rem;
-  scale: 80%;
+
+.button {
+    position:absolute;
 }
+
+.button-2 {
+    position: absolute;
+    margin-top: -0.3rem;
+    margin-left: 8.5rem;
+
+}
+
 .flag-counter {
     opacity: 0;
 
