@@ -149,145 +149,13 @@ footer {
     font-family: "Segoe UI";
     font-weight: bold;
 }
-.download-button-1 {
-    padding: 0.5rem;
-    background: limegreen;
-    color: white;
-    border-radius: 0.5rem;
-    letter-spacing: 0.07rem;
-    text-transform: uppercase;
-    font-family: "Segoe UI";
-    font-weight: bold;
-}
-.download-button-2 {
-    padding: 0.5rem;
-    background: limegreen;
-    color: white;
-    border-radius: 0.5rem;
-    letter-spacing: 0.07rem;
-    text-transform: uppercase;
-    font-family: "Segoe UI";
-    font-weight: bold;
-}
-.download-button-3 {
-    padding: 0.5rem;
-    background: limegreen;
-    color: white;
-    border-radius: 0.5rem;
-    letter-spacing: 0.07rem;
-    text-transform: uppercase;
-    font-family: "Segoe UI";
-    font-weight: bold;
-}
-.download-button-4 {
-    padding: 0.5rem;
-    background: limegreen;
-    color: white;
-    border-radius: 0.5rem;
-    letter-spacing: 0.07rem;
-    text-transform: uppercase;
-    font-family: "Segoe UI";
-    font-weight: bold;
-}
-.download-button-5 {
-    padding: 0.5rem;
-    background: limegreen;
-    color: white;
-    border-radius: 0.5rem;
-    letter-spacing: 0.07rem;
-    text-transform: uppercase;
-    font-family: "Segoe UI";
-    font-weight: bold;
-}
-.download-button-6 {
-    padding: 0.5rem;
-    background: limegreen;
-    color: white;
-    border-radius: 0.5rem;
-    letter-spacing: 0.07rem;
-    text-transform: uppercase;
-    font-family: "Segoe UI";
-    font-weight: bold;
-}
 .download-button:visited {
-    color: white;
-}
-.download-button-1:visited {
-    color: white;
-}
-.download-button-2:visited {
-    color: white;
-}
-.download-button-3:visited {
-    color: white;
-}
-.download-button-4:visited {
-    color: white;
-}
-.download-button-5:visited {
-    color: white;
-}
-.download-button-6:visited {
     color: white;
 }
 .download-button:link {
     color: white;
 }
-.link-list {
-    border-color: white;
-    border-radius: 0.5rem;
-    font-size: large;
-    font-family: sans-serif;
-    color: white;
-    background-color: #0a2c4e;
-    height: 2.5rem;
-}
-.link-list-1 {
-    border-color: white;
-    border-radius: 0.5rem;
-    font-size: large;
-    font-family: sans-serif;
-    color: white;
-    background-color: #0a2c4e;
-    height: 2.5rem;
-}
-.link-list-2 {
-    border-color: white;
-    border-radius: 0.5rem;
-    font-size: large;
-    font-family: sans-serif;
-    color: white;
-    background-color: #0a2c4e;
-    height: 2.5rem;
-}
-.link-list-3 {
-    border-color: white;
-    border-radius: 0.5rem;
-    font-size: large;
-    font-family: sans-serif;
-    color: white;
-    background-color: #0a2c4e;
-    height: 2.5rem;
-}
-.link-list-4 {
-    border-color: white;
-    border-radius: 0.5rem;
-    font-size: large;
-    font-family: sans-serif;
-    color: white;
-    background-color: #0a2c4e;
-    height: 2.5rem;
-}
-.link-list-5 {
-    border-color: white;
-    border-radius: 0.5rem;
-    font-size: large;
-    font-family: sans-serif;
-    color: white;
-    background-color: #0a2c4e;
-    height: 2.5rem;
-}
-.link-list-6 {
+.download-selection {
     border-color: white;
     border-radius: 0.5rem;
     font-size: large;
@@ -322,7 +190,6 @@ footer {
 }
 .language-selection:hover {
     color: white;
-
 }
 .language-selection::after {
     font-size: large;
@@ -338,19 +205,17 @@ footer {
 }
 
 .button {
-    position:absolute;
+    position: absolute;
 }
 
 .button-2 {
     position: absolute;
     margin-top: -0.3rem;
     margin-left: 8.5rem;
-
 }
 
 .flag-counter {
     opacity: 0;
-
 }
 
 .archive-label {
