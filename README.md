@@ -1,4 +1,4 @@
-# SMC - Seba Modding Community Website
+# <a href=https://5e8a.github.io/smc/#>SMC - Seba Modding Community Website</a>
 
 The official blog and documentation hub for the **Fabric Boosted** Minecraft modpack, created by Seba.
 
