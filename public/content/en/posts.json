@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "slug": "community-benchmarks-december",
+    "title": "Community Benchmarks: December",
+    "author": {
+      "name": "Seba",
+      "bio": "Lead Developer of Fabric Boosted",
+      "avatar": "/smc/assets/avatars/seba.png"
+    },
+    "date": "15 Dec 2025",
+    "category": "Community",
+    "coverImage": "https://picsum.photos/seed/benchmark/800/400",
+    "summary": "See how the new update performs on different hardware configurations submitted by our community members.",
+    "carouselImages": ["https://picsum.photos/seed/chart1/800/450", "https://picsum.photos/seed/chart2/800/450"],
+    "content": [
+      {
+        "header": "Testing environment",
+        "paragraph": "All benchmarks were conducted using [GamerPotion's FPS Tester world](https://www.curseforge.com/minecraft/worlds/gamerpotions-fps-test), ensuring consistent settings across different hardware setups.\nResults captured using [CapFrameX](https://www.capframex.com/) for accurate frame time analysis."
+      },
+      {
+        "header": "Ryzen 5 7600X + NVIDIA RTX 3060",
+        "paragraph": "Average FPS of 2400, never dropping below 800 FPS.",
+        "image": "/smc/assets/posts/benchmark.webp"
+      },
+      {
+        "header": "High-End Limits",
+        "paragraph": "On an RTX 4090, we are seeing over 1200 FPS in vanilla terrain. With shaders enabled (Complimentary Reimagined), the pack maintains a solid 144 FPS."
+      }
+    ]
+  }
+]

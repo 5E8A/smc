@@ -1,57 +1,127 @@
 <!DOCTYPE html>
-<html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>SMC - Seba Modding Community</title>
-        <link rel="icon" type="image/x-icon" href="favicon.ico" />
-        <link rel="stylesheet" href="style.css" />
-        <script src="https://kit.fontawesome.com/a24ffa59a2.js" crossorigin="anonymous"></script>
-        <script src="./script.js" defer></script>
-    </head>
-    <body>
-        <nav class="menu"> 
-            <ul class="menu-wrapper">  
-                <select class="language-selection" id="lang-select">
-                    <option value="pl">Polski</option>
-                    <option value="eng">English</option>
-                </select>
-                <li class="option" page="home">Home</li>
-                <li class="option" page="graf-instalacja">
-                    Graf Edit
-                    <ul class="option-list">
-                        <li page="graf-instalacja">Installation</li>
-                        <li page="graf-list">Features</li>
-                    </ul>
-                </li>
-                <li class="option" page="fabric-instalacja">
-                    Fabric Boosted
-                    <ul class="option-list">
-                        <li page="fabric-instalacja">Installation</li>
-                        <li page="fabric-mody">Mod List</li>
-                    </ul>
-                </li>
-                <li class="option" page="classicores-instalacja">
-                    Classic Ores
-                    <ul class="option-list">
-                        <li page="classicores-instalacja">Installation</li>
-                    </ul>
-                </li>
-            
-                
-                <li class="option option-2" page="archive">
-                    Archive
-                    <ul class="option-list">
-                        <li page="archive">Login</li>
-                    </ul>
-                </li>
-                <li>
-                    <img src="https://s11.flagcounter.com/count/QQP8/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_18/viewers_0/labels_0/pageviews_0/flags_0/percent_0/alt="Flag Counter" height="62" style="vertical-align:middle" class="flag-counter"></a>
-                </li>
-                
-        </nav>
-        <div class="main"></div>
-        <footer>Seba Modding Community 2023-2025</footer>
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SMC - Fabric Boosted</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mc: {
+                bg: "#09090b", // Obsidian/Void Black
+                surface: "#18181b", // Deepslate
+                surfaceLight: "#27272a", // Polished Deepslate
+                border: "#3f3f46", // Stone Bricks border
+                accent: "#3bfcdb", // Diamond Blue
+                green: "#3c8527", // Launcher Green
+                greenHover: "#2a641c",
+                text: "#e4e4e7", // Zinc 200
+                textMuted: "#a1a1aa", // Zinc 400
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+              mc: ['"VT323"', "monospace"],
+            },
+            backgroundImage: {
+              deepslate: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwquTn5yMwQbJAY0CGAAALqxNLE39BAAAAAElFTkSuQmCC')", // Subtle pattern
+            },
+          },
+        },
+      };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=VT323&display=swap" rel="stylesheet" />
+    <script type="importmap">
+      {
+        "imports": {
+          "react/": "https://esm.sh/react@^19.2.3/",
+          "react": "https://esm.sh/react@^19.2.3",
+          "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+          "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #09090b;
+        color: #e4e4e7;
+      }
+
+      /* Modern Minecraft Button (Launcher Style) */
+      .btn-mc-green {
+        background-color: #3c8527;
+        border: 2px solid #1e1e1e; /* Dark border */
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 4px 0 #1e1e1e;
+        color: white;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.1s ease;
+      }
+
+      .btn-mc-green:hover {
+        background-color: #4a9e33;
+        transform: translateY(-2px);
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 6px 0 #1e1e1e;
+      }
+
+      .btn-mc-green:active {
+        transform: translateY(2px);
+        box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.2), 0 2px 0 #1e1e1e;
+      }
+
+      /* Secondary Button (Stone Style) */
+      .btn-mc-stone {
+        background-color: #3f3f46;
+        border: 2px solid #18181b;
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 4px 0 #18181b;
+        color: #e4e4e7;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        transition: all 0.1s ease;
+      }
+
+      .btn-mc-stone:hover {
+        background-color: #52525b;
+        transform: translateY(-2px);
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 6px 0 #18181b;
+      }
+
+      /* Modern Card Panel */
+      .mc-card {
+        background-color: #18181b;
+        border: 1px solid #3f3f46;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      /* Pixel Font Shadow for headers only */
+      .font-pixel-shadow {
+        text-shadow: 2px 2px 0px #000000;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        background: #09090b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3f3f46;
+        border-radius: 5px;
+        border: 2px solid #09090b;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #52525b;
+      }
+    </style>
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

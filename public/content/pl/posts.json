@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "slug": "community-benchmarks-november",
+    "title": "Community Benchmarks: November",
+    "author": {
+      "name": "Seba",
+      "bio": "Główny programista Fabric Boosted",
+      "avatar": "/smc/assets/avatars/seba.png"
+    },
+    "date": "15 Lis 2023",
+    "category": "Społeczność",
+    "coverImage": "https://picsum.photos/seed/benchmark/800/400",
+    "summary": "Zobacz, jak nowa aktualizacja sprawdza się na różnych konfiguracjach sprzętowych przesłanych przez członków naszej społeczności.",
+    "carouselImages": ["https://picsum.photos/seed/chart1/800/450", "https://picsum.photos/seed/chart2/800/450"],
+    "content": [
+      {
+        "header": "Low-End Heroes",
+        "paragraph": "Użytkownik \"PixelMiner\" zgłosił stabilne 60FPS na zintegrowanej karcie graficznej Intel HD, korzystając z naszego profilu konfiguracyjnego \"Potato Mode\". To dowodzi, że Fabric Boosted jest wydajny nawet na starszych laptopach biurowych."
+      },
+      {
+        "header": "High-End Limits",
+        "paragraph": "Na RTX 4090 obserwujemy ponad 1200 FPS w terenie vanilla. Po włączeniu shaderów (Complimentary Reimagined) pakiet utrzymuje solidne 144 FPS."
+      }
+    ]
+  }
+]
