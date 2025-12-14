@@ -1,0 +1,37 @@
+
+[
+  {
+    "id": "wiki-pl-1",
+    "slug": "installation-guide",
+    "title": "Przewodnik Instalacji",
+    "author": "Seba",
+    "date": "2023-10-01",
+    "category": "Pierwsze Kroki",
+    "coverImage": "https://picsum.photos/seed/install/800/400",
+    "summary": "Instrukcje krok po kroku jak zainstalować Fabric Boosted przy użyciu różnych launcherów.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Wymagania Wstępne",
+        "paragraph": "Przed rozpoczęciem upewnij się, że masz zainstalowaną Javę 17 lub nowszą. Możesz ją pobrać z [Adoptium](https://adoptium.net/)."
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-2",
+    "slug": "performance-tweaks",
+    "title": "Zaawansowana Optymalizacja",
+    "author": "Seba",
+    "date": "2023-10-05",
+    "category": "Optymalizacja",
+    "coverImage": "https://picsum.photos/seed/perf/800/400",
+    "summary": "Zmaksymalizuj FPS zmieniając specyficzne ustawienia Sodium i JVM.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Przydzielanie RAM",
+        "paragraph": "Dla tej paczki zalecamy przydzielenie od 4GB do 6GB RAM."
+      }
+    ]
+  }
+]
