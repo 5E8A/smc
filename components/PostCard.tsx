@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Calendar, User } from "lucide-react";
+import { Calendar /*User*/ } from "lucide-react";
 import { BlogPost } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 

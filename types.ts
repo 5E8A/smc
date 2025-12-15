@@ -1,4 +1,3 @@
-
 export interface ContentSection {
   header?: string;
   paragraph?: string;
@@ -10,7 +9,11 @@ export interface BlogPost {
   id: string;
   slug: string;
   title: string;
-  author: string;
+  author: {
+    name: string;
+    avatar: string;
+    bio: string;
+  };
   date: string;
   category: string;
   coverImage: string;
@@ -23,7 +26,11 @@ export interface WikiDoc {
   id: string;
   slug: string;
   title: string;
-  author: string;
+  author: {
+    name: string;
+    avatar: string;
+    bio: string;
+  };
   date: string;
   category: string;
   coverImage: string;
