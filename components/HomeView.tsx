@@ -57,7 +57,7 @@ const HomeView: React.FC = () => {
         {/* Modern blur effect behind hero */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-mc-accent/5 blur-[120px] rounded-full"></div>
 
-        <div className="absolute inset-0 bg-[url('/smc/assets/static/background.jpg')] bg-cover bg-center opacity-50 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-[url('/smc/assets/static/background.webp')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 flex flex-col items-start justify-center min-h-[60vh] z-10">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-mc-accent/10 border border-mc-accent/20 mb-8 backdrop-blur-sm">
