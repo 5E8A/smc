@@ -15,14 +15,15 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative p-2 bg-gradient-to-br from-mc-surfaceLight to-mc-surface rounded-lg border border-white/10 shadow-lg group-hover:border-mc-accent/50 transition-colors">
+            <img src="/smc/assets/avatars/smc.png" alt="SMC Logo" className="h-10 w-10 rounded-full"></img>
+            {/* <div className="relative p-2 bg-gradient-to-br from-mc-surfaceLight to-mc-surface rounded-lg border border-white/10 shadow-lg group-hover:border-mc-accent/50 transition-colors">
               <Box className="h-6 w-6 text-mc-accent" strokeWidth={2} />
-            </div>
-            <div className="flex flex-col">
+            </div> */}
+            {/* <div className="flex flex-col">
               <span className="text-2xl font-mc text-white tracking-wide leading-none group-hover:text-mc-accent transition-colors">
                 SMC<span className="text-mc-textMuted"></span>
               </span>
-            </div>
+            </div> */}
           </Link>
 
           {/* Desktop Menu */}
