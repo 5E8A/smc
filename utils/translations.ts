@@ -48,9 +48,9 @@ export const translations = {
       mission_title: "Our Mission",
       mission_text: "Fabric Boosted was created with a single goal: to provide the smoothest Minecraft experience possible without compromising on visual fidelity. We believe that everyone should be able to enjoy the game at high framerates, regardless of their hardware specs.",
       creator_title: "The Creator",
-      creator_text: "Seba is a passionate Minecraft modder and optimization enthusiast. After years of struggling with lag on low-end laptops, he decided to curate the ultimate performance modpack.",
+      creator_text: "5E8A is a passionate Minecraft modder and optimization enthusiast. After years of struggling with optimazation, he decided to curate the ultimate performance modpack.",
       stats_downloads: "Downloads",
-      stats_users: "Active Users",
+      stats_users: "Active Discord Users",
       stats_version: "Current Version",
     },
     footer: {
@@ -109,9 +109,9 @@ export const translations = {
       mission_title: "Nasza Misja",
       mission_text: "Fabric Boosted powstało z jednym celem: zapewnić jak najpłynniejszą rozgrywkę w Minecraft bez kompromisów w jakości wizualnej. Wierzymy, że każdy powinien móc cieszyć się grą przy wysokiej liczbie klatek na sekundę, niezależnie od specyfikacji sprzętowej.",
       creator_title: "Twórca",
-      creator_text: "Seba to pasjonat moddingu Minecraft i entuzjasta optymalizacji. Po latach zmagań z lagami na słabych laptopach, postanowił stworzyć ostateczną paczkę wydajnościową.",
+      creator_text: "5E8A to pasjonat moddingu Minecraft i entuzjasta optymalizacji. Po latach zmagań z optymalizacją, postanowił stworzyć ostateczną paczkę wydajnościową.",
       stats_downloads: "Pobrań",
-      stats_users: "Aktywnych Graczy",
+      stats_users: "Aktywnych Użytkowników Discorda",
       stats_version: "Obecna Wersja",
     },
     footer: {

@@ -1,6 +1,6 @@
 # <a href=https://5e8a.github.io/smc/#>SMC - Seba Modding Community Website</a>
 
-The official blog and documentation hub for the **Fabric Boosted** Minecraft modpack, created by Seba.
+The official blog and documentation hub for the **Fabric Boosted** Minecraft modpack, created by 5E8A.
 
 The website serves as a blog for news, updates, and a wiki for optimization guides, all designed with a modern, Minecraft-inspired aesthetic.
 

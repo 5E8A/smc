@@ -89,7 +89,7 @@ const AboutView: React.FC = () => {
             <div className="flex items-center space-x-4 pt-6 border-t border-white/5">
               <div className="w-10 h-10 rounded bg-mc-surfaceLight flex items-center justify-center font-mc text-xl text-white">S</div>
               <div>
-                <div className="text-white font-bold text-sm">Seba</div>
+                <div className="text-white font-bold text-sm">5E8A</div>
                 <div className="text-mc-textMuted text-xs">Lead Developer</div>
               </div>
             </div>
