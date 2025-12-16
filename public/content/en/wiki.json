@@ -22,6 +22,10 @@
       {
         "header": "Updating Fabric Boosted",
         "paragraph": "To update Fabric Boosted, open Modrinth App, go to the Library tab, and click on Fabric Boosted instance, then click Update pack, if an update is available.\nMake sure to check Minecraft version when updating the pack."
+      },
+      {
+        "header": "Versioning",
+        "paragraph": "Fabric Boosted uses X.Y.Z versioning scheme, where:\nX - Major Minecraft Updates (1.19, 1.20 etc.)\nY - Minor Minecraft Updates (1.20.1, 1.20.2 etc.)\nZ - Fabric Boosted specific updates (mod updates, bug fixes etc.)\n\nWe also release Alpha and Beta versions named for example 2.6.0-Alpha5 or 2.6.0-Beta2\nBeta - Unstable Versions with some missing mods\nAlpha - Test Builds with many missing mods"
       }
     ]
   },
@@ -47,6 +51,14 @@
             {
         "header": "Nvidium Mod",
         "paragraph": "If you have an NVIDIA GPU (16 series or newer), Nvidium will keep more chunks loaded in GPU memory, improving expierience while moving around world without losing performance.\nNvidium settings is located in Video Settings > Nvidium\nDeafault is set to 256 Chunks, you can decrease it or completely disable it."
+      },
+      {
+        "header": "More Culling mod",
+        "paragraph": "More Culling improves performance by not rendering objects that are not visible to the player, such as those blocked by other objects.\nMore Culling settings is located in Video Settings > More Culling"
+      },
+      {
+        "header": "Other Performance Mods",
+        "paragraph": "Fabric Boosted includes several performance enhancing mods such as:\n Lithium - Optimization to game physics, mob AI\n FerriteCore - Reduces RAM usage\nEntity Culling - Stops rendering invisible entities\nImmediatelyFast - Improves the immediate mode rendering performance.\nScalableLux - Improves the performance of light updates\nKrypton - Optimizes networking stack\nThreadTweak - Improves and tweaks thread scheduling\nModernFix - Improves performance, reduces memory usage, and fixes many bugs\nVery Many Players - Improves game performance at high playercounts\nConcurrent Chunk Management Engine - Improves chunk performance\nNoismium - Optimises world generation performance\nBadOptimizations - Collection of mostly micro optimizations\nFaster Random - Up to 100X faster Random Generator implementation\n\nThese mods work in the background to optimize various aspects of the game, providing a smoother experience without requiring any additional configuration."
       }
     ]
   },
@@ -61,6 +73,10 @@
     "summary": "Guide on how to download and enable shaders.",
     "carouselImages": [],
     "content": [
+      {
+        "header": "Introduction",
+        "paragraph": "[Iris Shaders](https://modrinth.com/mod/iris) is a mod that allows you to use shaders in Minecraft. Shaders enhance the visual quality of Minecraft by adding realistic lighting, shadows, and effects. This guide will help you download and enable shaders in Fabric Boosted."
+      },
       {
         "header": "Downloading Shaders",
         "paragraph": "To download shaders go to Fabric Boosted Instance in Modrinth App, go to install content, switch to Shaders tab, and download Shader Pack of your choice.\nIf you want to install Shader Packs outside of Modrinth App, place the downloaded .zip file into the 'shaderpacks' folder.\nYou can find this folder by click three dots, then Open Folder > shaderpacks."
@@ -83,8 +99,16 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "",
-        "paragraph": ""
+        "header": "Using Modrinth App",
+        "paragraph": "To add mods to Fabric Boosted, open the Modrinth App, select your Fabric Boosted instance, and navigate to the 'Install Content' tab. From there, you can browse and install mods directly from Modrinth.\nNote: Fabric Boosted will not update automatically added Mods, so make sure to check for updates manually."
+      },
+      {
+        "header": "Manually Adding Mods",
+        "paragraph": "You can also add mods manually by placing the mod .jar files into the 'mods' folder of your Fabric Boosted instance.\nTo access this folder, open Modrinth App, select your Fabric Boosted instance, click on the three dots, and choose 'Open Folder' > 'mods'."
+      },
+      {
+        "header": "Incompatible Mods",
+        "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\nIf you find any other incompatible mods, please report them on our [Discord](https://discord.gg/uaX8D5jQp2)."
       }
     ]
   },
@@ -100,20 +124,20 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "",
-        "paragraph": ""
+        "header": "Optifine Alternatives",
+        "paragraph": "Shaders - [Iris Shaders](https://modrinth.com/mod/iris)\nDynamic Lighting - [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights)\nZoom - [Logical Zoom](https://modrinth.com/mod/logical-zoom)\nCapes - [Capes Mod](https://modrinth.com/mod/capes)\nConnected Textures - [Continuity](https://modrinth.com/mod/continuity)\nBetter Grass- [BetterGrassify](https://modrinth.com/mod/bettergrassify)\nCustom Sky - [Skyboxify](https://modrinth.com/mod/skyboxify)\nAnimated Textures - [Animatica](https://modrinth.com/mod/animatica)\nCustom Entities Textures - [Entity Texture Features](https://modrinth.com/mod/entitytexturefeatures)\nCustom Entity Models - [Entity Model Features](https://modrinth.com/mod/entity-model-features)\nCustom GUI - [OptiGUI](https://modrinth.com/mod/optigui)\nCustom Loading Screen - [Puzzle](https://modrinth.com/mod/puzzle)"
       }
     ]
   },
   {
     "id": "wiki-en-6",
-    "slug": "keybinds-and-controls",
-    "title": "Keybinds and Controls",
+    "slug": "qol-mods",
+    "title": "Quality of Life Mods",
     "author": "5E8A",
     "date": "2025-12-16",
-    "category": "Controls",
-    "coverImage": "/smc/assets/banners/controls.png",
-    "summary": "Keybinds and Controls for Fabric Boosted.",
+    "category": "Mods",
+    "coverImage": "/smc/assets/banners/QoL.png",
+    "summary": "Overview of Quality of Life mods included in Fabric Boosted.",
     "carouselImages": [],
     "content": [
       {
@@ -136,6 +160,27 @@
       {
         "header": "",
         "paragraph": ""
+      }
+    ]
+  },
+  {
+    "id": "wiki-en-8",
+    "slug": "keybinds-and-controls",
+    "title": "Keybinds and Controls",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Controls",
+    "coverImage": "/smc/assets/banners/controls.png",
+    "summary": "Keybinds and Controls for Fabric Boosted.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Changed Vanilla settings",
+        "paragraph": "R - Toggle Perspective\nSprint Mode - Toggle\nFOV - 88\nFOV Effects - Off\nAuto Jump - Off\nDistorion Effects - Off\nDarkness Pulsing - Off\nDamage Tilt - 30%\nMonochrome Logo - On\nMenu Background Blur - Off\nChat Text Size - 60%\nChat Width - 215px"
+      },
+      {
+        "header": "Useful Mods Keybinds",
+        "paragraph": "L - Toggles Light overlay ([Lighty](https://modrinth.com/mod/lighty))\nC - Optifine Zoom ([Logical Zoom](https://modrinth.com/mod/logical-zoom))\nG - Fullbright toggle ([Full Brightness Toggle](https://modrinth.com/mod/full-brightness-toggle))\nM - World Map ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nN - New waypoint ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nZ - Minimap Zoom ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nX - Fullscreen Minimap ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nH - Show/hide Item Durability ([Durability Viewer](https://modrinth.com/mod/durability-viewer-updated))\n\nMore keybinds can be found in Controls menu."
       }
     ]
   }
