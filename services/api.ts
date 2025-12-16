@@ -19,7 +19,8 @@ export const getActiveDiscordMembers = async (): Promise<number> => {
   if (discordMembersCache !== null) return discordMembersCache;
   try {
     const response = await discordAPI.get("/invites/uaX8D5jQp2", { params: { with_counts: true } });
-    discordMembersCache = response.data.approximate_presence_count;
+    console.log(response.data);
+    discordMembersCache = response.data.approximate_member_count;
     return discordMembersCache;
   } catch (error) {
     console.error("Error fetching Discord members:", error);
