@@ -31,7 +31,7 @@ const WikiView: React.FC = () => {
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 w-full">
         <div className="bg-mc-surface border border-white/10 rounded-xl p-8 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute top-0 left-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
           
           <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
             {t.wiki.title}
@@ -68,7 +68,7 @@ const WikiView: React.FC = () => {
               <Link 
                 key={doc.id} 
                 to={`/wiki/${doc.slug}`}
-                className="group flex flex-col bg-mc-surface border border-white/10 rounded-xl overflow-hidden hover:border-indigo-500/50 hover:shadow-xl transition-all duration-300"
+                className="group flex flex-col bg-mc-surface border border-white/10 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row h-full">
                   <div className="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
@@ -78,13 +78,13 @@ const WikiView: React.FC = () => {
                   <div className="p-6 md:w-2/3 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center space-x-2 mb-3">
-                         <Book className="w-4 h-4 text-indigo-400" />
-                         <span className="text-xs text-indigo-400 font-bold uppercase tracking-wider">{doc.category}</span>
+                         <Book className="w-4 h-4 text-green-400" />
+                         <span className="text-xs text-green-400 font-bold uppercase tracking-wider">{doc.category}</span>
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">{doc.title}</h3>
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">{doc.title}</h3>
                       <p className="text-mc-textMuted text-sm line-clamp-2">{doc.summary}</p>
                     </div>
-                    <div className="mt-4 flex items-center text-sm font-semibold text-white group-hover:text-indigo-400 transition-colors">
+                    <div className="mt-4 flex items-center text-sm font-semibold text-white group-hover:text-green-400 transition-colors">
                       {t.wiki.read_doc} <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>

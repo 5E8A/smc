@@ -44,7 +44,7 @@ const WikiDocView: React.FC = () => {
         <img src={doc.coverImage} className="w-full h-full object-cover opacity-50 blur-sm" alt="Cover" />
         
         <div className="absolute inset-0 flex flex-col justify-center items-center z-20 px-4">
-           <span className="px-3 py-1 mb-4 rounded bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+           <span className="px-3 py-1 mb-4 rounded bg-green-500/20 border border-green-500/30 text-green-300 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
               {doc.category}
            </span>
            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center max-w-4xl font-mc text-shadow-lg">
@@ -80,7 +80,7 @@ const WikiDocView: React.FC = () => {
             {doc.content.map((block, index) => (
               <div key={index} className="mb-8">
                 {block.header && (
-                  <h2 className="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-indigo-500 pl-4">
+                  <h2 className="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-green-500 pl-4">
                     {block.header}
                   </h2>
                 )}
