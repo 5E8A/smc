@@ -50,7 +50,7 @@ export const translations = {
       creator_title: "The Creator",
       creator_text: "5E8A is a passionate Minecraft modder and optimization enthusiast. After years of gaining knowledge with optimization, he decided to create the ultimate Fabric Modpack.",
       stats_downloads: "Downloads",
-      stats_users: "Active Discord Users",
+      stats_users: "Community Members",
       stats_version: "Current Version",
     },
     footer: {
@@ -111,7 +111,7 @@ export const translations = {
       creator_title: "Twórca",
       creator_text: "5E8A to pasjonat moddingu Minecraft i entuzjasta optymalizacji. Po latach zmagań z optymalizacją, postanowił stworzyć ostateczną paczkę wydajnościową.",
       stats_downloads: "Pobrań",
-      stats_users: "Aktywnych Użytkowników Discorda",
+      stats_users: "Członków Społeczności",
       stats_version: "Obecna Wersja",
     },
     footer: {
