@@ -5,36 +5,137 @@
     "slug": "installation-guide",
     "title": "Installation Guide",
     "author": "5E8A",
-    "date": "2023-10-01",
+    "date": "2025-12-16",
     "category": "Getting Started",
-    "coverImage": "https://picsum.photos/seed/install/800/400",
-    "summary": "Step-by-step instructions on how to install Fabric Boosted using various launchers.",
+    "coverImage": "/smc/assets/banners/download.png",
+    "summary": "Instructions on how to install and update Fabric Boosted using Modrinth App.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Prerequisites",
-        "paragraph": "Before starting, ensure you have Java 17 or newer installed. You can download it from [Adoptium](https://adoptium.net/)."
+        "header": "Installing Modrinth App",
+        "paragraph": "To install [Modrinth App](https://modrinth.com/app), download it from the official website and follow the installation instructions."
       },
       {
-        "header": "Using Modrinth App",
-        "paragraph": "This is the recommended method. Download the [Modrinth App](https://modrinth.com/app), search for 'Fabric Boosted', and click Install. It will automatically handle Java versions and updates."
+        "header": "Installing Fabric Boosted",
+        "paragraph": "Go to Discover content section in Modrinth App, and search for Fabric Boosted, and click Install."
+      },
+      {
+        "header": "Updating Fabric Boosted",
+        "paragraph": "To update Fabric Boosted, open Modrinth App, go to the Library tab, and click on Fabric Boosted instance, then click Update pack, if an update is available.\nMake sure to check Minecraft version when updating the pack."
       }
     ]
   },
   {
     "id": "wiki-en-2",
     "slug": "performance-tweaks",
-    "title": "Advanced Performance Tweaks",
-    "author": "Seba",
-    "date": "2023-10-05",
+    "title": "Performance Tweaks",
+    "author": "5E8A",
+    "date": "2025-12-16",
     "category": "Optimization",
-    "coverImage": "https://picsum.photos/seed/perf/800/400",
-    "summary": "Maximize your FPS by tweaking specific Sodium and JVM settings.",
+    "coverImage": "/smc/assets/banners/wrench.png",
+    "summary": "Maximize your FPS by tweaking specific options and JVM settings.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Allocating RAM",
-        "paragraph": "For this modpack, we recommend allocating between 4GB and 6GB of RAM. Allocating more than 8GB can actually cause [Garbage Collection Lag](https://spark.lucko.me/docs/guides/Garbage-Collection)."
+        "header": "Allocating more RAM",
+        "paragraph": "If you have enough system RAM, we recommend allocating between 4GB to 6GB of RAM.\nTo do this in Modrinth App, open your Fabric Boosted instance, go to Settings > Java and memory, select Custom memory allocation, and set desired amount of RAM."
+      },
+      {
+        "header": "Video Settings",
+        "paragraph": "Render Distance - Deafult is set to 12 chunks, you can lower it for better performance.\nSimulation Distance - Deafult is set to 12 chunks, you can lower it for better performance.\nGraphics - Set to Fast for optimal performance.\nSmooth Lighting - Turned off.\nParticles - Set to Decreased, you can change it to Minimal for better performance.\nClouds - Turned off.\nEntity Distance - Set to 100%\nV-Sync - Turned off.\nEntity Shadows - Turned off.\nLeaves - Set to Fast.\nWeather - Set to Fast."
+      },
+            {
+        "header": "Nvidium Mod",
+        "paragraph": "If you have an NVIDIA GPU (16 series or newer), Nvidium will keep more chunks loaded in GPU memory, improving expierience while moving around world without losing performance.\nNvidium settings is located in Video Settings > Nvidium\nDeafault is set to 256 Chunks, you can decrease it or completely disable it."
+      }
+    ]
+  },
+  {
+    "id": "wiki-en-3",
+    "slug": "shaders-setup",
+    "title": "Shaders Setup Guide",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Shaders",
+    "coverImage": "/smc/assets/banners/shader.png",
+    "summary": "Guide on how to download and enable shaders.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Downloading Shaders",
+        "paragraph": "To download shaders go to Fabric Boosted Instance in Modrinth App, go to install content, switch to Shaders tab, and download Shader Pack of your choice.\nIf you want to install Shader Packs outside of Modrinth App, place the downloaded .zip file into the 'shaderpacks' folder.\nYou can find this folder by click three dots, then Open Folder > shaderpacks."
+      },
+      {
+        "header": "Enabling Shaders",
+        "paragraph": "To enable shaders, go to the Settings > Video Settings > Shaders Packs, and select a shader pack from the list and click Apply."
+      }
+    ]
+  },
+  {
+    "id": "wiki-en-4",
+    "slug": "adding-mods",
+    "title": "Adding Mods",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Mods",
+    "coverImage": "/smc/assets/banners/add.png",
+    "summary": "Instructions on how to add additional mods to Fabric Boosted.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "",
+        "paragraph": ""
+      }
+    ]
+  },
+  {
+    "id": "wiki-en-5",
+    "slug": "optifine-features",
+    "title": "Optifine Features",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Optifine",
+    "coverImage": "/smc/assets/banners/opti.png",
+    "summary": "Overview of Optifine features",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "",
+        "paragraph": ""
+      }
+    ]
+  },
+  {
+    "id": "wiki-en-6",
+    "slug": "keybinds-and-controls",
+    "title": "Keybinds and Controls",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Help",
+    "coverImage": "/smc/assets/banners/controls.png",
+    "summary": "Keybinds and Controls for Fabric Boosted.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "",
+        "paragraph": ""
+      }
+    ]
+  },
+  {
+    "id": "wiki-en-7",
+    "slug": "world-hosting",
+    "title": "World Hosting",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Online",
+    "coverImage": "/smc/assets/banners/hosting.png",
+    "summary": "Guide on how to play your Minecraft world with friends.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "",
+        "paragraph": ""
       }
     ]
   }
