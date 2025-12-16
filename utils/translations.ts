@@ -10,7 +10,7 @@ export const translations = {
       wiki: "Wiki",
     },
     hero: {
-      tag: "Version [version] Now Available",
+      tag: "Version [version] Now Available for MC ",
       title_prefix: "FABRIC",
       title_accent: "BOOSTED",
       description: "Experience Minecraft like never before with the ultimate optimization modpack. High FPS, low latency, and smooth gameplay.",
@@ -71,7 +71,7 @@ export const translations = {
       wiki: "Wiki",
     },
     hero: {
-      tag: "Wersja [version] Już Dostępna",
+      tag: "Wersja [version] Już Dostępna na wersję MC ",
       title_prefix: "FABRIC",
       title_accent: "BOOSTED",
       description: "Doświadcz Minecrafta jak nigdy dotąd dzięki ostatecznej paczce optymalizacyjnej. Wysokie FPS, niskie opóźnienia i płynna rozgrywka.",

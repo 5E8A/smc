@@ -5,8 +5,9 @@ import PostCard from "./PostCard";
 import { Zap, Cpu, MemoryStick, ChevronRight, Loader2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router-dom";
-import { getLatestVersion } from "@/services/api";
+import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";
+import { VersionData } from "@/types";
 
 const splitVersionHeroTag = (text: string): string[] => {
   return text.split("[version]");
@@ -16,7 +17,7 @@ const HomeView: React.FC = () => {
   const { t, language } = useLanguage();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [version, setVersion] = useState<string | null>(null);
+  const [version, setVersion] = useState<VersionData | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -28,7 +29,7 @@ const HomeView: React.FC = () => {
 
   useEffect(() => {
     const fetchVersion = async () => {
-      const latestVersion = await getLatestVersion("dOLVvHgi");
+      const latestVersion = await getLatestVersionData("dOLVvHgi");
       setVersion(latestVersion);
     };
     fetchVersion();
@@ -37,16 +38,10 @@ const HomeView: React.FC = () => {
   const heroTagParts = splitVersionHeroTag(t.hero.tag);
 
   const renderHeroTag = () => {
-    // 1. Determine the dynamic content (version string or loading component)
-    const versionContent =
-      version !== null ? (
-        version // Render the plain string if loaded
-      ) : (
-        // Render the component if loading
-        <LoadingVersionText key="loading-version" format={"0.0.0"} />
-      ); // 2. Combine all parts into a single array (React automatically renders arrays of elements)
+    const versionContent = version !== null ? version.version_number : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
+    const gameVersion = version !== null ? version.game_version : <LoadingVersionText key="loading-game-version" format={"0.00.0"} />;
 
-    return [heroTagParts[0], versionContent, heroTagParts[1]];
+    return [heroTagParts[0], versionContent, heroTagParts[1], gameVersion];
   };
 
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { Code, Cpu } from "lucide-react";
-import { getActiveDiscordMembers, getTotalDownloads, getLatestVersion } from "@/services/api";
+import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
 
 const AboutView: React.FC = () => {
   const { t } = useLanguage();
@@ -28,9 +28,9 @@ const AboutView: React.FC = () => {
 
   React.useEffect(() => {
     const fetchLatestVersion = async () => {
-      const version = await getLatestVersion("dOLVvHgi");
+      const version = await getLatestVersionData("dOLVvHgi");
       if (version) {
-        setLatestVersion(version);
+        setLatestVersion(version.version_number);
       } else {
         setLatestVersion("N/A");
       }

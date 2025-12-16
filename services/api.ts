@@ -1,4 +1,5 @@
 import axios from "axios";
+import { VersionData } from "@/types";
 
 const discordAPI = axios.create({
   baseURL: "https://discord.com/api/v10",
@@ -19,7 +20,6 @@ export const getActiveDiscordMembers = async (): Promise<number> => {
   if (discordMembersCache !== null) return discordMembersCache;
   try {
     const response = await discordAPI.get("/invites/uaX8D5jQp2", { params: { with_counts: true } });
-    console.log(response.data);
     discordMembersCache = response.data.approximate_member_count;
     return discordMembersCache;
   } catch (error) {
@@ -41,15 +41,15 @@ const getProjectData = async (id: string): Promise<any> => {
   }
 };
 
-let verCache = null;
-export const getLatestVersion = async (id: string): Promise<string | null> => {
+let verCache: VersionData | null = null;
+export const getLatestVersionData = async (id: string): Promise<VersionData | null> => {
   if (verCache !== null) return verCache;
   try {
     const projectData = await getProjectData(id);
     if (projectData && projectData.versions && projectData.versions.length > 0) {
       try {
         const response = await modrinthAPI.get(`/version/${projectData.versions[projectData.versions.length - 1]}`);
-        verCache = response.data.version_number;
+        verCache = { version_number: response.data.version_number, game_version: response.data.game_versions[0] };
         return verCache;
       } catch (error) {
         console.error("Error fetching version data:", error);

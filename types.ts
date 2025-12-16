@@ -38,3 +38,8 @@ export interface WikiDoc {
   carouselImages: string[];
   content: ContentSection[];
 }
+
+export type VersionData = {
+  version_number: string;
+  game_version: string;
+};
