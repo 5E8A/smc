@@ -1,36 +1,185 @@
-
 [
   {
     "id": "wiki-pl-1",
     "slug": "installation-guide",
-    "title": "Przewodnik Instalacji",
+    "title": "Instrukcja Instalacji",
     "author": "5E8A",
-    "date": "2023-10-01",
+    "date": "2025-12-16",
     "category": "Pierwsze Kroki",
-    "coverImage": "https://picsum.photos/seed/install/800/400",
-    "summary": "Instrukcje krok po kroku jak zainstalować Fabric Boosted przy użyciu różnych launcherów.",
+    "coverImage": "/smc/assets/banners/download.png",
+    "summary": "Instrukcje dotyczące instalacji i aktualizacji Fabric Boosted za pomocą Aplikacji Modrinth.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Wymagania Wstępne",
-        "paragraph": "Przed rozpoczęciem upewnij się, że masz zainstalowaną Javę 17 lub nowszą. Możesz ją pobrać z [Adoptium](https://adoptium.net/)."
+        "header": "Instalacja Aplikacji Modrinth",
+        "paragraph": "Aby zainstalować [Aplikację Modrinth](https://modrinth.com/app), pobierz ją z oficjalnej strony internetowej i postępuj zgodnie z instrukcjami instalacji."
+      },
+      {
+        "header": "Instalacja Fabric Boosted",
+        "paragraph": "Przejdź do sekcji Odkryj zawartość w Aplikacji Modrinth, wyszukaj Fabric Boosted i kliknij Zainstaluj."
+      },
+      {
+        "header": "Aktualizacja Fabric Boosted",
+        "paragraph": "Aby zaktualizować Fabric Boosted, otwórz Aplikację Modrinth, przejdź do zakładki Biblioteka i kliknij na instancję Fabric Boosted, a następnie kliknij Zaktualizuj paczkę, jeśli aktualizacja jest dostępna.\nPamiętaj, aby sprawdzić wersję Minecrafta podczas aktualizacji paczki."
+      },
+      {
+        "header": "Wersjonowanie",
+        "paragraph": "Fabric Boosted używa schematu wersjonowania X.Y.Z, gdzie:\nX - Główne Aktualizacje Minecrafta (1.19, 1.20, itp.)\nY - Mniejsze Aktualizacje Minecrafta (1.20.1, 1.20.2, itp.)\nZ - Aktualizacje specyficzne dla Fabric Boosted (aktualizacje modów, poprawki błędów, itp.)\n\nWydajemy również wersje Alpha i Beta, nazwane na przykład 2.6.0-Alpha5 lub 2.6.0-Beta2\nBeta - Wersje niestabilne z brakującymi modami\nAlpha - Kompilacje testowe z wieloma brakującymi modami"
       }
     ]
   },
   {
     "id": "wiki-pl-2",
     "slug": "performance-tweaks",
-    "title": "Zaawansowana Optymalizacja",
+    "title": "Ustawienia Wydajności",
     "author": "5E8A",
-    "date": "2023-10-05",
+    "date": "2025-12-16",
     "category": "Optymalizacja",
-    "coverImage": "https://picsum.photos/seed/perf/800/400",
-    "summary": "Zmaksymalizuj FPS zmieniając specyficzne ustawienia Sodium i JVM.",
+    "coverImage": "/smc/assets/banners/wrench.png",
+    "summary": "Maksymalizuj swoje FPS poprzez dostosowanie konkretnych opcji i ustawień JVM.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Przydzielanie RAM",
-        "paragraph": "Dla tej paczki zalecamy przydzielenie od 4GB do 6GB RAM."
+        "header": "Przydzielanie większej ilości RAM",
+        "paragraph": "Jeśli masz wystarczającą ilość pamięci RAM w systemie, zalecamy przydzielenie od 4GB do 6GB pamięci RAM.\nAby to zrobić w Aplikacji Modrinth, otwórz instancję Fabric Boosted, przejdź do Ustawienia > Java i pamięć, wybierz Własne przydzielanie pamięci i ustaw żądaną ilość pamięci RAM."
+      },
+      {
+        "header": "Ustawienia Wideo",
+        "paragraph": "Zasięg renderowania (Render Distance) - Domyślnie ustawiony na 12 chunków, możesz go zmniejszyć dla lepszej wydajności.\nZasięg symulacji (Simulation Distance) - Domyślnie ustawiony na 12 chunków, możesz go zmniejszyć dla lepszej wydajności.\nGrafika (Graphics) - Ustaw na Szybka dla optymalnej wydajności.\nWygładzanie Oświetlenia (Smooth Lighting) - Wyłączone.\nCząsteczki (Particles) - Ustaw na Zmniejszone, możesz zmienić na Minimalne dla lepszej wydajności.\nChmury (Clouds) - Wyłączone.\nOdległość Encji (Entity Distance) - Ustaw na 100%\nV-Sync - Wyłączone.\nCienie Encji (Entity Shadows) - Wyłączone.\nLiście (Leaves) - Ustaw na Szybkie.\nPogoda (Weather) - Ustaw na Szybka."
+      },
+      {
+        "header": "Mod Nvidium",
+        "paragraph": "Jeśli masz kartę graficzną NVIDIA (seria 16 lub nowsza), Nvidium zachowa więcej chunków załadowanych w pamięci GPU, poprawiając wrażenia podczas poruszania się po świecie bez utraty wydajności.\nUstawienia Nvidium znajdują się w Ustawienia Wideo > Nvidium\nDomyślnie ustawione jest na 256 Chunków, możesz zmniejszyć tę wartość lub całkowicie ją wyłączyć."
+      },
+      {
+        "header": "Mod More Culling",
+        "paragraph": "More Culling poprawia wydajność, nie renderując obiektów, które nie są widoczne dla gracza, np. tych zablokowanych przez inne obiekty.\nUstawienia More Culling znajdują się w Ustawienia Wideo > More Culling"
+      },
+      {
+        "header": "Inne Mody Optymalizacyjne",
+        "paragraph": "Fabric Boosted zawiera kilka modów poprawiających wydajność, takich jak:\n Lithium - Optymalizacja fizyki gry, AI mobów\n FerriteCore - Zmniejsza zużycie pamięci RAM\nEntity Culling - Zatrzymuje renderowanie niewidocznych encji\nImmediatelyFast - Poprawia wydajność renderowania w trybie natychmiastowym.\nScalableLux - Poprawia wydajność aktualizacji oświetlenia\nKrypton - Optymalizuje stos sieciowy\nThreadTweak - Poprawia i dostosowuje harmonogramowanie wątków\nModernFix - Poprawia wydajność, zmniejsza zużycie pamięci i naprawia wiele błędów\nVery Many Players - Poprawia wydajność gry przy dużej liczbie graczy\nConcurrent Chunk Management Engine - Poprawia wydajność chunków\nNoismium - Optymalizuje wydajność generowania świata\nBadOptimizations - Zbiór głównie mikro-optymalizacji\nFaster Random - Do 100 razy szybsza implementacja generatora losowego\n\nTego typu mody działają w tle, optymalizując różne aspekty gry, zapewniając płynniejsze wrażenia bez konieczności dodatkowej konfiguracji."
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-3",
+    "slug": "shaders-setup",
+    "title": "Instrukcja Ustawiania Shaderów",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Shadery",
+    "coverImage": "/smc/assets/banners/shader.png",
+    "summary": "Przewodnik, jak pobrać i włączyć shadery.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Wprowadzenie",
+        "paragraph": "[Iris Shaders](https://modrinth.com/mod/iris) to mod, który pozwala na używanie shaderów w Minecrafcie. Shadery poprawiają jakość wizualną Minecrafta, dodając realistyczne oświetlenie, cienie i efekty. Ten przewodnik pomoże Ci pobrać i włączyć shadery w Fabric Boosted."
+      },
+      {
+        "header": "Pobieranie Shaderów",
+        "paragraph": "Aby pobrać shadery, przejdź do Instancji Fabric Boosted w Aplikacji Modrinth, przejdź do Zainstaluj zawartość, przełącz się do zakładki Shadery i pobierz Pakiet Shaderów, który wybierzesz.\nJeśli chcesz zainstalować Pakiety Shaderów spoza Aplikacji Modrinth, umieść pobrany plik .zip w folderze 'shaderpacks'.\nMożesz znaleźć ten folder, klikając trzy kropki, a następnie Otwórz Folder > shaderpacks."
+      },
+      {
+        "header": "Włączanie Shaderów",
+        "paragraph": "Aby włączyć shadery, przejdź do Ustawienia > Ustawienia Wideo > Pakiety Shaderów, wybierz pakiet shaderów z listy i kliknij Zastosuj."
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-4",
+    "slug": "adding-mods",
+    "title": "Dodawanie Modów",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Mody",
+    "coverImage": "/smc/assets/banners/add.png",
+    "summary": "Instrukcje dotyczące dodawania dodatkowych modów do Fabric Boosted.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Korzystanie z Aplikacji Modrinth",
+        "paragraph": "Aby dodać mody do Fabric Boosted, otwórz Aplikację Modrinth, wybierz swoją instancję Fabric Boosted i przejdź do zakładki 'Zainstaluj zawartość'. Stamtąd możesz przeglądać i instalować mody bezpośrednio z Modrinth.\nUwaga: Fabric Boosted nie aktualizuje automatycznie dodanych Modów, więc pamiętaj, aby ręcznie sprawdzać dostępność aktualizacji."
+      },
+      {
+        "header": "Ręczne Dodawanie Modów",
+        "paragraph": "Możesz również dodać mody ręcznie, umieszczając pliki .jar modów w folderze 'mods' Twojej instancji Fabric Boosted.\nAby uzyskać dostęp do tego folderu, otwórz Aplikację Modrinth, wybierz instancję Fabric Boosted, kliknij na trzy kropki i wybierz 'Otwórz Folder' > 'mods'."
+      },
+      {
+        "header": "Niekompatybilne Mody",
+        "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\nJeśli znajdziesz inne niekompatybilne mody, zgłoś je na naszym [Discordzie](https://discord.gg/uaX8D5jQp2)."
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-5",
+    "slug": "optifine-features",
+    "title": "Funkcje Optifine",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Optifine",
+    "coverImage": "/smc/assets/banners/opti.png",
+    "summary": "Przegląd funkcji Optifine",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Alternatywy dla Optifine",
+        "paragraph": "Shadery - [Iris Shaders](https://modrinth.com/mod/iris)\nDynamiczne Oświetlenie - [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights)\nZoom - [Logical Zoom](https://modrinth.com/mod/logical-zoom)\nPeleryny - [Capes Mod](https://modrinth.com/mod/capes)\nPołączone Tekstury - [Continuity](https://modrinth.com/mod/continuity)\nLepsza Trawa - [BetterGrassify](https://modrinth.com/mod/bettergrassify)\nNiestandardowe Niebo - [Skyboxify](https://modrinth.com/mod/skyboxify)\nAnimowane Tekstury - [Animatica](https://modrinth.com/mod/animatica)\nNiestandardowe Tekstury Encji - [Entity Texture Features](https://modrinth.com/mod/entitytexturefeatures)\nNiestandardowe Modele Encji - [Entity Model Features](https://modrinth.com/mod/entity-model-features)\nNiestandardowy Interfejs Graficzny - [OptiGUI](https://modrinth.com/mod/optigui)\nNiestandardowy Ekran Ładowania - [Puzzle](https://modrinth.com/mod/puzzle)"
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-6",
+    "slug": "qol-mods",
+    "title": "Mody Ułatwiające Życie (QoL)",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Mody",
+    "coverImage": "/smc/assets/banners/QoL.png",
+    "summary": "Przegląd modów ułatwiających życie (Quality of Life) zawartych w Fabric Boosted.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "W trakcie prac",
+        "paragraph": "Ta strona jest obecnie w trakcie opracowywania i zostanie wkrótce zaktualizowana."
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-7",
+    "slug": "world-hosting",
+    "title": "Hosting Świata",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Online",
+    "coverImage": "/smc/assets/banners/hosting.png",
+    "summary": "Przewodnik, jak grać w świat Minecrafta ze znajomymi.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "W trakcie prac",
+        "paragraph": "Ta strona jest obecnie w trakcie opracowywania i zostanie wkrótce zaktualizowana."
+      }
+    ]
+  },
+  {
+    "id": "wiki-pl-8",
+    "slug": "keybinds-and-controls",
+    "title": "Skróty Klawiszowe i Sterowanie",
+    "author": "5E8A",
+    "date": "2025-12-16",
+    "category": "Sterowanie",
+    "coverImage": "/smc/assets/banners/controls.png",
+    "summary": "Skróty klawiszowe i sterowanie dla Fabric Boosted.",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Zmienione ustawienia waniliowe",
+        "paragraph": "R - Przełącz perspektywę\nTryb Sprintu (Sprint Mode) - Przełączanie\nFOV - 88\nEfekty FOV (FOV Effects) - Wyłączone\nAuto Skok (Auto Jump) - Wyłączone\nEfekty Zniekształcenia (Distorion Effects) - Wyłączone\nPulsowanie Ciemności (Darkness Pulsing) - Wyłączone\nPrzechylenie Uszkodzeń (Damage Tilt) - 30%\nMonochromatyczne Logo (Monochrome Logo) - Włączone\nRozmycie Tła Menu (Menu Background Blur) - Wyłączone\nRozmiar Tekstu Chatu (Chat Text Size) - 60%\nSzerokość Chatu (Chat Width) - 215px"
+      },
+      {
+        "header": "Przydatne Skróty Klawiszowe Modów",
+        "paragraph": "L - Przełącza nakładkę Oświetlenia ([Lighty](https://modrinth.com/mod/lighty))\nC - Zoom Optifine ([Logical Zoom](https://modrinth.com/mod/logical-zoom))\nG - Przełącza Fullbright ([Full Brightness Toggle](https://modrinth.com/mod/full-brightness-toggle))\nM - Mapa Świata ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nN - Nowy punkt trasy ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nZ - Powiększenie Minimapy ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nX - Pełnoekranowa Minimapa ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nH - Pokaż/ukryj Trwałość Przedmiotu ([Durability Viewer](https://modrinth.com/mod/durability-viewer-updated))\n\nWięcej skrótów klawiszowych można znaleźć w menu Sterowanie (Controls)."
       }
     ]
   }

@@ -1,31 +1,30 @@
 [
   {
     "id": "1",
-    "slug": "community-benchmarks-december",
-    "title": "Community Benchmarks: December",
+    "slug": "Fabric-Boosted 1.21.11",
+    "title": "Fabric Boosted 1.21.11 Released!",
     "author": {
       "name": "5E8A",
       "bio": "Lead Developer of Fabric Boosted",
       "avatar": "/smc/assets/avatars/seba.png"
     },
-    "date": "15 Dec 2025",
-    "category": "Community",
-    "coverImage": "https://picsum.photos/seed/benchmark/800/400",
-    "summary": "See how the new update performs on different hardware configurations submitted by our community members.",
-    "carouselImages": ["https://picsum.photos/seed/chart1/800/450", "https://picsum.photos/seed/chart2/800/450"],
+    "date": "16 Dec 2025",
+    "category": "Updates",
+    "coverImage": "/smc/assets/posts/2.7.0-alpha1.webp",
+    "summary": "We are excited to announce the release of Fabric Boosted 2.7.0-Alpha1 which supports 1.21.11",
+    "carouselImages": [],
     "content": [
       {
-        "header": "Testing environment",
-        "paragraph": "All benchmarks were conducted using [GamerPotion's FPS Tester world](https://www.curseforge.com/minecraft/worlds/gamerpotions-fps-test), ensuring consistent settings across different hardware setups.\nResults captured using [CapFrameX](https://www.capframex.com/) for accurate frame time analysis."
+        "header": "Fabric Boosted 2.7.0-Alpha1 Release",
+        "paragraph": "We are excited to announce the release of [Fabric Boosted 2.7.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/2.7.0-Alpha1) which supports Minecraft 1.21.11"
       },
       {
-        "header": "Ryzen 5 7600X + NVIDIA RTX 3060",
-        "paragraph": "Average FPS of 2400, never dropping below 800 FPS.",
-        "image": "/smc/assets/posts/benchmark.webp"
+        "header": "Update Info",
+        "paragraph": "Note that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
       },
       {
-        "header": "High-End Limits",
-        "paragraph": "On an RTX 4090, we are seeing over 1200 FPS in vanilla terrain. With shaders enabled (Complimentary Reimagined), the pack maintains a solid 144 FPS."
+        "header": "",
+        "paragraph": ""
       }
     ]
   }
