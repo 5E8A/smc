@@ -1,4 +1,3 @@
-
 [
   {
     "id": "wiki-en-1",
@@ -12,19 +11,19 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "Installing Modrinth App",
+        "header": "📥 Installing Modrinth App",
         "paragraph": "To install [Modrinth App](https://modrinth.com/app), download it from the official website and follow the installation instructions."
       },
       {
-        "header": "Installing Fabric Boosted",
+        "header": "🚀 Installing Fabric Boosted",
         "paragraph": "Go to Discover content section in Modrinth App, and search for Fabric Boosted, and click Install."
       },
       {
-        "header": "Updating Fabric Boosted",
+        "header": "🔄 Updating Fabric Boosted",
         "paragraph": "To update Fabric Boosted, open Modrinth App, go to the Library tab, and click on Fabric Boosted instance, then click Update pack, if an update is available.\nMake sure to check Minecraft version when updating the pack."
       },
       {
-        "header": "Versioning",
+        "header": "📌 Versioning",
         "paragraph": "Fabric Boosted uses X.Y.Z versioning scheme, where:\nX - Major Minecraft Updates (1.19, 1.20 etc.)\nY - Minor Minecraft Updates (1.20.1, 1.20.2 etc.)\nZ - Fabric Boosted specific updates (mod updates, bug fixes etc.)\n\nWe also release Alpha and Beta versions named for example 2.6.0-Alpha5 or 2.6.0-Beta2\nBeta - Unstable Versions with some missing mods\nAlpha - Test Builds with many missing mods"
       }
     ]
@@ -34,31 +33,31 @@
     "slug": "performance-tweaks",
     "title": "Performance Tweaks",
     "author": "5E8A",
-    "date": "2025-12-16",
+    "date": "2025-12-18",
     "category": "Optimization",
     "coverImage": "/smc/assets/banners/wrench.png",
     "summary": "Maximize your FPS by tweaking specific options and JVM settings.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Allocating more RAM",
-        "paragraph": "If you have enough system RAM, we recommend allocating between 4GB to 6GB of RAM.\nTo do this in Modrinth App, open your Fabric Boosted instance, go to Settings > Java and memory, select Custom memory allocation, and set desired amount of RAM."
+        "header": "🧠 Allocating more RAM",
+        "paragraph": "If you have enough system RAM, we recommend allocating between 4GB to 6GB of RAM.\nTo do this in Modrinth App, open your Fabric Boosted instance, go to Settings > Java and memory, select Custom memory allocation, and set desired amount of RAM.\n2GB > 2048 MB\n4GB > 4096 MB\n6GB > 6144 MB\n8GB > 8192 MB"
       },
       {
-        "header": "Video Settings",
+        "header": "📺 Video Settings",
         "paragraph": "Render Distance - Deafult is set to 12 chunks, you can lower it for better performance.\nSimulation Distance - Deafult is set to 12 chunks, you can lower it for better performance.\nGraphics - Set to Fast for optimal performance.\nSmooth Lighting - Turned off.\nParticles - Set to Decreased, you can change it to Minimal for better performance.\nClouds - Turned off.\nEntity Distance - Set to 100%\nV-Sync - Turned off.\nEntity Shadows - Turned off.\nLeaves - Set to Fast.\nWeather - Set to Fast."
       },
-            {
-        "header": "Nvidium Mod",
+      {
+        "header": "🖼️ Nvidium Mod",
         "paragraph": "If you have an NVIDIA GPU (16 series or newer), Nvidium will keep more chunks loaded in GPU memory, improving expierience while moving around world without losing performance.\nNvidium settings is located in Video Settings > Nvidium\nDeafault is set to 256 Chunks, you can decrease it or completely disable it."
       },
       {
-        "header": "More Culling mod",
+        "header": "✂️ More Culling mod",
         "paragraph": "More Culling improves performance by not rendering objects that are not visible to the player, such as those blocked by other objects.\nMore Culling settings is located in Video Settings > More Culling"
       },
       {
-        "header": "Other Performance Mods",
-        "paragraph": "Fabric Boosted includes several performance enhancing mods such as:\n Lithium - Optimization to game physics, mob AI\n FerriteCore - Reduces RAM usage\nEntity Culling - Stops rendering invisible entities\nImmediatelyFast - Improves the immediate mode rendering performance.\nScalableLux - Improves the performance of light updates\nKrypton - Optimizes networking stack\nThreadTweak - Improves and tweaks thread scheduling\nModernFix - Improves performance, reduces memory usage, and fixes many bugs\nVery Many Players - Improves game performance at high playercounts\nConcurrent Chunk Management Engine - Improves chunk performance\nNoismium - Optimises world generation performance\nBadOptimizations - Collection of mostly micro optimizations\nFaster Random - Up to 100X faster Random Generator implementation\n\nThese mods work in the background to optimize various aspects of the game, providing a smoother experience without requiring any additional configuration."
+        "header": "🛠️ Other Performance Mods",
+        "paragraph": "Fabric Boosted includes several performance enhancing mods such as:\n[Lithium](https://modrinth.com/mod/lithium) - Optimization to game physics, mob AI\n[FerriteCore](https://modrinth.com/mod/ferrite-core) - Reduces RAM usage\n[Entity Culling](https://modrinth.com/mod/entityculling) - Stops rendering invisible entities\n[ImmediatelyFast](https://modrinth.com/mod/immediatelyfast) - Improves the immediate mode rendering performance.\n[ScalableLux](https://modrinth.com/mod/scalablelux) - Improves the performance of light updates\n[Krypton](https://modrinth.com/mod/krypton) - Optimizes networking stack\n[ThreadTweak](https://modrinth.com/mod/threadtweak) - Improves and tweaks thread scheduling\n[ModernFix](https://modrinth.com/mod/modernfix) - Improves performance, reduces memory usage, and fixes many bugs\n[Very Many Players](https://modrinth.com/mod/vmp-fabric) - Improves game performance at high playercounts\n[Concurrent Chunk Management Engine](https://modrinth.com/mod/c2me-fabric) - Improves chunk performance\n[Noismum](https://modrinth.com/mod/noisiumforked) - Optimises world generation performance\n[BadOptimizations](https://modrinth.com/mod/badoptimizations) - Collection of mostly micro optimizations\n[Faster Random](https://modrinth.com/mod/faster-random) - Up to 100X faster Random Generator implementation\n\nThese mods work in the background to optimize various aspects of the game, providing a smoother experience without requiring any additional configuration."
       }
     ]
   },
@@ -74,15 +73,15 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "Introduction",
+        "header": "📝 Introduction",
         "paragraph": "[Iris Shaders](https://modrinth.com/mod/iris) is a mod that allows you to use shaders in Minecraft. Shaders enhance the visual quality of Minecraft by adding realistic lighting, shadows, and effects. This guide will help you download and enable shaders in Fabric Boosted."
       },
       {
-        "header": "Downloading Shaders",
+        "header": "🌍 Downloading Shaders",
         "paragraph": "To download shaders go to Fabric Boosted Instance in Modrinth App, go to install content, switch to Shaders tab, and download Shader Pack of your choice.\nIf you want to install Shader Packs outside of Modrinth App, place the downloaded .zip file into the 'shaderpacks' folder.\nYou can find this folder by click three dots, then Open Folder > shaderpacks."
       },
       {
-        "header": "Enabling Shaders",
+        "header": "✨ Enabling Shaders",
         "paragraph": "To enable shaders, go to the Settings > Video Settings > Shaders Packs, and select a shader pack from the list and click Apply."
       }
     ]
@@ -99,15 +98,15 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "Using Modrinth App",
+        "header": "📱 Using Modrinth App",
         "paragraph": "To add mods to Fabric Boosted, open the Modrinth App, select your Fabric Boosted instance, and navigate to the 'Install Content' tab. From there, you can browse and install mods directly from Modrinth.\nNote: Fabric Boosted will not update automatically added Mods, so make sure to check for updates manually."
       },
       {
-        "header": "Manually Adding Mods",
+        "header": "📁 Manually Adding Mods",
         "paragraph": "You can also add mods manually by placing the mod .jar files into the 'mods' folder of your Fabric Boosted instance.\nTo access this folder, open Modrinth App, select your Fabric Boosted instance, click on the three dots, and choose 'Open Folder' > 'mods'."
       },
       {
-        "header": "Incompatible Mods",
+        "header": "⚠️ Incompatible Mods",
         "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\nIf you find any other incompatible mods, please report them on our [Discord](https://discord.gg/uaX8D5jQp2)."
       }
     ]
@@ -124,7 +123,7 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "Optifine Alternatives",
+        "header": "🔄 Optifine Alternatives",
         "paragraph": "Shaders - [Iris Shaders](https://modrinth.com/mod/iris)\nDynamic Lighting - [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights)\nZoom - [Logical Zoom](https://modrinth.com/mod/logical-zoom)\nCapes - [Capes Mod](https://modrinth.com/mod/capes)\nConnected Textures - [Continuity](https://modrinth.com/mod/continuity)\nBetter Grass- [BetterGrassify](https://modrinth.com/mod/bettergrassify)\nCustom Sky - [Skyboxify](https://modrinth.com/mod/skyboxify)\nAnimated Textures - [Animatica](https://modrinth.com/mod/animatica)\nCustom Entities Textures - [Entity Texture Features](https://modrinth.com/mod/entitytexturefeatures)\nCustom Entity Models - [Entity Model Features](https://modrinth.com/mod/entity-model-features)\nCustom GUI - [OptiGUI](https://modrinth.com/mod/optigui)\nCustom Loading Screen - [Puzzle](https://modrinth.com/mod/puzzle)"
       }
     ]
@@ -134,15 +133,15 @@
     "slug": "qol-mods",
     "title": "Quality of Life Mods",
     "author": "5E8A",
-    "date": "2025-12-16",
+    "date": "2025-12-19",
     "category": "Mods",
     "coverImage": "/smc/assets/banners/QoL.png",
     "summary": "Overview of Quality of Life mods included in Fabric Boosted.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Work in Progress",
-        "paragraph": "This page is currently being worked on and will be updated soon."
+        "header": "🌟 Quality of Life Mods",
+        "paragraph": "[Appleskin](https://modrinth.com/mod/appleskin) - Shows food hunger and saturation values\n[Auth me](https://modrinth.com/mod/auth-me) - Account authentication in game and offline mode\n[Bobby](https://modrinth.com/mod/bobby) - Allow render distances greater than server's set\n[Chat Heads](https://modrinth.com/mod/chat-heads) - Shows player heads in chat messages\n[Durability Viewer](https://modrinth.com/mod/durability-viewer-updated) - Displays armor durability on HUD\n[Don't Clear Chat History](https://modrinth.com/mod/dcch) - disables clearing chat history when on relog\n[Essential](https://modrinth.com/mod/essential) - Better screenshots, cosmetics & free server hosting\n[Fast Quit](https://modrinth.com/mod/fastquit) - Saves world in background when quitting\n[Full Brightness Toggle](https://modrinth.com/mod/full-brightness-toggle) - Toggles fullbright\n[Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf) - Damage Indicator on HUD\n[EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) - Instantly closes loading terrain screen\n[Lighty](https://modrinth.com/mod/lighty) - Shows light level overlay on blocks\n[No Chat Reports](https://modrinth.com/mod/no-chat-reports) - Makes chat unreportable\n[Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) - After crash gives a way to keep playing\n[More Chat History](https://modrinth.com/mod/morechathistory) - Increases the maximum length of chat history\n[Ping View](https://modrinth.com/mod/ping-view) - Shows player ping in tab list\n[Remove Reloading Screen](https://modrinth.com/mod/rrls) - Makes resource packs load in the background\n[Roughly Enough Items](https://modrinth.com/mod/roughlyenoughitems) - Provides all item list and recipes\n[Shulker box Tooltip](https://modrinth.com/mod/shulkerboxtooltip) - Shows shulker box contents in tooltip\n[Smooth Skies](https://modrinth.com/mod/smooth-skies) - Smooths out the skybox colors on far render distances\n[Talk Balloons](https://modrinth.com/mod/talk-balloons) - Adds bubbles above your head when you chat\n[VoxelMap](https://modrinth.com/mod/voxelmap-updated) - Minimap and Worldmap with waypoints"
       }
     ]
   },
@@ -151,15 +150,19 @@
     "slug": "world-hosting",
     "title": "World Hosting",
     "author": "5E8A",
-    "date": "2025-12-16",
+    "date": "2025-12-18",
     "category": "Online",
     "coverImage": "/smc/assets/banners/hosting.png",
     "summary": "Guide on how to play your Minecraft world with friends.",
     "carouselImages": [],
     "content": [
       {
-        "header": "Work in Progress",
-        "paragraph": "This page is currently being worked on and will be updated soon."
+        "header": "👥 Adding a friend",
+        "paragraph": "Add your friend using [Essential Mod](https://modrinth.com/mod/essential).\nIn Main Menu on the right side click Social > Add friend > [your friend's username] > Add\nThen your friend needs to accept invitation."
+      },
+      {
+        "header": "🏡 Hosting a world",
+        "paragraph": "Method 1 - To host a world, click 'Host' in the main menu, select world you want to host, set desired options, click next and invite your friend from the list, and click 'Host World', then your friend have to accept the invitation and will join your world.\n\nMethod 2 -  Open your world, pause the game, click 'Invite', set desired options, click next and invite your friend from the list and click 'Done', then your friend have to accept the invitation and will join your world."
       }
     ]
   },
@@ -175,11 +178,11 @@
     "carouselImages": [],
     "content": [
       {
-        "header": "Changed Vanilla settings",
+        "header": "⚙️ Changed Vanilla settings",
         "paragraph": "R - Toggle Perspective\nSprint Mode - Toggle\nFOV - 88\nFOV Effects - Off\nAuto Jump - Off\nDistorion Effects - Off\nDarkness Pulsing - Off\nDamage Tilt - 30%\nMonochrome Logo - On\nMenu Background Blur - Off\nChat Text Size - 60%\nChat Width - 215px"
       },
       {
-        "header": "Useful Mods Keybinds",
+        "header": "⌨️ Useful Mods Keybinds",
         "paragraph": "L - Toggles Light overlay ([Lighty](https://modrinth.com/mod/lighty))\nC - Optifine Zoom ([Logical Zoom](https://modrinth.com/mod/logical-zoom))\nG - Fullbright toggle ([Full Brightness Toggle](https://modrinth.com/mod/full-brightness-toggle))\nM - World Map ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nN - New waypoint ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nZ - Minimap Zoom ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nX - Fullscreen Minimap ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))\nH - Show/hide Item Durability ([Durability Viewer](https://modrinth.com/mod/durability-viewer-updated))\n\nMore keybinds can be found in Controls menu."
       }
     ]
