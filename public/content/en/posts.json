@@ -27,5 +27,34 @@
         "paragraph": ""
       }
     ]
+  },
+  {
+    "id": "2",
+    "slug": "30k-Downloads-Milestone",
+    "title": "30k Downloads Milestone!",
+    "author": {
+      "name": "5E8A",
+      "bio": "Lead Developer of Fabric Boosted",
+      "avatar": "/smc/assets/avatars/seba.png"
+    },
+    "date": "11 Dec 2026",
+    "category": "Announcements",
+    "coverImage": "/smc/assets/posts/30k.webp",
+    "summary": "We are excited to announce that Fabric Boosted has reached 30,000 downloads on Modrinth!",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "30,000 Downloads!",
+        "paragraph": "We are thrilled to announce that Fabric Boosted has reached a milestone of 30,000 downloads on Modrinth! This achievement reflects the incredible support and enthusiasm from our community. We want to extend our heartfelt thanks to each and every one of you for being part of this journey."
+      },
+      {
+        "header": "Looking Ahead",
+        "paragraph": "We are excited to continue improving Fabric Boosted and bringing you more updates in the future. Stay tuned for more exciting content!"
+      },
+      {
+        "header": "",
+        "paragraph": ""
+      }
+    ]
   }
 ]

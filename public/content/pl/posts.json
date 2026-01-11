@@ -27,5 +27,30 @@
         "paragraph": ""
       }
     ]
+  },
+  {
+    "id": "2",
+    "slug": "30k-pobran-milestone",
+    "title": "Kamień milowy: 30 000 pobrań!",
+    "author": {
+      "name": "5E8A",
+      "bio": "Główny deweloper Fabric Boosted",
+      "avatar": "/smc/assets/avatars/seba.png"
+    },
+    "date": "11 Gru 2026",
+    "category": "Ogłoszenia",
+    "coverImage": "/smc/assets/posts/30k.webp",
+    "summary": "Z radością ogłaszamy, że Fabric Boosted osiągnął 30 000 pobrań w serwisie Modrinth!",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "30 000 pobrań!",
+        "paragraph": "Z wielką radością ogłaszamy, że Fabric Boosted osiągnął kamień milowy w postaci 30 000 pobrań na Modrinth! To osiągnięcie odzwierciedla niesamowite wsparcie i entuzjazm naszej społeczności. Chcielibyśmy serdecznie podziękować każdemu z Was za bycie częścią tej przygody."
+      },
+      {
+        "header": "Spojrzenie w przyszłość",
+        "paragraph": "Jesteśmy podekscytowani możliwością dalszego udoskonalania Fabric Boosted i dostarczania kolejnych aktualizacji w przyszłości. Bądźcie czujni, nadchodzi więcej ciekawej zawartości!"
+      }
+    ]
   }
 ]
