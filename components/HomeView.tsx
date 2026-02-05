@@ -54,7 +54,7 @@ const HomeView: React.FC = () => {
 
         <div className="absolute inset-0 bg-[url('/smc/assets/static/background.webp')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 flex flex-col items-start justify-center min-h-[60vh] z-10">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-start justify-center min-h-[60vh] z-10">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-mc-accent/10 border border-mc-accent/20 mb-8 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-mc-accent mr-2 animate-pulse"></span>
             <span className="text-mc-accent text-sm font-semibold tracking-wide uppercase">{renderHeroTag()}</span>
@@ -77,6 +77,23 @@ const HomeView: React.FC = () => {
               <span>{t.hero.wiki}</span>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Ad Banner */}
+      <section className="w-full bg-[#050505] py-6 flex justify-center overflow-hidden border-y border-white/5">
+        <div className="w-full max-w-[1920px] px-4 sm:px-6 lg:px-8">
+          <a href="https://billing.sparkedhost.com/aff.php?aff=3127" target="_blank" rel="noopener noreferrer" className="relative block w-full rounded-xl overflow-hidden bg-mc-surface/30 border border-white/10 group transition-all duration-300 hover:border-mc-accent/40 hover:scale-[1.01] cursor-pointer isolate transform-gpu" style={{ aspectRatio: "1920 / 300" }}>
+            {/* Banner Image */}
+            <img src="/smc/assets/static/Artboard_3.png" alt="Sponsored Content" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+
+            {/* Ad Badge */}
+            <div className="absolute top-0 right-0 p-2">
+              <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/30 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-bl border-l border-b border-white/5">AD</span>
+            </div>
+          </a>
         </div>
       </section>
 
