@@ -33,7 +33,7 @@
     "slug": "performance-tweaks",
     "title": "Ustawienia Wydajności",
     "author": "5E8A",
-    "date": "2025-12-18",
+    "date": "2026-02-20",
     "category": "Optymalizacja",
     "coverImage": "/smc/assets/banners/wrench.png",
     "summary": "Maksymalizuj swoje FPS, dostosowując określone opcje i ustawienia JVM.",
@@ -45,7 +45,7 @@
       },
       {
         "header": "📺 Ustawienia Wideo",
-        "paragraph": "Render Distance - Domyślnie ustawione na 12 chunków, możesz je zmniejszyć dla lepszej wydajności.\nSimulation Distance - Domyślnie ustawione na 12 chunków, możesz je zmniejszyć dla lepszej wydajności.\nGraphics - Ustaw na Fast dla optymalnej wydajności.\nSmooth Lighting - Wyłączone.\nParticles - Ustawione na Decreased, możesz zmienić na Minimal dla lepszej wydajności.\nClouds - Wyłączone.\nEntity Distance - Ustawione na 100%\nV-Sync - Wyłączone.\nEntity Shadows - Wyłączone.\nLeaves - Ustawione na Fast.\nWeather - Ustawione na Fast."
+        "paragraph": "Render Distance - Domyślnie ustawione na 12 chunków, możesz je zmniejszyć dla lepszej wydajności.\nSimulation Distance - Domyślnie ustawione na 12 chunków, możesz je zmniejszyć dla lepszej wydajności.\nGraphics - Ustawione na Fast dla optymalnej wydajności.\nSmooth Lighting - Wyłączone.\nParticles - Ustawione na Decreased, możesz zmienić na Minimal dla lepszej wydajności.\nClouds - Wyłączone.\nEntity Distance - Ustawione na 100%\nV-Sync - Wyłączone.\nEntity Shadows - Wyłączone.\nLeaves - Ustawione na Fast.\nWeather - Ustawione na Fast."
       },
       {
         "header": "🖼️ Mod Nvidium",
@@ -57,7 +57,7 @@
       },
       {
         "header": "🛠️ Inne Mody Wydajnościowe",
-        "paragraph": "Fabric Boosted zawiera kilka modów zwiększających wydajność, takich jak:\n[Lithium](https://modrinth.com/mod/lithium) - Optymalizacja fizyki gry i AI mobów\n[FerriteCore](https://modrinth.com/mod/ferrite-core) - Zmniejsza zużycie RAM\n[Entity Culling](https://modrinth.com/mod/entityculling) - Przestaje renderować niewidoczne jednostki\n[ImmediatelyFast](https://modrinth.com/mod/immediatelyfast) - Poprawia wydajność renderowania w trybie natychmiastowym.\n[ScalableLux](https://modrinth.com/mod/scalablelux) - Poprawia wydajność aktualizacji światła\n[Krypton](https://modrinth.com/mod/krypton) - Optymalizuje stos sieciowy\n[ThreadTweak](https://modrinth.com/mod/threadtweak) - Poprawia i dostosowuje harmonogramowanie wątków\n[ModernFix](https://modrinth.com/mod/modernfix) - Poprawia wydajność, zmniejsza zużycie pamięci i naprawia wiele błędów\n[Very Many Players](https://modrinth.com/mod/vmp-fabric) - Poprawia wydajność gry przy dużej liczbie graczy\n[Concurrent Chunk Management Engine](https://modrinth.com/mod/c2me-fabric) - Poprawia wydajność chunków\n[Noismum](https://modrinth.com/mod/noisiumforked) - Optymalizuje wydajność generowania świata\n[BadOptimizations](https://modrinth.com/mod/badoptimizations) - Kolekcja głównie mikro-optymalizacji\n[Faster Random](https://modrinth.com/mod/faster-random) - Do 100 razy szybsza implementacja generatora losowego\n[Better Block Entities](https://modrinth.com/mod/better-block-entities) - Poprawia wydajność renderowania skrzynek, tabliczek, łóżek itp.\n\nTe mody działają w tle, aby optymalizować różne aspekty gry, zapewniając płynniejsze działanie bez konieczności dodatkowej konfiguracji."
+        "paragraph": "Fabric Boosted zawiera kilka modów zwiększających wydajność, takich jak:\n[Lithium](https://modrinth.com/mod/lithium) - Optymalizacja fizyki gry i AI mobów\n[FerriteCore](https://modrinth.com/mod/ferrite-core) - Zmniejsza zużycie RAM\n[Entity Culling](https://modrinth.com/mod/entityculling) - Przestaje renderować niewidoczne jednostki\n[ImmediatelyFast](https://modrinth.com/mod/immediatelyfast) - Poprawia wydajność renderowania w trybie natychmiastowym.\n[ScalableLux](https://modrinth.com/mod/scalablelux) - Poprawia wydajność aktualizacji światła\n[Krypton](https://modrinth.com/mod/krypton) - Optymalizuje stos sieciowy\n[ThreadTweak](https://modrinth.com/mod/threadtweak) - Poprawia i dostosowuje harmonogramowanie wątków\n[ModernFix](https://modrinth.com/mod/modernfix) - Poprawia wydajność, zmniejsza zużycie pamięci i naprawia wiele błędów\n[Very Many Players](https://modrinth.com/mod/vmp-fabric) - Poprawia wydajność gry przy dużej liczbie graczy\n[Concurrent Chunk Management Engine](https://modrinth.com/mod/c2me-fabric) - Poprawia wydajność chunków\n[Fast Noise](https://modrinth.com/mod/zfastnoise) - Optymalizuje wydajność generowania świata\n[BadOptimizations](https://modrinth.com/mod/badoptimizations) - Kolekcja głównie mikro-optymalizacji\n[Better Block Entities](https://modrinth.com/mod/better-block-entities) - Poprawia wydajność renderowania skrzynek, tabliczek, łóżek itp.\n\nTe mody działają w tle, aby optymalizować różne aspekty gry, zapewniając płynniejsze działanie bez konieczności dodatkowej konfiguracji."
       }
     ]
   },
@@ -91,7 +91,7 @@
     "slug": "adding-mods",
     "title": "Dodawanie Modów",
     "author": "5E8A",
-    "date": "2025-12-16",
+    "date": "2026-02-20",
     "category": "Mods",
     "coverImage": "/smc/assets/banners/add.png",
     "summary": "Instrukcje, jak dodać dodatkowe mody do Fabric Boosted.",
@@ -107,7 +107,7 @@
       },
       {
         "header": "⚠️ Niekompatybilne Mody",
-        "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\n- Fast Noise\nJeśli znajdziesz inne niekompatybilne mody, zgłoś je na naszym [Discord](https://discord.gg/uaX8D5jQp2)."
+        "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\n- NoisiumForked\nJeśli znajdziesz inne niekompatybilne mody, zgłoś je na naszym [Discord](https://discord.gg/uaX8D5jQp2)."
       }
     ]
   },
