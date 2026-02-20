@@ -33,7 +33,7 @@
     "slug": "performance-tweaks",
     "title": "Performance Tweaks",
     "author": "5E8A",
-    "date": "2025-12-18",
+    "date": "2026-02-20",
     "category": "Optimization",
     "coverImage": "/smc/assets/banners/wrench.png",
     "summary": "Maximize your FPS by tweaking specific options and JVM settings.",
@@ -57,7 +57,7 @@
       },
       {
         "header": "🛠️ Other Performance Mods",
-        "paragraph": "Fabric Boosted includes several performance enhancing mods such as:\n[Lithium](https://modrinth.com/mod/lithium) - Optimization to game physics, mob AI\n[FerriteCore](https://modrinth.com/mod/ferrite-core) - Reduces RAM usage\n[Entity Culling](https://modrinth.com/mod/entityculling) - Stops rendering invisible entities\n[ImmediatelyFast](https://modrinth.com/mod/immediatelyfast) - Improves the immediate mode rendering performance.\n[ScalableLux](https://modrinth.com/mod/scalablelux) - Improves the performance of light updates\n[Krypton](https://modrinth.com/mod/krypton) - Optimizes networking stack\n[ThreadTweak](https://modrinth.com/mod/threadtweak) - Improves and tweaks thread scheduling\n[ModernFix](https://modrinth.com/mod/modernfix) - Improves performance, reduces memory usage, and fixes many bugs\n[Very Many Players](https://modrinth.com/mod/vmp-fabric) - Improves game performance at high playercounts\n[Concurrent Chunk Management Engine](https://modrinth.com/mod/c2me-fabric) - Improves chunk performance\n[Noismum](https://modrinth.com/mod/noisiumforked) - Optimises world generation performance\n[BadOptimizations](https://modrinth.com/mod/badoptimizations) - Collection of mostly micro optimizations\n[Faster Random](https://modrinth.com/mod/faster-random) - Up to 100X faster Random Generator implementation\n[Better Block Entities](https://modrinth.com/mod/better-block-entities) - Improves Block Entity Rendering\n\nThese mods work in the background to optimize various aspects of the game, providing a smoother experience without requiring any additional configuration."
+        "paragraph": "Fabric Boosted includes several performance enhancing mods such as:\n[Lithium](https://modrinth.com/mod/lithium) - Optimization to game physics, mob AI\n[FerriteCore](https://modrinth.com/mod/ferrite-core) - Reduces RAM usage\n[Entity Culling](https://modrinth.com/mod/entityculling) - Stops rendering invisible entities\n[ImmediatelyFast](https://modrinth.com/mod/immediatelyfast) - Improves the immediate mode rendering performance.\n[ScalableLux](https://modrinth.com/mod/scalablelux) - Improves the performance of light updates\n[Krypton](https://modrinth.com/mod/krypton) - Optimizes networking stack\n[ThreadTweak](https://modrinth.com/mod/threadtweak) - Improves and tweaks thread scheduling\n[ModernFix](https://modrinth.com/mod/modernfix) - Improves performance, reduces memory usage, and fixes many bugs\n[Very Many Players](https://modrinth.com/mod/vmp-fabric) - Improves game performance at high playercounts\n[Concurrent Chunk Management Engine](https://modrinth.com/mod/c2me-fabric) - Improves chunk performance\n[Fast Noise](https://modrinth.com/mod/zfastnoise) - Optimises world generation performance\n[BadOptimizations](https://modrinth.com/mod/badoptimizations) - Collection of mostly micro optimizations\n[Better Block Entities](https://modrinth.com/mod/better-block-entities) - Improves Block Entity Rendering\n\nThese mods work in the background to optimize various aspects of the game, providing a smoother experience without requiring any additional configuration."
       }
     ]
   },
@@ -91,7 +91,7 @@
     "slug": "adding-mods",
     "title": "Adding Mods",
     "author": "5E8A",
-    "date": "2025-12-16",
+    "date": "2026-02-20",
     "category": "Mods",
     "coverImage": "/smc/assets/banners/add.png",
     "summary": "Instructions on how to add additional mods to Fabric Boosted.",
@@ -107,7 +107,7 @@
       },
       {
         "header": "⚠️ Incompatible Mods",
-        "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\n- Fast Noise\nIf you find any other incompatible mods, please report them on our [Discord](https://discord.gg/uaX8D5jQp2)."
+        "paragraph": "- VulkanMod\n- OptiFabric\n- Embeddium\n- NoisiumForked\nIf you find any other incompatible mods, please report them on our [Discord](https://discord.gg/uaX8D5jQp2)."
       }
     ]
   },
