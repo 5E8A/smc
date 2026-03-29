@@ -50,10 +50,31 @@
       {
         "header": "Looking Ahead",
         "paragraph": "We are excited to continue improving Fabric Boosted and bringing you more updates in the future. Stay tuned for more exciting content!"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "slug": "Fabric-Boosted 26.1",
+    "title": "Fabric Boosted 26.1 Released!",
+    "author": {
+      "name": "5E8A",
+      "bio": "Lead Developer of Fabric Boosted",
+      "avatar": "/smc/assets/avatars/seba.png"
+    },
+    "date": "30 Mar 2026",
+    "category": "Updates",
+    "coverImage": "/smc/assets/posts/3.0.0-alpha1.webp",
+    "summary": "We are excited to announce the release of Fabric Boosted 3.0.0-Alpha1 which supports 26.1",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Fabric Boosted 3.0.0-Alpha1 Release",
+        "paragraph": "We are excited to announce the release of [Fabric Boosted 3.0.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.0.0-Alpha1) which supports Minecraft 26.1"
       },
       {
-        "header": "",
-        "paragraph": ""
+        "header": "Update Info",
+        "paragraph": "Note that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
       }
     ]
   }
