@@ -61,12 +61,37 @@
     "date": "30 Mar 2026",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/posts/3.0.0-alpha1.webp",
-    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 2.7.0-Alpha1, który obsługuje wersję 26.1",
+    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.0.0-Alpha1, który obsługuje wersję 26.1",
     "carouselImages": [],
     "content": [
       {
         "header": "Wydanie Fabric Boosted 3.0.0-Alpha1",
-        "paragraph": "Z radością ogłaszamy wydanie [Fabric Boosted 3.0.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.0.0-Alpha1), która obsługuje Minecraft 1.21.11"
+        "paragraph": "Z radością ogłaszamy wydanie [Fabric Boosted 3.0.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.0.0-Alpha1), która obsługuje Minecraft 26.1"
+      },
+      {
+        "header": "Informacje o Aktualizacji",
+        "paragraph": "Pamiętaj, że jest to wydanie Alpha, co oznacza, że niektóre mody mogą być niekompletne lub niestabilne.\nZalecamy wykonanie kopii zapasowej światów przed aktualizacją. Aktualizacji możesz dokonać za pośrednictwem Aplikacji Modrinth, wybierając instancję Fabric Boosted i klikając 'Aktualizuj paczkę'."
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "slug": "Fabric-Boosted 26.2",
+    "title": "Fabric Boosted 26.2 Wydany!",
+    "author": {
+      "name": "5E8A",
+      "bio": "Lead Developer of Fabric Boosted",
+      "avatar": "/smc/assets/avatars/seba.png"
+    },
+    "date": "18 Cze 2026",
+    "category": "Aktualizacje",
+    "coverImage": "/smc/assets/posts/3.3.0-alpha1.webp",
+    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.3.0-Alpha1, który obsługuje wersję 26.2",
+    "carouselImages": [],
+    "content": [
+      {
+        "header": "Wydanie Fabric Boosted 3.3.0-Alpha1",
+        "paragraph": "Z radością ogłaszamy wydanie [Fabric Boosted 3.3.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.3.0-Alpha1), która obsługuje Minecraft 26.2"
       },
       {
         "header": "Informacje o Aktualizacji",
