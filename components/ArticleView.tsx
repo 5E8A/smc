@@ -26,7 +26,7 @@ const ArticleView: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-mc-bg bg-deepslate flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-mc-accent animate-spin" />
+        <Loader2 className="w-12 h-12 text-mc-green animate-spin" />
       </div>
     );
   }
@@ -43,7 +43,7 @@ const ArticleView: React.FC = () => {
         <img src={post.coverImage} className="w-full h-full object-cover opacity-60" alt="Cover" />
 
         <div className="absolute inset-0 flex flex-col justify-end items-center pb-20 z-20 px-4">
-          <span className="px-4 py-1 mb-6 rounded-full bg-mc-accent/10 border border-mc-accent/20 text-mc-accent text-sm font-bold uppercase tracking-wider backdrop-blur-md">{post.category}</span>
+          <span className="px-4 py-1 mb-6 rounded-full bg-mc-green/10 border border-mc-green/20 text-mc-green text-sm font-bold uppercase tracking-wider backdrop-blur-md">{post.category}</span>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center max-w-4xl leading-tight">{post.title}</h1>
           <div className="flex items-center space-x-6 text-mc-textMuted text-sm font-medium">
             <div className="flex items-center">
@@ -86,7 +86,7 @@ const ArticleView: React.FC = () => {
               <div key={index} className="mb-12">
                 {block.header && (
                   <h2 className="text-3xl font-bold text-white mb-6 flex items-center">
-                    <span className="w-1 h-8 bg-mc-accent rounded-full mr-4"></span>
+                    <span className="w-1 h-8 bg-mc-green rounded-full mr-4"></span>
                     {block.header}
                   </h2>
                 )}

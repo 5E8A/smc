@@ -25,7 +25,7 @@ const WikiDocView: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-mc-bg bg-deepslate flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-mc-accent animate-spin" />
+        <Loader2 className="w-12 h-12 text-mc-green animate-spin" />
       </div>
     );
   }
