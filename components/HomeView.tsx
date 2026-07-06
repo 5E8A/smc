@@ -60,8 +60,8 @@ const HomeView: React.FC = () => {
             <span className="text-mc-green text-sm font-semibold tracking-wide uppercase">{renderHeroTag()}</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-mc text-white mb-6 font-pixel-shadow leading-none tracking-tight scale-75 origin-left">
-            <img src="/smc/assets/static/banner2.png"></img>
+          <h1 className="leading-none tracking-tight scale-75 origin-left">
+            <img src="/smc/assets/static/banner2.webp"></img>
           </h1>
 
           <p className="max-w-xl text-lg text-mc-textMuted mb-10 leading-relaxed font-sans">{t.hero.description}</p>
