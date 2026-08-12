@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { LinkProps, useNavigate, useRouter } from "@tanstack/react-router";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 
 interface BackButtonProps {
   fallbackTo: LinkProps["to"];

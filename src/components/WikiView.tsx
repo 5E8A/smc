@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchWikiDocs } from "../data/wiki";
 import { WikiDoc } from "../types";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Search, Book, ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import SmartImage from "./SmartImage";

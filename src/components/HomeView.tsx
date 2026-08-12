@@ -3,7 +3,7 @@ import { fetchRecentPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
 import { Zap, Cpu, MemoryStick, ChevronRight, Loader2 } from "lucide-react";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Link } from "@tanstack/react-router";
 import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";

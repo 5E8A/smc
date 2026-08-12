@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "@tanstack/react-router";
 import { Calendar /*User*/ } from "lucide-react";
 import { BlogPost } from "../types";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
 
 interface PostCardProps {
