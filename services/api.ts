@@ -1,26 +1,53 @@
-import axios from "axios";
 import { VersionData } from "@/types";
 
-const discordAPI = axios.create({
-  baseURL: "https://discord.com/api/v10",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const REQUEST_TIMEOUT_MS = 10000;
 
-const modrinthAPI = axios.create({
-  baseURL: "https://api.modrinth.com/v2",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const DISCORD_BASE_URL = "https://discord.com/api/v10";
+const MODRINTH_BASE_URL = "https://api.modrinth.com/v2";
 
-let discordMembersCache = null;
+interface ModrinthProject {
+  downloads: number;
+  versions: string[];
+}
+
+interface ModrinthVersion {
+  version_number: string;
+  game_versions: string[];
+}
+
+const request = async <T>(baseUrl: string, path: string, params?: Record<string, string | number | boolean>): Promise<T> => {
+  const url = new URL(path, baseUrl);
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, String(value)));
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url.toString(), {
+      signal: controller.signal,
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request to ${url.toString()} failed with status ${response.status}`);
+    }
+
+    return (await response.json()) as T;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
+let discordMembersCache: number | null = null;
 export const getActiveDiscordMembers = async (): Promise<number> => {
   if (discordMembersCache !== null) return discordMembersCache;
   try {
-    const response = await discordAPI.get("/invites/uaX8D5jQp2", { params: { with_counts: true } });
-    discordMembersCache = response.data.approximate_member_count;
+    const data = await request<{ approximate_member_count: number }>(DISCORD_BASE_URL, "/invites/uaX8D5jQp2", {
+      with_counts: true,
+    });
+    discordMembersCache = data.approximate_member_count;
     return discordMembersCache;
   } catch (error) {
     console.error("Error fetching Discord members:", error);
@@ -28,12 +55,11 @@ export const getActiveDiscordMembers = async (): Promise<number> => {
   }
 };
 
-let projectCache = null;
-const getProjectData = async (id: string): Promise<any> => {
+let projectCache: ModrinthProject | null = null;
+const getProjectData = async (id: string): Promise<ModrinthProject | null> => {
   if (projectCache !== null) return projectCache;
   try {
-    const response = await modrinthAPI.get(`/project/${id}`);
-    projectCache = response.data;
+    projectCache = await request<ModrinthProject>(MODRINTH_BASE_URL, `/project/${id}`);
     return projectCache;
   } catch (error) {
     console.error("Error fetching project data:", error);
@@ -48,8 +74,11 @@ export const getLatestVersionData = async (id: string): Promise<VersionData | nu
     const projectData = await getProjectData(id);
     if (projectData && projectData.versions && projectData.versions.length > 0) {
       try {
-        const response = await modrinthAPI.get(`/version/${projectData.versions[projectData.versions.length - 1]}`);
-        verCache = { version_number: response.data.version_number, game_version: response.data.game_versions[0] };
+        const version = await request<ModrinthVersion>(
+          MODRINTH_BASE_URL,
+          `/version/${projectData.versions[projectData.versions.length - 1]}`
+        );
+        verCache = { version_number: version.version_number, game_version: version.game_versions[0] };
         return verCache;
       } catch (error) {
         console.error("Error fetching version data:", error);
@@ -63,7 +92,7 @@ export const getLatestVersionData = async (id: string): Promise<VersionData | nu
   }
 };
 
-let downloadsCache = null;
+let downloadsCache: number | null = null;
 export const getTotalDownloads = async (id: string): Promise<number> => {
   if (downloadsCache !== null) return downloadsCache;
   try {
@@ -72,6 +101,7 @@ export const getTotalDownloads = async (id: string): Promise<number> => {
       downloadsCache = projectData.downloads;
       return downloadsCache;
     }
+    return 0;
   } catch (error) {
     console.error("Error fetching total downloads:", error);
     return 0;
