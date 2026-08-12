@@ -25,27 +25,27 @@ const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/archive.lazy').then((d) => d.Route))
 const PostSlugRoute = PostSlugRouteImport.update({
   id: '/post/$slug',
   path: '/post/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/post.$slug.lazy').then((d) => d.Route))
 const WikiIndexRoute = WikiIndexRouteImport.update({
   id: '/wiki/',
   path: '/wiki/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/wiki/index.lazy').then((d) => d.Route))
 const WikiSlugRoute = WikiSlugRouteImport.update({
   id: '/wiki/$slug',
   path: '/wiki/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/wiki.$slug.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
