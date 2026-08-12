@@ -31,24 +31,28 @@ const Navbar: React.FC = () => {
             <div className="flex items-center space-x-1 bg-mc-surface/50 p-1 rounded-lg border border-white/5 mr-6">
               <Link
                 to="/"
+                preload="intent"
                 className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.home}</span>
               </Link>
               <Link
                 to="/archive"
+                preload="intent"
                 className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.archive}</span>
               </Link>
               <Link
                 to="/wiki"
+                preload="intent"
                 className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.wiki}</span>
               </Link>
               <Link
                 to="/about"
+                preload="intent"
                 className="text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 {t.nav.about}
@@ -104,6 +108,7 @@ const Navbar: React.FC = () => {
           <div className="px-4 pt-2 pb-6 space-y-2">
             <Link
               to="/"
+              preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >
@@ -111,6 +116,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               to="/archive"
+              preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >
@@ -118,6 +124,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               to="/wiki"
+              preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >
@@ -125,6 +132,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               to="/about"
+              preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-mc-text-muted hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >

@@ -73,7 +73,7 @@ const HomeView: React.FC = () => {
               <span>{t.hero.read_updates}</span>
               <ChevronRight className="w-5 h-5 ml-2" />
             </a>
-            <Link to="/wiki" className="btn-mc-stone px-8 py-3 rounded text-center">
+            <Link to="/wiki" preload="intent" className="btn-mc-stone px-8 py-3 rounded text-center">
               <span>{t.hero.wiki}</span>
             </Link>
           </div>
@@ -153,6 +153,7 @@ const HomeView: React.FC = () => {
             </div>
             <Link
               to="/archive"
+              preload="intent"
               className="hidden md:flex items-center font-medium text-mc-accent hover:text-white transition-colors mt-4 md:mt-0"
             >
               {t.latest.view_archive} <ChevronRight className="w-4 h-4 ml-1" />

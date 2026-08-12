@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
                 </a>
               </li>
               <li>
-                <Link to="/wiki" className="hover:text-mc-accent transition-colors">
+                <Link to="/wiki" preload="intent" className="hover:text-mc-accent transition-colors">
                   {t.hero.wiki}
                 </Link>
               </li>

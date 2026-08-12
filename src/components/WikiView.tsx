@@ -67,6 +67,7 @@ const WikiView: React.FC = () => {
                 key={doc.id}
                 to="/wiki/$slug"
                 params={{ slug: doc.slug }}
+                preload="intent"
                 className="group flex flex-col bg-mc-surface border border-white/10 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row h-full">
