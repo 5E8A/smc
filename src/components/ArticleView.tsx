@@ -4,7 +4,7 @@ import { fetchPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
 import Carousel from "./Carousel";
 import BackButton from "./BackButton";
-import { Calendar, User, Clock, Loader2 } from "lucide-react";
+import { CalendarIcon, UserIcon, ClockIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
@@ -28,7 +28,7 @@ const ArticleView = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-mc-bg bg-deepslate flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-mc-green animate-spin" />
+        <SpinnerIcon className="w-12 h-12 text-mc-green animate-spin" />
       </div>
     );
   }
@@ -53,13 +53,13 @@ const ArticleView = () => {
           </h1>
           <div className="flex items-center space-x-6 text-mc-text-muted text-sm font-medium">
             <div className="flex items-center">
-              <User className="w-4 h-4 mr-2" /> {post.author.name}
+              <UserIcon className="w-4 h-4 mr-2" /> {post.author.name}
             </div>
             <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" /> {post.date}
+              <CalendarIcon className="w-4 h-4 mr-2" /> {post.date}
             </div>
             <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-2" /> 5 min read
+              <ClockIcon className="w-4 h-4 mr-2" /> 5 min read
             </div>
           </div>
         </div>

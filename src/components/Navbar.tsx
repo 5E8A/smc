@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Download, Globe } from "lucide-react";
+import { ListIcon, XIcon, DownloadIcon, GlobeIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
@@ -27,7 +27,7 @@ const Navbar = () => {
             </div> */}
           </Link>
 
-          {/* Desktop Menu */}
+          {/* Desktop ListIcon */}
           <div className="hidden md:flex items-center">
             <div className="flex items-center space-x-1 bg-mc-surface/50 p-1 rounded-lg border border-white/5 mr-6">
               <Link
@@ -67,13 +67,13 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="btn-mc-green flex items-center space-x-2 px-6 py-2 rounded"
             >
-              <Download className="w-4 h-4" />
+              <DownloadIcon className="w-4 h-4" />
               <span>{t.nav.download}</span>
             </a>
 
             {/* Language Switcher */}
             <div className="flex items-center ml-6 pl-6 border-l border-white/10">
-              <Globe className="w-4 h-4 text-mc-text-muted mr-2" />
+              <GlobeIcon className="w-4 h-4 text-mc-text-muted mr-2" />
               <select
                 aria-label={t.common.language}
                 value={language}
@@ -98,13 +98,13 @@ const Navbar = () => {
               className="inline-flex items-center justify-center p-2 rounded-md text-mc-text-muted hover:text-white hover:bg-white/10 focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
-              {isOpen ? <X className="block h-6 w-6" /> : <Menu className="block h-6 w-6" />}
+              {isOpen ? <XIcon className="block h-6 w-6" /> : <ListIcon className="block h-6 w-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile ListIcon */}
       {isOpen && (
         <div className="md:hidden bg-mc-surface border-b border-white/10">
           <div className="px-4 pt-2 pb-6 space-y-2">
@@ -145,7 +145,7 @@ const Navbar = () => {
             </a>
             <div className="border-t border-white/10 mt-4 pt-4 px-3">
               <div className="flex items-center text-mc-text-muted">
-                <Globe className="w-5 h-5 mr-2" />
+                <GlobeIcon className="w-5 h-5 mr-2" />
                 <select
                   aria-label={t.common.language}
                   value={language}

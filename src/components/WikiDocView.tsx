@@ -3,7 +3,7 @@ import { useParams, Navigate } from "@tanstack/react-router";
 import { fetchWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
 import BackButton from "./BackButton";
-import { Calendar, Book, Loader2 } from "lucide-react";
+import { CalendarIcon, BookIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
@@ -27,7 +27,7 @@ const WikiDocView = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-mc-bg bg-deepslate flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-mc-green animate-spin" />
+        <SpinnerIcon className="w-12 h-12 text-mc-green animate-spin" />
       </div>
     );
   }
@@ -64,10 +64,10 @@ const WikiDocView = () => {
         <div className="bg-mc-surface border border-white/5 rounded-2xl p-8 md:p-12 shadow-2xl">
           <div className="flex items-center justify-between border-b border-white/5 pb-6 mb-8">
             <div className="flex items-center text-mc-text-muted text-sm">
-              <Book className="w-4 h-4 mr-2" /> Wiki Documentation
+              <BookIcon className="w-4 h-4 mr-2" /> Wiki Documentation
             </div>
             <div className="flex items-center text-mc-text-muted text-sm">
-              <Calendar className="w-4 h-4 mr-2" /> Last Updated: {doc.date}
+              <CalendarIcon className="w-4 h-4 mr-2" /> Last Updated: {doc.date}
             </div>
           </div>
 

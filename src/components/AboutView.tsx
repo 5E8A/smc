@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/useLanguage";
-import { Code, Cpu } from "lucide-react";
+import { CodeIcon, CpuIcon } from "@phosphor-icons/react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
 
 const AboutView = () => {
@@ -80,7 +80,7 @@ const AboutView = () => {
           {/* Mission */}
           <div className="bg-mc-surface border border-white/10 rounded-xl p-8">
             <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-6">
-              <Cpu className="w-6 h-6 text-emerald-400" />
+              <CpuIcon className="w-6 h-6 text-emerald-400" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-4">{t.about_page.mission_title}</h2>
             <p className="text-mc-text-muted leading-relaxed">{t.about_page.mission_text}</p>
@@ -89,7 +89,7 @@ const AboutView = () => {
           {/* Creator */}
           <div className="bg-mc-surface border border-white/10 rounded-xl p-8">
             <div className="w-12 h-12 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-6">
-              <Code className="w-6 h-6 text-indigo-400" />
+              <CodeIcon className="w-6 h-6 text-indigo-400" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-4">{t.about_page.creator_title}</h2>
             <p className="text-mc-text-muted leading-relaxed mb-6">{t.about_page.creator_text}</p>

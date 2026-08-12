@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
+import { CaretLeftIcon, CaretRightIcon, Image as ImageIcon } from "@phosphor-icons/react";
 import SmartImage from "./SmartImage";
 
 interface CarouselProps {
@@ -51,14 +51,14 @@ const Carousel = ({ images }: CarouselProps) => {
         className="absolute top-1/2 -translate-y-1/2 left-4 z-20 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-mc-green hover:text-black backdrop-blur-sm"
         onClick={prevSlide}
       >
-        <ChevronLeft size={24} />
+        <CaretLeftIcon size={24} />
       </button>
 
       <button
         className="absolute top-1/2 -translate-y-1/2 right-4 z-20 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-mc-green hover:text-black backdrop-blur-sm"
         onClick={nextSlide}
       >
-        <ChevronRight size={24} />
+        <CaretRightIcon size={24} />
       </button>
 
       {/* Modern Dots */}

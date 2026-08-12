@@ -3,7 +3,7 @@ import { fetchPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
 import { useLanguage } from "../context/useLanguage";
-import { Search, Loader2 } from "lucide-react";
+import { MagnifyingGlassIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 const ArchiveView = () => {
   const { t, language } = useLanguage();
@@ -38,10 +38,10 @@ const ArchiveView = () => {
           </h1>
           <p className="text-mc-text-muted text-lg relative z-10 mb-8 max-w-2xl">{t.archive.subtitle}</p>
 
-          {/* Search Bar */}
+          {/* MagnifyingGlassIcon Bar */}
           <div className="relative max-w-md z-10">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-mc-text-muted" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-mc-text-muted" />
             </div>
             <input
               type="text"
@@ -59,7 +59,7 @@ const ArchiveView = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
           {loading ? (
             <div className="col-span-full flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-mc-green animate-spin" />
+              <SpinnerIcon className="w-8 h-8 text-mc-green animate-spin" />
             </div>
           ) : filteredPosts.length > 0 ? (
             filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
