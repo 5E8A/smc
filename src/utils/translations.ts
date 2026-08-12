@@ -11,6 +11,12 @@ export const translations = {
     },
     common: {
       back: "Back",
+      language: "Language",
+    },
+    meta: {
+      title: "SMC - Seba Modding Community",
+      description:
+        "Official blog for the Fabric Boosted modpack by 5E8A. News, updates, and optimization guides.",
     },
     hero: {
       tag: "Version [version] Now Available for MC ",
@@ -83,6 +89,12 @@ export const translations = {
     },
     common: {
       back: "Wstecz",
+      language: "Język",
+    },
+    meta: {
+      title: "SMC - Seba Modding Community",
+      description:
+        "Oficjalny blog paczki modów Fabric Boosted od 5E8A. Aktualności, poradniki i przewodniki optymalizacyjne.",
     },
     hero: {
       tag: "Wersja [version] Już Dostępna na wersję MC ",

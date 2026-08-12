@@ -126,7 +126,7 @@ const HomeView: React.FC = () => {
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-500/10 mb-6 group-hover:scale-110 transition-transform">
                 <Cpu className="w-6 h-6 text-indigo-400" />
               </div>
-              <h3 className="text-2xl font-mc text-white mb-3">{t.features.fabric_title}</h3>
+              <h2 className="text-2xl font-mc text-white mb-3">{t.features.fabric_title}</h2>
               <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.fabric_desc}</p>
             </div>
 
@@ -135,7 +135,7 @@ const HomeView: React.FC = () => {
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-yellow-500/10 mb-6 group-hover:scale-110 transition-transform">
                 <Zap className="w-6 h-6 text-yellow-400" />
               </div>
-              <h3 className="text-2xl font-mc text-white mb-3">{t.features.sodium_title}</h3>
+              <h2 className="text-2xl font-mc text-white mb-3">{t.features.sodium_title}</h2>
               <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.sodium_desc}</p>
             </div>
 
@@ -144,7 +144,7 @@ const HomeView: React.FC = () => {
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-emerald-500/10 mb-6 group-hover:scale-110 transition-transform">
                 <MemoryStick className="w-6 h-6 text-emerald-400" />
               </div>
-              <h3 className="text-2xl font-mc text-white mb-3">{t.features.memory_title}</h3>
+              <h2 className="text-2xl font-mc text-white mb-3">{t.features.memory_title}</h2>
               <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.memory_desc}</p>
             </div>
           </div>
