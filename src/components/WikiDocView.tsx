@@ -56,7 +56,7 @@ const WikiDocView: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-30">
         {/* Back Button */}
         <div className="absolute -top-16 left-4 md:left-0">
-          <BackButton fallbackTo="/wiki" label="Back to Wiki" />
+          <BackButton fallbackTo="/wiki" />
         </div>
 
         {/* Content Container */}
