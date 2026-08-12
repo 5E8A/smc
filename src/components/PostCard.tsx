@@ -55,6 +55,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <Link
             to="/post/$slug"
             params={{ slug: post.slug }}
+            preload="intent"
             className="text-sm font-semibold text-white hover:text-mc-green transition-colors"
           >
             {t.latest.read_article} &rarr;
