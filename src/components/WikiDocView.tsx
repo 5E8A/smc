@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "@tanstack/react-router";
+import { useParams, Navigate } from "@tanstack/react-router";
 import { fetchWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
-import { ArrowLeft, Calendar, Book, Loader2 } from "lucide-react";
+import BackButton from "./BackButton";
+import { Calendar, Book, Loader2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { parseRichText } from "../utils/richText";
 
@@ -55,13 +56,7 @@ const WikiDocView: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-30">
         {/* Back Button */}
         <div className="absolute -top-16 left-4 md:left-0">
-          <Link
-            to="/wiki"
-            className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Wiki
-          </Link>
+          <BackButton fallbackTo="/wiki" label="Back to Wiki" />
         </div>
 
         {/* Content Container */}
