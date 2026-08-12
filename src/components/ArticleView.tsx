@@ -5,7 +5,7 @@ import { BlogPost } from "../types";
 import Carousel from "./Carousel";
 import BackButton from "./BackButton";
 import { Calendar, User, Clock, Loader2 } from "lucide-react";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
 

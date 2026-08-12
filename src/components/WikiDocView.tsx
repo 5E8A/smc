@@ -4,7 +4,7 @@ import { fetchWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
 import BackButton from "./BackButton";
 import { Calendar, Book, Loader2 } from "lucide-react";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
 

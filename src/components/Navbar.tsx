@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X, Download, Globe } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
 
 const Navbar: React.FC = () => {

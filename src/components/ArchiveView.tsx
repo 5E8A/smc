@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Search, Loader2 } from "lucide-react";
 
 const ArchiveView: React.FC = () => {
