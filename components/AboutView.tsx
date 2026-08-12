@@ -48,7 +48,7 @@ const AboutView: React.FC = () => {
           <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
             {t.about_page.title}
           </h1>
-          <p className="text-mc-textMuted text-lg relative z-10 mb-0 max-w-2xl">{t.about_page.subtitle}</p>
+          <p className="text-mc-text-muted text-lg relative z-10 mb-0 max-w-2xl">{t.about_page.subtitle}</p>
         </div>
       </div>
 
@@ -59,19 +59,19 @@ const AboutView: React.FC = () => {
             <div className="text-mc-accent text-4xl font-bold font-mc mb-2">
               {downloads !== null ? downloads : "Loading..."}
             </div>
-            <div className="text-mc-textMuted text-sm uppercase tracking-wider">{t.about_page.stats_downloads}</div>
+            <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_downloads}</div>
           </div>
           <div className="bg-mc-surface/50 border border-white/5 rounded-xl p-6 text-center">
             <div className="text-white text-4xl font-bold font-mc mb-2">
               {activeMembers !== null ? activeMembers : "Loading..."}
             </div>
-            <div className="text-mc-textMuted text-sm uppercase tracking-wider">{t.about_page.stats_users}</div>
+            <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_users}</div>
           </div>
           <div className="bg-mc-surface/50 border border-white/5 rounded-xl p-6 text-center">
             <div className="text-mc-green text-4xl font-bold font-mc mb-2">
               {latestVersion !== null ? latestVersion : "Loading..."}
             </div>
-            <div className="text-mc-textMuted text-sm uppercase tracking-wider">{t.about_page.stats_version}</div>
+            <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_version}</div>
           </div>
         </div>
 
@@ -83,7 +83,7 @@ const AboutView: React.FC = () => {
               <Cpu className="w-6 h-6 text-emerald-400" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-4">{t.about_page.mission_title}</h2>
-            <p className="text-mc-textMuted leading-relaxed">{t.about_page.mission_text}</p>
+            <p className="text-mc-text-muted leading-relaxed">{t.about_page.mission_text}</p>
           </div>
 
           {/* Creator */}
@@ -92,15 +92,15 @@ const AboutView: React.FC = () => {
               <Code className="w-6 h-6 text-indigo-400" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-4">{t.about_page.creator_title}</h2>
-            <p className="text-mc-textMuted leading-relaxed mb-6">{t.about_page.creator_text}</p>
+            <p className="text-mc-text-muted leading-relaxed mb-6">{t.about_page.creator_text}</p>
 
             <div className="flex items-center space-x-4 pt-6 border-t border-white/5">
-              <div className="w-10 h-10 rounded bg-mc-surfaceLight flex items-center justify-center font-mc text-xl text-white">
+              <div className="w-10 h-10 rounded bg-mc-surface-light flex items-center justify-center font-mc text-xl text-white">
                 S
               </div>
               <div>
                 <div className="text-white font-bold text-sm">5E8A</div>
-                <div className="text-mc-textMuted text-xs">Lead Developer</div>
+                <div className="text-mc-text-muted text-xs">Lead Developer</div>
               </div>
             </div>
           </div>
