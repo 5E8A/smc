@@ -1,6 +1,6 @@
 import React from "react";
 import { useLanguage } from "../context/LanguageContext";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import GitHubIcon from "./GitHubIcon";
 
 const Footer: React.FC = () => {

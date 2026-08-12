@@ -64,6 +64,11 @@ export const translations = {
       rights: "Not affiliated with Mojang Studios.",
       made_with: "Developed by logy",
     },
+    not_found: {
+      title: "Page Not Found",
+      description: "The page you're looking for doesn't exist or has been moved.",
+      back_home: "Back to Home",
+    },
   },
   pl: {
     nav: {
@@ -128,6 +133,11 @@ export const translations = {
       copyright: "SMC - Seba Modding Community",
       rights: "Nie powiązane z Mojang Studios.",
       made_with: "Stworzone przez logy",
+    },
+    not_found: {
+      title: "Nie Znaleziono Strony",
+      description: "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+      back_home: "Wróć na Stronę Główną",
     },
   },
 };

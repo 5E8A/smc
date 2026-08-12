@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Calendar /*User*/ } from "lucide-react";
 import { BlogPost } from "../types";
 import { useLanguage } from "../context/LanguageContext";
@@ -53,7 +53,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </div>
 
           <Link
-            to={`/post/${post.slug}`}
+            to="/post/$slug"
+            params={{ slug: post.slug }}
             className="text-sm font-semibold text-white hover:text-mc-green transition-colors"
           >
             {t.latest.read_article} &rarr;

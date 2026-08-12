@@ -3,7 +3,7 @@ import { fetchWikiDocs } from "../data/wiki";
 import { WikiDoc } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 import { Search, Book, ArrowRight, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 const WikiView: React.FC = () => {
   const { t, language } = useLanguage();
@@ -65,7 +65,8 @@ const WikiView: React.FC = () => {
             filteredDocs.map((doc) => (
               <Link
                 key={doc.id}
-                to={`/wiki/${doc.slug}`}
+                to="/wiki/$slug"
+                params={{ slug: doc.slug }}
                 className="group flex flex-col bg-mc-surface border border-white/10 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row h-full">
