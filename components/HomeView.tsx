@@ -94,7 +94,7 @@ const HomeView: React.FC = () => {
             <img
               src="/smc/assets/static/Artboard_3.png"
               alt="Sponsored Content"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-70"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
