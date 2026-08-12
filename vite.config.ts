@@ -45,7 +45,7 @@ export default defineConfig(({ mode }) => {
             if (id.includes("@tanstack/react-router") || id.includes("@tanstack/history")) {
               return "router";
             }
-            if (id.includes("lucide-react")) {
+            if (id.includes("@phosphor-icons/react")) {
               return "icons";
             }
           },
