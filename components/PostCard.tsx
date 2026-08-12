@@ -18,7 +18,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <img
           src={post.coverImage}
           alt={post.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="w-full h-full object-cover transform-gpu transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-mc-surface via-transparent to-transparent opacity-90"></div>
         <div className="absolute top-4 left-4">

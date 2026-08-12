@@ -74,7 +74,7 @@ const WikiView: React.FC = () => {
                     <img
                       src={doc.coverImage}
                       alt={doc.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover transform-gpu group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <div className="p-6 md:w-2/3 flex flex-col justify-between">
