@@ -64,12 +64,29 @@ const placeholderFor = async (file) => {
   console.log(`placeholder for ${rel} (${(size / 1024).toFixed(1)} KB)`);
 };
 
-const copyWebp = async (file) => {
+const WEBP_OPTS = {
+  "static/background.webp": { quality: 70 },
+  "posts/": { quality: 75, width: 768 },
+};
+
+const optimizeWebp = async (file) => {
   const rel = path.relative(srcDir, file).replace(/\\/g, "/");
   const out = path.join(outDir, rel);
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  await fs.promises.copyFile(file, out);
-  console.log(`${rel} -> ${rel} (copied)`);
+
+  const match = Object.entries(WEBP_OPTS).find(([key]) => (key.endsWith("/") ? rel.startsWith(key) : rel === key));
+  if (match) {
+    const opts = match[1];
+    let pipeline = sharp(file);
+    if (opts.width) {
+      pipeline = pipeline.resize(opts.width, null, { fit: "inside" });
+    }
+    await pipeline.webp({ quality: opts.quality }).toFile(out);
+    console.log(`${rel} -> ${rel} (optimized q${opts.quality}${opts.width ? `, max ${opts.width}w` : ""})`);
+  } else {
+    await fs.promises.copyFile(file, out);
+    console.log(`${rel} -> ${rel} (copied)`);
+  }
 };
 
 const main = async () => {
@@ -82,7 +99,7 @@ const main = async () => {
     if (/\.(png|jpe?g)$/i.test(file)) {
       await convert(file);
     } else if (/\.webp$/i.test(file)) {
-      await copyWebp(file);
+      await optimizeWebp(file);
       await placeholderFor(file);
     }
   }
