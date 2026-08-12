@@ -6,6 +6,7 @@ import BackButton from "./BackButton";
 import { Calendar, Book, Loader2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { parseRichText } from "../utils/richText";
+import SmartImage from "./SmartImage";
 
 const WikiDocView: React.FC = () => {
   const { slug } = useParams({ strict: false });
@@ -41,7 +42,7 @@ const WikiDocView: React.FC = () => {
       <div className="relative h-64 w-full overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-mc-bg to-transparent z-10"></div>
-        <img src={doc.coverImage} className="w-full h-full object-cover opacity-50 blur-sm" alt="Cover" />
+        <SmartImage src={doc.coverImage} alt="Cover" className="w-full h-full opacity-50 blur-sm" lazy={false} priority="high" />
 
         <div className="absolute inset-0 flex flex-col justify-center items-center z-20 px-4">
           <span className="px-3 py-1 mb-4 rounded bg-green-500/20 border border-green-500/30 text-green-300 text-xs font-bold uppercase tracking-wider backdrop-blur-md">

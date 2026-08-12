@@ -8,6 +8,7 @@ import { Link } from "@tanstack/react-router";
 import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";
 import { VersionData } from "@/types";
+import SmartImage from "./SmartImage";
 
 const splitVersionHeroTag = (text: string): string[] => {
   return text.split("[version]");
@@ -63,7 +64,14 @@ const HomeView: React.FC = () => {
           </div>
 
           <h1 className="leading-none tracking-tight scale-75 origin-left">
-            <img src="/smc/assets/static/banner2.webp"></img>
+            <SmartImage
+              src="/smc/assets/static/banner2.webp"
+              alt="SMC - Seba Modding Community"
+              width={1400}
+              height={200}
+              lazy={false}
+              priority="high"
+            />
           </h1>
 
           <p className="max-w-xl text-lg text-mc-text-muted mb-10 leading-relaxed font-sans">{t.hero.description}</p>
@@ -91,10 +99,10 @@ const HomeView: React.FC = () => {
             style={{ aspectRatio: "1920 / 300" }}
           >
             {/* Banner Image */}
-            <img
-              src="/smc/assets/static/Artboard_3.png"
+            <SmartImage
+              src="/smc/assets/static/Artboard_3.webp"
               alt="Sponsored Content"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-[1.02]"
             />
 
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
