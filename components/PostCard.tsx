@@ -15,10 +15,16 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <div className="flex flex-col bg-mc-surface rounded-xl border border-white/10 overflow-hidden hover:border-mc-green/50 hover:shadow-2xl hover:shadow-mc-green/10 transition-all duration-300 group h-full">
       {/* Image Container */}
       <div className="relative h-56 overflow-hidden">
-        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <img
+          src={post.coverImage}
+          alt={post.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-mc-surface via-transparent to-transparent opacity-90"></div>
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-mc-green rounded border border-white/10">{post.category}</span>
+          <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-mc-green rounded border border-white/10">
+            {post.category}
+          </span>
         </div>
       </div>
 
@@ -31,7 +37,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </div>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-mc-green transition-colors leading-tight line-clamp-2">{post.title}</h3>
+        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-mc-green transition-colors leading-tight line-clamp-2">
+          {post.title}
+        </h3>
 
         <p className="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-grow">{post.summary}</p>
 
@@ -44,7 +52,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             {post.author.name}
           </div>
 
-          <Link to={`/post/${post.slug}`} className="text-sm font-semibold text-white hover:text-mc-green transition-colors">
+          <Link
+            to={`/post/${post.slug}`}
+            className="text-sm font-semibold text-white hover:text-mc-green transition-colors"
+          >
             {t.latest.read_article} &rarr;
           </Link>
         </div>

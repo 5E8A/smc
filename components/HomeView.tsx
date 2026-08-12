@@ -38,8 +38,10 @@ const HomeView: React.FC = () => {
   const heroTagParts = splitVersionHeroTag(t.hero.tag);
 
   const renderHeroTag = () => {
-    const versionContent = version !== null ? version.version_number : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
-    const gameVersion = version !== null ? version.game_version : <LoadingVersionText key="loading-game-version" format={"0.00.0"} />;
+    const versionContent =
+      version !== null ? version.version_number : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
+    const gameVersion =
+      version !== null ? version.game_version : <LoadingVersionText key="loading-game-version" format={"0.00.0"} />;
 
     return [heroTagParts[0], versionContent, heroTagParts[1], gameVersion];
   };
@@ -81,15 +83,27 @@ const HomeView: React.FC = () => {
       {/* Ad Banner */}
       <section className="w-full bg-[#050505] py-6 flex justify-center overflow-hidden border-y border-white/5">
         <div className="w-full max-w-[1920px] px-4 sm:px-6 lg:px-8">
-          <a href="https://billing.sparkedhost.com/aff.php?aff=3127" target="_blank" rel="noopener noreferrer" className="relative block w-full rounded-xl overflow-hidden bg-mc-surface/30 border border-white/10 group transition-all duration-300 hover:border-mc-accent/40 hover:scale-[1.01] cursor-pointer isolate transform-gpu" style={{ aspectRatio: "1920 / 300" }}>
+          <a
+            href="https://billing.sparkedhost.com/aff.php?aff=3127"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative block w-full rounded-xl overflow-hidden bg-mc-surface/30 border border-white/10 group transition-all duration-300 hover:border-mc-accent/40 hover:scale-[1.01] cursor-pointer isolate transform-gpu"
+            style={{ aspectRatio: "1920 / 300" }}
+          >
             {/* Banner Image */}
-            <img src="/smc/assets/static/Artboard_3.png" alt="Sponsored Content" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-70" />
+            <img
+              src="/smc/assets/static/Artboard_3.png"
+              alt="Sponsored Content"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-70"
+            />
 
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
 
             {/* Ad Badge */}
             <div className="absolute top-0 right-0 p-2">
-              <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/30 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-bl border-l border-b border-white/5">PARTNERSHIP</span>
+              <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/30 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-bl border-l border-b border-white/5">
+                PARTNERSHIP
+              </span>
             </div>
           </a>
         </div>
@@ -137,7 +151,10 @@ const HomeView: React.FC = () => {
               <h2 className="text-4xl font-mc text-white mb-2">{t.latest.title}</h2>
               <p className="text-mc-textMuted">{t.latest.subtitle}</p>
             </div>
-            <Link to="/archive" className="hidden md:flex items-center font-medium text-mc-accent hover:text-white transition-colors mt-4 md:mt-0">
+            <Link
+              to="/archive"
+              className="hidden md:flex items-center font-medium text-mc-accent hover:text-white transition-colors mt-4 md:mt-0"
+            >
               {t.latest.view_archive} <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>

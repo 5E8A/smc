@@ -43,8 +43,12 @@ const ArticleView: React.FC = () => {
         <img src={post.coverImage} className="w-full h-full object-cover opacity-60" alt="Cover" />
 
         <div className="absolute inset-0 flex flex-col justify-end items-center pb-20 z-20 px-4">
-          <span className="px-4 py-1 mb-6 rounded-full bg-mc-green/10 border border-mc-green/20 text-mc-green text-sm font-bold uppercase tracking-wider backdrop-blur-md">{post.category}</span>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center max-w-4xl leading-tight">{post.title}</h1>
+          <span className="px-4 py-1 mb-6 rounded-full bg-mc-green/10 border border-mc-green/20 text-mc-green text-sm font-bold uppercase tracking-wider backdrop-blur-md">
+            {post.category}
+          </span>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center max-w-4xl leading-tight">
+            {post.title}
+          </h1>
           <div className="flex items-center space-x-6 text-mc-textMuted text-sm font-medium">
             <div className="flex items-center">
               <User className="w-4 h-4 mr-2" /> {post.author.name}
@@ -62,7 +66,10 @@ const ArticleView: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-30">
         {/* Back Button */}
         <div className="absolute -top-24 left-4 md:left-0">
-          <Link to="/" className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm">
+          <Link
+            to="/"
+            className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm"
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Link>
@@ -91,12 +98,22 @@ const ArticleView: React.FC = () => {
                   </h2>
                 )}
 
-                {block.paragraph && <p className="text-gray-300 leading-8 text-lg font-light mb-6">{parseRichText(block.paragraph)}</p>}
+                {block.paragraph && (
+                  <p className="text-gray-300 leading-8 text-lg font-light mb-6">{parseRichText(block.paragraph)}</p>
+                )}
 
                 {block.image && (
                   <figure className="my-8 rounded-xl overflow-hidden border border-white/10 bg-black/20">
-                    <img src={block.image} alt={block.imageCaption || block.header || "Article Image"} className="w-full h-auto object-cover" />
-                    {block.imageCaption && <figcaption className="bg-black/40 p-3 text-center text-mc-textMuted text-sm italic border-t border-white/5">{block.imageCaption}</figcaption>}
+                    <img
+                      src={block.image}
+                      alt={block.imageCaption || block.header || "Article Image"}
+                      className="w-full h-auto object-cover"
+                    />
+                    {block.imageCaption && (
+                      <figcaption className="bg-black/40 p-3 text-center text-mc-textMuted text-sm italic border-t border-white/5">
+                        {block.imageCaption}
+                      </figcaption>
+                    )}
                   </figure>
                 )}
               </div>

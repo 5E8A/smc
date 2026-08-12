@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 
 interface CarouselProps {
   images: string[];
@@ -39,26 +39,22 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
     <div className="relative group w-full h-full">
       {/* Main Image Container */}
       <div className="relative w-full aspect-video bg-[#050505] overflow-hidden">
-        <img
-          src={images[currentIndex]}
-          alt={`Slide ${currentIndex + 1}`}
-          className="w-full h-full object-cover"
-        />
-        
+        <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="w-full h-full object-cover" />
+
         {/* Subtle gradient overlay at bottom for dots */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
       </div>
 
       {/* Navigation Buttons - Hidden by default, show on hover */}
-      <button 
-        className="absolute top-1/2 -translate-y-1/2 left-4 z-20 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-mc-green hover:text-black backdrop-blur-sm" 
+      <button
+        className="absolute top-1/2 -translate-y-1/2 left-4 z-20 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-mc-green hover:text-black backdrop-blur-sm"
         onClick={prevSlide}
       >
         <ChevronLeft size={24} />
       </button>
 
-      <button 
-        className="absolute top-1/2 -translate-y-1/2 right-4 z-20 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-mc-green hover:text-black backdrop-blur-sm" 
+      <button
+        className="absolute top-1/2 -translate-y-1/2 right-4 z-20 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-mc-green hover:text-black backdrop-blur-sm"
         onClick={nextSlide}
       >
         <ChevronRight size={24} />
@@ -71,9 +67,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
             key={slideIndex}
             onClick={() => goToSlide(slideIndex)}
             className={`cursor-pointer w-2 h-2 rounded-full transition-all duration-300 ${
-              currentIndex === slideIndex 
-                ? 'bg-white w-6' 
-                : 'bg-white/30 hover:bg-white/60'
+              currentIndex === slideIndex ? "bg-white w-6" : "bg-white/30 hover:bg-white/60"
             }`}
           ></div>
         ))}

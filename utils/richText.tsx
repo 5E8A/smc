@@ -23,7 +23,13 @@ export const parseRichText = (text: string): React.ReactNode[] => {
     const linkText = match[1];
     const linkUrl = match[2];
     parts.push(
-      <a key={`link-${match.index}`} href={linkUrl} target="_blank" rel="noopener noreferrer" className="text-mc-accent hover:text-white hover:underline transition-colors font-semibold">
+      <a
+        key={`link-${match.index}`}
+        href={linkUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-mc-accent hover:text-white hover:underline transition-colors font-semibold"
+      >
         {linkText}
       </a>
     );

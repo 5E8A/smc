@@ -13,7 +13,8 @@ export const translations = {
       tag: "Version [version] Now Available for MC ",
       title_prefix: "FABRIC",
       title_accent: "BOOSTED",
-      description: "The ultimate optimization & quality-of-life modpack. Built for flawless performance, whether you're playing vanilla singleplayer or multiplayer servers.",
+      description:
+        "The ultimate optimization & quality-of-life modpack. Built for flawless performance, whether you're playing vanilla singleplayer or multiplayer servers.",
       read_updates: "Read Updates",
       wiki: "Wiki & Docs",
     },
@@ -46,9 +47,11 @@ export const translations = {
       title: "About The Project",
       subtitle: "The philosophy behind Fabric Boosted.",
       mission_title: "Our Mission",
-      mission_text: "Fabric Boosted was created with goal to provide the smoothest Minecraft experience with best Quality of Life mods. We believe that everyone should be able to enjoy Minecraft at high framerates and improved vanilla gameplay using QoL mods.",
+      mission_text:
+        "Fabric Boosted was created with goal to provide the smoothest Minecraft experience with best Quality of Life mods. We believe that everyone should be able to enjoy Minecraft at high framerates and improved vanilla gameplay using QoL mods.",
       creator_title: "The Creator",
-      creator_text: "5E8A is a passionate Minecraft modder and optimization enthusiast. After years of gaining knowledge with optimization, he decided to create the ultimate Fabric Modpack.",
+      creator_text:
+        "5E8A is a passionate Minecraft modder and optimization enthusiast. After years of gaining knowledge with optimization, he decided to create the ultimate Fabric Modpack.",
       stats_downloads: "Downloads",
       stats_users: "Community Members",
       stats_version: "Current Version",
@@ -74,7 +77,8 @@ export const translations = {
       tag: "Wersja [version] Już Dostępna na wersję MC ",
       title_prefix: "FABRIC",
       title_accent: "BOOSTED",
-      description: "Doświadcz Minecrafta jak nigdy dotąd dzięki ostatecznej paczce optymalizacyjnej. Wysokie FPS, niskie opóźnienia i płynna rozgrywka.",
+      description:
+        "Doświadcz Minecrafta jak nigdy dotąd dzięki ostatecznej paczce optymalizacyjnej. Wysokie FPS, niskie opóźnienia i płynna rozgrywka.",
       read_updates: "Czytaj Aktualności",
       wiki: "Wiki i Dokumentacja",
     },
@@ -84,7 +88,8 @@ export const translations = {
       sodium_title: "Moc Sodium",
       sodium_desc: "Wymienia silnik renderujący, aby zapewnić stałe 144+ FPS na nowoczesnym sprzęcie.",
       memory_title: "Wydajność Pamięci",
-      memory_desc: "Zaawansowane dostrajanie Garbage Collection oznacza, że możesz grać komfortowo z mniejszą ilością RAM.",
+      memory_desc:
+        "Zaawansowane dostrajanie Garbage Collection oznacza, że możesz grać komfortowo z mniejszą ilością RAM.",
     },
     latest: {
       title: "OSTATNIE LOGI",
@@ -107,9 +112,11 @@ export const translations = {
       title: "O Projekcie",
       subtitle: "Filozofia stojąca za Fabric Boosted.",
       mission_title: "Nasza Misja",
-      mission_text: "Fabric Boosted powstało z jednym celem: zapewnić jak najpłynniejszą rozgrywkę w Minecraft bez kompromisów w jakości wizualnej. Wierzymy, że każdy powinien móc cieszyć się grą przy wysokiej liczbie klatek na sekundę, niezależnie od specyfikacji sprzętowej.",
+      mission_text:
+        "Fabric Boosted powstało z jednym celem: zapewnić jak najpłynniejszą rozgrywkę w Minecraft bez kompromisów w jakości wizualnej. Wierzymy, że każdy powinien móc cieszyć się grą przy wysokiej liczbie klatek na sekundę, niezależnie od specyfikacji sprzętowej.",
       creator_title: "Twórca",
-      creator_text: "5E8A to pasjonat moddingu Minecraft i entuzjasta optymalizacji. Po latach zmagań z optymalizacją, postanowił stworzyć ostateczną paczkę wydajnościową.",
+      creator_text:
+        "5E8A to pasjonat moddingu Minecraft i entuzjasta optymalizacji. Po latach zmagań z optymalizacją, postanowił stworzyć ostateczną paczkę wydajnościową.",
       stats_downloads: "Pobrań",
       stats_users: "Członków Społeczności",
       stats_version: "Obecna Wersja",
