@@ -6,7 +6,7 @@
     "author": "5E8A",
     "date": "2025-12-16",
     "category": "Getting Started",
-    "coverImage": "/smc/assets/banners/download.png",
+    "coverImage": "/smc/assets/banners/download.webp",
     "summary": "Instructions on how to install and update Fabric Boosted using Modrinth App.",
     "carouselImages": [],
     "content": [
@@ -35,7 +35,7 @@
     "author": "5E8A",
     "date": "2026-06-02",
     "category": "Optimization",
-    "coverImage": "/smc/assets/banners/wrench.png",
+    "coverImage": "/smc/assets/banners/wrench.webp",
     "summary": "Maximize your FPS by tweaking specific options and JVM settings.",
     "carouselImages": [],
     "content": [
@@ -68,7 +68,7 @@
     "author": "5E8A",
     "date": "2025-12-16",
     "category": "Shaders",
-    "coverImage": "/smc/assets/banners/shader.png",
+    "coverImage": "/smc/assets/banners/shader.webp",
     "summary": "Guide on how to download and enable shaders.",
     "carouselImages": [],
     "content": [
@@ -93,7 +93,7 @@
     "author": "5E8A",
     "date": "2026-02-20",
     "category": "Mods",
-    "coverImage": "/smc/assets/banners/add.png",
+    "coverImage": "/smc/assets/banners/add.webp",
     "summary": "Instructions on how to add additional mods to Fabric Boosted.",
     "carouselImages": [],
     "content": [
@@ -118,7 +118,7 @@
     "author": "5E8A",
     "date": "2025-12-16",
     "category": "Optifine",
-    "coverImage": "/smc/assets/banners/opti.png",
+    "coverImage": "/smc/assets/banners/opti.webp",
     "summary": "Overview of Optifine features",
     "carouselImages": [],
     "content": [
@@ -135,7 +135,7 @@
     "author": "5E8A",
     "date": "2026-06-02",
     "category": "Mods",
-    "coverImage": "/smc/assets/banners/QoL.png",
+    "coverImage": "/smc/assets/banners/QoL.webp",
     "summary": "Overview of Quality of Life mods included in Fabric Boosted.",
     "carouselImages": [],
     "content": [
@@ -152,7 +152,7 @@
     "author": "5E8A",
     "date": "2025-12-18",
     "category": "Online",
-    "coverImage": "/smc/assets/banners/hosting.png",
+    "coverImage": "/smc/assets/banners/hosting.webp",
     "summary": "Guide on how to play your Minecraft world with friends.",
     "carouselImages": [],
     "content": [
@@ -173,7 +173,7 @@
     "author": "5E8A",
     "date": "2025-12-16",
     "category": "Controls",
-    "coverImage": "/smc/assets/banners/controls.png",
+    "coverImage": "/smc/assets/banners/controls.webp",
     "summary": "Keybinds and Controls for Fabric Boosted.",
     "carouselImages": [],
     "content": [
