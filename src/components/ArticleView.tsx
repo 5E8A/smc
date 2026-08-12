@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "@tanstack/react-router";
 import { fetchPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
 import Carousel from "./Carousel";
@@ -8,7 +8,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { parseRichText } from "../utils/richText";
 
 const ArticleView: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
   const [post, setPost] = useState<BlogPost | undefined>(undefined);
   const [loading, setLoading] = useState(true);

@@ -4,7 +4,7 @@ import { BlogPost } from "../types";
 import PostCard from "./PostCard";
 import { Zap, Cpu, MemoryStick, ChevronRight, Loader2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";
 import { VersionData } from "@/types";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "@tanstack/react-router";
 import { fetchWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
 import { ArrowLeft, Calendar, Book, Loader2 } from "lucide-react";
@@ -7,7 +7,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { parseRichText } from "../utils/richText";
 
 const WikiDocView: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
   const [doc, setDoc] = useState<WikiDoc | undefined>(undefined);
   const [loading, setLoading] = useState(true);
