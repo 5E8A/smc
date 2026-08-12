@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "@tanstack/react-router";
+import { useParams, Navigate } from "@tanstack/react-router";
 import { fetchPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
 import Carousel from "./Carousel";
-import { ArrowLeft, Calendar, User, Clock, Loader2 } from "lucide-react";
+import BackButton from "./BackButton";
+import { Calendar, User, Clock, Loader2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { parseRichText } from "../utils/richText";
 
@@ -66,13 +67,7 @@ const ArticleView: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-30">
         {/* Back Button */}
         <div className="absolute -top-24 left-4 md:left-0">
-          <Link
-            to="/"
-            className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Link>
+          <BackButton fallbackTo="/archive" />
         </div>
 
         {/* Content Container */}
