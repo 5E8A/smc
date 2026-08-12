@@ -22,15 +22,15 @@ This project is a modern Single-Page Application (SPA) built with a focus on fas
 
 ### Tech Stack
 
-- **Frontend**: React (v19.x) with TypeScript (~5.8.2).
-- **Build Tool**: Vite (v6.x).
+- **Frontend**: React (v19.x) with TypeScript (v6.x).
+- **Build Tool**: Vite (v8.x).
 - **Styling**: Tailwind CSS (v4.x) with a custom, high-contrast, Minecraft-themed color palette and custom button styles defined in `index.html`.
 - **Routing**: `react-router-dom` (v7.x) using `HashRouter` for client-side navigation (e.g., `/archive`, `/post/:slug`, `/wiki`).
 
 ### Architecture & Data Flow
 
 1.  **Content Management**: The blog posts and wiki documentation are stored locally as JSON files (`/public/content/{lang}/posts.json`, etc.) and fetched by client-side utilities (`data/posts.ts`, `data/wiki.ts`). This acts as a flat-file CMS.
-2.  **External API Integration**: Dynamic data like total downloads, latest version, and active Discord members are fetched from the Modrinth API and Discord API using `axios` in `services/api.ts`. The Modrinth Project ID for "Fabric Boosted" is `dOLVvHgi`.
+2.  **External API Integration**: Dynamic data like total downloads, latest version, and active Discord members are fetched from the Modrinth API and Discord API using a lightweight native `fetch` wrapper in `services/api.ts`. The Modrinth Project ID for "Fabric Boosted" is `dOLVvHgi`.
 3.  **Internationalization (i18n)**: The site supports multiple languages ("en" and "pl") managed via a React Context (`LanguageContext.tsx`) and translations defined in `utils/translations.ts`. The preferred language is persisted using `localStorage`.
 4.  **Content Rendering**: Text content supports rich text features, specifically converting Markdown-style links (`[text](url)`) into styled HTML anchor tags using the `parseRichText` utility.
 
@@ -66,6 +66,16 @@ This script first runs the TypeScript compiler for type checking (tsc) and then 
 
 ```bash
 npm run build
+```
+
+### Linting & Formatting
+
+The project uses ESLint (flat config) with the `typescript-eslint`, `react-hooks`, and `react-refresh` plugins, plus Prettier for consistent formatting.
+
+```bash
+npm run lint       # check for lint errors
+npm run lint:fix   # auto-fix lint errors
+npm run format     # format all files with Prettier
 ```
 
 ## 🚀 Deployment
