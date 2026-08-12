@@ -24,7 +24,7 @@ This project is a modern Single-Page Application (SPA) built with a focus on fas
 
 - **Frontend**: React (v19.x) with TypeScript (v6.x).
 - **Build Tool**: Vite (v8.x).
-- **Styling**: Tailwind CSS (v4.x) with a custom, high-contrast, Minecraft-themed color palette and custom button styles defined in `index.html`.
+- **Styling**: Tailwind CSS (v4.x) with a custom, high-contrast, Minecraft-themed color palette and custom button styles defined in `index.css`, processed at build time via the `@tailwindcss/vite` plugin.
 - **Routing**: `react-router-dom` (v7.x) using `HashRouter` for client-side navigation (e.g., `/archive`, `/post/:slug`, `/wiki`).
 
 ### Architecture & Data Flow
