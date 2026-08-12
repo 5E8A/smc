@@ -9,6 +9,9 @@ export const translations = {
       archive: "News",
       wiki: "Wiki",
     },
+    common: {
+      back: "Back",
+    },
     hero: {
       tag: "Version [version] Now Available for MC ",
       title_prefix: "FABRIC",
@@ -77,6 +80,9 @@ export const translations = {
       download: "Pobierz",
       archive: "Archiwum",
       wiki: "Wiki",
+    },
+    common: {
+      back: "Wstecz",
     },
     hero: {
       tag: "Wersja [version] Już Dostępna na wersję MC ",
