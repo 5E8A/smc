@@ -36,16 +36,16 @@ const WikiView: React.FC = () => {
           <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
             {t.wiki.title}
           </h1>
-          <p className="text-mc-textMuted text-lg relative z-10 mb-8 max-w-2xl">{t.wiki.subtitle}</p>
+          <p className="text-mc-text-muted text-lg relative z-10 mb-8 max-w-2xl">{t.wiki.subtitle}</p>
 
           {/* Search Bar */}
           <div className="relative max-w-md z-10">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-mc-textMuted" />
+              <Search className="h-5 w-5 text-mc-text-muted" />
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-3 border border-white/10 rounded-lg leading-5 bg-black/40 text-white placeholder-mc-textMuted focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+              className="block w-full pl-10 pr-3 py-3 border border-white/10 rounded-lg leading-5 bg-black/40 text-white placeholder-mc-text-muted focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
               placeholder={t.wiki.search_placeholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -88,7 +88,7 @@ const WikiView: React.FC = () => {
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
                         {doc.title}
                       </h3>
-                      <p className="text-mc-textMuted text-sm line-clamp-2">{doc.summary}</p>
+                      <p className="text-mc-text-muted text-sm line-clamp-2">{doc.summary}</p>
                     </div>
                     <div className="mt-4 flex items-center text-sm font-semibold text-white group-hover:text-green-400 transition-colors">
                       {t.wiki.read_doc}{" "}
@@ -99,7 +99,7 @@ const WikiView: React.FC = () => {
               </Link>
             ))
           ) : (
-            <div className="col-span-full text-center py-20 text-mc-textMuted">No results found.</div>
+            <div className="col-span-full text-center py-20 text-mc-text-muted">No results found.</div>
           )}
         </div>
       </div>

@@ -16,12 +16,12 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <img src="/smc/assets/avatars/smc.png" alt="SMC Logo" className="h-10 w-10 rounded-full"></img>
-            {/* <div className="relative p-2 bg-gradient-to-br from-mc-surfaceLight to-mc-surface rounded-lg border border-white/10 shadow-lg group-hover:border-mc-accent/50 transition-colors">
+            {/* <div className="relative p-2 bg-gradient-to-br from-mc-surface-light to-mc-surface rounded-lg border border-white/10 shadow-lg group-hover:border-mc-accent/50 transition-colors">
               <Box className="h-6 w-6 text-mc-accent" strokeWidth={2} />
             </div> */}
             {/* <div className="flex flex-col">
               <span className="text-2xl font-mc text-white tracking-wide leading-none group-hover:text-mc-accent transition-colors">
-                SMC<span className="text-mc-textMuted"></span>
+                SMC<span className="text-mc-text-muted"></span>
               </span>
             </div> */}
           </Link>
@@ -31,25 +31,25 @@ const Navbar: React.FC = () => {
             <div className="flex items-center space-x-1 bg-mc-surface/50 p-1 rounded-lg border border-white/5 mr-6">
               <Link
                 to="/"
-                className="flex items-center space-x-2 text-mc-textMuted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.home}</span>
               </Link>
               <Link
                 to="/archive"
-                className="flex items-center space-x-2 text-mc-textMuted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.archive}</span>
               </Link>
               <Link
                 to="/wiki"
-                className="flex items-center space-x-2 text-mc-textMuted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.wiki}</span>
               </Link>
               <Link
                 to="/about"
-                className="text-mc-textMuted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 {t.nav.about}
               </Link>
@@ -68,11 +68,11 @@ const Navbar: React.FC = () => {
 
             {/* Language Switcher */}
             <div className="flex items-center ml-6 pl-6 border-l border-white/10">
-              <Globe className="w-4 h-4 text-mc-textMuted mr-2" />
+              <Globe className="w-4 h-4 text-mc-text-muted mr-2" />
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as "en" | "pl")}
-                className="bg-transparent text-sm font-medium text-mc-textMuted focus:outline-none hover:text-white cursor-pointer uppercase"
+                className="bg-transparent text-sm font-medium text-mc-text-muted focus:outline-none hover:text-white cursor-pointer uppercase"
               >
                 <option value="en" className="bg-mc-surface">
                   EN
@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
             <button
               onClick={toggleMenu}
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-mc-textMuted hover:text-white hover:bg-white/10 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-mc-text-muted hover:text-white hover:bg-white/10 focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? <X className="block h-6 w-6" /> : <Menu className="block h-6 w-6" />}
@@ -126,7 +126,7 @@ const Navbar: React.FC = () => {
             <Link
               to="/about"
               onClick={() => setIsOpen(false)}
-              className="text-mc-textMuted hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
+              className="text-mc-text-muted hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >
               {t.nav.about}
             </Link>
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
               {t.nav.download}
             </a>
             <div className="border-t border-white/10 mt-4 pt-4 px-3">
-              <div className="flex items-center text-mc-textMuted">
+              <div className="flex items-center text-mc-text-muted">
                 <Globe className="w-5 h-5 mr-2" />
                 <select
                   value={language}

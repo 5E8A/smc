@@ -67,10 +67,10 @@ const WikiDocView: React.FC = () => {
         {/* Content Container */}
         <div className="bg-mc-surface border border-white/5 rounded-2xl p-8 md:p-12 shadow-2xl">
           <div className="flex items-center justify-between border-b border-white/5 pb-6 mb-8">
-            <div className="flex items-center text-mc-textMuted text-sm">
+            <div className="flex items-center text-mc-text-muted text-sm">
               <Book className="w-4 h-4 mr-2" /> Wiki Documentation
             </div>
-            <div className="flex items-center text-mc-textMuted text-sm">
+            <div className="flex items-center text-mc-text-muted text-sm">
               <Calendar className="w-4 h-4 mr-2" /> Last Updated: {doc.date}
             </div>
           </div>
@@ -97,7 +97,7 @@ const WikiDocView: React.FC = () => {
                       className="w-full h-auto object-cover"
                     />
                     {block.imageCaption && (
-                      <figcaption className="bg-black/40 p-2 text-center text-mc-textMuted text-xs">
+                      <figcaption className="bg-black/40 p-2 text-center text-mc-text-muted text-xs">
                         {block.imageCaption}
                       </figcaption>
                     )}

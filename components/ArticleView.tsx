@@ -49,7 +49,7 @@ const ArticleView: React.FC = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center max-w-4xl leading-tight">
             {post.title}
           </h1>
-          <div className="flex items-center space-x-6 text-mc-textMuted text-sm font-medium">
+          <div className="flex items-center space-x-6 text-mc-text-muted text-sm font-medium">
             <div className="flex items-center">
               <User className="w-4 h-4 mr-2" /> {post.author.name}
             </div>
@@ -82,7 +82,7 @@ const ArticleView: React.FC = () => {
             <div className="mb-16 rounded-xl overflow-hidden border border-white/10 shadow-lg">
               <Carousel images={post.carouselImages} />
               <div className="bg-black/40 p-3 text-center border-t border-white/5">
-                <p className="text-xs text-mc-textMuted uppercase tracking-widest">Gallery</p>
+                <p className="text-xs text-mc-text-muted uppercase tracking-widest">Gallery</p>
               </div>
             </div>
           )}
@@ -110,7 +110,7 @@ const ArticleView: React.FC = () => {
                       className="w-full h-auto object-cover"
                     />
                     {block.imageCaption && (
-                      <figcaption className="bg-black/40 p-3 text-center text-mc-textMuted text-sm italic border-t border-white/5">
+                      <figcaption className="bg-black/40 p-3 text-center text-mc-text-muted text-sm italic border-t border-white/5">
                         {block.imageCaption}
                       </figcaption>
                     )}
@@ -125,7 +125,7 @@ const ArticleView: React.FC = () => {
             <img src={post.author.avatar} alt={post.author.name} className="w-16 h-16 rounded-full object-cover" />
             <div>
               <h3 className="text-white font-bold text-lg mb-1">{post.author.name}</h3>
-              <p className="text-mc-textMuted text-sm">{post.author.bio}</p>
+              <p className="text-mc-text-muted text-sm">{post.author.bio}</p>
             </div>
           </div>
         </div>

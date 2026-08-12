@@ -30,7 +30,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
       {/* Content */}
       <div className="p-6 flex flex-col flex-grow relative -mt-12">
-        <div className="flex items-center text-xs text-mc-textMuted mb-3 space-x-4">
+        <div className="flex items-center text-xs text-mc-text-muted mb-3 space-x-4">
           <div className="flex items-center bg-black/40 px-2 py-1 rounded border border-white/5">
             <Calendar className="w-3 h-3 mr-2" />
             {post.date}
@@ -44,7 +44,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <p className="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-grow">{post.summary}</p>
 
         <div className="pt-4 mt-auto border-t border-white/5 flex items-center justify-between">
-          <div className="flex items-center text-xs text-mc-textMuted">
+          <div className="flex items-center text-xs text-mc-text-muted">
             {/* Avatar Section: Using the image and reducing its size */}
             <img src={post.author.avatar} alt={post.author.name} className="w-6 h-6 rounded-full object-cover mr-2" />
 
