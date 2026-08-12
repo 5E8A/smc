@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, type CSSProperties } from "react";
 
 interface SmartImageProps {
   src: string;
@@ -12,7 +12,7 @@ interface SmartImageProps {
 
 const placeholderFor = (src: string): string => src.replace(/\.(png|jpe?g|webp)$/i, ".placeholder.$1");
 
-const SmartImage: React.FC<SmartImageProps> = ({
+const SmartImage = ({
   src,
   alt,
   width,
@@ -20,11 +20,11 @@ const SmartImage: React.FC<SmartImageProps> = ({
   priority,
   lazy = true,
   className = "",
-}) => {
+}: SmartImageProps) => {
   const [loaded, setLoaded] = useState(false);
   const [placeholderOk, setPlaceholderOk] = useState(true);
 
-  const wrapperStyle: React.CSSProperties = {};
+  const wrapperStyle: CSSProperties = {};
   if (width && height) {
     wrapperStyle.width = width;
     wrapperStyle.height = height;

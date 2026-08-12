@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Navigate } from "@tanstack/react-router";
 import { fetchPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
@@ -9,7 +9,7 @@ import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
 
-const ArticleView: React.FC = () => {
+const ArticleView = () => {
   const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
   const [post, setPost] = useState<BlogPost | undefined>(undefined);

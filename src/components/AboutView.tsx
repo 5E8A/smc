@@ -1,16 +1,16 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "../context/useLanguage";
 import { Code, Cpu } from "lucide-react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
 
-const AboutView: React.FC = () => {
+const AboutView = () => {
   const { t } = useLanguage();
 
-  const [downloads, setDownloads] = React.useState<string | null>(null);
-  const [activeMembers, setActiveMembers] = React.useState<number | null>(null);
-  const [latestVersion, setLatestVersion] = React.useState<string | null>(null);
+  const [downloads, setDownloads] = useState<string | null>(null);
+  const [activeMembers, setActiveMembers] = useState<number | null>(null);
+  const [latestVersion, setLatestVersion] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       const downloads = await getTotalDownloads("dOLVvHgi");
       setDownloads(downloads.toLocaleString());
@@ -18,7 +18,7 @@ const AboutView: React.FC = () => {
     fetchData();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchActiveMembers = async () => {
       const count = await getActiveDiscordMembers();
       setActiveMembers(count);
@@ -26,7 +26,7 @@ const AboutView: React.FC = () => {
     fetchActiveMembers();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchLatestVersion = async () => {
       const version = await getLatestVersionData("dOLVvHgi");
       if (version) {

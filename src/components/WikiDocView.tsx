@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Navigate } from "@tanstack/react-router";
 import { fetchWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
@@ -8,7 +8,7 @@ import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
 
-const WikiDocView: React.FC = () => {
+const WikiDocView = () => {
   const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
   const [doc, setDoc] = useState<WikiDoc | undefined>(undefined);

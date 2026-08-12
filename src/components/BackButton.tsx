@@ -1,4 +1,3 @@
-import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { LinkProps, useNavigate, useRouter } from "@tanstack/react-router";
 import { useLanguage } from "../context/useLanguage";
@@ -7,7 +6,7 @@ interface BackButtonProps {
   fallbackTo: LinkProps["to"];
 }
 
-const BackButton: React.FC<BackButtonProps> = ({ fallbackTo }) => {
+const BackButton = ({ fallbackTo }: BackButtonProps) => {
   const { t } = useLanguage();
   const { history } = useRouter();
   const navigate = useNavigate();

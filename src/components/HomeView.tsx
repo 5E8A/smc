@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchRecentPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
@@ -14,7 +14,7 @@ const splitVersionHeroTag = (text: string): string[] => {
   return text.split("[version]");
 };
 
-const HomeView: React.FC = () => {
+const HomeView = () => {
   const { t, language } = useLanguage();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
