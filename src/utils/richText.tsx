@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode } from "react";
 
 const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
 
@@ -6,12 +6,12 @@ const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
  * Parses rich text, converting Markdown-style links and newline characters (\n)
  * into an array of React Nodes (<a> tags and text/ <br /> tags).
  * * @param text The input string containing rich text elements.
- * @returns An array of React.ReactNode elements.
+ * @returns An array of ReactNode elements.
  */
-export const parseRichText = (text: string): React.ReactNode[] => {
+export const parseRichText = (text: string): ReactNode[] => {
   if (!text) return [];
 
-  const parts: React.ReactNode[] = [];
+  const parts: ReactNode[] = [];
   let lastIndex = 0;
   let match;
 
@@ -41,7 +41,7 @@ export const parseRichText = (text: string): React.ReactNode[] => {
     parts.push(text.substring(lastIndex));
   }
 
-  const finalNodes: React.ReactNode[] = [];
+  const finalNodes: ReactNode[] = [];
 
   parts.forEach((part, index) => {
     if (typeof part === "string") {

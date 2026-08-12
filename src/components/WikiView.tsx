@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchWikiDocs } from "../data/wiki";
 import { WikiDoc } from "../types";
 import { useLanguage } from "../context/useLanguage";
@@ -6,7 +6,7 @@ import { Search, Book, ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import SmartImage from "./SmartImage";
 
-const WikiView: React.FC = () => {
+const WikiView = () => {
   const { t, language } = useLanguage();
   const [docs, setDocs] = useState<WikiDoc[]>([]);
   const [loading, setLoading] = useState(true);

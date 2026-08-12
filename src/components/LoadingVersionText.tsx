@@ -1,6 +1,6 @@
 // src/components/LoadingVersionText.tsx (Modified)
 
-import React from "react";
+import { useEffect, useState } from "react";
 
 interface LoadingVersionTextProps {
   // The format to mimic, e.g., "0.0.0" or "v1.2.3"
@@ -11,8 +11,8 @@ interface LoadingVersionTextProps {
  * Displays a "glitch text" effect for a loading state, taking styling
  * from its parent element.
  */
-export const LoadingVersionText: React.FC<LoadingVersionTextProps> = ({ format }) => {
-  const [glitchText, setGlitchText] = React.useState(format);
+export const LoadingVersionText = ({ format }: LoadingVersionTextProps) => {
+  const [glitchText, setGlitchText] = useState(format);
   const placeholderChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"; // Shortened for efficiency
 
   const generateGlitchText = (targetFormat: string): string => {
@@ -30,7 +30,7 @@ export const LoadingVersionText: React.FC<LoadingVersionTextProps> = ({ format }
     return newText;
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const intervalId = setInterval(() => {
       setGlitchText(generateGlitchText(format));
     }, 100);

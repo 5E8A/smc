@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "@tanstack/react-router";
 import { Calendar /*User*/ } from "lucide-react";
 import { BlogPost } from "../types";
@@ -9,7 +8,7 @@ interface PostCardProps {
   post: BlogPost;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard = ({ post }: PostCardProps) => {
   const { t } = useLanguage();
 
   return (

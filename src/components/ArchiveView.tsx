@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
 import { useLanguage } from "../context/useLanguage";
 import { Search, Loader2 } from "lucide-react";
 
-const ArchiveView: React.FC = () => {
+const ArchiveView = () => {
   const { t, language } = useLanguage();
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Menu, X, Download, Globe } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
 
