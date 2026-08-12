@@ -13,8 +13,7 @@ const BackButton: React.FC<BackButtonProps> = ({ fallbackTo }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    const idx = window.history.state?.idx;
-    if (typeof idx === "number" && idx > 0) {
+    if (history.canGoBack()) {
       history.back();
     } else {
       navigate({ to: fallbackTo });
