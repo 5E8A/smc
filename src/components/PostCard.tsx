@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Calendar /*User*/ } from "lucide-react";
 import { BlogPost } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import SmartImage from "./SmartImage";
 
 interface PostCardProps {
   post: BlogPost;
@@ -15,10 +16,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <div className="flex flex-col bg-mc-surface rounded-xl border border-white/10 overflow-hidden hover:border-mc-green/50 hover:shadow-2xl hover:shadow-mc-green/10 transition-all duration-300 group h-full">
       {/* Image Container */}
       <div className="relative h-56 overflow-hidden">
-        <img
+        <SmartImage
           src={post.coverImage}
           alt={post.title}
-          className="w-full h-full object-cover will-change-transform transition-transform duration-700 group-hover:cover-zoom"
+          className="w-full h-full will-change-transform transition-transform duration-700 group-hover:cover-zoom"
+          priority="low"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-mc-surface via-transparent to-transparent opacity-90"></div>
         <div className="absolute top-4 left-4">

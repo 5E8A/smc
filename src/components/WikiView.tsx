@@ -4,6 +4,7 @@ import { WikiDoc } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 import { Search, Book, ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import SmartImage from "./SmartImage";
 
 const WikiView: React.FC = () => {
   const { t, language } = useLanguage();
@@ -73,10 +74,11 @@ const WikiView: React.FC = () => {
                 <div className="flex flex-col md:flex-row h-full">
                   <div className="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
                     <div className="absolute inset-0 bg-indigo-900/20 z-10 group-hover:bg-transparent transition-colors"></div>
-                    <img
+                    <SmartImage
                       src={doc.coverImage}
                       alt={doc.title}
-                      className="w-full h-full object-cover will-change-transform group-hover:cover-zoom transition-transform duration-300"
+                      className="w-full h-full will-change-transform group-hover:cover-zoom transition-transform duration-300"
+                      priority="low"
                     />
                   </div>
                   <div className="p-6 md:w-2/3 flex flex-col justify-between">

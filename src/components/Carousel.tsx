@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
+import SmartImage from "./SmartImage";
 
 interface CarouselProps {
   images: string[];
@@ -39,7 +40,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
     <div className="relative group w-full h-full">
       {/* Main Image Container */}
       <div className="relative w-full aspect-video bg-[#050505] overflow-hidden">
-        <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="w-full h-full object-cover" />
+        <SmartImage src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="w-full h-full" priority="low" />
 
         {/* Subtle gradient overlay at bottom for dots */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>

@@ -7,6 +7,7 @@ import BackButton from "./BackButton";
 import { Calendar, User, Clock, Loader2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { parseRichText } from "../utils/richText";
+import SmartImage from "./SmartImage";
 
 const ArticleView: React.FC = () => {
   const { slug } = useParams({ strict: false });
@@ -41,7 +42,7 @@ const ArticleView: React.FC = () => {
       {/* Header Image Background */}
       <div className="relative h-[50vh] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-mc-bg/50 to-mc-bg z-10"></div>
-        <img src={post.coverImage} className="w-full h-full object-cover opacity-60" alt="Cover" />
+        <SmartImage src={post.coverImage} alt="Cover" className="w-full h-full opacity-60" lazy={false} priority="high" />
 
         <div className="absolute inset-0 flex flex-col justify-end items-center pb-20 z-20 px-4">
           <span className="px-4 py-1 mb-6 rounded-full bg-mc-green/10 border border-mc-green/20 text-mc-green text-sm font-bold uppercase tracking-wider backdrop-blur-md">
