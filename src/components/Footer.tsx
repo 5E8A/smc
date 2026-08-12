@@ -1,6 +1,6 @@
 import { useLanguage } from "../context/useLanguage";
 import { Link } from "@tanstack/react-router";
-import GitHubIcon from "./GitHubIcon";
+import { GithubLogoIcon } from "@phosphor-icons/react";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -80,7 +80,7 @@ const Footer = () => {
                 className="p-2 bg-white/5 rounded-lg hover:bg-white/10 hover:text-white text-mc-text-muted transition-colors"
               >
                 <span className="sr-only">GitHub</span>
-                <GitHubIcon className="h-5 w-5" />
+                <GithubLogoIcon className="h-5 w-5" />
               </a>
             </div>
           </div>

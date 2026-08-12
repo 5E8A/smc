@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchWikiDocs } from "../data/wiki";
 import { WikiDoc } from "../types";
 import { useLanguage } from "../context/useLanguage";
-import { Search, Book, ArrowRight, Loader2 } from "lucide-react";
+import { MagnifyingGlassIcon, BookIcon, ArrowRightIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import SmartImage from "./SmartImage";
 
@@ -39,10 +39,10 @@ const WikiView = () => {
           </h1>
           <p className="text-mc-text-muted text-lg relative z-10 mb-8 max-w-2xl">{t.wiki.subtitle}</p>
 
-          {/* Search Bar */}
+          {/* MagnifyingGlassIcon Bar */}
           <div className="relative max-w-md z-10">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-mc-text-muted" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-mc-text-muted" />
             </div>
             <input
               type="text"
@@ -60,7 +60,7 @@ const WikiView = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[300px]">
           {loading ? (
             <div className="col-span-full flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-mc-accent animate-spin" />
+              <SpinnerIcon className="w-8 h-8 text-mc-accent animate-spin" />
             </div>
           ) : filteredDocs.length > 0 ? (
             filteredDocs.map((doc) => (
@@ -84,7 +84,7 @@ const WikiView = () => {
                   <div className="p-6 md:w-2/3 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center space-x-2 mb-3">
-                        <Book className="w-4 h-4 text-green-400" />
+                        <BookIcon className="w-4 h-4 text-green-400" />
                         <span className="text-xs text-green-400 font-bold uppercase tracking-wider">
                           {doc.category}
                         </span>
@@ -96,7 +96,7 @@ const WikiView = () => {
                     </div>
                     <div className="mt-4 flex items-center text-sm font-semibold text-white group-hover:text-green-400 transition-colors">
                       {t.wiki.read_doc}{" "}
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { LinkProps, useNavigate, useRouter } from "@tanstack/react-router";
 import { useLanguage } from "../context/useLanguage";
 
@@ -25,7 +25,7 @@ const BackButton = ({ fallbackTo }: BackButtonProps) => {
       onClick={handleClick}
       className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm"
     >
-      <ArrowLeft className="w-4 h-4 mr-2" />
+      <ArrowLeftIcon className="w-4 h-4 mr-2" />
       {t.common.back}
     </button>
   );

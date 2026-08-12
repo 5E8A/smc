@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Calendar /*User*/ } from "lucide-react";
+import { CalendarIcon /*User*/ } from "@phosphor-icons/react";
 import { BlogPost } from "../types";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
@@ -33,7 +33,7 @@ const PostCard = ({ post }: PostCardProps) => {
       <div className="p-6 flex flex-col flex-grow relative -mt-12">
         <div className="flex items-center text-xs text-mc-text-muted mb-3 space-x-4">
           <div className="flex items-center bg-black/40 px-2 py-1 rounded border border-white/5">
-            <Calendar className="w-3 h-3 mr-2" />
+            <CalendarIcon className="w-3 h-3 mr-2" />
             {post.date}
           </div>
         </div>

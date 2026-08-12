@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchRecentPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
-import { Zap, Cpu, MemoryStick, ChevronRight, Loader2 } from "lucide-react";
+import { LightningIcon, CpuIcon, MemoryIcon, CaretRightIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import { Link } from "@tanstack/react-router";
 import { getLatestVersionData } from "@/services/api";
@@ -79,7 +79,7 @@ const HomeView = () => {
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <a href="#latest" className="btn-mc-green px-8 py-3 rounded text-center flex items-center justify-center">
               <span>{t.hero.read_updates}</span>
-              <ChevronRight className="w-5 h-5 ml-2" />
+              <CaretRightIcon className="w-5 h-5 ml-2" />
             </a>
             <Link to="/wiki" preload="intent" className="btn-mc-stone px-8 py-3 rounded text-center">
               <span>{t.hero.wiki}</span>
@@ -124,7 +124,7 @@ const HomeView = () => {
             {/* Feature 1 */}
             <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-accent/30 transition-colors group">
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-500/10 mb-6 group-hover:scale-110 transition-transform">
-                <Cpu className="w-6 h-6 text-indigo-400" />
+                <CpuIcon className="w-6 h-6 text-indigo-400" />
               </div>
               <h2 className="text-2xl font-mc text-white mb-3">{t.features.fabric_title}</h2>
               <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.fabric_desc}</p>
@@ -133,7 +133,7 @@ const HomeView = () => {
             {/* Feature 2 */}
             <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-accent/30 transition-colors group">
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-yellow-500/10 mb-6 group-hover:scale-110 transition-transform">
-                <Zap className="w-6 h-6 text-yellow-400" />
+                <LightningIcon className="w-6 h-6 text-yellow-400" />
               </div>
               <h2 className="text-2xl font-mc text-white mb-3">{t.features.sodium_title}</h2>
               <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.sodium_desc}</p>
@@ -142,7 +142,7 @@ const HomeView = () => {
             {/* Feature 3 */}
             <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-accent/30 transition-colors group">
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-emerald-500/10 mb-6 group-hover:scale-110 transition-transform">
-                <MemoryStick className="w-6 h-6 text-emerald-400" />
+                <MemoryIcon className="w-6 h-6 text-emerald-400" />
               </div>
               <h2 className="text-2xl font-mc text-white mb-3">{t.features.memory_title}</h2>
               <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.memory_desc}</p>
@@ -164,14 +164,14 @@ const HomeView = () => {
               preload="intent"
               className="hidden md:flex items-center font-medium text-mc-accent hover:text-white transition-colors mt-4 md:mt-0"
             >
-              {t.latest.view_archive} <ChevronRight className="w-4 h-4 ml-1" />
+              {t.latest.view_archive} <CaretRightIcon className="w-4 h-4 ml-1" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
             {loading ? (
               <div className="col-span-full flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-mc-accent animate-spin" />
+                <SpinnerIcon className="w-8 h-8 text-mc-accent animate-spin" />
               </div>
             ) : (
               posts.map((post) => <PostCard key={post.id} post={post} />)
