@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 
 const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
 
@@ -28,9 +29,16 @@ export const parseRichText = (text: string): ReactNode[] => {
         href={linkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-mc-green-text hover:text-white hover:underline transition-colors font-semibold"
+        className="text-mc-green-text hover:text-white hover:shadow-[inset_0_-1px_0_currentColor] transition-colors font-semibold"
       >
         {linkText}
+        <ArrowSquareOutIcon
+          aria-hidden
+          weight="bold"
+          size="1em"
+          className="ml-1 inline-block"
+          style={{ verticalAlign: "-0.125em" }}
+        />
       </a>
     );
 
