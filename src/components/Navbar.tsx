@@ -16,7 +16,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <SmartImage src="/smc/assets/avatars/smc.webp" alt="SMC Logo" className="h-10 w-10 rounded-full" lazy={false} />
+            <SmartImage src="/smc/assets/avatars/smc.webp" alt="SMC Logo" className="h-10 w-10 rounded-squircle" lazy={false} />
             {/* <div className="relative p-2 bg-gradient-to-br from-mc-surface-light to-mc-surface rounded-lg border border-white/10 shadow-lg group-hover:border-mc-accent/50 transition-colors">
               <Box className="h-6 w-6 text-mc-accent" strokeWidth={2} />
             </div> */}
