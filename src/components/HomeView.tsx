@@ -9,11 +9,8 @@ import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";
 import { VersionData } from "@/types";
 import SmartImage from "./SmartImage";
+import VersionBadge from "./VersionBadge";
 import ParallaxBackground from "./ParallaxBackground";
-
-const splitVersionHeroTag = (text: string): string[] => {
-  return text.split("[version]");
-};
 
 const HomeView = () => {
   const { t, language } = useLanguage();
@@ -37,16 +34,10 @@ const HomeView = () => {
     fetchVersion();
   }, []);
 
-  const heroTagParts = splitVersionHeroTag(t.hero.tag);
-
-  const renderHeroTag = () => {
-    const versionContent =
-      version !== null ? version.version_number : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
-    const gameVersion =
-      version !== null ? version.game_version : <LoadingVersionText key="loading-game-version" format={"0.00.0"} />;
-
-    return [heroTagParts[0], versionContent, heroTagParts[1], gameVersion];
-  };
+  const versionContent =
+    version !== null ? version.version_number : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
+  const gameVersion =
+    version !== null ? version.game_version : <LoadingVersionText key="loading-game-version" format={"0.00.0"} />;
 
   return (
     <div className="flex flex-col">
@@ -58,10 +49,7 @@ const HomeView = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-mc-green/5 blur-[120px] rounded-full"></div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-start justify-center min-h-[60vh] z-10">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-mc-green/10 border border-mc-green/20 mb-8 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-mc-green mr-2 animate-pulse"></span>
-            <span className="text-mc-green text-sm font-semibold tracking-wide uppercase">{renderHeroTag()}</span>
-          </div>
+          <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
 
           <h1 className="leading-none tracking-tight scale-75 origin-left">
             <SmartImage
