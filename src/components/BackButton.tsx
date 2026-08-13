@@ -23,7 +23,7 @@ const BackButton = ({ fallbackTo }: BackButtonProps) => {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm"
+      className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm cursor-pointer"
     >
       <ArrowLeftIcon className="w-4 h-4 mr-2" />
       {t.common.back}
