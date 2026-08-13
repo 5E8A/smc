@@ -89,8 +89,8 @@ const HomeView = () => {
       </section>
 
       {/* Ad Banner */}
-      <section className="w-full bg-[#050505] py-6 flex justify-center overflow-hidden border-y border-white/5">
-        <div className="w-full max-w-[1920px] px-4 sm:px-6 lg:px-8">
+      <section className="w-full max-w-7xl mx-auto py-6 overflow-hidden border-y border-white/5">
+        <div className="px-4 sm:px-6 lg:px-8">
           <a
             href="https://billing.sparkedhost.com/aff.php?aff=3127"
             target="_blank"
@@ -168,7 +168,7 @@ const HomeView = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-75">
             {loading ? (
               <div className="col-span-full flex items-center justify-center">
                 <SpinnerIcon className="w-8 h-8 text-mc-accent animate-spin" />
