@@ -25,7 +25,6 @@ const ParallaxBackground = ({ className, variant = "parallax", factor = 0.35 }: 
       if (!raf) raf = requestAnimationFrame(update);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    update();
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
