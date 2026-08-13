@@ -27,11 +27,25 @@ const HomeView = () => {
   }, [language]);
 
   useEffect(() => {
+    let done = false;
     const fetchVersion = async () => {
+      if (done) return;
+      done = true;
       const latestVersion = await getLatestVersionData("dOLVvHgi");
       setVersion(latestVersion);
     };
-    fetchVersion();
+
+    const observer =
+      typeof PerformanceObserver !== "undefined"
+        ? new PerformanceObserver(() => fetchVersion())
+        : null;
+    observer?.observe({ type: "largest-contentful-paint" });
+
+    const fallback = setTimeout(fetchVersion, 1500);
+    return () => {
+      observer?.disconnect();
+      clearTimeout(fallback);
+    };
   }, []);
 
   const versionContent =
