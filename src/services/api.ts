@@ -29,10 +29,7 @@ const request = async <T>(
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(url.toString(), {
-      signal: controller.signal,
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await fetch(url.toString(), { signal: controller.signal });
 
     if (!response.ok) {
       throw new Error(`Request to ${url.toString()} failed with status ${response.status}`);
