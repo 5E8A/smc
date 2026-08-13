@@ -9,6 +9,7 @@ import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";
 import { VersionData } from "@/types";
 import SmartImage from "./SmartImage";
+import ParallaxBackground from "./ParallaxBackground";
 
 const splitVersionHeroTag = (text: string): string[] => {
   return text.split("[version]");
@@ -48,14 +49,13 @@ const HomeView = () => {
   };
 
   return (
-    <div className="flex flex-col bg-mc-bg bg-deepslate">
+    <div className="flex flex-col">
+      <ParallaxBackground className="parallax-bg" />
+
       {/* Hero Section - Launcher Style */}
       <section className="relative overflow-hidden border-b border-white/5">
-        <div className="absolute inset-0 bg-black/40 z-0"></div>
         {/* Modern blur effect behind hero */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-mc-green/5 blur-[120px] rounded-full"></div>
-
-        <div className="absolute inset-0 bg-[url('/smc/assets/static/background.webp')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-start justify-center min-h-[60vh] z-10">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-mc-green/10 border border-mc-green/20 mb-8 backdrop-blur-sm">
@@ -118,7 +118,7 @@ const HomeView = () => {
       </section>
 
       {/* Features Grid - Modern Clean Cards */}
-      <section className="py-24 bg-mc-bg relative">
+      <section className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
@@ -152,7 +152,7 @@ const HomeView = () => {
       </section>
 
       {/* Latest Posts */}
-      <section id="latest" className="py-24 bg-[#050505] border-t border-white/5">
+      <section id="latest" className="py-24 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>

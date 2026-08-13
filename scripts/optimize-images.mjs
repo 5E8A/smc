@@ -26,6 +26,9 @@ const walk = (dir) =>
 const toWebpName = (file) => file.replace(/\.(png|jpe?g)$/i, ".webp");
 const toPlaceholderName = (file) => file.replace(/\.(png|jpe?g|webp)$/i, ".placeholder.webp");
 
+const FULL_WIDTH_BACKGROUND = "static/background.png";
+const MOBILE_BG_MAX_WIDTH = 1200;
+
 const convert = async (file) => {
   const rel = path.relative(srcDir, file).replace(/\\/g, "/");
 
@@ -46,6 +49,17 @@ const convert = async (file) => {
     pipeline = pipeline.resize(avatarSize, avatarSize, { fit: "cover" });
   }
   await pipeline.webp({ quality: 80 }).toFile(out);
+
+  if (rel === FULL_WIDTH_BACKGROUND) {
+    const mobileOut = out.replace(/\.webp$/i, ".mobile.webp");
+    await sharp(file)
+      .resize(MOBILE_BG_MAX_WIDTH, null, { fit: "inside" })
+      .webp({ quality: 70 })
+      .toFile(mobileOut);
+    const size = (await fs.promises.stat(out)).size;
+    const mobileSize = (await fs.promises.stat(mobileOut)).size;
+    console.log(`${rel} -> ${toWebpName(rel)} (${(size / 1024).toFixed(1)} KB) + mobile (${(mobileSize / 1024).toFixed(1)} KB)`);
+  }
 
   const placeholderOut = path.join(outDir, toPlaceholderName(rel));
   await sharp(file).resize(PLACEHOLDER_WIDTH, null, { fit: "inside" }).webp({ quality: 30 }).toFile(placeholderOut);
