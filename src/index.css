@@ -101,6 +101,19 @@
   transform: translateZ(0) scale(1.05);
 }
 
+.parallax-bg {
+  background-image: url("/smc/assets/static/background.webp");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: screen;
+}
+
+@media (max-width: 1023px) {
+  .parallax-bg {
+    background-image: url("/smc/assets/static/background.mobile.webp");
+  }
+}
+
 .toast {
   border-style: solid;
   border-width: 3px 2px;
@@ -169,19 +182,6 @@
 }
 
 @layer components {
-.parallax-bg {
-  background-image: url("/smc/assets/static/background.webp");
-  background-size: cover;
-  background-position: center;
-  mix-blend-mode: screen;
-}
-
-@media (max-width: 1023px) {
-  .parallax-bg {
-    background-image: url("/smc/assets/static/background.mobile.webp");
-  }
-}
-
   /* Modern Minecraft Button (Launcher Style) */
   .btn-mc-green {
     background-color: #3c8527;
