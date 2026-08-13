@@ -39,7 +39,7 @@ const WikiView = () => {
           <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
             {t.wiki.title}
           </h1>
-          <p className="text-mc-text-muted text-lg relative z-10 mb-8 max-w-2xl">{t.wiki.subtitle}</p>
+          <p className="text-mc-text text-lg relative z-10 mb-8 max-w-2xl">{t.wiki.subtitle}</p>
 
           {/* MagnifyingGlassIcon Bar */}
           <div className="relative max-w-md z-10">
@@ -94,7 +94,7 @@ const WikiView = () => {
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
                         {doc.title}
                       </h3>
-                      <p className="text-mc-text-muted text-sm line-clamp-2">{doc.summary}</p>
+                      <p className="text-mc-text text-sm line-clamp-2">{doc.summary}</p>
                     </div>
                     <div className="mt-4 flex items-center text-sm font-semibold text-white group-hover:text-green-400 transition-colors">
                       {t.wiki.read_doc}{" "}

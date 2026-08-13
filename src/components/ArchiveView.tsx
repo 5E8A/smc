@@ -38,7 +38,7 @@ const ArchiveView = () => {
           <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
             {t.archive.title}
           </h1>
-          <p className="text-mc-text-muted text-lg relative z-10 mb-8 max-w-2xl">{t.archive.subtitle}</p>
+          <p className="text-mc-text text-lg relative z-10 mb-8 max-w-2xl">{t.archive.subtitle}</p>
 
           {/* MagnifyingGlassIcon Bar */}
           <div className="relative max-w-md z-10">
