@@ -39,7 +39,7 @@ const AboutView = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-mc-bg bg-deepslate pt-10 pb-20">
+    <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 w-full">
         <div className="bg-mc-surface border border-white/10 rounded-xl p-8 shadow-xl relative overflow-hidden">
