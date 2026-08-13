@@ -62,7 +62,7 @@ const HomeView = () => {
             />
           </h1>
 
-          <p className="max-w-xl text-lg text-mc-text-muted mb-10 leading-relaxed font-sans">{t.hero.description}</p>
+          <p className="max-w-xl text-lg text-mc-text mb-10 leading-relaxed font-sans">{t.hero.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <a href="#latest" className="btn-mc-green px-8 py-3 rounded text-center flex items-center justify-center">
@@ -115,7 +115,7 @@ const HomeView = () => {
                 <CpuIcon className="w-6 h-6 text-indigo-400" />
               </div>
               <h2 className="text-2xl font-mc text-white mb-3">{t.features.fabric_title}</h2>
-              <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.fabric_desc}</p>
+              <p className="text-mc-text leading-relaxed text-sm">{t.features.fabric_desc}</p>
             </div>
 
             {/* Feature 2 */}
@@ -124,7 +124,7 @@ const HomeView = () => {
                 <LightningIcon className="w-6 h-6 text-yellow-400" />
               </div>
               <h2 className="text-2xl font-mc text-white mb-3">{t.features.sodium_title}</h2>
-              <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.sodium_desc}</p>
+              <p className="text-mc-text leading-relaxed text-sm">{t.features.sodium_desc}</p>
             </div>
 
             {/* Feature 3 */}
@@ -133,7 +133,7 @@ const HomeView = () => {
                 <MemoryIcon className="w-6 h-6 text-emerald-400" />
               </div>
               <h2 className="text-2xl font-mc text-white mb-3">{t.features.memory_title}</h2>
-              <p className="text-mc-text-muted leading-relaxed text-sm">{t.features.memory_desc}</p>
+              <p className="text-mc-text leading-relaxed text-sm">{t.features.memory_desc}</p>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ const HomeView = () => {
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
               <h2 className="text-4xl font-mc text-white mb-2">{t.latest.title}</h2>
-              <p className="text-mc-text-muted">{t.latest.subtitle}</p>
+              <p className="text-mc-text">{t.latest.subtitle}</p>
             </div>
             <Link
               to="/archive"

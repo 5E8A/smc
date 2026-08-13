@@ -20,7 +20,7 @@ const Footer = () => {
           {/* Links */}
           <div className="space-y-4">
             <h4 className="text-white font-semibold text-sm uppercase tracking-wider">{t.footer.resources}</h4>
-            <ul className="space-y-2 text-mc-text-muted text-sm">
+            <ul className="space-y-2 text-mc-text text-sm">
               <li>
                 <a
                   href="https://www.curseforge.com/members/5e8a/projects"

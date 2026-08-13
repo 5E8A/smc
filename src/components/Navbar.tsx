@@ -33,28 +33,28 @@ const Navbar = () => {
               <Link
                 to="/"
                 preload="intent"
-                className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="flex items-center space-x-2 text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.home}</span>
               </Link>
               <Link
                 to="/archive"
                 preload="intent"
-                className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="flex items-center space-x-2 text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.archive}</span>
               </Link>
               <Link
                 to="/wiki"
                 preload="intent"
-                className="flex items-center space-x-2 text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="flex items-center space-x-2 text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.wiki}</span>
               </Link>
               <Link
                 to="/about"
                 preload="intent"
-                className="text-mc-text-muted hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
+                className="text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 {t.nav.about}
               </Link>
@@ -78,7 +78,7 @@ const Navbar = () => {
                 aria-label={t.common.language}
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as "en" | "pl")}
-                className="bg-transparent text-sm font-medium text-mc-text-muted focus:outline-none hover:text-white cursor-pointer uppercase"
+                className="bg-transparent text-sm font-medium text-mc-text focus:outline-none hover:text-white cursor-pointer uppercase"
               >
                 <option value="en" className="bg-mc-surface">
                   EN
@@ -136,7 +136,7 @@ const Navbar = () => {
               to="/about"
               preload="intent"
               onClick={() => setIsOpen(false)}
-              className="text-mc-text-muted hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
+              className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >
               {t.nav.about}
             </Link>

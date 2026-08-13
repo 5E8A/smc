@@ -84,7 +84,7 @@
   --color-mc-green: #3c8527; /* Launcher Green */
   --color-mc-green-hover: #2a641c;
   --color-mc-text: #e4e4e7; /* Zinc 200 */
-  --color-mc-text-muted: #a1a1aa; /* Zinc 400 */
+  --color-mc-text-muted: #b4b4bc; /* Zinc 400+ */
 
   --background-image-deepslate: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwquTn5yMwQbJAY0CGAAALqxNLE39BAAAAAElFTkSuQmCC");
 }
