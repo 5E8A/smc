@@ -88,6 +88,8 @@
   --color-mc-text-muted: #b4b4bc; /* Zinc 400+ */
 
   --background-image-deepslate: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwquTn5yMwQbJAY0CGAAALqxNLE39BAAAAAElFTkSuQmCC");
+
+  --radius-squircle: 22.37%;
 }
 
 @layer base {
