@@ -46,6 +46,11 @@ const Footer = () => {
                   {t.hero.wiki}
                 </Link>
               </li>
+              <li>
+                <Link to="/credits" preload="intent" className="hover:text-mc-green-text transition-colors">
+                  {t.footer.credits}
+                </Link>
+              </li>
               {/* <li>
                 <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-mc-accent transition-colors">
                   Github Issues

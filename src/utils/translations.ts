@@ -74,6 +74,29 @@ export const translations = {
       copyright: "SMC - Seba Modding Community",
       rights: "Not affiliated with Mojang Studios.",
       made_with: "Developed by logy",
+      credits: "Credits",
+    },
+    credits: {
+      title: "CREDITS & LEGAL",
+      subtitle: "Who made what, and the legal fine print.",
+      disclaimer_title: "Disclaimer",
+      disclaimer_text:
+        "NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT. Minecraft is a trademark of Mojang AB and Microsoft Corporation.",
+      assets_title: "Minecraft Assets",
+      assets_text:
+        "The block textures (dark prismarine, deepslate, warped wart block, sculk), the toast texture and the grass block icon are (c) Mojang AB / Microsoft Corporation. They are sourced from the vanilla Minecraft assets via the open-source PrismarineJS/minecraft-assets repository and used under the Minecraft Usage Guidelines.",
+      wallpaper_title: "Background Artwork",
+      wallpaper_text:
+        "The homepage background artwork was sourced from a free wallpaper site ([Wallpaper Alchemy](https://www.wallpaperalchemy.com/wallpaper/minecraft-mountain-sunset-valley-wallpaper-4k-1702)). All rights belong to its original creator - if this is your work, contact us to add credit or remove it.",
+      fonts_title: "Fonts",
+      fonts_text:
+        "Inter - (c) 2016 The Inter Project Authors. VT323 - (c) 2011 The VT323 Project Authors. Both are licensed under the SIL Open Font License 1.1 ([openfontlicense.org](https://openfontlicense.org)) and are used unmodified. Full license texts ship with the font files.",
+      operator_title: "Site Operator",
+      operator_text:
+        "SMC - Seba Modding Community is operated by 5E8A. Contact: GitHub / Discord.",
+      affiliate_title: "Affiliate Disclosure",
+      affiliate_text:
+        "The hosting banner on the homepage is an affiliate link to Sparked Host. We may earn a commission at no extra cost to you.",
     },
     not_found: {
       title: "Page Not Found",
@@ -155,6 +178,29 @@ export const translations = {
       copyright: "SMC - Seba Modding Community",
       rights: "Nie powiązane z Mojang Studios.",
       made_with: "Stworzone przez logy",
+      credits: "Credits",
+    },
+    credits: {
+      title: "CREDITS I PRAWA",
+      subtitle: "Kto co stworzył i drobny druk.",
+      disclaimer_title: "Zastrzeżenie",
+      disclaimer_text:
+        "TO NIE JEST OFICJALNY PRODUKT MINECRAFT. NIE ZATWIERDZONY ANI NIE POWIĄZANY Z MOJANG LUB MICROSOFT. Minecraft jest znakiem towarowym Mojang AB i Microsoft Corporation.",
+      assets_title: "Zasoby Minecraft",
+      assets_text:
+        "Tekstury bloków (ciemny pryzmaryn, deepslate, blok warped wart, sculk), tekstura toastu oraz ikona trawy są (c) Mojang AB / Microsoft Corporation. Pochodzą z oryginalnych zasobów Minecraft za pośrednictwem open-source'owego repozytorium PrismarineJS/minecraft-assets i są używane zgodnie z Zasadami Użytkowania Minecraft.",
+      wallpaper_title: "Grafika w Tle",
+      wallpaper_text:
+        "Grafika tła strony głównej pochodzi z darmowej strony z tapetami ([Wallpaper Alchemy](https://www.wallpaperalchemy.com/wallpaper/minecraft-mountain-sunset-valley-wallpaper-4k-1702)). Wszelkie prawa należą do jej oryginalnego twórcy - jeśli jest to Twoja praca, skontaktuj się z nami, aby dodać podziękowanie lub usunąć grafikę.",
+      fonts_title: "Czcionki",
+      fonts_text:
+        "Inter - (c) 2016 The Inter Project Authors. VT323 - (c) 2011 The VT323 Project Authors. Obie są licencjonowane na SIL Open Font License 1.1 ([openfontlicense.org](https://openfontlicense.org)) i używane bez modyfikacji. Pełne teksty licencji znajdują się przy plikach czcionek.",
+      operator_title: "Operator Strony",
+      operator_text:
+        "SMC - Seba Modding Community jest prowadzone przez 5E8A. Kontakt: GitHub / Discord.",
+      affiliate_title: "Informacja o Afiliacji",
+      affiliate_text:
+        "Baner hostingowy na stronie głównej to link partnerski do Sparked Host. Możemy otrzymać prowizję bez dodatkowych kosztów dla Ciebie.",
     },
     not_found: {
       title: "Nie Znaleziono Strony",

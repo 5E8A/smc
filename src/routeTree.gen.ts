@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ArchiveRouteImport } from './routes/archive'
+import { Route as CreditsRouteImport } from './routes/credits'
 import { Route as PostSlugRouteImport } from './routes/post.$slug'
 import { Route as WikiIndexRouteImport } from './routes/wiki/index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
@@ -31,6 +32,11 @@ const ArchiveRoute = ArchiveRouteImport.update({
   path: '/archive',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/archive.lazy').then((d) => d.Route))
+const CreditsRoute = CreditsRouteImport.update({
+  id: '/credits',
+  path: '/credits',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/credits.lazy').then((d) => d.Route))
 const PostSlugRoute = PostSlugRouteImport.update({
   id: '/post/$slug',
   path: '/post/$slug',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/archive': typeof ArchiveRoute
+  '/credits': typeof CreditsRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/archive': typeof ArchiveRoute
+  '/credits': typeof CreditsRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki': typeof WikiIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/archive': typeof ArchiveRoute
+  '/credits': typeof CreditsRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -75,14 +84,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/about' | '/archive' | '/post/$slug' | '/wiki/$slug' | '/wiki/'
+    | '/'
+    | '/about'
+    | '/archive'
+    | '/credits'
+    | '/post/$slug'
+    | '/wiki/$slug'
+    | '/wiki/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/archive' | '/post/$slug' | '/wiki/$slug' | '/wiki'
+  to:
+    | '/'
+    | '/about'
+    | '/archive'
+    | '/credits'
+    | '/post/$slug'
+    | '/wiki/$slug'
+    | '/wiki'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/archive'
+    | '/credits'
     | '/post/$slug'
     | '/wiki/$slug'
     | '/wiki/'
@@ -92,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ArchiveRoute: typeof ArchiveRoute
+  CreditsRoute: typeof CreditsRoute
   PostSlugRoute: typeof PostSlugRoute
   WikiSlugRoute: typeof WikiSlugRoute
   WikiIndexRoute: typeof WikiIndexRoute
@@ -118,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/archive'
       fullPath: '/archive'
       preLoaderRoute: typeof ArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/credits': {
+      id: '/credits'
+      path: '/credits'
+      fullPath: '/credits'
+      preLoaderRoute: typeof CreditsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post/$slug': {
@@ -148,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ArchiveRoute: ArchiveRoute,
+  CreditsRoute: CreditsRoute,
   PostSlugRoute: PostSlugRoute,
   WikiSlugRoute: WikiSlugRoute,
   WikiIndexRoute: WikiIndexRoute,
