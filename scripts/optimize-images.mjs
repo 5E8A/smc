@@ -29,6 +29,10 @@ const toPlaceholderName = (file) => file.replace(/\.(png|jpe?g|webp)$/i, ".place
 const FULL_WIDTH_BACKGROUND = "static/background.png";
 const MOBILE_BG_MAX_WIDTH = 1200;
 
+const STATIC_MAX_WIDTH = {
+  "static/Artboard_3.png": 1600,
+};
+
 const convert = async (file) => {
   const rel = path.relative(srcDir, file).replace(/\\/g, "/");
 
@@ -42,11 +46,14 @@ const convert = async (file) => {
   }
 
   const avatarSize = AVATAR_SIZES[rel];
+  const staticMaxWidth = STATIC_MAX_WIDTH[rel];
   const out = path.join(outDir, toWebpName(rel));
   fs.mkdirSync(path.dirname(out), { recursive: true });
   let pipeline = sharp(file);
   if (avatarSize) {
     pipeline = pipeline.resize(avatarSize, avatarSize, { fit: "cover" });
+  } else if (staticMaxWidth) {
+    pipeline = pipeline.resize(staticMaxWidth, null, { fit: "inside" });
   }
   await pipeline.webp({ quality: 80 }).toFile(out);
 
