@@ -104,6 +104,8 @@ const HomeView = () => {
             <SmartImage
               src="/smc/assets/static/Artboard_3.webp"
               alt="Sponsored Content"
+              lazy={false}
+              priority="high"
               className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-[1.02]"
             />
 
