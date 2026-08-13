@@ -27,7 +27,7 @@ Deployed to GitHub Pages under `/smc` via artifacts.
 
 ## Conventions
 - **Named React imports only** — never `import React from "react"`, never `React.FC`; plain `const Cmp = ({ ... }: Props) => ...`.
-- ESLint flat config; `react-hooks/set-state-in-effect` is intentionally off; `scripts/` gets node globals via config.
+- ESLint flat config; `scripts/` gets node globals via config.
 - **Do NOT bump TypeScript past 6.x** — `typescript-eslint` peer range is `<6.1.0`; TS 7 breaks linting.
 
 ## Hard constraints

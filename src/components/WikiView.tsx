@@ -14,7 +14,6 @@ const WikiView = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setLoading(true);
     fetchWikiDocs(language).then((data) => {
       setDocs(data);
       setLoading(false);

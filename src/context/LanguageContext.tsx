@@ -3,21 +3,11 @@ import { translations, Language } from "../utils/translations";
 import { LanguageContext, LanguageContextType } from "./useLanguage";
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>("en");
-
-  useEffect(() => {
+  const [language, setLanguageState] = useState<Language>(() => {
     const savedLang = localStorage.getItem("smc-language") as Language;
-    if (savedLang && (savedLang === "en" || savedLang === "pl")) {
-      setLanguageState(savedLang);
-    } else {
-      const browserLang = navigator.language.split("-")[0];
-      if (browserLang === "pl") {
-        setLanguageState("pl");
-      } else {
-        setLanguageState("en");
-      }
-    }
-  }, []);
+    if (savedLang === "en" || savedLang === "pl") return savedLang;
+    return navigator.language.split("-")[0] === "pl" ? "pl" : "en";
+  });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
