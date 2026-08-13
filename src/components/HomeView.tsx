@@ -83,7 +83,7 @@ const HomeView = () => {
             href="https://billing.sparkedhost.com/aff.php?aff=3127"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative block w-full rounded-xl overflow-hidden bg-mc-surface/30 border border-white/10 group transition-all duration-300 hover:border-mc-accent/40 hover:scale-[1.01] cursor-pointer isolate transform-gpu"
+            className="relative block w-full rounded-xl overflow-hidden bg-mc-surface/30 border border-white/10 group transition-all duration-300 hover:border-mc-green/40 hover:scale-[1.01] cursor-pointer isolate transform-gpu"
             style={{ aspectRatio: "1920 / 300" }}
           >
             {/* Banner Image */}
@@ -110,7 +110,7 @@ const HomeView = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-accent/30 transition-colors group">
+            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-green/30 transition-colors group">
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-500/10 mb-6 group-hover:scale-110 transition-transform">
                 <CpuIcon className="w-6 h-6 text-indigo-400" />
               </div>
@@ -119,7 +119,7 @@ const HomeView = () => {
             </div>
 
             {/* Feature 2 */}
-            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-accent/30 transition-colors group">
+            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-green/30 transition-colors group">
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-yellow-500/10 mb-6 group-hover:scale-110 transition-transform">
                 <LightningIcon className="w-6 h-6 text-yellow-400" />
               </div>
@@ -128,7 +128,7 @@ const HomeView = () => {
             </div>
 
             {/* Feature 3 */}
-            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-accent/30 transition-colors group">
+            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-green/30 transition-colors group">
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-emerald-500/10 mb-6 group-hover:scale-110 transition-transform">
                 <MemoryIcon className="w-6 h-6 text-emerald-400" />
               </div>
@@ -150,7 +150,7 @@ const HomeView = () => {
             <Link
               to="/archive"
               preload="intent"
-              className="hidden md:flex items-center font-medium text-mc-accent hover:text-white transition-colors mt-4 md:mt-0"
+              className="hidden md:flex items-center font-medium text-mc-green-text hover:text-white transition-colors mt-4 md:mt-0"
             >
               {t.latest.view_archive} <CaretRightIcon className="w-4 h-4 ml-1" />
             </Link>
@@ -159,7 +159,7 @@ const HomeView = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-75">
             {loading ? (
               <div className="col-span-full flex items-center justify-center">
-                <SpinnerIcon className="w-8 h-8 text-mc-accent animate-spin" />
+                <SpinnerIcon className="w-8 h-8 text-mc-green-text animate-spin" />
               </div>
             ) : (
               posts.map((post) => <PostCard key={post.id} post={post} />)

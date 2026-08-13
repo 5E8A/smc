@@ -56,7 +56,7 @@ const AboutView = () => {
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-mc-surface/50 border border-white/5 rounded-xl p-6 text-center">
-            <div className="text-mc-accent text-4xl font-bold font-mc mb-2">
+            <div className="text-mc-green-text text-4xl font-bold font-mc mb-2">
               {downloads !== null ? downloads : "Loading..."}
             </div>
             <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_downloads}</div>

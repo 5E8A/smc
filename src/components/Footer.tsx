@@ -26,7 +26,7 @@ const Footer = () => {
                   href="https://www.curseforge.com/members/5e8a/projects"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-mc-accent transition-colors"
+                  className="hover:text-mc-green-text transition-colors"
                 >
                   CurseForge
                 </a>
@@ -36,13 +36,13 @@ const Footer = () => {
                   href="https://modrinth.com/user/5E8A"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-mc-accent transition-colors"
+                  className="hover:text-mc-green-text transition-colors"
                 >
                   Modrinth
                 </a>
               </li>
               <li>
-                <Link to="/wiki" preload="intent" className="hover:text-mc-accent transition-colors">
+                <Link to="/wiki" preload="intent" className="hover:text-mc-green-text transition-colors">
                   {t.hero.wiki}
                 </Link>
               </li>
