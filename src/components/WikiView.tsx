@@ -48,7 +48,7 @@ const WikiView = () => {
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-3 border border-white/10 rounded-lg leading-5 bg-black/40 text-white placeholder-mc-text-muted focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+              className="block w-full pl-10 pr-3 py-3 border border-white/10 rounded-lg leading-5 bg-black/40 text-white placeholder-mc-text-muted focus:outline-none focus:ring-1 focus:ring-mc-green focus:border-mc-green sm:text-sm transition-colors"
               placeholder={t.wiki.search_placeholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -62,7 +62,7 @@ const WikiView = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[300px]">
           {loading ? (
             <div className="col-span-full flex items-center justify-center">
-              <SpinnerIcon className="w-8 h-8 text-mc-accent animate-spin" />
+              <SpinnerIcon className="w-8 h-8 text-mc-green-text animate-spin" />
             </div>
           ) : filteredDocs.length > 0 ? (
             filteredDocs.map((doc) => (
@@ -75,7 +75,7 @@ const WikiView = () => {
               >
                 <div className="flex flex-col md:flex-row h-full">
                   <div className="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
-                    <div className="absolute inset-0 bg-indigo-900/20 z-10 group-hover:bg-transparent transition-colors"></div>
+                    <div className="absolute inset-0 bg-black/2 z-10 group-hover:bg-transparent transition-colors"></div>
                     <SmartImage
                       src={doc.coverImage}
                       alt={doc.title}

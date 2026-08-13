@@ -28,7 +28,7 @@ export const parseRichText = (text: string): ReactNode[] => {
         href={linkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-mc-accent hover:text-white hover:underline transition-colors font-semibold"
+        className="text-mc-green-text hover:text-white hover:underline transition-colors font-semibold"
       >
         {linkText}
       </a>

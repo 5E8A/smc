@@ -83,6 +83,7 @@
   --color-mc-accent: #90d5ff; /* Diamond Blue */
   --color-mc-green: #3c8527; /* Launcher Green */
   --color-mc-green-hover: #2a641c;
+  --color-mc-green-text: #4ade80; /* green-400 for text on dark */
   --color-mc-text: #e4e4e7; /* Zinc 200 */
   --color-mc-text-muted: #b4b4bc; /* Zinc 400+ */
 
