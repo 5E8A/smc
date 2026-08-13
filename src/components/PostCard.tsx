@@ -12,7 +12,12 @@ const PostCard = ({ post }: PostCardProps) => {
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col bg-mc-surface rounded-xl border border-white/10 overflow-hidden hover:border-mc-green/50 hover:shadow-2xl hover:shadow-mc-green/10 transition-all duration-300 group h-full">
+    <Link
+      to="/post/$slug"
+      params={{ slug: post.slug }}
+      preload="intent"
+      className="flex flex-col bg-mc-surface rounded-xl border border-white/10 overflow-hidden hover:border-mc-green/50 hover:shadow-2xl hover:shadow-mc-green/10 transition-all duration-300 group h-full select-none"
+    >
       {/* Image Container */}
       <div className="relative h-56 overflow-hidden">
         <SmartImage
@@ -53,17 +58,12 @@ const PostCard = ({ post }: PostCardProps) => {
             {post.author.name}
           </div>
 
-          <Link
-            to="/post/$slug"
-            params={{ slug: post.slug }}
-            preload="intent"
-            className="text-sm font-semibold text-white hover:text-mc-green transition-colors"
-          >
+          <span className="text-sm font-semibold text-white group-hover:text-mc-green transition-colors">
             {t.latest.read_article} &rarr;
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
