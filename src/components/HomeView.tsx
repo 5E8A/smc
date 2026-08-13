@@ -19,7 +19,6 @@ const HomeView = () => {
   const [version, setVersion] = useState<VersionData | null>(null);
 
   useEffect(() => {
-    setLoading(true);
     fetchRecentPosts(language, 3).then((data) => {
       setPosts(data);
       setLoading(false);

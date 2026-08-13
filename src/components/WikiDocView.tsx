@@ -16,7 +16,6 @@ const WikiDocView = () => {
 
   useEffect(() => {
     if (slug) {
-      setLoading(true);
       fetchWikiDocBySlug(slug, language).then((data) => {
         setDoc(data);
         setLoading(false);

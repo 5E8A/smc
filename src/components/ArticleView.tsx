@@ -17,7 +17,6 @@ const ArticleView = () => {
 
   useEffect(() => {
     if (slug) {
-      setLoading(true);
       fetchPostBySlug(slug, language).then((data) => {
         setPost(data);
         setLoading(false);

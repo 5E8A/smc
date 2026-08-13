@@ -13,7 +13,6 @@ const ArchiveView = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setLoading(true);
     fetchPosts(language).then((data) => {
       setAllPosts(data);
       setLoading(false);
