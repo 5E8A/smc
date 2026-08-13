@@ -19,7 +19,9 @@ export const translations = {
         "Official blog for the Fabric Boosted modpack by 5E8A. News, updates, and optimization guides.",
     },
     hero: {
-      tag: "Version [version] Now Available for MC ",
+      tag_prefix: "Version",
+      tag_suffix: "Now Available for MC",
+      achievement_title: "Achievement Get!",
       title_prefix: "FABRIC",
       title_accent: "BOOSTED",
       description:
@@ -97,7 +99,9 @@ export const translations = {
         "Oficjalny blog paczki modów Fabric Boosted od 5E8A. Aktualności, poradniki i przewodniki optymalizacyjne.",
     },
     hero: {
-      tag: "Wersja [version] Już Dostępna na wersję MC ",
+      tag_prefix: "Wersja",
+      tag_suffix: "Już Dostępna na wersję MC",
+      achievement_title: "Osiągnięcie zdobyte!",
       title_prefix: "FABRIC",
       title_accent: "BOOSTED",
       description:
