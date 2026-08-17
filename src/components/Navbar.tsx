@@ -11,7 +11,7 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <nav className="sticky top-0 z-50 bg-mc-bg/80 backdrop-blur-md border-b border-white/10">
+    <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -106,7 +106,7 @@ const Navbar = () => {
 
       {/* Mobile ListIcon */}
       {isOpen && (
-        <div className="md:hidden bg-mc-bg/80 backdrop-blur-md border-b border-white/10">
+        <div className="md:hidden backdrop-blur-md border-b border-white/10">
           <div className="px-4 pt-2 pb-6 space-y-2">
             <Link
               to="/"
@@ -140,10 +140,10 @@ const Navbar = () => {
             >
               {t.nav.about}
             </Link>
-            <a href="#" className="btn-mc-green block w-full text-center px-3 py-3 mt-4 rounded">
+            <a href="https://modrinth.com/modpack/fabric-boosted" target="_blank" rel="noopener noreferrer" className="btn-mc-green block w-full text-center px-3 py-3 mt-4 rounded">
               {t.nav.download}
             </a>
-            <div className="border-t border-white/10 mt-4 pt-4 px-3">
+            <div className="mt-4 px-3">
               <div className="flex items-center text-mc-text-muted">
                 <GlobeIcon className="w-5 h-5 mr-2" />
                 <select
