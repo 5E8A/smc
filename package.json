@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:screenshot": "set VITE_SCREENSHOT=true&& vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "analyze": "vite build --mode analyze",
-    "optimize:images": "node scripts/optimize-images.mjs",
+    "process-assets": "node scripts/process-assets.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
