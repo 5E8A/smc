@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getWikiDocs } from "../data/wiki";
 import { WikiDoc } from "../types";
 import { useLanguage } from "../context/useLanguage";
 import { BookIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import SmartImage from "./SmartImage";
-import ParallaxBackground from "./ParallaxBackground";
 import SearchHeader from "./SearchHeader";
+
+const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
 const WikiView = () => {
   const { t, language } = useLanguage();
   const docs: WikiDoc[] = getWikiDocs(language);
   const [searchTerm, setSearchTerm] = useState("");
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (screenshotMode && bgRef.current) bgRef.current.style.height = `${document.documentElement.scrollHeight}px`;
+  }, []);
 
   const filteredDocs = docs.filter(
     (doc) =>
@@ -22,7 +28,7 @@ const WikiView = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
-      <ParallaxBackground variant="static" className="parallax-bg-tiled parallax-bg-wiki" />
+      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 parallax-bg-tiled parallax-bg-wiki`} />
       <SearchHeader
         title={t.wiki.title}
         subtitle={t.wiki.subtitle}

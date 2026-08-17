@@ -116,8 +116,21 @@
 .parallax-bg {
   background-image: url("/smc/assets/static/background.webp");
   background-size: cover;
-  background-position: center;
+  background-position: 50% 50%;
   mix-blend-mode: screen;
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .parallax-bg { background-position: 50% 36.5%; }
+}
+@media (min-aspect-ratio: 4/3) {
+  .parallax-bg { background-position: 50% 28.2%; }
+}
+@media (min-aspect-ratio: 16/10) {
+  .parallax-bg { background-position: 50% 25.8%; }
+}
+@media (min-aspect-ratio: 16/9) {
+  .parallax-bg { background-position: 50% 24.8%; }
 }
 
 @media (max-width: 1023px) {
@@ -164,33 +177,6 @@
 
 .parallax-bg-wiki {
   background-image: url("/smc/assets/static/wiki-bg.webp");
-}
-
-.parallax-bg-about {
-  background-image: url("/smc/assets/static/about-bg.webp");
-}
-
-.about-scroll-bg {
-  position: relative;
-}
-
-.about-scroll-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image: url("/smc/assets/static/about-bg.webp");
-  background-repeat: repeat;
-  background-size: 48px;
-  image-rendering: pixelated;
-  opacity: 0.45;
-  pointer-events: none;
-}
-
-@media (min-width: 1536px) {
-  .about-scroll-bg::before {
-    background-size: 64px;
-  }
 }
 
 @layer components {

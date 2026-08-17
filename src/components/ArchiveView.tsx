@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
-import ParallaxBackground from "./ParallaxBackground";
 import { useLanguage } from "../context/useLanguage";
 import SearchHeader from "./SearchHeader";
+
+const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
 const ArchiveView = () => {
   const { t, language } = useLanguage();
   const allPosts: BlogPost[] = getPosts(language);
   const [searchTerm, setSearchTerm] = useState("");
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (screenshotMode && bgRef.current) bgRef.current.style.height = `${document.documentElement.scrollHeight}px`;
+  }, []);
 
   const filteredPosts = allPosts.filter(
     (post) =>
@@ -20,7 +26,7 @@ const ArchiveView = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
-      <ParallaxBackground className="parallax-bg-tiled parallax-bg-archive" />
+      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 parallax-bg-tiled parallax-bg-archive`} />
       <SearchHeader
         title={t.archive.title}
         subtitle={t.archive.subtitle}
