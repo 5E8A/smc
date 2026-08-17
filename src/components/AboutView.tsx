@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../context/useLanguage";
 import { CodeIcon, CpuIcon } from "@phosphor-icons/react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
+
+const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
 const AboutView = () => {
   const { t } = useLanguage();
@@ -9,6 +11,11 @@ const AboutView = () => {
   const [downloads, setDownloads] = useState<string | null>(null);
   const [activeMembers, setActiveMembers] = useState<number | null>(null);
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (screenshotMode && bgRef.current) bgRef.current.style.height = `${document.documentElement.scrollHeight}px`;
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +47,7 @@ const AboutView = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
+      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 parallax-bg-tiled`} style={{ backgroundImage: "url('/smc/assets/static/about-bg.webp')" }} />
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 w-full">
         <div className="bg-mc-surface border border-white/10 rounded-xl p-8 shadow-xl relative overflow-hidden">
