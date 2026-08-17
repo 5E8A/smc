@@ -26,10 +26,7 @@ const HomeView = () => {
       setVersion(latestVersion);
     };
 
-    const observer =
-      typeof PerformanceObserver !== "undefined"
-        ? new PerformanceObserver(() => fetchVersion())
-        : null;
+    const observer = typeof PerformanceObserver !== "undefined" ? new PerformanceObserver(() => fetchVersion()) : null;
     observer?.observe({ type: "largest-contentful-paint" });
 
     const fallback = setTimeout(fetchVersion, 1500);
@@ -53,14 +50,14 @@ const HomeView = () => {
         {/* Modern blur effect behind hero */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-mc-green/5 blur-[120px] rounded-full"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-start justify-center min-h-[60vh] z-10">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 flex flex-col items-start justify-center min-h-[50vh] md:min-h-[60vh] z-10">
           <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
 
           <h1 className="leading-none tracking-tight scale-75 origin-left font-banner text-white text-[90px] md:text-[167px] font-pixel-shadow uppercase" aria-label="SMC - Seba Modding Community">
             FABRIC<br className="md:hidden" />BOOSTED
           </h1>
 
-          <p className="max-w-xl text-lg text-mc-text mb-10 leading-relaxed font-sans">{t.hero.description}</p>
+          <p className="max-w-xl text-lg text-mc-text mb-6 md:mb-10 leading-relaxed font-sans">{t.hero.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <a href="#latest" className="btn-mc-green px-8 py-3 rounded text-center flex items-center justify-center">
@@ -106,7 +103,7 @@ const HomeView = () => {
       </section>
 
       {/* Features Grid - Modern Clean Cards */}
-      <section className="py-24 relative">
+      <section className="py-12 md:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
@@ -140,9 +137,9 @@ const HomeView = () => {
       </section>
 
       {/* Latest Posts */}
-      <section id="latest" className="py-24 border-t border-white/5">
+      <section id="latest" className="py-12 md:py-24 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-12">
             <div>
               <h2 className="text-4xl font-mc text-white mb-2">{t.latest.title}</h2>
               <p className="text-mc-text">{t.latest.subtitle}</p>
@@ -150,17 +147,19 @@ const HomeView = () => {
             <Link
               to="/archive"
               preload="intent"
-              className="hidden md:flex items-center font-medium text-mc-green-text hover:text-white transition-colors mt-4 md:mt-0"
+              className="hidden md:flex btn-mc-stone px-6 py-2 rounded items-center mt-4 md:mt-0"
             >
-              {t.latest.view_archive} <CaretRightIcon className="w-4 h-4 ml-1" />
+              {t.latest.view_archive}
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-75">
-            {posts.map((post) => <PostCard key={post.id} post={post} />)}
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
           </div>
 
-          <div className="mt-12 text-center md:hidden">
+          <div className="mt-6 md:mt-12 text-center md:hidden">
             <Link to="/archive" className="btn-mc-stone px-8 py-3 rounded inline-block">
               {t.latest.view_archive}
             </Link>
