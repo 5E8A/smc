@@ -14,6 +14,7 @@ const AVATAR_SIZES = {
 
 const FAVICON = "avatars/smc2.png";
 const FAVICON_SIZE = 48;
+const SQUIRCLE_RADIUS = 0.2237; // matches --radius-squircle in index.css
 
 const PLACEHOLDER_WIDTH = 20;
 
@@ -39,9 +40,13 @@ const convert = async (file) => {
   if (rel === FAVICON) {
     const faviconOut = path.join(outDir, rel);
     fs.mkdirSync(path.dirname(faviconOut), { recursive: true });
-    await sharp(file).resize(FAVICON_SIZE, FAVICON_SIZE, { fit: "cover" }).png().toFile(faviconOut);
+    const radius = FAVICON_SIZE * SQUIRCLE_RADIUS;
+    const mask = Buffer.from(
+      `<svg width="${FAVICON_SIZE}" height="${FAVICON_SIZE}" xmlns="http://www.w3.org/2000/svg"><rect width="${FAVICON_SIZE}" height="${FAVICON_SIZE}" rx="${radius}" ry="${radius}" fill="white"/></svg>`,
+    );
+    await sharp(file).resize(FAVICON_SIZE, FAVICON_SIZE, { fit: "cover" }).composite([{ input: mask, blend: "dest-in" }]).png().toFile(faviconOut);
     const size = (await fs.promises.stat(faviconOut)).size;
-    console.log(`${rel} -> ${rel} (favicon, ${(size / 1024).toFixed(1)} KB)`);
+    console.log(`${rel} -> ${rel} (favicon squircle, ${(size / 1024).toFixed(1)} KB)`);
     return;
   }
 

@@ -7,7 +7,7 @@ Deployed to GitHub Pages under `/smc` via artifacts.
 
 ## Commands
 - `npm run dev` / `build` / `preview` / `lint` / `lint:fix` / `format` / `format:check`
-- `npm run optimize:images` — regenerates all webp assets + LQIP placeholders into `public/assets` from `originals/`
+- `npm run process-assets` — asset pipeline: regenerates webp + LQIP placeholders + squircle favicon from `originals/` into `public/assets`. Edit sources in `originals/`, never in `public/assets`.
 - `npm run analyze` — bundle size visualizer (writes `dist/stats.html`)
 
 ## Committing
@@ -20,7 +20,7 @@ Deployed to GitHub Pages under `/smc` via artifacts.
 - **Base path `/smc`** everywhere (vite `base` + router `basepath`). Typed links use `to="/post/$slug"` + `params`. `dist/404.html` (emitted by the spaFallback404 plugin in `vite.config.ts`) makes GH Pages deep links work.
 - **Tailwind v4 is CSS-first**: theme tokens live in `src/index.css` `@theme` (kebab-case only — `mc-text-muted`, not `mc-textMuted`), custom utilities via `@utility` (e.g. `cover-zoom`). No `tailwind.config` file.
 - **i18n is custom, no library**: strings in `src/utils/translations.ts` (`en`/`pl`); `useLanguage` hook from `src/context/useLanguage.ts`. `LanguageProvider` syncs `<html lang>`, `document.title` and the meta description.
-- **Images**: route every `<img>` through `SmartImage` (lazy loading + LQIP placeholder by convention `image.webp` → `image.placeholder.webp`). Never edit `public/assets` directly — edit sources in `originals/` and run `optimize:images`.
+- **Images**: route every `<img>` through `SmartImage` (lazy loading + LQIP placeholder by convention `image.webp` → `image.placeholder.webp`). Never edit `public/assets` directly — edit sources in `originals/` and run `npm run process-assets`.
 - **Content CMS**: posts/wiki live in `src/content/{en,pl}/{posts,wiki}.json`, imported at build time (JSON inlined into route chunks); synchronous access via `src/data/posts.ts` / `src/data/wiki.ts`. `coverImage`/`avatar` paths there point into `public/assets`. Content edits require a rebuild.
 - **API**: only `src/services/api.ts` — a typed `fetch` wrapper for Modrinth/Discord stat reads. Nothing else.
 - **Bundling**: `manualChunks` (react/router/icons) + lazy routes + `preload="intent"` on nav links. Keep it that way — new pages must be lazy route files, never heavy imports into the eager entry.
