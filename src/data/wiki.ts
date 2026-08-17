@@ -1,21 +1,13 @@
 import { WikiDoc } from "../types";
+import enDocs from "../content/en/wiki.json";
+import plDocs from "../content/pl/wiki.json";
 
-export const fetchWikiDocs = async (language: "en" | "pl"): Promise<WikiDoc[]> => {
-  try {
-    const response = await fetch(`/smc/content/${language}/wiki.json`);
-    if (!response.ok) {
-      console.error("Failed to fetch wiki docs");
-      return [];
-    }
-    const docs: WikiDoc[] = await response.json();
-    return docs;
-  } catch (error) {
-    console.error("Error loading wiki docs:", error);
-    return [];
-  }
+const docsByLanguage: Record<"en" | "pl", WikiDoc[]> = {
+  en: enDocs as WikiDoc[],
+  pl: plDocs as WikiDoc[],
 };
 
-export const fetchWikiDocBySlug = async (slug: string, language: "en" | "pl"): Promise<WikiDoc | undefined> => {
-  const docs = await fetchWikiDocs(language);
-  return docs.find((d) => d.slug === slug);
-};
+export const getWikiDocs = (language: "en" | "pl"): WikiDoc[] => docsByLanguage[language];
+
+export const getWikiDocBySlug = (slug: string, language: "en" | "pl"): WikiDoc | undefined =>
+  getWikiDocs(language).find((d) => d.slug === slug);

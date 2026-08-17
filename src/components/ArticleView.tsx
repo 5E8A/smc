@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
 import { useParams, Navigate } from "@tanstack/react-router";
-import { fetchPostBySlug } from "../data/posts";
+import { getPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
 import Carousel from "./Carousel";
 import BackButton from "./BackButton";
-import { CalendarIcon, UserIcon, ClockIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { CalendarIcon, UserIcon, ClockIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
@@ -12,25 +11,7 @@ import SmartImage from "./SmartImage";
 const ArticleView = () => {
   const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
-  const [post, setPost] = useState<BlogPost | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (slug) {
-      fetchPostBySlug(slug, language).then((data) => {
-        setPost(data);
-        setLoading(false);
-      });
-    }
-  }, [slug, language]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-mc-bg bg-deepslate flex items-center justify-center">
-        <SpinnerIcon className="w-12 h-12 text-mc-green animate-spin" />
-      </div>
-    );
-  }
+  const post: BlogPost | undefined = slug ? getPostBySlug(slug, language) : undefined;
 
   if (!post) {
     return <Navigate to="/" replace />;

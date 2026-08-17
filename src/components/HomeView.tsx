@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchRecentPosts } from "../data/posts";
+import { getRecentPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
-import { LightningIcon, CpuIcon, MemoryIcon, CaretRightIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { LightningIcon, CpuIcon, MemoryIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import { Link } from "@tanstack/react-router";
 import { getLatestVersionData } from "@/services/api";
@@ -14,16 +14,8 @@ import ParallaxBackground from "./ParallaxBackground";
 
 const HomeView = () => {
   const { t, language } = useLanguage();
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
   const [version, setVersion] = useState<VersionData | null>(null);
-
-  useEffect(() => {
-    fetchRecentPosts(language, 3).then((data) => {
-      setPosts(data);
-      setLoading(false);
-    });
-  }, [language]);
+  const posts: BlogPost[] = getRecentPosts(language, 3);
 
   useEffect(() => {
     let done = false;
@@ -172,13 +164,7 @@ const HomeView = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-75">
-            {loading ? (
-              <div className="col-span-full flex items-center justify-center">
-                <SpinnerIcon className="w-8 h-8 text-mc-green-text animate-spin" />
-              </div>
-            ) : (
-              posts.map((post) => <PostCard key={post.id} post={post} />)
-            )}
+            {posts.map((post) => <PostCard key={post.id} post={post} />)}
           </div>
 
           <div className="mt-12 text-center md:hidden">

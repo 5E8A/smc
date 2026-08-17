@@ -1,23 +1,15 @@
-import { useState, useEffect } from "react";
-import { fetchPosts } from "../data/posts";
+import { useState } from "react";
+import { getPosts } from "../data/posts";
 import { BlogPost } from "../types";
 import PostCard from "./PostCard";
 import ParallaxBackground from "./ParallaxBackground";
 import { useLanguage } from "../context/useLanguage";
-import { MagnifyingGlassIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 const ArchiveView = () => {
   const { t, language } = useLanguage();
-  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const allPosts: BlogPost[] = getPosts(language);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    fetchPosts(language).then((data) => {
-      setAllPosts(data);
-      setLoading(false);
-    });
-  }, [language]);
 
   const filteredPosts = allPosts.filter(
     (post) =>
@@ -58,11 +50,7 @@ const ArchiveView = () => {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
-          {loading ? (
-            <div className="col-span-full flex items-center justify-center">
-              <SpinnerIcon className="w-8 h-8 text-mc-green animate-spin" />
-            </div>
-          ) : filteredPosts.length > 0 ? (
+          {filteredPosts.length > 0 ? (
             filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
           ) : (
             <div className="col-span-full text-center py-20 text-mc-text-muted">No results found.</div>

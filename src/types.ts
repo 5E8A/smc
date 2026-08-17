@@ -26,11 +26,7 @@ export interface WikiDoc {
   id: string;
   slug: string;
   title: string;
-  author: {
-    name: string;
-    avatar: string;
-    bio: string;
-  };
+  author: string;
   date: string;
   category: string;
   coverImage: string;

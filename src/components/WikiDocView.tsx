@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
 import { useParams, Navigate } from "@tanstack/react-router";
-import { fetchWikiDocBySlug } from "../data/wiki";
+import { getWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
 import BackButton from "./BackButton";
-import { CalendarIcon, BookIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { CalendarIcon, BookIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import { parseRichText } from "../utils/richText";
 import SmartImage from "./SmartImage";
@@ -11,25 +10,7 @@ import SmartImage from "./SmartImage";
 const WikiDocView = () => {
   const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
-  const [doc, setDoc] = useState<WikiDoc | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (slug) {
-      fetchWikiDocBySlug(slug, language).then((data) => {
-        setDoc(data);
-        setLoading(false);
-      });
-    }
-  }, [slug, language]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-mc-bg bg-deepslate flex items-center justify-center">
-        <SpinnerIcon className="w-12 h-12 text-mc-green animate-spin" />
-      </div>
-    );
-  }
+  const doc: WikiDoc | undefined = slug ? getWikiDocBySlug(slug, language) : undefined;
 
   if (!doc) {
     return <Navigate to="/wiki" replace />;
