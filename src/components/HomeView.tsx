@@ -56,15 +56,8 @@ const HomeView = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-start justify-center min-h-[60vh] z-10">
           <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
 
-          <h1 className="leading-none tracking-tight scale-75 origin-left">
-            <SmartImage
-              src="/smc/assets/static/banner2.webp"
-              alt="SMC - Seba Modding Community"
-              width={1400}
-              height={200}
-              lazy={false}
-              priority="high"
-            />
+          <h1 className="leading-none tracking-tight scale-75 origin-left font-banner text-white text-[90px] md:text-[167px] font-pixel-shadow uppercase" aria-label="SMC - Seba Modding Community">
+            FABRIC<br className="md:hidden" />BOOSTED
           </h1>
 
           <p className="max-w-xl text-lg text-mc-text mb-10 leading-relaxed font-sans">{t.hero.description}</p>
