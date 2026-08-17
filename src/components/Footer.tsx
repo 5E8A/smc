@@ -91,15 +91,20 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-sm text-mc-text-muted">
-          <p>
-            &copy; {new Date().getFullYear()} {t.footer.copyright}. {t.footer.rights}
-          </p>
-          <p className="flex items-center mt-2 md:mt-0">
-            <a href="https://github.com/logyQT" target="_blank" rel="noopener noreferrer">
-              {t.footer.made_with}
-            </a>
-          </p>
+        <div className="pt-8 border-t border-white/5">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-sm text-mc-text-muted">
+            <p>
+              &copy; {new Date().getFullYear()} {t.footer.copyright}
+              <br />
+              {t.footer.copyrightName}
+            </p>
+            <p className="flex items-center order-2 md:order-3 mt-2 md:mt-0">
+              <a href="https://github.com/logyQT" target="_blank" rel="noopener noreferrer">
+                {t.footer.made_with}
+              </a>
+            </p>
+            <p className="order-3 md:order-2 text-xs mt-2 md:mt-0">{t.footer.rights}</p>
+          </div>
         </div>
       </div>
     </footer>
