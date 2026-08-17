@@ -21,7 +21,7 @@ Deployed to GitHub Pages under `/smc` via artifacts.
 - **Tailwind v4 is CSS-first**: theme tokens live in `src/index.css` `@theme` (kebab-case only — `mc-text-muted`, not `mc-textMuted`), custom utilities via `@utility` (e.g. `cover-zoom`). No `tailwind.config` file.
 - **i18n is custom, no library**: strings in `src/utils/translations.ts` (`en`/`pl`); `useLanguage` hook from `src/context/useLanguage.ts`. `LanguageProvider` syncs `<html lang>`, `document.title` and the meta description.
 - **Images**: route every `<img>` through `SmartImage` (lazy loading + LQIP placeholder by convention `image.webp` → `image.placeholder.webp`). Never edit `public/assets` directly — edit sources in `originals/` and run `optimize:images`.
-- **Content CMS**: posts/wiki live in `public/content/{en,pl}/{posts,wiki}.json` (client-fetched JSON); `coverImage`/`avatar` paths there point into `public/assets`.
+- **Content CMS**: posts/wiki live in `src/content/{en,pl}/{posts,wiki}.json`, imported at build time (JSON inlined into route chunks); synchronous access via `src/data/posts.ts` / `src/data/wiki.ts`. `coverImage`/`avatar` paths there point into `public/assets`. Content edits require a rebuild.
 - **API**: only `src/services/api.ts` — a typed `fetch` wrapper for Modrinth/Discord stat reads. Nothing else.
 - **Bundling**: `manualChunks` (react/router/icons) + lazy routes + `preload="intent"` on nav links. Keep it that way — new pages must be lazy route files, never heavy imports into the eager entry.
 

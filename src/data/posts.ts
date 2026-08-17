@@ -1,4 +1,6 @@
 import { BlogPost } from "../types";
+import enPosts from "../content/en/posts.json";
+import plPosts from "../content/pl/posts.json";
 
 const parseDate = (dateStr: string): number => {
   const plMonths: { [key: string]: string } = {
@@ -26,36 +28,24 @@ const parseDate = (dateStr: string): number => {
   return new Date(processedDate).getTime();
 };
 
-export const fetchPosts = async (language: "en" | "pl"): Promise<BlogPost[]> => {
-  try {
-    const response = await fetch(`/smc/content/${language}/posts.json`);
-    if (!response.ok) {
-      console.error("Failed to fetch posts");
-      return [];
-    }
-    const posts: BlogPost[] = await response.json();
-
-    // Sort by Date
-    return posts.sort((a, b) => {
-      const dateA = parseDate(a.date);
-      const dateB = parseDate(b.date);
-      if (!isNaN(dateA) && !isNaN(dateB)) {
-        return dateB - dateA;
-      }
-      return parseInt(b.id) - parseInt(a.id);
-    });
-  } catch (error) {
-    console.error("Error loading posts:", error);
-    return [];
+const sortPosts = (a: BlogPost, b: BlogPost): number => {
+  const dateA = parseDate(a.date);
+  const dateB = parseDate(b.date);
+  if (!isNaN(dateA) && !isNaN(dateB)) {
+    return dateB - dateA;
   }
+  return parseInt(b.id) - parseInt(a.id);
 };
 
-export const fetchRecentPosts = async (language: "en" | "pl", limit: number): Promise<BlogPost[]> => {
-  const posts = await fetchPosts(language);
-  return posts.slice(0, limit);
+const postsByLanguage: Record<"en" | "pl", BlogPost[]> = {
+  en: [...(enPosts as BlogPost[])].sort(sortPosts),
+  pl: [...(plPosts as BlogPost[])].sort(sortPosts),
 };
 
-export const fetchPostBySlug = async (slug: string, language: "en" | "pl"): Promise<BlogPost | undefined> => {
-  const posts = await fetchPosts(language);
-  return posts.find((p) => p.slug === slug);
-};
+export const getPosts = (language: "en" | "pl"): BlogPost[] => postsByLanguage[language];
+
+export const getRecentPosts = (language: "en" | "pl", limit: number): BlogPost[] =>
+  getPosts(language).slice(0, limit);
+
+export const getPostBySlug = (slug: string, language: "en" | "pl"): BlogPost | undefined =>
+  getPosts(language).find((p) => p.slug === slug);

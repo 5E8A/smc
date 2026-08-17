@@ -1,24 +1,16 @@
-import { useState, useEffect } from "react";
-import { fetchWikiDocs } from "../data/wiki";
+import { useState } from "react";
+import { getWikiDocs } from "../data/wiki";
 import { WikiDoc } from "../types";
 import { useLanguage } from "../context/useLanguage";
-import { MagnifyingGlassIcon, BookIcon, ArrowRightIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, BookIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import SmartImage from "./SmartImage";
 import ParallaxBackground from "./ParallaxBackground";
 
 const WikiView = () => {
   const { t, language } = useLanguage();
-  const [docs, setDocs] = useState<WikiDoc[]>([]);
-  const [loading, setLoading] = useState(true);
+  const docs: WikiDoc[] = getWikiDocs(language);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    fetchWikiDocs(language).then((data) => {
-      setDocs(data);
-      setLoading(false);
-    });
-  }, [language]);
 
   const filteredDocs = docs.filter(
     (doc) =>
@@ -59,11 +51,7 @@ const WikiView = () => {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[300px]">
-          {loading ? (
-            <div className="col-span-full flex items-center justify-center">
-              <SpinnerIcon className="w-8 h-8 text-mc-green-text animate-spin" />
-            </div>
-          ) : filteredDocs.length > 0 ? (
+          {filteredDocs.length > 0 ? (
             filteredDocs.map((doc) => (
               <Link
                 key={doc.id}
