@@ -240,6 +240,27 @@
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
+  /* Minecraft Crafting Slot Card */
+  .mc-slot {
+    position: relative;
+    background-color: #141416;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.06),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.4),
+      4px 4px 0 rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .mc-slot:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.06),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.4),
+      4px 6px 0 rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(60, 133, 39, 0.15);
+  }
+
   /* Pixel Font Shadow for headers only */
   .font-pixel-shadow {
     text-shadow: 2px 2px 0px #000000;

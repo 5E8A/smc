@@ -11,6 +11,7 @@ import { VersionData } from "@/types";
 import SmartImage from "./SmartImage";
 import VersionBadge from "./VersionBadge";
 import ParallaxBackground from "./ParallaxBackground";
+import CraftingSlot from "./CraftingSlot";
 
 const HomeView = () => {
   const { t, language } = useLanguage();
@@ -46,7 +47,7 @@ const HomeView = () => {
       <ParallaxBackground className="parallax-bg" />
 
       {/* Hero Section - Launcher Style */}
-      <section className="relative overflow-hidden border-b border-white/5">
+      <section className="relative overflow-hidden">
         {/* Modern blur effect behind hero */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-mc-green/5 blur-[120px] rounded-full"></div>
 
@@ -54,7 +55,7 @@ const HomeView = () => {
           <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
 
           <h1 className="leading-none tracking-tight scale-75 origin-left font-banner text-white text-[90px] md:text-[167px] font-pixel-shadow uppercase" aria-label="SMC - Seba Modding Community">
-            FABRIC<br className="md:hidden" />BOOSTED
+            <span className="md:whitespace-nowrap">FABRIC<br className="md:hidden" /><span className="hidden md:inline"> </span>BOOSTED</span>
           </h1>
 
           <p className="max-w-xl text-lg text-mc-text mb-6 md:mb-10 leading-relaxed font-sans">{t.hero.description}</p>
@@ -72,7 +73,7 @@ const HomeView = () => {
       </section>
 
       {/* Ad Banner */}
-      <section className="w-full max-w-7xl mx-auto py-6 overflow-hidden border-y border-white/5">
+      <section className="w-full max-w-7xl mx-auto py-6 overflow-hidden">
         <div className="px-4 sm:px-6 lg:px-8">
           <a
             href="https://billing.sparkedhost.com/aff.php?aff=3127"
@@ -106,38 +107,27 @@ const HomeView = () => {
       <section className="py-12 md:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Feature 1 */}
-            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-green/30 transition-colors group">
-              <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-500/10 mb-6 group-hover:scale-110 transition-transform">
-                <CpuIcon className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h2 className="text-2xl font-mc text-white mb-3">{t.features.fabric_title}</h2>
-              <p className="text-mc-text leading-relaxed text-sm">{t.features.fabric_desc}</p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-green/30 transition-colors group">
-              <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-yellow-500/10 mb-6 group-hover:scale-110 transition-transform">
-                <LightningIcon className="w-6 h-6 text-yellow-400" />
-              </div>
-              <h2 className="text-2xl font-mc text-white mb-3">{t.features.sodium_title}</h2>
-              <p className="text-mc-text leading-relaxed text-sm">{t.features.sodium_desc}</p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="mc-card p-8 rounded-xl bg-mc-surface/50 border-white/5 hover:border-mc-green/30 transition-colors group">
-              <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-emerald-500/10 mb-6 group-hover:scale-110 transition-transform">
-                <MemoryIcon className="w-6 h-6 text-emerald-400" />
-              </div>
-              <h2 className="text-2xl font-mc text-white mb-3">{t.features.memory_title}</h2>
-              <p className="text-mc-text leading-relaxed text-sm">{t.features.memory_desc}</p>
-            </div>
+            <CraftingSlot
+              icon={<CpuIcon className="w-8 h-8 text-indigo-400" weight="duotone" />}
+              title={t.features.fabric_title}
+              description={t.features.fabric_desc}
+            />
+            <CraftingSlot
+              icon={<LightningIcon className="w-8 h-8 text-yellow-400" weight="duotone" />}
+              title={t.features.sodium_title}
+              description={t.features.sodium_desc}
+            />
+            <CraftingSlot
+              icon={<MemoryIcon className="w-8 h-8 text-emerald-400" weight="duotone" />}
+              title={t.features.memory_title}
+              description={t.features.memory_desc}
+            />
           </div>
         </div>
       </section>
 
       {/* Latest Posts */}
-      <section id="latest" className="py-12 md:py-24 border-t border-white/5">
+      <section id="latest" className="py-12 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-12">
             <div>
