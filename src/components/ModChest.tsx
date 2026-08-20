@@ -109,7 +109,7 @@ const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave }: ChestSlotProps) 
       onMouseLeave={onLeave}
     >
       <ModIcon slug={mod.slug} icon={mod.icon} alt={mod.title} size={g.modIconSize} className="rounded-none" sprite={sprite} spriteIndex={index} />
-      <div className="absolute inset-0 border-2 border-white/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+      <div className="pointer-events-none absolute inset-0 border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100"></div>
     </a>
   );
 };
@@ -119,9 +119,9 @@ const Chest = ({ title, mods, g, sprite, onHover }: { title: string; mods: ModDa
 
   return (
     <div className="relative" style={{ width: g.chestWidth, height: g.chestHeight }}>
-      <ChestFrame className="absolute inset-0 w-full h-full select-none" />
+      <ChestFrame className="absolute inset-0 size-full select-none" />
       <h3
-        className="absolute font-mc leading-none text-[#404040] whitespace-nowrap pointer-events-none"
+        className="pointer-events-none absolute font-mc leading-none whitespace-nowrap text-[#404040]"
         style={{ left: g.titleLeft, top: g.titleTop, fontSize: g.titleFontSize }}
       >
         {title}
@@ -193,7 +193,7 @@ const ModChest = () => {
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
       aria-label={t.mods[chests[col].key as keyof typeof t.mods]}
     >
-      <TabSprite selected={col === activeCat} column={col} className="absolute inset-0 w-full h-full" />
+      <TabSprite selected={col === activeCat} column={col} className="absolute inset-0 size-full" />
       <ItemIcon
         id={CATEGORY_ICONS[col]}
         className="absolute"
@@ -253,7 +253,7 @@ const ModChest = () => {
       {tooltip && (
         <McTooltip
           ref={tooltipRef}
-          className="fixed z-[100]"
+          className="fixed z-100"
           style={{ left: tooltipPos.left, top: tooltipPos.top, whiteSpace: tooltip.kind === "tab" ? "nowrap" : undefined }}
           scale={g.scale}
           width={tooltip.kind === "slot" ? 96 * g.scale : undefined}

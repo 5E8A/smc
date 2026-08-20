@@ -46,69 +46,69 @@ const AboutView = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
-      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 mc-bg-tiled bg-warped-wart-block`} />
+    <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
+      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-warped-wart-block opacity-45`} />
       {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 w-full">
-        <div className="bg-mc-surface border border-white/10 rounded-xl p-8 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+      <div className="mx-auto mb-12 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 shadow-xl">
+          <div className="absolute top-0 right-0 size-64 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-emerald-500/10 blur-3xl"></div>
 
-          <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
+          <h1 className="font-pixel-shadow relative z-10 mb-4 font-mc text-4xl text-white md:text-5xl">
             {t.about_page.title}
           </h1>
-          <p className="text-mc-text text-lg relative z-10 mb-0 max-w-2xl">{t.about_page.subtitle}</p>
+          <p className="relative z-10 mb-0 max-w-2xl text-lg text-mc-text">{t.about_page.subtitle}</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-mc-surface/50 border border-white/5 rounded-xl p-6 text-center">
-            <div className="text-mc-green-text text-4xl font-bold font-mc mb-2">
+        <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="rounded-xl border border-white/5 bg-mc-surface/50 p-6 text-center">
+            <div className="mb-2 font-mc text-4xl font-bold text-mc-green-text">
               {downloads !== null ? downloads : "Loading..."}
             </div>
-            <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_downloads}</div>
+            <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_downloads}</div>
           </div>
-          <div className="bg-mc-surface/50 border border-white/5 rounded-xl p-6 text-center">
-            <div className="text-white text-4xl font-bold font-mc mb-2">
+          <div className="rounded-xl border border-white/5 bg-mc-surface/50 p-6 text-center">
+            <div className="mb-2 font-mc text-4xl font-bold text-white">
               {activeMembers !== null ? activeMembers : "Loading..."}
             </div>
-            <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_users}</div>
+            <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_users}</div>
           </div>
-          <div className="bg-mc-surface/50 border border-white/5 rounded-xl p-6 text-center">
-            <div className="text-mc-green text-4xl font-bold font-mc mb-2">
+          <div className="rounded-xl border border-white/5 bg-mc-surface/50 p-6 text-center">
+            <div className="mb-2 font-mc text-4xl font-bold text-mc-green">
               {latestVersion !== null ? latestVersion : "Loading..."}
             </div>
-            <div className="text-mc-text-muted text-sm uppercase tracking-wider">{t.about_page.stats_version}</div>
+            <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_version}</div>
           </div>
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Mission */}
-          <div className="bg-mc-surface border border-white/10 rounded-xl p-8">
-            <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-6">
-              <CpuIcon className="w-6 h-6 text-emerald-400" />
+          <div className="rounded-xl border border-white/10 bg-mc-surface p-8">
+            <div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-emerald-500/10">
+              <CpuIcon className="size-6 text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-4">{t.about_page.mission_title}</h2>
-            <p className="text-mc-text leading-relaxed">{t.about_page.mission_text}</p>
+            <h2 className="mb-4 text-2xl font-bold text-white">{t.about_page.mission_title}</h2>
+            <p className="leading-relaxed text-mc-text">{t.about_page.mission_text}</p>
           </div>
 
           {/* Creator */}
-          <div className="bg-mc-surface border border-white/10 rounded-xl p-8">
-            <div className="w-12 h-12 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-6">
-              <CodeIcon className="w-6 h-6 text-indigo-400" />
+          <div className="rounded-xl border border-white/10 bg-mc-surface p-8">
+            <div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-indigo-500/10">
+              <CodeIcon className="size-6 text-indigo-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-4">{t.about_page.creator_title}</h2>
-            <p className="text-mc-text leading-relaxed mb-6">{t.about_page.creator_text}</p>
+            <h2 className="mb-4 text-2xl font-bold text-white">{t.about_page.creator_title}</h2>
+            <p className="mb-6 leading-relaxed text-mc-text">{t.about_page.creator_text}</p>
 
-            <div className="flex items-center space-x-4 pt-6 border-t border-white/5">
-              <div className="w-10 h-10 rounded bg-mc-surface-light flex items-center justify-center font-mc text-xl text-white">
+            <div className="flex items-center space-x-4 border-t border-white/5 pt-6">
+              <div className="flex size-10 items-center justify-center rounded bg-mc-surface-light font-mc text-xl text-white">
                 S
               </div>
               <div>
-                <div className="text-white font-bold text-sm">5E8A</div>
-                <div className="text-mc-text-muted text-xs">Lead Developer</div>
+                <div className="text-sm font-bold text-white">5E8A</div>
+                <div className="text-xs text-mc-text-muted">Lead Developer</div>
               </div>
             </div>
           </div>

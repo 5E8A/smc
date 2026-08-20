@@ -30,11 +30,11 @@ const McTooltip = ({
         width,
       }}
     >
-      <div className="text-white leading-snug" style={{ fontSize: 7 * scale }}>
+      <div className="leading-snug text-white" style={{ fontSize: 7 * scale }}>
         {title}
       </div>
       {description && (
-        <div className="text-mc-text-muted leading-snug mt-1" style={{ fontSize: 5.5 * scale }}>
+        <div className="mt-1 leading-snug text-mc-text-muted" style={{ fontSize: 5.5 * scale }}>
           {description}
         </div>
       )}

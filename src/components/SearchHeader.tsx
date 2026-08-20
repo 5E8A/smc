@@ -10,18 +10,18 @@ interface SearchHeaderProps {
 
 const SearchHeader = ({ title, subtitle, searchPlaceholder, searchTerm, onSearchChange }: SearchHeaderProps) => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 w-full">
-      <div className="bg-mc-surface border border-white/10 rounded-xl p-8 shadow-xl relative overflow-hidden">
-        <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">{title}</h1>
-        <p className="text-mc-text text-lg relative z-10 mb-8 max-w-2xl">{subtitle}</p>
+    <div className="mx-auto mb-12 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 shadow-xl">
+        <h1 className="font-pixel-shadow relative z-10 mb-4 font-mc text-4xl text-white md:text-5xl">{title}</h1>
+        <p className="relative z-10 mb-8 max-w-2xl text-lg text-mc-text">{subtitle}</p>
 
-        <div className="relative max-w-md z-10">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon className="h-5 w-5 text-mc-text-muted" />
+        <div className="relative z-10 max-w-md">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <MagnifyingGlassIcon className="size-5 text-mc-text-muted" />
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-3 border border-white/10 rounded-lg leading-5 bg-black/40 text-white placeholder-mc-text-muted focus:outline-none focus:ring-1 focus:ring-mc-green focus:border-mc-green sm:text-sm transition-colors"
+            className="block w-full rounded-lg border border-white/10 bg-black/40 py-3 pr-3 pl-10 leading-5 text-white placeholder-mc-text-muted transition-colors focus:border-mc-green focus:ring-1 focus:ring-mc-green focus:outline-none sm:text-sm"
             placeholder={searchPlaceholder}
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
