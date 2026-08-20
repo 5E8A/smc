@@ -28,7 +28,7 @@ const WikiView = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
-      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 parallax-bg-tiled parallax-bg-wiki`} />
+      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 mc-bg-tiled bg-deepslate`} />
       <SearchHeader
         title={t.wiki.title}
         subtitle={t.wiki.subtitle}
@@ -44,8 +44,8 @@ const WikiView = () => {
             filteredDocs.map((doc) => (
               <Link
                 key={doc.id}
-                to="/wiki/$slug"
-                params={{ slug: doc.slug }}
+                to="/$lang/wiki/$slug"
+                params={{ lang: language, slug: doc.slug }}
                 preload="intent"
                 className="group flex flex-col bg-mc-surface border border-white/10 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl transition-all duration-300"
               >

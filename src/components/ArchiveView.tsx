@@ -26,7 +26,7 @@ const ArchiveView = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
-      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 parallax-bg-tiled parallax-bg-archive`} />
+      <div ref={bgRef} aria-hidden className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} inset-0 opacity-45 mc-bg-tiled bg-dark-prismarine`} />
       <SearchHeader
         title={t.archive.title}
         subtitle={t.archive.subtitle}

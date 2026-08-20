@@ -13,7 +13,7 @@ const WikiDocView = () => {
   const doc: WikiDoc | undefined = slug ? getWikiDocBySlug(slug, language) : undefined;
 
   if (!doc) {
-    return <Navigate to="/wiki" replace />;
+    return <Navigate to="/$lang/wiki" params={{ lang: language }} replace />;
   }
 
   return (
@@ -37,7 +37,7 @@ const WikiDocView = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-30">
         {/* Back Button */}
         <div className="absolute -top-16 left-4 md:left-0">
-          <BackButton fallbackTo="/wiki" />
+          <BackButton fallbackTo="/$lang/wiki" fallbackParams={{ lang: language }} />
         </div>
 
         {/* Content Container */}

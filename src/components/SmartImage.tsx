@@ -1,4 +1,7 @@
-import { useState, type CSSProperties } from "react";
+import { type CSSProperties } from "react";
+import lqipMap from "@/data/lqip.json";
+
+const lqipIndex = lqipMap as Record<string, number>;
 
 interface SmartImageProps {
   src: string;
@@ -10,37 +13,18 @@ interface SmartImageProps {
   className?: string;
 }
 
-const placeholderFor = (src: string): string => src.replace(/\.(png|jpe?g|webp)$/i, ".placeholder.$1");
+const SmartImage = ({ src, alt, width, height, priority, lazy = true, className = "" }: SmartImageProps) => {
+  const lqip = lqipIndex[src.replace(/^\/smc\//, "")];
 
-const SmartImage = ({
-  src,
-  alt,
-  width,
-  height,
-  priority,
-  lazy = true,
-  className = "",
-}: SmartImageProps) => {
-  const [loaded, setLoaded] = useState(false);
-  const [placeholderOk, setPlaceholderOk] = useState(true);
-
-  const wrapperStyle: CSSProperties = {};
+  const wrapperStyle: CSSProperties & Record<string, unknown> = {};
+  if (lqip != null) wrapperStyle["--lqip"] = lqip;
   if (width && height) {
     wrapperStyle.width = width;
     wrapperStyle.height = height;
   }
 
   return (
-    <div className={`relative overflow-hidden ${className}`} style={wrapperStyle}>
-      {placeholderOk && !loaded && (
-        <img
-          src={placeholderFor(src)}
-          alt=""
-          aria-hidden="true"
-          onError={() => setPlaceholderOk(false)}
-          className="absolute inset-0 w-full h-full object-cover image-rendering-pixelated"
-        />
-      )}
+    <div className={`lqip lqip-bg relative overflow-hidden ${className}`} style={wrapperStyle}>
       <img
         src={src}
         alt={alt}
@@ -49,9 +33,7 @@ const SmartImage = ({
         loading={lazy ? "lazy" : "eager"}
         decoding="async"
         fetchPriority={priority}
-        onLoad={() => setLoaded(true)}
-        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-        style={{ opacity: loaded ? 1 : 0 }}
+        className="absolute inset-0 w-full h-full object-cover"
       />
     </div>
   );

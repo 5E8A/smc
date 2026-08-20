@@ -10,115 +10,176 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as ArchiveRouteImport } from './routes/archive'
-import { Route as CreditsRouteImport } from './routes/credits'
+import { Route as LangRouteImport } from './routes/$lang'
+import { Route as LangIndexRouteImport } from './routes/$lang/index'
+import { Route as LangAboutRouteImport } from './routes/$lang/about'
+import { Route as LangArchiveRouteImport } from './routes/$lang/archive'
+import { Route as LangCreditsRouteImport } from './routes/$lang/credits'
+import { Route as LangDevRouteImport } from './routes/$lang/dev'
 import { Route as PostSlugRouteImport } from './routes/post.$slug'
-import { Route as WikiIndexRouteImport } from './routes/wiki/index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
+import { Route as LangPostSlugRouteImport } from './routes/$lang/post.$slug'
+import { Route as LangWikiIndexRouteImport } from './routes/$lang/wiki/index'
+import { Route as LangWikiSlugRouteImport } from './routes/$lang/wiki.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
+const LangRoute = LangRouteImport.update({
+  id: '/$lang',
+  path: '/$lang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangIndexRoute = LangIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LangRoute,
+} as any)
+const LangAboutRoute = LangAboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
-const ArchiveRoute = ArchiveRouteImport.update({
+  getParentRoute: () => LangRoute,
+} as any).lazy(() => import('./routes/$lang/about.lazy').then((d) => d.Route))
+const LangArchiveRoute = LangArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/archive.lazy').then((d) => d.Route))
-const CreditsRoute = CreditsRouteImport.update({
+  getParentRoute: () => LangRoute,
+} as any).lazy(() => import('./routes/$lang/archive.lazy').then((d) => d.Route))
+const LangCreditsRoute = LangCreditsRouteImport.update({
   id: '/credits',
   path: '/credits',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/credits.lazy').then((d) => d.Route))
+  getParentRoute: () => LangRoute,
+} as any).lazy(() => import('./routes/$lang/credits.lazy').then((d) => d.Route))
+const LangDevRoute = LangDevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
+  getParentRoute: () => LangRoute,
+} as any).lazy(() => import('./routes/$lang/dev.lazy').then((d) => d.Route))
 const PostSlugRoute = PostSlugRouteImport.update({
   id: '/post/$slug',
   path: '/post/$slug',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/post.$slug.lazy').then((d) => d.Route))
-const WikiIndexRoute = WikiIndexRouteImport.update({
-  id: '/wiki/',
-  path: '/wiki/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/wiki/index.lazy').then((d) => d.Route))
 const WikiSlugRoute = WikiSlugRouteImport.update({
   id: '/wiki/$slug',
   path: '/wiki/$slug',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/wiki.$slug.lazy').then((d) => d.Route))
+const LangPostSlugRoute = LangPostSlugRouteImport.update({
+  id: '/post/$slug',
+  path: '/post/$slug',
+  getParentRoute: () => LangRoute,
+} as any).lazy(() =>
+  import('./routes/$lang/post.$slug.lazy').then((d) => d.Route),
+)
+const LangWikiIndexRoute = LangWikiIndexRouteImport.update({
+  id: '/wiki/',
+  path: '/wiki/',
+  getParentRoute: () => LangRoute,
+} as any).lazy(() =>
+  import('./routes/$lang/wiki/index.lazy').then((d) => d.Route),
+)
+const LangWikiSlugRoute = LangWikiSlugRouteImport.update({
+  id: '/wiki/$slug',
+  path: '/wiki/$slug',
+  getParentRoute: () => LangRoute,
+} as any).lazy(() =>
+  import('./routes/$lang/wiki.$slug.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/archive': typeof ArchiveRoute
-  '/credits': typeof CreditsRoute
+  '/$lang': typeof LangRouteWithChildren
+  '/$lang/about': typeof LangAboutRoute
+  '/$lang/archive': typeof LangArchiveRoute
+  '/$lang/credits': typeof LangCreditsRoute
+  '/$lang/dev': typeof LangDevRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
-  '/wiki/': typeof WikiIndexRoute
+  '/$lang/': typeof LangIndexRoute
+  '/$lang/post/$slug': typeof LangPostSlugRoute
+  '/$lang/wiki/$slug': typeof LangWikiSlugRoute
+  '/$lang/wiki/': typeof LangWikiIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/archive': typeof ArchiveRoute
-  '/credits': typeof CreditsRoute
+  '/$lang/about': typeof LangAboutRoute
+  '/$lang/archive': typeof LangArchiveRoute
+  '/$lang/credits': typeof LangCreditsRoute
+  '/$lang/dev': typeof LangDevRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
-  '/wiki': typeof WikiIndexRoute
+  '/$lang': typeof LangIndexRoute
+  '/$lang/post/$slug': typeof LangPostSlugRoute
+  '/$lang/wiki/$slug': typeof LangWikiSlugRoute
+  '/$lang/wiki': typeof LangWikiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/archive': typeof ArchiveRoute
-  '/credits': typeof CreditsRoute
+  '/$lang': typeof LangRouteWithChildren
+  '/$lang/about': typeof LangAboutRoute
+  '/$lang/archive': typeof LangArchiveRoute
+  '/$lang/credits': typeof LangCreditsRoute
+  '/$lang/dev': typeof LangDevRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
-  '/wiki/': typeof WikiIndexRoute
+  '/$lang/': typeof LangIndexRoute
+  '/$lang/post/$slug': typeof LangPostSlugRoute
+  '/$lang/wiki/$slug': typeof LangWikiSlugRoute
+  '/$lang/wiki/': typeof LangWikiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
-    | '/archive'
-    | '/credits'
+    | '/$lang'
+    | '/$lang/about'
+    | '/$lang/archive'
+    | '/$lang/credits'
+    | '/$lang/dev'
     | '/post/$slug'
     | '/wiki/$slug'
-    | '/wiki/'
+    | '/$lang/'
+    | '/$lang/post/$slug'
+    | '/$lang/wiki/$slug'
+    | '/$lang/wiki/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
-    | '/archive'
-    | '/credits'
+    | '/$lang/about'
+    | '/$lang/archive'
+    | '/$lang/credits'
+    | '/$lang/dev'
     | '/post/$slug'
     | '/wiki/$slug'
-    | '/wiki'
+    | '/$lang'
+    | '/$lang/post/$slug'
+    | '/$lang/wiki/$slug'
+    | '/$lang/wiki'
   id:
     | '__root__'
     | '/'
-    | '/about'
-    | '/archive'
-    | '/credits'
+    | '/$lang'
+    | '/$lang/about'
+    | '/$lang/archive'
+    | '/$lang/credits'
+    | '/$lang/dev'
     | '/post/$slug'
     | '/wiki/$slug'
-    | '/wiki/'
+    | '/$lang/'
+    | '/$lang/post/$slug'
+    | '/$lang/wiki/$slug'
+    | '/$lang/wiki/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  ArchiveRoute: typeof ArchiveRoute
-  CreditsRoute: typeof CreditsRoute
+  LangRoute: typeof LangRouteWithChildren
   PostSlugRoute: typeof PostSlugRoute
   WikiSlugRoute: typeof WikiSlugRoute
-  WikiIndexRoute: typeof WikiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -130,39 +191,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
+    '/$lang': {
+      id: '/$lang'
+      path: '/$lang'
+      fullPath: '/$lang'
+      preLoaderRoute: typeof LangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/': {
+      id: '/$lang/'
+      path: '/'
+      fullPath: '/$lang/'
+      preLoaderRoute: typeof LangIndexRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/about': {
+      id: '/$lang/about'
       path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/about'
+      preLoaderRoute: typeof LangAboutRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/archive': {
-      id: '/archive'
+    '/$lang/archive': {
+      id: '/$lang/archive'
       path: '/archive'
-      fullPath: '/archive'
-      preLoaderRoute: typeof ArchiveRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/archive'
+      preLoaderRoute: typeof LangArchiveRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/credits': {
-      id: '/credits'
+    '/$lang/credits': {
+      id: '/$lang/credits'
       path: '/credits'
-      fullPath: '/credits'
-      preLoaderRoute: typeof CreditsRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/credits'
+      preLoaderRoute: typeof LangCreditsRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/dev': {
+      id: '/$lang/dev'
+      path: '/dev'
+      fullPath: '/$lang/dev'
+      preLoaderRoute: typeof LangDevRouteImport
+      parentRoute: typeof LangRoute
     }
     '/post/$slug': {
       id: '/post/$slug'
       path: '/post/$slug'
       fullPath: '/post/$slug'
       preLoaderRoute: typeof PostSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/wiki/': {
-      id: '/wiki/'
-      path: '/wiki'
-      fullPath: '/wiki/'
-      preLoaderRoute: typeof WikiIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wiki/$slug': {
@@ -172,18 +247,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WikiSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/post/$slug': {
+      id: '/$lang/post/$slug'
+      path: '/post/$slug'
+      fullPath: '/$lang/post/$slug'
+      preLoaderRoute: typeof LangPostSlugRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/wiki/': {
+      id: '/$lang/wiki/'
+      path: '/wiki'
+      fullPath: '/$lang/wiki/'
+      preLoaderRoute: typeof LangWikiIndexRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/wiki/$slug': {
+      id: '/$lang/wiki/$slug'
+      path: '/wiki/$slug'
+      fullPath: '/$lang/wiki/$slug'
+      preLoaderRoute: typeof LangWikiSlugRouteImport
+      parentRoute: typeof LangRoute
+    }
   }
 }
 
+interface LangRouteChildren {
+  LangAboutRoute: typeof LangAboutRoute
+  LangArchiveRoute: typeof LangArchiveRoute
+  LangCreditsRoute: typeof LangCreditsRoute
+  LangDevRoute: typeof LangDevRoute
+  LangIndexRoute: typeof LangIndexRoute
+  LangPostSlugRoute: typeof LangPostSlugRoute
+  LangWikiSlugRoute: typeof LangWikiSlugRoute
+  LangWikiIndexRoute: typeof LangWikiIndexRoute
+}
+
+const LangRouteChildren: LangRouteChildren = {
+  LangAboutRoute: LangAboutRoute,
+  LangArchiveRoute: LangArchiveRoute,
+  LangCreditsRoute: LangCreditsRoute,
+  LangDevRoute: LangDevRoute,
+  LangIndexRoute: LangIndexRoute,
+  LangPostSlugRoute: LangPostSlugRoute,
+  LangWikiSlugRoute: LangWikiSlugRoute,
+  LangWikiIndexRoute: LangWikiIndexRoute,
+}
+
+const LangRouteWithChildren = LangRoute._addFileChildren(LangRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  ArchiveRoute: ArchiveRoute,
-  CreditsRoute: CreditsRoute,
+  LangRoute: LangRouteWithChildren,
   PostSlugRoute: PostSlugRoute,
   WikiSlugRoute: WikiSlugRoute,
-  WikiIndexRoute: WikiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

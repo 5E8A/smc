@@ -4,9 +4,10 @@ import { useLanguage } from "../context/useLanguage";
 
 interface BackButtonProps {
   fallbackTo: LinkProps["to"];
+  fallbackParams?: Record<string, string>;
 }
 
-const BackButton = ({ fallbackTo }: BackButtonProps) => {
+const BackButton = ({ fallbackTo, fallbackParams }: BackButtonProps) => {
   const { t } = useLanguage();
   const { history } = useRouter();
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const BackButton = ({ fallbackTo }: BackButtonProps) => {
     if (history.canGoBack()) {
       history.back();
     } else {
-      navigate({ to: fallbackTo });
+      navigate({ to: fallbackTo, params: fallbackParams as never });
     }
   };
 

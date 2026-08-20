@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { CaretLeftIcon, CaretRightIcon, Image as ImageIcon } from "@phosphor-icons/react";
-import SmartImage from "./SmartImage";
+import { CaretLeftIcon, CaretRightIcon, ImageIcon } from "@phosphor-icons/react";
+import SmartImage from "@/components/SmartImage";
 
 interface CarouselProps {
   images: string[];
@@ -40,7 +40,12 @@ const Carousel = ({ images }: CarouselProps) => {
     <div className="relative group w-full h-full">
       {/* Main Image Container */}
       <div className="relative w-full aspect-video bg-[#050505] overflow-hidden">
-        <SmartImage src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="w-full h-full" priority="low" />
+        <SmartImage
+          src={images[currentIndex]}
+          alt={`Slide ${currentIndex + 1}`}
+          className="w-full h-full"
+          priority="low"
+        />
 
         {/* Subtle gradient overlay at bottom for dots */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
