@@ -31,8 +31,7 @@ export interface WikiDoc {
   category: string;
   coverImage: string;
   summary: string;
-  carouselImages: string[];
-  content: ContentSection[];
+  content: string;
 }
 
 export type VersionData = {
