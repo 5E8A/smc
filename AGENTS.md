@@ -9,6 +9,7 @@ Deployed to GitHub Pages under `/smc` via artifacts.
 - `npm run dev` / `build` / `preview` / `lint` / `lint:fix` / `format` / `format:check`
 - `npm run process-assets` — asset pipeline: regenerates webp + LQIP placeholders + squircle favicon from `originals/` into `public/assets`. Edit sources in `originals/`, never in `public/assets`.
 - `npm run analyze` — bundle size visualizer (writes `dist/stats.html`)
+- `npm run screenshot` — Playwright cross-browser screenshot suite (`scripts/screenshot/`). Full-page + fold captures per route × viewport × browser; output in `screenshots/` (gitignored). Flags: `--browsers=`, `--viewports=`, `--only=`, `--no-fold`, `--menu-open` (extra `-menu` variant with the mobile hamburger open on viewports <768px), `--lang=pl`, `--prod`, `--reuse`, `--skip-existing`, `--list`, `--out=`, `--concurrency=`. Spawns its own server on port 3100 with `VITE_SCREENSHOT=true`; `--reuse` verifies an existing server on 3000 really is in screenshot mode before reusing. Dynamic routes (posts/wiki) auto-discovered from `src/content/`. `npm run screenshot:install` — installs Playwright browsers (chromium, firefox, webkit).
 
 ## Committing
 - Never commit without explicit user approval — always ask permission first.

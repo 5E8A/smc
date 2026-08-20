@@ -14,7 +14,7 @@ const ArticleView = () => {
   const post: BlogPost | undefined = slug ? getPostBySlug(slug, language) : undefined;
 
   if (!post) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/$lang" params={{ lang: language }} replace />;
   }
 
   return (
@@ -47,7 +47,7 @@ const ArticleView = () => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-30">
         <div className="mb-5">
-          <BackButton fallbackTo="/archive" />
+          <BackButton fallbackTo="/$lang/archive" fallbackParams={{ lang: language }} />
         </div>
 
         {/* Content Container */}

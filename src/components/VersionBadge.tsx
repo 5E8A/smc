@@ -13,7 +13,7 @@ const VersionBadge = ({ version, gameVersion, variant = "chip" }: VersionBadgePr
   if (variant === "achievement") {
     return (
       <div className="mb-8 w-[320px] max-w-full select-none toast">
-        <div className="flex items-center gap-4 px-2.5 py-2 min-h-[48px]">
+        <div className="flex items-center gap-4 px-2.5 py-2 min-h-12">
           <img
             src="/smc/assets/static/grass-block.webp"
             alt=""
@@ -21,12 +21,9 @@ const VersionBadge = ({ version, gameVersion, variant = "chip" }: VersionBadgePr
             style={{ imageRendering: "pixelated" }}
           />
           <div className="flex flex-col justify-center">
-            <span
-              className="font-mc text-2xl leading-none"
-              style={{ color: "#FFFF73", textShadow: "1px 1px 0 #000" }}
-            >
+            {/* <span className="font-mc text-2xl leading-none" style={{ color: "#FFFF73", textShadow: "1px 1px 0 #000" }}>
               {t.hero.achievement_title}
-            </span>
+            </span> */}
             <span className="font-mc text-xl leading-tight text-white" style={{ textShadow: "1px 1px 0 #000" }}>
               {t.hero.tag_prefix} {version} {t.hero.tag_suffix} {gameVersion}
             </span>
@@ -39,8 +36,7 @@ const VersionBadge = ({ version, gameVersion, variant = "chip" }: VersionBadgePr
   if (variant === "text") {
     return (
       <p className="mb-8 text-mc-text-muted text-lg leading-relaxed">
-        {t.hero.tag_prefix}{" "}
-        <span className="font-mc text-3xl text-mc-green">{version}</span> {t.hero.tag_suffix}{" "}
+        {t.hero.tag_prefix} <span className="font-mc text-3xl text-mc-green">{version}</span> {t.hero.tag_suffix}{" "}
         <span className="font-mc text-2xl text-white">{gameVersion}</span>
       </p>
     );

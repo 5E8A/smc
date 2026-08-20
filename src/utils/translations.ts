@@ -37,6 +37,14 @@ export const translations = {
       memory_title: "Quality of Life",
       memory_desc: "Adds most useful QoL mods to enhance gameplay.",
     },
+    mods: {
+      title: "WHAT'S INSIDE",
+      subtitle: "The mods that power Fabric Boosted",
+      performance: "Performance",
+      optifine: "OptiFine Features",
+      qol: "Quality of Life",
+      utility: "Utility",
+    },
     latest: {
       title: "LATEST LOGS",
       subtitle: "Updates from the developer",
@@ -85,7 +93,7 @@ export const translations = {
         "NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT. Minecraft is a trademark of Mojang AB and Microsoft Corporation.",
       assets_title: "Minecraft Assets",
       assets_text:
-        "The block textures (dark prismarine, deepslate, warped wart block, sculk), the toast texture and the grass block icon are (c) Mojang AB / Microsoft Corporation. They are sourced from the vanilla Minecraft assets via the open-source PrismarineJS/minecraft-assets repository and used under the Minecraft Usage Guidelines.",
+        "The block textures (dark prismarine, deepslate, warped wart block, sculk, bedrock), the toast texture and the grass block icon are (c) Mojang AB / Microsoft Corporation. They are sourced from the vanilla Minecraft assets via the open-source PrismarineJS/minecraft-assets repository and used under the Minecraft Usage Guidelines.",
       wallpaper_title: "Background Artwork",
       wallpaper_text:
         "The homepage background artwork was sourced from a free wallpaper site ([Wallpaper Alchemy](https://www.wallpaperalchemy.com/wallpaper/minecraft-mountain-sunset-valley-wallpaper-4k-1702)). All rights belong to its original creator - if this is your work, contact us to add credit or remove it.",
@@ -142,6 +150,14 @@ export const translations = {
       memory_desc:
         "Zaawansowane dostrajanie Garbage Collection oznacza, że możesz grać komfortowo z mniejszą ilością RAM.",
     },
+    mods: {
+      title: "CO ZAWIERA",
+      subtitle: "Mody napędzające Fabric Boosted",
+      performance: "Wydajność",
+      optifine: "Funkcje OptiFine",
+      qol: "Jakość Życia",
+      utility: "Narzędzia",
+    },
     latest: {
       title: "OSTATNIE LOGI",
       subtitle: "Aktualizacje od dewelopera",
@@ -190,7 +206,7 @@ export const translations = {
         "TO NIE JEST OFICJALNY PRODUKT MINECRAFT. NIE ZATWIERDZONY ANI NIE POWIĄZANY Z MOJANG LUB MICROSOFT. Minecraft jest znakiem towarowym Mojang AB i Microsoft Corporation.",
       assets_title: "Zasoby Minecraft",
       assets_text:
-        "Tekstury bloków (ciemny pryzmaryn, deepslate, blok warped wart, sculk), tekstura toastu oraz ikona trawy są (c) Mojang AB / Microsoft Corporation. Pochodzą z oryginalnych zasobów Minecraft za pośrednictwem open-source'owego repozytorium PrismarineJS/minecraft-assets i są używane zgodnie z Zasadami Użytkowania Minecraft.",
+        "Tekstury bloków (ciemny pryzmaryn, deepslate, blok warped wart, sculk, bedrock), tekstura toastu oraz ikona trawy są (c) Mojang AB / Microsoft Corporation. Pochodzą z oryginalnych zasobów Minecraft za pośrednictwem open-source'owego repozytorium PrismarineJS/minecraft-assets i są używane zgodnie z Zasadami Użytkowania Minecraft.",
       wallpaper_title: "Grafika w Tle",
       wallpaper_text:
         "Grafika tła strony głównej pochodzi z darmowej strony z tapetami ([Wallpaper Alchemy](https://www.wallpaperalchemy.com/wallpaper/minecraft-mountain-sunset-valley-wallpaper-4k-1702)). Wszelkie prawa należą do jej oryginalnego twórcy - jeśli jest to Twoja praca, skontaktuj się z nami, aby dodać podziękowanie lub usunąć grafikę.",

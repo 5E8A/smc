@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ListIcon, XIcon, DownloadIcon, GlobeIcon } from "@phosphor-icons/react";
+import { ListIcon, XIcon, DownloadIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
+import LangSwitcher from "./LangSwitcher";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,49 +11,52 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  const langParams = { lang: language };
+
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-(--nav-height)">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <SmartImage src="/smc/assets/avatars/smc.webp" alt="SMC Logo" className="h-10 w-10 rounded-squircle" lazy={false} />
-            {/* <div className="relative p-2 bg-gradient-to-br from-mc-surface-light to-mc-surface rounded-lg border border-white/10 shadow-lg group-hover:border-mc-accent/50 transition-colors">
-              <Box className="h-6 w-6 text-mc-accent" strokeWidth={2} />
-            </div> */}
-            {/* <div className="flex flex-col">
-              <span className="text-2xl font-mc text-white tracking-wide leading-none group-hover:text-mc-accent transition-colors">
-                SMC<span className="text-mc-text-muted"></span>
-              </span>
-            </div> */}
+          <Link to="/$lang" params={langParams} className="flex items-center space-x-3 group">
+            <SmartImage
+              src="/smc/assets/avatars/smc.webp"
+              alt="SMC Logo"
+              className="h-10 w-10 rounded-squircle"
+              lazy={false}
+            />
           </Link>
 
           {/* Desktop ListIcon */}
           <div className="hidden md:flex items-center">
             <div className="flex items-center space-x-1 bg-mc-surface/50 p-1 rounded-lg border border-white/5 mr-6">
               <Link
-                to="/"
+                to="/$lang"
+                params={langParams}
                 preload="intent"
                 className="flex items-center space-x-2 text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.home}</span>
               </Link>
               <Link
-                to="/archive"
+                to="/$lang/archive"
+                params={langParams}
                 preload="intent"
                 className="flex items-center space-x-2 text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.archive}</span>
               </Link>
               <Link
-                to="/wiki"
+                to="/$lang/wiki"
+                params={langParams}
                 preload="intent"
                 className="flex items-center space-x-2 text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
                 <span>{t.nav.wiki}</span>
               </Link>
               <Link
-                to="/about"
+                to="/$lang/about"
+                params={langParams}
                 preload="intent"
                 className="text-mc-text hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-all font-medium text-sm"
               >
@@ -71,23 +75,16 @@ const Navbar = () => {
               <span>{t.nav.download}</span>
             </a>
 
-            {/* Language Switcher */}
-            <div className="flex items-center ml-6 pl-6 border-l border-white/10">
-              <GlobeIcon className="w-4 h-4 text-mc-text-muted mr-2" />
-              <select
-                aria-label={t.common.language}
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as "en" | "pl")}
-                className="bg-transparent text-sm font-medium text-mc-text focus:outline-none hover:text-white cursor-pointer uppercase"
-              >
-                <option value="en" className="bg-mc-surface">
-                  EN
-                </option>
-                <option value="pl" className="bg-mc-surface">
-                  PL
-                </option>
-              </select>
-            </div>
+            <Link
+              to="/$lang"
+              params={{ lang: language === "en" ? "pl" : "en" }}
+              className="hidden"
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              {language === "en" ? "Polski" : "English"}
+            </Link>
+            <LangSwitcher language={language} setLanguage={setLanguage} t={t} className="ml-6" />
           </div>
 
           {/* Mobile menu button */}
@@ -109,7 +106,8 @@ const Navbar = () => {
         <div className="md:hidden backdrop-blur-md border-b border-white/10">
           <div className="px-4 pt-2 pb-6 space-y-2">
             <Link
-              to="/"
+              to="/$lang"
+              params={langParams}
               preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
@@ -117,7 +115,8 @@ const Navbar = () => {
               {t.nav.home}
             </Link>
             <Link
-              to="/archive"
+              to="/$lang/archive"
+              params={langParams}
               preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
@@ -125,7 +124,8 @@ const Navbar = () => {
               {t.nav.archive}
             </Link>
             <Link
-              to="/wiki"
+              to="/$lang/wiki"
+              params={langParams}
               preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
@@ -133,32 +133,25 @@ const Navbar = () => {
               {t.nav.wiki}
             </Link>
             <Link
-              to="/about"
+              to="/$lang/about"
+              params={langParams}
               preload="intent"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/5 block px-3 py-3 rounded-md text-lg font-medium"
             >
               {t.nav.about}
             </Link>
-            <a href="https://modrinth.com/modpack/fabric-boosted" target="_blank" rel="noopener noreferrer" className="btn-mc-green block w-full text-center px-3 py-3 mt-4 rounded">
+            <a
+              href="https://modrinth.com/modpack/fabric-boosted"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-mc-green block w-full text-center px-3 py-3 mt-4 rounded"
+            >
               {t.nav.download}
             </a>
             <div className="mt-4 px-3">
               <div className="flex items-center text-mc-text-muted">
-                <GlobeIcon className="w-5 h-5 mr-2" />
-                <select
-                  aria-label={t.common.language}
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value as "en" | "pl")}
-                  className="bg-transparent text-white focus:outline-none w-full uppercase"
-                >
-                  <option value="en" className="bg-mc-surface">
-                    English
-                  </option>
-                  <option value="pl" className="bg-mc-surface">
-                    Polski
-                  </option>
-                </select>
+                <LangSwitcher language={language} setLanguage={setLanguage} t={t} />
               </div>
             </div>
           </div>
