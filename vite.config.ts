@@ -24,9 +24,7 @@ export default defineConfig(({ mode }) => {
       nitro({ baseURL: "/smc" }),
       react(),
       tailwindcss(),
-      ...(analyze
-        ? [visualizer({ filename: "dist/stats.html", open: true, gzipSize: true })]
-        : []),
+      ...(analyze ? [visualizer({ filename: "dist/stats.html", open: true, gzipSize: true })] : []),
     ],
     resolve: {
       alias: {
@@ -37,7 +35,11 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom") || id.includes("node_modules/scheduler")) {
+            if (
+              id.includes("node_modules/react") ||
+              id.includes("node_modules/react-dom") ||
+              id.includes("node_modules/scheduler")
+            ) {
               return "react";
             }
             if (id.includes("@tanstack/react-router") || id.includes("@tanstack/history")) {

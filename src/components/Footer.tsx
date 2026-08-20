@@ -24,6 +24,11 @@ const Footer = () => {
             <h4 className="text-sm font-semibold tracking-wider text-white uppercase">{t.footer.resources}</h4>
             <ul className="space-y-2 text-sm text-mc-text">
               <li>
+                <Link to="/$lang/wiki" params={langParams} preload="intent" className="transition-colors hover:text-mc-green-text">
+                  {t.hero.wiki}
+                </Link>
+              </li>
+              <li>
                 <a
                   href="https://www.curseforge.com/members/5e8a/projects"
                   target="_blank"
@@ -42,11 +47,6 @@ const Footer = () => {
                 >
                   Modrinth
                 </a>
-              </li>
-              <li>
-                <Link to="/$lang/wiki" params={langParams} preload="intent" className="transition-colors hover:text-mc-green-text">
-                  {t.hero.wiki}
-                </Link>
               </li>
               <li>
                 <Link to="/$lang/credits" params={langParams} preload="intent" className="transition-colors hover:text-mc-green-text">

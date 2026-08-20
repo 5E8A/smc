@@ -15,7 +15,6 @@ import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangAboutRouteImport } from './routes/$lang/about'
 import { Route as LangArchiveRouteImport } from './routes/$lang/archive'
 import { Route as LangCreditsRouteImport } from './routes/$lang/credits'
-import { Route as LangDevRouteImport } from './routes/$lang/dev'
 import { Route as PostSlugRouteImport } from './routes/post.$slug'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as LangPostSlugRouteImport } from './routes/$lang/post.$slug'
@@ -52,11 +51,6 @@ const LangCreditsRoute = LangCreditsRouteImport.update({
   path: '/credits',
   getParentRoute: () => LangRoute,
 } as any).lazy(() => import('./routes/$lang/credits.lazy').then((d) => d.Route))
-const LangDevRoute = LangDevRouteImport.update({
-  id: '/dev',
-  path: '/dev',
-  getParentRoute: () => LangRoute,
-} as any).lazy(() => import('./routes/$lang/dev.lazy').then((d) => d.Route))
 const PostSlugRoute = PostSlugRouteImport.update({
   id: '/post/$slug',
   path: '/post/$slug',
@@ -95,7 +89,6 @@ export interface FileRoutesByFullPath {
   '/$lang/about': typeof LangAboutRoute
   '/$lang/archive': typeof LangArchiveRoute
   '/$lang/credits': typeof LangCreditsRoute
-  '/$lang/dev': typeof LangDevRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/$lang/': typeof LangIndexRoute
@@ -108,7 +101,6 @@ export interface FileRoutesByTo {
   '/$lang/about': typeof LangAboutRoute
   '/$lang/archive': typeof LangArchiveRoute
   '/$lang/credits': typeof LangCreditsRoute
-  '/$lang/dev': typeof LangDevRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/$lang': typeof LangIndexRoute
@@ -123,7 +115,6 @@ export interface FileRoutesById {
   '/$lang/about': typeof LangAboutRoute
   '/$lang/archive': typeof LangArchiveRoute
   '/$lang/credits': typeof LangCreditsRoute
-  '/$lang/dev': typeof LangDevRoute
   '/post/$slug': typeof PostSlugRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/$lang/': typeof LangIndexRoute
@@ -139,7 +130,6 @@ export interface FileRouteTypes {
     | '/$lang/about'
     | '/$lang/archive'
     | '/$lang/credits'
-    | '/$lang/dev'
     | '/post/$slug'
     | '/wiki/$slug'
     | '/$lang/'
@@ -152,7 +142,6 @@ export interface FileRouteTypes {
     | '/$lang/about'
     | '/$lang/archive'
     | '/$lang/credits'
-    | '/$lang/dev'
     | '/post/$slug'
     | '/wiki/$slug'
     | '/$lang'
@@ -166,7 +155,6 @@ export interface FileRouteTypes {
     | '/$lang/about'
     | '/$lang/archive'
     | '/$lang/credits'
-    | '/$lang/dev'
     | '/post/$slug'
     | '/wiki/$slug'
     | '/$lang/'
@@ -226,13 +214,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangCreditsRouteImport
       parentRoute: typeof LangRoute
     }
-    '/$lang/dev': {
-      id: '/$lang/dev'
-      path: '/dev'
-      fullPath: '/$lang/dev'
-      preLoaderRoute: typeof LangDevRouteImport
-      parentRoute: typeof LangRoute
-    }
     '/post/$slug': {
       id: '/post/$slug'
       path: '/post/$slug'
@@ -275,7 +256,6 @@ interface LangRouteChildren {
   LangAboutRoute: typeof LangAboutRoute
   LangArchiveRoute: typeof LangArchiveRoute
   LangCreditsRoute: typeof LangCreditsRoute
-  LangDevRoute: typeof LangDevRoute
   LangIndexRoute: typeof LangIndexRoute
   LangPostSlugRoute: typeof LangPostSlugRoute
   LangWikiSlugRoute: typeof LangWikiSlugRoute
@@ -286,7 +266,6 @@ const LangRouteChildren: LangRouteChildren = {
   LangAboutRoute: LangAboutRoute,
   LangArchiveRoute: LangArchiveRoute,
   LangCreditsRoute: LangCreditsRoute,
-  LangDevRoute: LangDevRoute,
   LangIndexRoute: LangIndexRoute,
   LangPostSlugRoute: LangPostSlugRoute,
   LangWikiSlugRoute: LangWikiSlugRoute,
