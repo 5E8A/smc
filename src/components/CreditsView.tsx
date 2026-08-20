@@ -14,22 +14,22 @@ const CreditsView = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-transparent pt-10 pb-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 w-full">
-        <div className="bg-mc-surface border border-white/10 rounded-xl p-8 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-mc-green/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-          <h1 className="text-4xl md:text-5xl font-mc text-white mb-4 font-pixel-shadow relative z-10">
+    <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
+      <div className="mx-auto mb-12 w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 shadow-xl">
+          <div className="absolute top-0 right-0 size-64 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-mc-green/5 blur-3xl"></div>
+          <h1 className="font-pixel-shadow relative z-10 mb-4 font-mc text-4xl text-white md:text-5xl">
             {t.credits.title}
           </h1>
-          <p className="text-mc-text text-lg relative z-10 mb-0 max-w-2xl">{t.credits.subtitle}</p>
+          <p className="relative z-10 mb-0 max-w-2xl text-lg text-mc-text">{t.credits.subtitle}</p>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-6">
+      <div className="mx-auto w-full max-w-4xl space-y-6 px-4 sm:px-6 lg:px-8">
         {sections.map((section) => (
-          <div key={section.title} className="bg-mc-surface border border-white/10 rounded-xl p-8">
-            <h2 className="text-xl font-bold text-white mb-3">{section.title}</h2>
-            <p className="text-mc-text leading-relaxed">{parseRichText(section.text)}</p>
+          <div key={section.title} className="rounded-xl border border-white/10 bg-mc-surface p-8">
+            <h2 className="mb-3 text-xl font-bold text-white">{section.title}</h2>
+            <p className="leading-relaxed text-mc-text">{parseRichText(section.text)}</p>
           </div>
         ))}
       </div>

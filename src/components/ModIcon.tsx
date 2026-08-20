@@ -56,7 +56,7 @@ const ModIcon = ({ slug, icon, alt, size = 32, className = "", sprite, spriteInd
         alt={alt}
         width={size}
         height={size}
-        className={`rounded-md object-cover flex-shrink-0 ${className}`}
+        className={`flex-shrink-0 rounded-md object-cover ${className}`}
         style={{ width: size, height: size }}
         loading="lazy"
       />
@@ -65,11 +65,11 @@ const ModIcon = ({ slug, icon, alt, size = 32, className = "", sprite, spriteInd
 
   return (
     <div
-      className={`rounded-md flex items-center justify-center flex-shrink-0 ${className}`}
+      className={`flex flex-shrink-0 items-center justify-center rounded-md ${className}`}
       style={{ width: size, height: size, backgroundColor: `hsl(${slugHue(slug)} 30% 22%)` }}
     >
       <CubeIcon
-        className="w-1/2 h-1/2"
+        className="size-1/2"
         weight="duotone"
         style={{ color: `hsl(${slugHue(slug)} 60% 65%)` }}
       />

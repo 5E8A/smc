@@ -50,15 +50,15 @@ const HomeView = () => {
 
       <div className="flex h-[calc(100svh-var(--nav-height))] flex-col">
         {/* Hero Section - Launcher Style */}
-        <section className="relative overflow-hidden flex-1 min-h-0 flex flex-col">
+        <section className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
           {/* Modern blur effect behind hero */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-mc-green/5 blur-[120px] rounded-full"></div>
+          <div className="absolute top-0 left-1/2 size-full max-w-7xl -translate-x-1/2 rounded-full bg-mc-green/5 blur-[120px]"></div>
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 lg:py-16 flex-1 w-full flex flex-col items-start justify-center z-10 @container">
+          <div className="@container relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col items-start justify-center px-4 py-10 sm:px-6 md:py-12 lg:px-8 lg:py-16">
             <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
 
             <h1
-              className="leading-none tracking-tight font-banner text-white uppercase font-pixel-shadow text-[min(90px,26cqi)] @min-[640px]:text-[min(125px,11.2cqi)] @min-[640px]:whitespace-nowrap"
+              className="font-pixel-shadow font-banner text-[min(90px,26cqi)] leading-none tracking-tight text-white uppercase @min-[640px]:text-[min(125px,11.2cqi)] @min-[640px]:whitespace-nowrap"
               aria-label="SMC - Seba Modding Community"
             >
               <span>
@@ -68,16 +68,16 @@ const HomeView = () => {
               </span>
             </h1>
 
-            <p className="max-w-xl text-lg text-mc-text mb-6 md:mb-10 leading-relaxed font-sans">
+            <p className="mb-6 max-w-xl font-sans text-lg leading-relaxed text-mc-text md:mb-10">
               {t.hero.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <a href="#latest" className="btn-mc-green px-8 py-3 rounded text-center flex items-center justify-center">
+            <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+              <a href="#latest" className="btn-mc-green flex items-center justify-center rounded px-8 py-3 text-center">
                 <span>{t.hero.read_updates}</span>
-                <CaretRightIcon className="w-5 h-5 ml-2" />
+                <CaretRightIcon className="ml-2 size-5" />
               </a>
-              <Link to="/$lang/wiki" params={langParams} preload="intent" className="btn-mc-stone px-8 py-3 rounded text-center">
+              <Link to="/$lang/wiki" params={langParams} preload="intent" className="btn-mc-stone rounded px-8 py-3 text-center">
                 <span>{t.hero.wiki}</span>
               </Link>
             </div>
@@ -85,13 +85,13 @@ const HomeView = () => {
         </section>
 
         {/* Ad Banner */}
-        <section className="w-full max-w-7xl mx-auto py-6 overflow-hidden shrink-0">
+        <section className="mx-auto w-full max-w-7xl shrink-0 overflow-hidden py-6">
           <div className="px-4 sm:px-6 lg:px-8">
             <a
               href="https://billing.sparkedhost.com/aff.php?aff=3127"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative block w-full rounded-xl overflow-hidden bg-mc-surface/30 border border-white/10 group transition-all duration-300 hover:border-mc-green/40 hover:scale-[1.01] cursor-pointer isolate transform-gpu"
+              className="group hover:scale-1.01 relative isolate block w-full transform-gpu cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-mc-surface/30 transition-all duration-300 hover:border-mc-green/40"
               style={{ aspectRatio: "1920 / 300" }}
             >
               {/* Banner Image */}
@@ -100,14 +100,14 @@ const HomeView = () => {
                 alt="Sponsored Content"
                 lazy={false}
                 priority="high"
-                className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-[1.02]"
+                className="group-hover:scale-1.02 absolute inset-0 size-full transition-transform duration-500"
               />
 
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+              <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/20" />
 
               {/* Ad Badge */}
               <div className="absolute top-0 right-0 p-2">
-                <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/30 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-bl border-l border-b border-white/5">
+                <span className="rounded-bl border-b border-l border-white/5 bg-black/60 px-2 py-0.5 text-[8px] tracking-widest text-white/30 uppercase backdrop-blur-md md:text-[10px]">
                   PARTNERSHIP
                 </span>
               </div>
@@ -118,7 +118,7 @@ const HomeView = () => {
         {/* Scroll cue */}
         <button
           onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
-          className="flex h-12 shrink-0 items-center justify-center text-mc-text-muted hover:text-mc-green-text transition-colors"
+          className="flex h-12 shrink-0 items-center justify-center text-mc-text-muted transition-colors hover:text-mc-green-text"
           aria-label="Scroll down"
         >
           <svg viewBox="0 0 22 22" width={28} height={28} fill="currentColor" className="chevron-pulse">
@@ -128,10 +128,10 @@ const HomeView = () => {
       </div>
 
       {/* Mods Showcase */}
-      <section className="pb-12 md:pb-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 md:mb-12 pb-12">
-            <h2 className="text-4xl font-mc text-white mb-2">{t.mods.title}</h2>
+      <section className="relative pb-12 md:pb-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 pb-12 md:mb-12">
+            <h2 className="mb-2 font-mc text-4xl text-white">{t.mods.title}</h2>
             <p className="text-mc-text">{t.mods.subtitle}</p>
           </div>
 
@@ -140,31 +140,31 @@ const HomeView = () => {
       </section>
 
       {/* Latest Posts */}
-      <section id="latest" className="pb-12 md:pb-24 [content-visibility:auto]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-12">
+      <section id="latest" className="pb-12 [content-visibility:auto] md:pb-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6 flex flex-col items-start justify-between md:mb-12 md:flex-row md:items-end">
             <div>
-              <h2 className="text-4xl font-mc text-white mb-2">{t.latest.title}</h2>
+              <h2 className="mb-2 font-mc text-4xl text-white">{t.latest.title}</h2>
               <p className="text-mc-text">{t.latest.subtitle}</p>
             </div>
             <Link
               to="/$lang/archive"
               params={langParams}
               preload="intent"
-              className="hidden md:flex btn-mc-stone px-6 py-2 rounded items-center mt-4 md:mt-0"
+              className="btn-mc-stone mt-4 hidden items-center rounded px-6 py-2 md:mt-0 md:flex"
             >
               {t.latest.view_archive}
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-75">
+          <div className="grid min-h-75 grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
           </div>
 
-          <div className="mt-6 md:mt-12 text-center md:hidden">
-            <Link to="/$lang/archive" params={langParams} className="btn-mc-stone px-8 py-3 rounded inline-block">
+          <div className="mt-6 text-center md:mt-12 md:hidden">
+            <Link to="/$lang/archive" params={langParams} className="btn-mc-stone inline-block rounded px-8 py-3">
               {t.latest.view_archive}
             </Link>
           </div>

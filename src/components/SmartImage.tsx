@@ -33,7 +33,7 @@ const SmartImage = ({ src, alt, width, height, priority, lazy = true, className 
         loading={lazy ? "lazy" : "eager"}
         decoding="async"
         fetchPriority={priority}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 size-full object-cover"
       />
     </div>
   );

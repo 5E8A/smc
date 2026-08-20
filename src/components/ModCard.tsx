@@ -11,14 +11,14 @@ const ModCard = ({ mod }: ModCardProps) => {
       href={`https://modrinth.com/mod/${mod.slug}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="mc-slot p-3 rounded-lg flex items-center gap-3 group"
+      className="mc-slot group flex items-center gap-3 rounded-lg p-3"
     >
       <ModIcon slug={mod.slug} icon={mod.icon} alt={mod.title} />
       <div className="min-w-0">
-        <h3 className="text-sm font-semibold text-white truncate group-hover:text-mc-green transition-colors">
+        <h3 className="truncate text-sm font-semibold text-white transition-colors group-hover:text-mc-green">
           {mod.title}
         </h3>
-        <p className="text-xs text-mc-text-muted truncate">{mod.description}</p>
+        <p className="truncate text-xs text-mc-text-muted">{mod.description}</p>
       </div>
     </a>
   );

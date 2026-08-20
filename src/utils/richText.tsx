@@ -29,7 +29,7 @@ export const parseRichText = (text: string): ReactNode[] => {
         href={linkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-mc-green-text hover:text-white hover:shadow-[inset_0_-1px_0_currentColor] transition-colors font-semibold"
+        className="font-semibold text-mc-green-text transition-colors hover:text-white hover:shadow-[inset_0_-1px_0_currentColor]"
       >
         {linkText}
         <ArrowSquareOutIcon

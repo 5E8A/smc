@@ -24,9 +24,9 @@ const BackButton = ({ fallbackTo, fallbackParams }: BackButtonProps) => {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex items-center text-white/80 hover:text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10 transition-colors text-sm cursor-pointer"
+      className="inline-flex cursor-pointer items-center rounded-full border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/80 backdrop-blur-sm transition-colors hover:text-white"
     >
-      <ArrowLeftIcon className="w-4 h-4 mr-2" />
+      <ArrowLeftIcon className="mr-2 size-4" />
       {t.common.back}
     </button>
   );
