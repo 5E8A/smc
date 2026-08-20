@@ -12,7 +12,7 @@ const SearchHeader = ({ title, subtitle, searchPlaceholder, searchTerm, onSearch
   return (
     <div className="mx-auto mb-12 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 shadow-xl">
-        <h1 className="font-pixel-shadow relative z-10 mb-4 font-mc text-4xl text-white md:text-5xl">{title}</h1>
+        <h1 className="relative z-10 mb-4 font-mc text-4xl text-white font-pixel-shadow md:text-5xl">{title}</h1>
         <p className="relative z-10 mb-8 max-w-2xl text-lg text-mc-text">{subtitle}</p>
 
         <div className="relative z-10 max-w-md">

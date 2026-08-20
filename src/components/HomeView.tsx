@@ -58,7 +58,7 @@ const HomeView = () => {
             <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
 
             <h1
-              className="font-pixel-shadow font-banner text-[min(90px,26cqi)] leading-none tracking-tight text-white uppercase @min-[640px]:text-[min(125px,11.2cqi)] @min-[640px]:whitespace-nowrap"
+              className="font-banner text-[min(90px,26cqi)] leading-none tracking-tight text-white uppercase font-pixel-shadow @min-[640px]:text-[min(125px,11.2cqi)] @min-[640px]:whitespace-nowrap"
               aria-label="SMC - Seba Modding Community"
             >
               <span>
@@ -91,7 +91,7 @@ const HomeView = () => {
               href="https://billing.sparkedhost.com/aff.php?aff=3127"
               target="_blank"
               rel="noopener noreferrer"
-              className="group hover:scale-1.01 relative isolate block w-full transform-gpu cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-mc-surface/30 transition-all duration-300 hover:border-mc-green/40"
+              className="group hover:scale-1.01 relative isolate block w-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-mc-surface/30 transition-all duration-300 hover:border-mc-green/40"
               style={{ aspectRatio: "1920 / 300" }}
             >
               {/* Banner Image */}

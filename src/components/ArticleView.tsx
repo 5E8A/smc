@@ -63,7 +63,7 @@ const ArticleView = () => {
           )}
 
           {/* Main Content Render */}
-          <article className="prose prose-invert prose-lg max-w-none">
+          <article className="max-w-none">
             {post.content.map((block, index) => (
               <div key={index} className="mb-12">
                 {block.header && (

@@ -272,10 +272,7 @@
       0 0 20px rgba(60, 133, 39, 0.15);
   }
 
-  /* Pixel Font Shadow for headers only */
-  .font-pixel-shadow {
-    text-shadow: 2px 2px 0px #000000;
-  }
+
 
   /* Minecraft Styled Tooltip */
   .mc-tooltip {
@@ -298,7 +295,6 @@
   }
 }
 
-/* Scroll cue pulse */
 @keyframes chevron-pulse {
   0%,
   100% {
@@ -310,7 +306,12 @@
     transform: translateY(4px);
   }
 }
-.chevron-pulse {
+
+@utility font-pixel-shadow {
+  text-shadow: 2px 2px 0px #000000;
+}
+
+@utility chevron-pulse {
   animation: chevron-pulse 2s ease-in-out infinite;
 }
 
