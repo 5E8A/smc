@@ -34,9 +34,9 @@ const WikiDocView = () => {
         </div>
       </div>
 
-      <div className="relative z-30 mx-auto -mt-8 max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-30 mx-auto -mt-10 max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
-        <div className="absolute -top-16 left-4 md:left-0">
+        <div className="mb-5">
           <BackButton fallbackTo="/$lang/wiki" fallbackParams={{ lang: language }} />
         </div>
 
@@ -52,7 +52,7 @@ const WikiDocView = () => {
           </div>
 
           {/* Main Content Render */}
-          <article className="prose prose-invert prose-lg max-w-none">
+          <article className="max-w-none">
             {doc.content.map((block, index) => (
               <div key={index} className="mb-8">
                 {block.header && (

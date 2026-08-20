@@ -18,7 +18,7 @@ const CreditsView = () => {
       <div className="mx-auto mb-12 w-full max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 shadow-xl">
           <div className="absolute top-0 right-0 size-64 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-mc-green/5 blur-3xl"></div>
-          <h1 className="font-pixel-shadow relative z-10 mb-4 font-mc text-4xl text-white md:text-5xl">
+          <h1 className="relative z-10 mb-4 font-mc text-4xl text-white font-pixel-shadow md:text-5xl">
             {t.credits.title}
           </h1>
           <p className="relative z-10 mb-0 max-w-2xl text-lg text-mc-text">{t.credits.subtitle}</p>

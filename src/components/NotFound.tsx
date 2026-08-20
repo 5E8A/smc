@@ -13,7 +13,7 @@ const NotFound = () => {
         aria-hidden
         className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-bedrock opacity-45`}
       />
-      <h1 className="font-pixel-shadow mb-4 font-mc text-8xl text-mc-green md:text-9xl">404</h1>
+      <h1 className="mb-4 font-mc text-8xl text-mc-green font-pixel-shadow md:text-9xl">404</h1>
       <h2 className="mb-4 text-center text-2xl font-bold text-white md:text-3xl">{t.not_found.title}</h2>
       <p className="mb-10 max-w-md text-center text-lg text-mc-text">{t.not_found.description}</p>
       <Link to="/$lang" params={{ lang: language }} className="btn-mc-green rounded px-8 py-3 text-center">
