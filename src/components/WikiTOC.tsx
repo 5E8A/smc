@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { slug as githubSlug } from "github-slugger";
+import Icon from "./IconMap";
 
 interface TocItem {
   id: string;
@@ -9,6 +10,24 @@ interface TocItem {
 
 interface WikiTOCProps {
   content: string;
+}
+
+const ICON_RE = /:([A-Z][A-Za-z]+Icon):/g;
+
+function renderTextWithIcons(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  for (const match of text.matchAll(ICON_RE)) {
+    if (match.index! > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index!));
+    }
+    parts.push(<Icon key={match.index} name={match[1]} />);
+    lastIndex = match.index! + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
 }
 
 const slugify = (text: string): string => githubSlug(text);
@@ -25,7 +44,7 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
       if (match) {
         const level = match[1].length;
         const text = match[2].replace(/[*_~`]/g, "");
-        items.push({ id: slugify(text), text, level });
+        items.push({ id: slugify(text.replace(ICON_RE, "")), text, level });
       }
     }
     return items;
@@ -104,7 +123,7 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
                     : "text-white/65 hover:bg-white/5 hover:text-white/90"
                 }`}
               >
-                {h.text}
+                {renderTextWithIcons(h.text)}
               </a>
             </li>
           );
