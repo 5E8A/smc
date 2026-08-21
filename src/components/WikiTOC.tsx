@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { slug as githubSlug } from "github-slugger";
 
 interface TocItem {
@@ -15,6 +15,7 @@ const slugify = (text: string): string => githubSlug(text);
 
 const WikiTOC = ({ content }: WikiTOCProps) => {
   const [activeId, setActiveId] = useState<string>("");
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const headings = useMemo(() => {
     const items: TocItem[] = [];
@@ -35,11 +36,31 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
 
     const offset = 120;
     const onScroll = () => {
+      if (scrollTimeout.current) return;
+
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 50;
+
+      if (atBottom && headings.length > 0) {
+        setActiveId(headings[headings.length - 1].id);
+        return;
+      }
+
       let current = headings[0]?.id ?? "";
+      let closestTop = Infinity;
+      let found = false;
       for (const h of headings) {
         const el = document.getElementById(h.id);
-        if (el && el.getBoundingClientRect().top <= offset) {
-          current = h.id;
+        if (el) {
+          const top = el.getBoundingClientRect().top;
+          if (top <= offset) {
+            current = h.id;
+            found = true;
+          } else if (!found && top < closestTop) {
+            closestTop = top;
+            current = h.id;
+          }
         }
       }
       setActiveId(current);
@@ -47,7 +68,10 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
   }, [headings]);
 
   const minLevel = headings.length > 0 ? Math.min(...headings.map((h) => h.level)) : 1;
@@ -67,6 +91,11 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
                 href={`#${h.id}`}
                 onClick={(e) => {
                   e.preventDefault();
+                  setActiveId(h.id);
+                  if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+                  scrollTimeout.current = setTimeout(() => {
+                    scrollTimeout.current = null;
+                  }, 800);
                   document.getElementById(h.id)?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className={`block truncate rounded px-2 py-1 text-sm transition-colors ${
