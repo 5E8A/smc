@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
           enabled: true,
           crawlLinks: true,
           autoSubfolderIndex: true,
-          filter: ({ path }) => !path.includes("/modrinth"),
+          // filter: ({ path }) => !path.includes("/modrinth"),
         },
       }),
       nitro({ baseURL: "/smc" }),
