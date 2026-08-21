@@ -112,6 +112,13 @@ export const translations = {
       description: "The page you're looking for doesn't exist or has been moved.",
       back_home: "Back to Home",
     },
+    open_app: {
+      title: "Opening Modrinth App",
+      description_before: "If you don't have the Modrinth App, ",
+      description_link: "install it here",
+      description_after: ", or open in browser using the link below.",
+      fallback_link: "Open in browser",
+    },
   },
   pl: {
     nav: {
@@ -224,6 +231,13 @@ export const translations = {
       title: "Nie Znaleziono Strony",
       description: "Strona, której szukasz, nie istnieje lub została przeniesiona.",
       back_home: "Wróć na Stronę Główną",
+    },
+    open_app: {
+      title: "Otwieranie Modrinth App",
+      description_before: "Jeśli nie masz Modrinth App, ",
+      description_link: "zainstaluj tutaj",
+      description_after: ", lub otwórz w przeglądarce za pomocą poniższego przycisku.",
+      fallback_link: "Otwórz w przeglądarce",
     },
   },
 };

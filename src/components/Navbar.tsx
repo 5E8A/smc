@@ -66,7 +66,7 @@ const Navbar = () => {
 
             {/* Modern Action Button */}
             <a
-              href="https://modrinth.com/modpack/fabric-boosted"
+              href={`/smc/${language}/modrinth?type=modpack&slug=fabric-boosted`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-mc-green flex items-center space-x-2 rounded px-6 py-2"
@@ -142,7 +142,7 @@ const Navbar = () => {
               {t.nav.about}
             </Link>
             <a
-              href="https://modrinth.com/modpack/fabric-boosted"
+              href={`/smc/${language}/modrinth?type=modpack&slug=fabric-boosted`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-mc-green mt-4 block w-full rounded p-3 text-center"
