@@ -165,7 +165,7 @@
 
 @media (max-width: 1023px) {
   .parallax-bg {
-    background-image: var(--_lqip-bg, none), url("/smc/assets/static/background.mobile.webp");
+    background-image: url("/smc/assets/static/background.mobile.webp"), var(--_lqip-bg, none);
   }
 }
 
@@ -272,8 +272,6 @@
       4px 6px 0 rgba(0, 0, 0, 0.3),
       0 0 20px rgba(60, 133, 39, 0.15);
   }
-
-
 
   /* Minecraft Styled Tooltip */
   .mc-tooltip {
