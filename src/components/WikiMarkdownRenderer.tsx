@@ -33,7 +33,7 @@ const components: MarkdownComponents = {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold text-mc-green-text transition-colors hover:text-white hover:shadow-[inset_0_-1px_0_currentColor]"
+          className="font-semibold text-green-400 transition-colors hover:text-white hover:shadow-[inset_0_-1px_0_currentColor]"
           {...props}
         >
           {children}
@@ -48,7 +48,7 @@ const components: MarkdownComponents = {
       );
     }
     return (
-      <a href={href} className="text-mc-green-text hover:text-white" {...props}>
+      <a href={href} className="text-green-400 hover:text-white" {...props}>
         {children}
       </a>
     );

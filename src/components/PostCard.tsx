@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { CalendarIcon /*User*/ } from "@phosphor-icons/react";
+import { CalendarIcon, ArrowRightIcon, BookIcon } from "@phosphor-icons/react";
 import { BlogPost } from "../types";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
@@ -26,28 +26,28 @@ const PostCard = ({ post }: PostCardProps) => {
           className="size-full transition-transform duration-700 will-change-transform group-hover:cover-zoom"
           priority="low"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-mc-surface via-transparent to-transparent opacity-90"></div>
-        <div className="absolute top-4 left-4">
-          <span className="rounded border border-white/10 bg-black/60 px-3 py-1 text-xs font-bold tracking-wider text-mc-green uppercase backdrop-blur-md">
-            {post.category}
-          </span>
-        </div>
+        <div className="absolute inset-0 bg-linear-to-t from-mc-surface via-transparent to-transparent opacity-90"></div>
       </div>
 
       {/* Content */}
-      <div className="relative -mt-12 flex flex-grow flex-col p-6">
-        <div className="mb-3 flex items-center space-x-4 text-xs text-mc-text-muted">
-          <div className="flex items-center rounded border border-white/5 bg-black/40 px-2 py-1">
-            <CalendarIcon className="mr-2 size-3" />
+      <div className="relative -mt-12 flex grow flex-col p-6 justify-between">
+        <div className="mb-3 flex items-center gap-2 text-xs">
+          <div className="mb-3 flex items-center space-x-2 bg-black/30 p-2 rounded border border-white/10">
+            <CalendarIcon className="size-[1em] mr-2" />
             {post.date}
+          </div>
+
+          <div className="mb-3 flex items-center space-x-2 bg-black/30 p-2 rounded border border-white/10">
+            <BookIcon className="size-4 text-green-400" />
+            <span className="text-xs font-bold tracking-wider text-green-400 uppercase">{post.category}</span>
           </div>
         </div>
 
-        <h3 className="mb-3 line-clamp-2 text-xl leading-tight font-bold text-white transition-colors group-hover:text-mc-green">
+        <h3 className="mb-3 line-clamp-2 text-xl leading-tight font-bold text-white transition-colors group-hover:text-green-400">
           {post.title}
         </h3>
 
-        <p className="mb-6 line-clamp-3 flex-grow text-sm leading-relaxed text-gray-400">{post.summary}</p>
+        <p className="mb-6 line-clamp-3 grow text-sm leading-relaxed text-mc-text">{post.summary}</p>
 
         <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
           <div className="flex items-center text-xs text-mc-text-muted">
@@ -58,9 +58,10 @@ const PostCard = ({ post }: PostCardProps) => {
             {post.author.name}
           </div>
 
-          <span className="text-sm font-semibold text-white transition-colors group-hover:text-mc-green">
-            {t.latest.read_article} &rarr;
-          </span>
+          <div className="mt-4 flex items-center text-sm font-semibold text-white transition-colors group-hover:text-green-400">
+            {t.latest.read_article}
+            <ArrowRightIcon className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+          </div>
         </div>
       </div>
     </Link>

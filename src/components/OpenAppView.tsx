@@ -1,26 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { Route } from "../routes/$lang/modrinth";
 import { ArrowSquareOutIcon, CircleNotchIcon, DownloadIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 
 const VALID_TYPES = ["modpack", "mod", "server"] as const;
 const SLUG_RE = /^[a-z0-9-]+$/;
 
-function readParams(): { type: string | null; slug: string | null } {
-  const p = new URLSearchParams(window.location.search);
-  return { type: p.get("type"), slug: p.get("slug") };
-}
-
 const OpenAppView = () => {
   const { t } = useLanguage();
-  const [params] = useState(() => {
-    if (typeof window === "undefined") return { type: null, slug: null };
-    return readParams();
-  });
+  const { type, slug } = Route.useSearch();
 
-  const validType = VALID_TYPES.includes(params.type as (typeof VALID_TYPES)[number])
-    ? params.type
+  const validType = VALID_TYPES.includes(type as (typeof VALID_TYPES)[number])
+    ? type
     : null;
-  const validSlug = params.slug && SLUG_RE.test(params.slug) ? params.slug : null;
+  const validSlug = slug && SLUG_RE.test(slug) ? slug : null;
 
   const valid = validType && validSlug;
   const appUrl = valid ? `modrinth://${validType}/${validSlug}` : null;

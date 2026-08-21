@@ -73,11 +73,23 @@ const HomeView = () => {
             </p>
 
             <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
-              <a href="#latest" className="btn-mc-green flex items-center justify-center rounded px-8 py-3 text-center">
+              <a
+                href="#latest"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("latest")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="btn-mc-green flex items-center justify-center rounded px-8 py-3 text-center"
+              >
                 <span>{t.hero.read_updates}</span>
                 <CaretRightIcon className="ml-2 size-5" />
               </a>
-              <Link to="/$lang/wiki" params={langParams} preload="intent" className="btn-mc-stone rounded px-8 py-3 text-center">
+              <Link
+                to="/$lang/wiki"
+                params={langParams}
+                preload="intent"
+                className="btn-mc-stone rounded px-8 py-3 text-center"
+              >
                 <span>{t.hero.wiki}</span>
               </Link>
             </div>
@@ -85,7 +97,7 @@ const HomeView = () => {
         </section>
 
         {/* Ad Banner */}
-        <section className="mx-auto w-full max-w-7xl shrink-0 overflow-hidden py-6">
+        <section className="mx-auto w-full max-w-7xl shrink-0 overflow-hidden py-6 pb-0">
           <div className="px-4 sm:px-6 lg:px-8">
             <a
               href="https://billing.sparkedhost.com/aff.php?aff=3127"
@@ -116,19 +128,23 @@ const HomeView = () => {
         </section>
 
         {/* Scroll cue */}
-        <button
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
-          className="flex h-12 shrink-0 items-center justify-center text-mc-text-muted transition-colors hover:text-mc-green-text"
+        <a
+          href="#mods-showcase"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("mods-showcase")?.scrollIntoView({ behavior: "smooth" });
+          }}
+          className="flex h-20 shrink-0 items-center justify-center text-mc-text-muted transition-colors hover:text-mc-green-text"
           aria-label="Scroll down"
         >
-          <svg viewBox="0 0 22 22" width={28} height={28} fill="currentColor" className="chevron-pulse">
+          <svg viewBox="0 0 22 22" width={50} height={50} fill="currentColor" className="chevron-pulse">
             <path d="M16 10H17V9H18V7H16V8H15V9H14V10H13V11H12V12H10V11H9V10H8V9H7V8H6V7H4V9H5V10H6V11H7V12H8V13H9V14H10V15H12V14H13V13H14V12H15V11H16" />
           </svg>
-        </button>
+        </a>
       </div>
 
       {/* Mods Showcase */}
-      <section className="relative pb-12 md:pb-24">
+      <section id="mods-showcase" className="relative pb-12 md:pb-24 scroll-mt-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 pb-12 md:mb-12">
             <h2 className="mb-2 font-mc text-4xl text-white">{t.mods.title}</h2>
@@ -140,7 +156,7 @@ const HomeView = () => {
       </section>
 
       {/* Latest Posts */}
-      <section id="latest" className="pb-12 [content-visibility:auto] md:pb-24">
+      <section id="latest" className="pb-12 [content-visibility:auto] md:pb-24 scroll-mt-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6 flex flex-col items-start justify-between md:mb-12 md:flex-row md:items-end">
             <div>
