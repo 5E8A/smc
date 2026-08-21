@@ -49,6 +49,7 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 });
 
+// oxlint-disable-next-line react/only-export-components
 function RootDocument({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
