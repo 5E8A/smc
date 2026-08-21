@@ -53,11 +53,11 @@ const WikiDocView = () => {
           {/* Main card */}
           <div className="min-w-0 flex-1">
             <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
-              <div className="relative h-64 w-full overflow-hidden">
+              <div className="relative w-full overflow-hidden aspect-3/1">
                 <SmartImage
                   src={doc.coverImage}
                   alt={doc.title}
-                  className="absolute inset-0 size-full"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-full"
                   lazy={false}
                   priority="high"
                 />
@@ -67,12 +67,8 @@ const WikiDocView = () => {
               </div>
 
               <div className="border-b border-white/5 px-8 pt-8 pb-6 md:px-12">
-                <h1 className="mb-2 max-w-4xl text-4xl font-bold text-white md:text-5xl">
-                  {doc.title}
-                </h1>
-                <p className="mb-4 max-w-3xl text-base text-mc-text-muted">
-                  {doc.summary}
-                </p>
+                <h1 className="mb-2 max-w-4xl text-3xl font-bold text-white md:text-4xl">{doc.title}</h1>
+                <p className="mb-4 max-w-3xl text-base text-mc-text">{doc.summary}</p>
                 <div className="flex items-center justify-between text-sm text-mc-text-muted">
                   <span className="flex items-center gap-1">
                     <CalendarIcon className="size-4" /> {doc.date}
