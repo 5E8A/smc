@@ -1,9 +1,13 @@
-import Markdown from "react-markdown";
+import Markdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeRaw from "rehype-raw";
 import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import Icon from "./IconMap";
+
+type MarkdownComponents = Components & {
+  icon: React.ComponentType<{ name?: string; className?: string }>;
+};
 
 interface WikiMarkdownRendererProps {
   content: string;
@@ -19,8 +23,8 @@ function remarkNoH1() {
 
 const processIcons = (content: string) => content.replace(/:([A-Z][A-Za-z]+Icon):/g, '<icon name="$1"></icon>');
 
-const components: Record<string, React.ComponentType<Record<string, unknown>>> = {
-  icon: ({ name: iconName, node, children: _c, ...rest }) => <Icon name={iconName ?? ""} {...rest} />,
+const components: MarkdownComponents = {
+  icon: ({ name: iconName, ...rest }) => <Icon name={iconName ?? ""} {...rest} />,
   a: ({ href, children, node, ...props }) => {
     const isExternal = href?.startsWith("http");
     if (isExternal) {
