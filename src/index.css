@@ -1,0 +1,486 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/smc/assets/fonts/inter-400-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/smc/assets/fonts/inter-400-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/smc/assets/fonts/inter-500-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/smc/assets/fonts/inter-500-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/smc/assets/fonts/inter-600-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/smc/assets/fonts/inter-600-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "VT323";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/smc/assets/fonts/vt323-400-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "VT323";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/smc/assets/fonts/vt323-400-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Modern Age";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/smc/assets/fonts/modern-age-latin.woff2") format("woff2");
+  unicode-range: U+0020-007E;
+}
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mc: "VT323", monospace;
+  --font-banner: "Modern Age", sans-serif;
+
+  --color-mc-bg: #09090b; /* Obsidian/Void Black */
+  --color-mc-surface: #18181b; /* Deepslate */
+  --color-mc-surface-light: #27272a; /* Polished Deepslate */
+  --color-mc-border: #3f3f46; /* Stone Bricks border */
+  --color-mc-accent: #90d5ff; /* Diamond Blue */
+  --color-mc-green: #3c8527; /* Launcher Green */
+  --color-mc-green-hover: #2a641c;
+  --color-mc-green-text: #4ade80; /* green-400 for text on dark */
+  --color-mc-text: #e4e4e7; /* Zinc 200 */
+  --color-mc-text-muted: #b4b4bc; /* Zinc 400+ */
+
+  --background-image-deepslate: url("/smc/assets/static/deepslate.webp");
+  --background-image-dark-prismarine: url("/smc/assets/static/dark-prismarine.webp");
+  --background-image-warped-wart-block: url("/smc/assets/static/warped-wart-block.webp");
+  --background-image-bedrock: url("/smc/assets/static/bedrock.webp");
+  --background-image-polished-deepslate: url("/smc/assets/static/polished-deepslate.webp");
+
+  --radius-squircle: 22.37%;
+
+  --nav-height: 5rem;
+}
+
+@layer base {
+  body {
+    background-color: #09090b;
+    color: #e4e4e7;
+  }
+}
+
+@utility cover-zoom {
+  transform: translateZ(0) scale(1.05);
+}
+
+.parallax-bg {
+  background-image: url("/smc/assets/static/background.webp"), var(--_lqip-bg, none);
+  background-size: cover;
+  background-position: 50% 50%;
+  mix-blend-mode: screen;
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .parallax-bg {
+    background-position: 50% 36.5%;
+  }
+}
+@media (min-aspect-ratio: 4/3) {
+  .parallax-bg {
+    background-position: 50% 28.2%;
+  }
+}
+@media (min-aspect-ratio: 16/10) {
+  .parallax-bg {
+    background-position: 50% 25.8%;
+  }
+}
+@media (min-aspect-ratio: 16/9) {
+  .parallax-bg {
+    background-position: 50% 24.8%;
+  }
+}
+
+@media (max-width: 1023px) {
+  .parallax-bg {
+    background-image: var(--_lqip-bg, none), url("/smc/assets/static/background.mobile.webp");
+  }
+}
+
+.toast {
+  border-style: solid;
+  border-width: 3px 2px;
+  border-image: url("/smc/assets/static/toast.webp") 3 2 3 2 fill stretch;
+  background-color: #212121;
+  image-rendering: pixelated;
+}
+
+.mc-bg-tiled {
+  background-repeat: repeat;
+  image-rendering: pixelated;
+  background-size: 48px;
+}
+
+@media (min-width: 1536px) {
+  .mc-bg-tiled {
+    background-size: 64px;
+  }
+}
+
+@layer components {
+  /* Modern Minecraft Button (Launcher Style) */
+  .btn-mc-green {
+    background-color: #3c8527;
+    border: 2px solid #1e1e1e; /* Dark border */
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      0 4px 0 #1e1e1e;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+  }
+
+  .btn-mc-green:hover {
+    background-color: #4a9e33;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      0 6px 0 #1e1e1e;
+  }
+
+  .btn-mc-green:active {
+    transform: translateY(2px);
+    box-shadow:
+      inset 0 2px 0 rgba(0, 0, 0, 0.2),
+      0 2px 0 #1e1e1e;
+  }
+
+  /* Secondary Button (Stone Style) */
+  .btn-mc-stone {
+    background-color: #3f3f46;
+    border: 2px solid #18181b;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      0 4px 0 #18181b;
+    color: #e4e4e7;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+
+  .btn-mc-stone:hover {
+    background-color: #52525b;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      0 6px 0 #18181b;
+  }
+
+  /* Modern Card Panel */
+  .mc-card {
+    background-color: #18181b;
+    border: 1px solid #3f3f46;
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.5),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Minecraft Crafting Slot Card */
+  .mc-slot {
+    position: relative;
+    background-color: #141416;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.06),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.4),
+      4px 4px 0 rgba(0, 0, 0, 0.3);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .mc-slot:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.06),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.4),
+      4px 6px 0 rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(60, 133, 39, 0.15);
+  }
+
+
+
+  /* Minecraft Styled Tooltip */
+  .mc-tooltip {
+    position: relative;
+    background-color: rgba(16, 0, 16, 0.94);
+  }
+
+  /* Vanilla notched beveled border: four 1px edge strips, each stopping 1px short of the corners */
+  .mc-tooltip::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(to right, rgba(80, 0, 255, 0.31), rgba(80, 0, 255, 0.31)) 0 0 / calc(100% - 2px) 1px no-repeat,
+      linear-gradient(to bottom, rgba(80, 0, 255, 0.31), rgba(40, 0, 127, 0.31)) 0 0 / 1px calc(100% - 2px) no-repeat,
+      linear-gradient(to right, rgba(40, 0, 127, 0.31), rgba(40, 0, 127, 0.31)) 100% 100% / calc(100% - 2px) 1px
+        no-repeat,
+      linear-gradient(to bottom, rgba(80, 0, 255, 0.31), rgba(40, 0, 127, 0.31)) 100% 0 / 1px calc(100% - 2px) no-repeat;
+  }
+}
+
+@keyframes chevron-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}
+
+@utility font-pixel-shadow {
+  text-shadow: 2px 2px 0px #000000;
+}
+
+@utility chevron-pulse {
+  animation: chevron-pulse 2s ease-in-out infinite;
+}
+
+/* CSS-only LQIP (Lean Rada) — decodes a 20-bit integer into 6 radial gradients + base color */
+.lqip[style*="--lqip:"] {
+  /* Unpack 6 brightness components (2 bits each) */
+  --lqip-ca: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 18))), 4);
+  --lqip-cb: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 16))), 4);
+  --lqip-cc: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 14))), 4);
+  --lqip-cd: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 12))), 4);
+  --lqip-ce: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 10))), 4);
+  --lqip-cf: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 8))), 4);
+
+  /* Unpack base color: ll (2 bits), aaa (3 bits), bbb (3 bits) */
+  --lqip-ll: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 6))), 4);
+  --lqip-aaa: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 3))), 8);
+  --lqip-bbb: mod(calc(var(--lqip) + pow(2, 19)), 8);
+
+  /* Grayscale brightness colors */
+  --lqip-ca-clr: hsl(0 0% calc(var(--lqip-ca) / 3 * 60% + 20%));
+  --lqip-cb-clr: hsl(0 0% calc(var(--lqip-cb) / 3 * 60% + 20%));
+  --lqip-cc-clr: hsl(0 0% calc(var(--lqip-cc) / 3 * 60% + 20%));
+  --lqip-cd-clr: hsl(0 0% calc(var(--lqip-cd) / 3 * 60% + 20%));
+  --lqip-ce-clr: hsl(0 0% calc(var(--lqip-ce) / 3 * 60% + 20%));
+  --lqip-cf-clr: hsl(0 0% calc(var(--lqip-cf) / 3 * 60% + 20%));
+
+  /* Base color in OkLab */
+  --lqip-base-clr: oklab(
+    calc(var(--lqip-ll) / 3 * 0.6 + 0.2) calc(var(--lqip-aaa) / 8 * 0.7 - 0.35)
+      calc((var(--lqip-bbb) + 1) / 8 * 0.7 - 0.35)
+  );
+
+  /* 6 radial gradients in a 3×2 grid with quadratic easing + base fill */
+  --_lqip-bg:
+    radial-gradient(
+      50% 75% at 16.67% 25%,
+      var(--lqip-ca-clr) 0%,
+      color-mix(in srgb, var(--lqip-ca-clr) 98%, transparent) 10%,
+      color-mix(in srgb, var(--lqip-ca-clr) 92%, transparent) 20%,
+      color-mix(in srgb, var(--lqip-ca-clr) 82%, transparent) 30%,
+      color-mix(in srgb, var(--lqip-ca-clr) 68%, transparent) 40%,
+      color-mix(in srgb, var(--lqip-ca-clr) 32%, transparent) 60%,
+      color-mix(in srgb, var(--lqip-ca-clr) 18%, transparent) 70%,
+      color-mix(in srgb, var(--lqip-ca-clr) 8%, transparent) 80%,
+      color-mix(in srgb, var(--lqip-ca-clr) 2%, transparent) 90%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 75% at 50% 25%,
+      var(--lqip-cb-clr) 0%,
+      color-mix(in srgb, var(--lqip-cb-clr) 98%, transparent) 10%,
+      color-mix(in srgb, var(--lqip-cb-clr) 92%, transparent) 20%,
+      color-mix(in srgb, var(--lqip-cb-clr) 82%, transparent) 30%,
+      color-mix(in srgb, var(--lqip-cb-clr) 68%, transparent) 40%,
+      color-mix(in srgb, var(--lqip-cb-clr) 32%, transparent) 60%,
+      color-mix(in srgb, var(--lqip-cb-clr) 18%, transparent) 70%,
+      color-mix(in srgb, var(--lqip-cb-clr) 8%, transparent) 80%,
+      color-mix(in srgb, var(--lqip-cb-clr) 2%, transparent) 90%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 75% at 83.33% 25%,
+      var(--lqip-cc-clr) 0%,
+      color-mix(in srgb, var(--lqip-cc-clr) 98%, transparent) 10%,
+      color-mix(in srgb, var(--lqip-cc-clr) 92%, transparent) 20%,
+      color-mix(in srgb, var(--lqip-cc-clr) 82%, transparent) 30%,
+      color-mix(in srgb, var(--lqip-cc-clr) 68%, transparent) 40%,
+      color-mix(in srgb, var(--lqip-cc-clr) 32%, transparent) 60%,
+      color-mix(in srgb, var(--lqip-cc-clr) 18%, transparent) 70%,
+      color-mix(in srgb, var(--lqip-cc-clr) 8%, transparent) 80%,
+      color-mix(in srgb, var(--lqip-cc-clr) 2%, transparent) 90%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 75% at 16.67% 75%,
+      var(--lqip-cd-clr) 0%,
+      color-mix(in srgb, var(--lqip-cd-clr) 98%, transparent) 10%,
+      color-mix(in srgb, var(--lqip-cd-clr) 92%, transparent) 20%,
+      color-mix(in srgb, var(--lqip-cd-clr) 82%, transparent) 30%,
+      color-mix(in srgb, var(--lqip-cd-clr) 68%, transparent) 40%,
+      color-mix(in srgb, var(--lqip-cd-clr) 32%, transparent) 60%,
+      color-mix(in srgb, var(--lqip-cd-clr) 18%, transparent) 70%,
+      color-mix(in srgb, var(--lqip-cd-clr) 8%, transparent) 80%,
+      color-mix(in srgb, var(--lqip-cd-clr) 2%, transparent) 90%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 75% at 50% 75%,
+      var(--lqip-ce-clr) 0%,
+      color-mix(in srgb, var(--lqip-ce-clr) 98%, transparent) 10%,
+      color-mix(in srgb, var(--lqip-ce-clr) 92%, transparent) 20%,
+      color-mix(in srgb, var(--lqip-ce-clr) 82%, transparent) 30%,
+      color-mix(in srgb, var(--lqip-ce-clr) 68%, transparent) 40%,
+      color-mix(in srgb, var(--lqip-ce-clr) 32%, transparent) 60%,
+      color-mix(in srgb, var(--lqip-ce-clr) 18%, transparent) 70%,
+      color-mix(in srgb, var(--lqip-ce-clr) 8%, transparent) 80%,
+      color-mix(in srgb, var(--lqip-ce-clr) 2%, transparent) 90%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 75% at 83.33% 75%,
+      var(--lqip-cf-clr) 0%,
+      color-mix(in srgb, var(--lqip-cf-clr) 98%, transparent) 10%,
+      color-mix(in srgb, var(--lqip-cf-clr) 92%, transparent) 20%,
+      color-mix(in srgb, var(--lqip-cf-clr) 82%, transparent) 30%,
+      color-mix(in srgb, var(--lqip-cf-clr) 68%, transparent) 40%,
+      color-mix(in srgb, var(--lqip-cf-clr) 32%, transparent) 60%,
+      color-mix(in srgb, var(--lqip-cf-clr) 18%, transparent) 70%,
+      color-mix(in srgb, var(--lqip-cf-clr) 8%, transparent) 80%,
+      color-mix(in srgb, var(--lqip-cf-clr) 2%, transparent) 90%,
+      transparent 100%
+    ),
+    linear-gradient(0deg, var(--lqip-base-clr), var(--lqip-base-clr));
+}
+
+/* LQIP display: applies the decoded gradient as background-image (used by SmartImage) */
+.lqip-bg[style*="--lqip:"] {
+  background-image: var(--_lqip-bg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 5px;
+  border: 2px solid #09090b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* Cross-document view transitions (no-JS fallback) */
+@view-transition {
+  navigation: auto;
+}
+
+/* Cross-fade animation for route transitions */
+::view-transition-old(root) {
+  animation: fade-out 200ms ease-in;
+}
+::view-transition-new(root) {
+  animation: fade-in 200ms ease-out;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}

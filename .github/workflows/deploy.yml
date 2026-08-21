@@ -27,6 +27,8 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Build project
         run: npm run build
       - name: Setup Pages
@@ -34,7 +36,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./dist"
+          path: ".output/public"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
