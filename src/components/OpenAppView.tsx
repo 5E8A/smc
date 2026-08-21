@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { Route } from "../routes/$lang/modrinth";
 import { ArrowSquareOutIcon, CircleNotchIcon, DownloadIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
@@ -6,16 +6,25 @@ import { useLanguage } from "../context/useLanguage";
 const VALID_TYPES = ["modpack", "mod", "server"] as const;
 const SLUG_RE = /^[a-z0-9-]+$/;
 
+const emptySubscribe = () => () => {};
+
 const OpenAppView = () => {
   const { t } = useLanguage();
-  const { type, slug } = Route.useSearch();
+  const search = Route.useSearch();
 
-  const validType = VALID_TYPES.includes(type as (typeof VALID_TYPES)[number])
-    ? type
-    : null;
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  const type = isClient ? search.type : undefined;
+  const slug = isClient ? search.slug : undefined;
+
+  const validType = type && VALID_TYPES.includes(type as (typeof VALID_TYPES)[number]) ? type : null;
   const validSlug = slug && SLUG_RE.test(slug) ? slug : null;
 
-  const valid = validType && validSlug;
+  const valid = Boolean(validType && validSlug);
   const appUrl = valid ? `modrinth://${validType}/${validSlug}` : null;
   const webUrl = valid ? `https://modrinth.com/${validType}/${validSlug}` : null;
 
@@ -56,9 +65,7 @@ const OpenAppView = () => {
             href={webUrl ?? "#"}
             aria-disabled={!valid}
             className={`inline-flex items-center gap-2 rounded px-6 py-3 font-medium transition-opacity ${
-              valid
-                ? "btn-mc-green"
-                : "pointer-events-none cursor-default bg-mc-surface text-mc-text-muted opacity-50"
+              valid ? "btn-mc-green" : "pointer-events-none cursor-default bg-mc-surface text-mc-text-muted opacity-50"
             }`}
           >
             <ArrowSquareOutIcon className="size-4" />
