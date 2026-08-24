@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CircleNotchIcon, FloppyDiskIcon, TrashIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  CircleNotchIcon,
+  FloppyDiskIcon,
+  MonitorIcon,
+  TrashIcon,
+  WarningCircleIcon,
+} from "@phosphor-icons/react";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -19,6 +27,7 @@ import { WikiEditor } from "./components/WikiEditor";
 import { AuthorForm } from "./components/AuthorsView";
 import { AssetsView } from "./components/AssetsView";
 import { ConverterView } from "./components/ConverterView";
+import { PreviewWindow } from "./components/PreviewWindow";
 import { invalidateAuthorCache } from "./components/AuthorPicker";
 import { Button } from "./components/fields";
 
@@ -65,24 +74,22 @@ const nextIdFor = (entries: Entry[], kind: Kind, lang: Lang): string =>
     ? String(entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1)
     : `wiki-${lang}-${entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1}`;
 
-function useLiveValidation(tab: Tab, lang: Lang, entries: Entry[] | null): { issues: Issue[] | null; live: boolean } {
-  const [issues, setIssues] = useState<Issue[] | null>(null);
+function useLiveValidation(tab: Tab, lang: Lang, entries: Entry[] | null): Issue[] | null {
+  const [result, setResult] = useState<{ key: string; issues: Issue[] | null }>({ key: "", issues: null });
   const serialized = useMemo(() => (entries ? JSON.stringify(entries) : null), [entries]);
+  const key = `${tab}:${lang}`;
 
   useEffect(() => {
-    if ((tab !== "posts" && tab !== "wiki") || !serialized) {
-      setIssues(null);
-      return;
-    }
+    if (!serialized) return;
     const t = window.setTimeout(() => {
       validateContent(kindOf(tab), lang, JSON.parse(serialized))
-        .then((r) => setIssues(r.issues))
-        .catch(() => setIssues(null));
+        .then((r) => setResult({ key, issues: r.issues }))
+        .catch(() => setResult({ key, issues: null }));
     }, 600);
     return () => window.clearTimeout(t);
-  }, [tab, lang, serialized]);
+  }, [key, serialized, tab, lang]);
 
-  return { issues, live: true };
+  return entries !== null && result.key === key ? result.issues : null;
 }
 
 const BOOT = bootState();
@@ -102,6 +109,8 @@ export const App = () => {
   const [authorsSnapshot, setAuthorsSnapshot] = useState("");
   const [selectedAuthorIndex, setSelectedAuthorIndex] = useState<number | null>(null);
   const [authorsError, setAuthorsError] = useState<string | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const contentTab = tab === "posts" || tab === "wiki";
   const otherLang: Lang = lang === "en" ? "pl" : "en";
@@ -130,9 +139,7 @@ export const App = () => {
       getContent<Entry>(kindOf(tab), l)
         .then((entries) => {
           const hintId =
-            l === BOOT.lang && tab === BOOT.tab && entries.some((e) => e.id === BOOT.entryHint)
-              ? BOOT.entryHint
-              : null;
+            l === BOOT.lang && tab === BOOT.tab && entries.some((e) => e.id === BOOT.entryHint) ? BOOT.entryHint : null;
           setTabs((prev) => ({
             ...prev,
             [k]: { entries, snapshot: JSON.stringify(entries), selectedId: hintId ?? entries[0]?.id ?? null },
@@ -171,8 +178,8 @@ export const App = () => {
     return () => window.removeEventListener("beforeunload", handler);
   }, [anyDirty]);
 
-  const live = useLiveValidation(tab, lang, contentTab && state && dirty ? state.entries : null);
-  const activeIssues = saveIssues ?? live.issues;
+  const liveIssues = useLiveValidation(tab, lang, contentTab && state && dirty ? state.entries : null);
+  const activeIssues = saveIssues ?? liveIssues;
 
   const counterpartMissing = useMemo(() => {
     if (!contentTab || !selected) return false;
@@ -294,6 +301,10 @@ export const App = () => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
         e.preventDefault();
         void save();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        setSidebarCollapsed((v) => !v);
       }
     };
     window.addEventListener("keydown", handler);
@@ -442,12 +453,16 @@ export const App = () => {
   }, [state]);
 
   const viewDirty = tab === "authors" ? authorsDirty : dirty;
-  const paneReady =
-    tab === "assets" || tab === "converter" ? true : tab === "authors" ? !!authors : !!state;
+  const paneReady = tab === "assets" || tab === "converter" ? true : tab === "authors" ? !!authors : !!state;
   const selectedAuthor = selectedAuthorIndex !== null ? (authors?.[selectedAuthorIndex] ?? null) : null;
   const selectedHasErrors =
     !!selected &&
     !!saveIssues?.some((i) => i.severity === "error" && i.entry >= 0 && state?.entries[i.entry] === selected);
+
+  const entryPreviewPath = useMemo(() => {
+    if (!contentTab || !selected || !selected.slug) return null;
+    return `/smc/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(selected.slug)}`;
+  }, [contentTab, selected, tab, lang]);
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
@@ -474,103 +489,132 @@ export const App = () => {
           ))}
         </nav>
         <span className="ml-auto text-[11px] text-zinc-600">127.0.0.1 only · edits write straight to src/content</span>
+        <button
+          type="button"
+          title={previewOpen ? "Close live preview" : "Open live preview (dev server on :3000)"}
+          onClick={() => setPreviewOpen((v) => !v)}
+          className={`rounded-md px-2 py-1.5 transition-colors ${
+            previewOpen ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+          }`}
+        >
+          <MonitorIcon size={15} />
+        </button>
       </header>
 
-      <div className="flex min-h-0 flex-1">
+      <div className="relative flex min-h-0 flex-1">
         {(contentTab || tab === "authors") && (
-          <aside className="flex w-72 shrink-0 flex-col border-r border-zinc-800 bg-zinc-950">
-            {(tab === "posts" || tab === "wiki") && (
-              <>
-                <div className="border-b border-zinc-800 p-3">
-                  <div className="flex rounded-lg border border-zinc-800 p-0.5">
-                    {(["en", "pl"] as const).map((l) => (
-                      <button
-                        key={l}
-                        type="button"
-                        onClick={() => setLang(l)}
-                        className={`flex-1 rounded-md py-1 text-xs font-bold tracking-wider uppercase transition-colors ${
-                          lang === l ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-zinc-200"
-                        }`}
-                      >
-                        {l}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {state && (
-                  <EntryList
-                    entries={state.entries}
-                    selectedId={state.selectedId}
-                    dirtyIds={dirtyIds}
-                    paritySuffix={(entry) => {
-                      const otherEntries = tabs[tabKey(otherLang, tab)]?.entries;
-                      if (!otherEntries) return undefined;
-                      return otherEntries.some((e) => e.slug === entry.slug)
-                        ? undefined
-                        : ` · no ${otherLang.toUpperCase()}`;
-                    }}
-                    onSelect={(id) =>
-                      setTabs((prev) => {
-                        const cur = prev[key];
-                        return cur ? { ...prev, [key]: { ...cur, selectedId: id } } : prev;
-                      })
-                    }
-                    onAdd={addEntry}
-                    onDuplicate={duplicateEntry}
-                    onDelete={deleteEntry}
-                  />
+          <>
+            <aside
+              className={`flex shrink-0 flex-col overflow-hidden bg-zinc-950 transition-[width] duration-200 ${
+                sidebarCollapsed ? "w-0" : "w-72 border-r border-zinc-800"
+              }`}
+            >
+              <div className="flex w-72 min-h-0 flex-1 flex-col">
+                {(tab === "posts" || tab === "wiki") && (
+                  <>
+                    <div className="border-b border-zinc-800 p-3">
+                      <div className="flex rounded-lg border border-zinc-800 p-0.5">
+                        {(["en", "pl"] as const).map((l) => (
+                          <button
+                            key={l}
+                            type="button"
+                            onClick={() => setLang(l)}
+                            className={`flex-1 rounded-md py-1 text-xs font-bold tracking-wider uppercase transition-colors ${
+                              lang === l ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-zinc-200"
+                            }`}
+                          >
+                            {l}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {state && (
+                      <EntryList
+                        entries={state.entries}
+                        selectedId={state.selectedId}
+                        dirtyIds={dirtyIds}
+                        paritySuffix={(entry) => {
+                          const otherEntries = tabs[tabKey(otherLang, tab)]?.entries;
+                          if (!otherEntries) return undefined;
+                          return otherEntries.some((e) => e.slug === entry.slug)
+                            ? undefined
+                            : ` · no ${otherLang.toUpperCase()}`;
+                        }}
+                        onSelect={(id) =>
+                          setTabs((prev) => {
+                            const cur = prev[key];
+                            return cur ? { ...prev, [key]: { ...cur, selectedId: id } } : prev;
+                          })
+                        }
+                        onAdd={addEntry}
+                        onDuplicate={duplicateEntry}
+                        onDelete={deleteEntry}
+                      />
+                    )}
+                    <div className="flex h-8 items-center border-t border-zinc-800 px-4 text-[11px] text-zinc-600">
+                      Saves write src/content/{lang}/{kindOf(tab)}.json
+                    </div>
+                  </>
                 )}
-                <div className="border-t border-zinc-800 px-4 py-2 text-[11px] text-zinc-600">
-                  Saves write src/content/{lang}/{kindOf(tab)}.json
-                </div>
-              </>
-            )}
 
-            {tab === "authors" && authors && (
-              <>
-                <ListPanel
-                  items={authors}
-                  getKey={(a) => String(authors.indexOf(a))}
-                  primary={(a) => a.name.en || "(unnamed)"}
-                  secondary={(a) => a.id}
-                  selectedKey={selectedAuthorIndex !== null ? String(selectedAuthorIndex) : "__none__"}
-                  onSelect={(k) => setSelectedAuthorIndex(Number(k))}
-                  onCreate={() => {
-                    const a: Author = { id: "", avatar: "", name: { en: "", pl: "" }, bio: { en: "", pl: "" } };
-                    setAuthors((list) => {
-                      const next = list ? [...list, a] : [a];
-                      setSelectedAuthorIndex(next.length - 1);
-                      return next;
-                    });
-                  }}
-                  createLabel="Authors"
-                  emptyText="No authors in the registry yet."
-                  rowActions={(a) => (
-                    <button
-                      type="button"
-                      title="Delete author"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (
-                          !window.confirm(
-                            `Delete author "${a.name.en || a.id}"?\nThe site refuses to build if content still references them.`
-                          )
-                        )
-                          return;
-                        void deleteAuthorAtIndex(authors.indexOf(a));
+                {tab === "authors" && authors && (
+                  <>
+                    <ListPanel
+                      items={authors}
+                      getKey={(a) => String(authors.indexOf(a))}
+                      primary={(a) => a.name.en || "(unnamed)"}
+                      secondary={(a) => a.id}
+                      selectedKey={selectedAuthorIndex !== null ? String(selectedAuthorIndex) : "__none__"}
+                      onSelect={(k) => setSelectedAuthorIndex(Number(k))}
+                      onCreate={() => {
+                        const a: Author = { id: "", avatar: "", name: { en: "", pl: "" }, bio: { en: "", pl: "" } };
+                        setAuthors((list) => {
+                          const next = list ? [...list, a] : [a];
+                          setSelectedAuthorIndex(next.length - 1);
+                          return next;
+                        });
                       }}
-                      className="rounded p-1 text-zinc-500 hover:text-red-400"
-                    >
-                      <TrashIcon size={13} />
-                    </button>
-                  )}
-                />
-                <div className="border-t border-zinc-800 px-4 py-2 text-[11px] text-zinc-600">
-                  Saves write src/content/authors.json
-                </div>
-              </>
-            )}
-          </aside>
+                      createLabel="Authors"
+                      emptyText="No authors in the registry yet."
+                      rowActions={(a) => (
+                        <button
+                          type="button"
+                          title="Delete author"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (
+                              !window.confirm(
+                                `Delete author "${a.name.en || a.id}"?\nThe site refuses to build if content still references them.`
+                              )
+                            )
+                              return;
+                            void deleteAuthorAtIndex(authors.indexOf(a));
+                          }}
+                          className="rounded p-1 text-zinc-500 hover:text-red-400"
+                        >
+                          <TrashIcon size={13} />
+                        </button>
+                      )}
+                    />
+                    <div className="flex h-8 items-center border-t border-zinc-800 px-4 text-[11px] text-zinc-600">
+                      Saves write src/content/authors.json
+                    </div>
+                  </>
+                )}
+              </div>
+            </aside>
+            <button
+              type="button"
+              onClick={() => setSidebarCollapsed((v) => !v)}
+              title={sidebarCollapsed ? "Show sidebar (Ctrl+B)" : "Hide sidebar (Ctrl+B)"}
+              aria-label={sidebarCollapsed ? "Show sidebar" : "Hide sidebar"}
+              className={`absolute bottom-0 z-20 flex h-8 w-5 items-center justify-center rounded-t-md border border-b-0 border-zinc-700 bg-zinc-900 text-zinc-500 shadow-lg transition-all duration-200 hover:text-zinc-200 ${
+                sidebarCollapsed ? "left-0" : "left-[278px]"
+              }`}
+            >
+              {sidebarCollapsed ? <CaretRightIcon size={12} /> : <CaretLeftIcon size={12} />}
+            </button>
+          </>
         )}
 
         <main className="min-w-0 flex-1 overflow-y-auto">
@@ -723,6 +767,8 @@ export const App = () => {
           )}
         </main>
       </div>
+
+      {previewOpen && <PreviewWindow entryPath={entryPreviewPath} onClose={() => setPreviewOpen(false)} />}
     </div>
   );
 };
