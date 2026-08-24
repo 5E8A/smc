@@ -34,7 +34,7 @@ export function useMediaLibrary() {
   const [notice, setNotice] = useState<ImageNotice | null>(null);
   const [logLines, setLogLines] = useState<string[]>([]);
   const [lqipRunning, setLqipRunning] = useState(false);
-  const esRef = useRef<EventSource | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
     setMedia(await loadMedia(true));
@@ -46,26 +46,60 @@ export function useMediaLibrary() {
         .then(setMedia)
         .catch((e) => setNotice({ kind: "err", text: String(e) }));
     }
-    return () => esRef.current?.close();
+    return () => abortRef.current?.abort();
   }, []);
+
+  const finishLqip = useCallback(() => {
+    setLqipRunning(false);
+    void refresh();
+  }, [refresh]);
 
   const runLqip = useCallback(() => {
     if (lqipRunning) return;
     setLogLines([]);
     setLqipRunning(true);
-    const es = new EventSource("/api/lqip");
-    esRef.current = es;
-    es.addEventListener("log", (ev) => setLogLines((prev) => [...prev, JSON.parse((ev as MessageEvent).data)]));
-    es.addEventListener("done", () => {
-      es.close();
-      esRef.current = null;
-      setLqipRunning(false);
-      void refresh();
-    });
-    es.onerror = () => {
-      if (esRef.current === es && es.readyState === EventSource.CLOSED) setLqipRunning(false);
-    };
-  }, [lqipRunning, refresh]);
+    const controller = new AbortController();
+    abortRef.current = controller;
+    void (async () => {
+      try {
+        const res = await fetch("/api/lqip", { method: "POST", signal: controller.signal });
+        if (!res.ok || !res.body) throw new Error(`blurhash generation failed (${res.status})`);
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          let sep: number;
+          while ((sep = buffer.indexOf("\n\n")) !== -1) {
+            const frame = buffer.slice(0, sep);
+            buffer = buffer.slice(sep + 2);
+            let event = "message";
+            const dataLines: string[] = [];
+            for (const line of frame.split("\n")) {
+              if (line.startsWith("event:")) event = line.slice(6).trim();
+              else if (line.startsWith("data:")) dataLines.push(line.slice(5).trimStart());
+            }
+            if (event === "log") setLogLines((prev) => [...prev, JSON.parse(dataLines.join("\n"))]);
+            if (event === "done") {
+              void reader.cancel().catch(() => {});
+              finishLqip();
+              return;
+            }
+          }
+        }
+        finishLqip();
+      } catch (err) {
+        setLqipRunning(false);
+        if (!controller.signal.aborted) {
+          setNotice({ kind: "err", text: err instanceof Error ? err.message : String(err) });
+        }
+      } finally {
+        if (abortRef.current === controller) abortRef.current = null;
+      }
+    })();
+  }, [lqipRunning, finishLqip]);
 
   const clearLog = useCallback(() => setLogLines([]), []);
 

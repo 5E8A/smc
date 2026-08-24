@@ -9,7 +9,12 @@ import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } fr
 const MAX_JSON_BODY = 5 * 1024 * 1024;
 const MAX_UPLOAD = 26 * 1024 * 1024;
 
+const ALLOWED_HOSTS = new Set(["127.0.0.1:4000", "localhost:4000"]);
+
 async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  if (!ALLOWED_HOSTS.has((req.headers.host ?? "").toLowerCase())) {
+    return void sendJson(res, 403, { error: "forbidden host" });
+  }
   const url = new URL(req.url ?? "/", "http://localhost");
   const method = req.method ?? "GET";
   const kind = url.searchParams.get("kind");
@@ -239,7 +244,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     }
 
     case "/lqip": {
-      if (method !== "GET") {
+      if (method !== "POST") {
         res.writeHead(405);
         return void res.end();
       }
