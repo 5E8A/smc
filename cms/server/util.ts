@@ -50,18 +50,6 @@ export function assetExists(publicPath: string): boolean {
   }
 }
 
-export function slugify(input: string): string {
-  return input
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/ł/g, "l")
-    .replace(/Ł/g, "L")
-    .replace(/[^a-zA-Z0-9._~ -]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
 const MIME: Record<string, string> = {
   ".webp": "image/webp",
   ".png": "image/png",

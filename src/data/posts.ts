@@ -1,28 +1,14 @@
 import { BlogPost, BlogPostRaw } from "../types";
 import { resolveAuthor } from "./authors";
+import { EN_MONTHS, PL_MONTHS } from "../../shared/months";
 import enPosts from "../content/en/posts.json";
 import plPosts from "../content/pl/posts.json";
 
 const parseDate = (dateStr: string): number => {
-  const plMonths: { [key: string]: string } = {
-    Sty: "Jan",
-    Lut: "Feb",
-    Mar: "Mar",
-    Kwi: "Apr",
-    Maj: "May",
-    Cze: "Jun",
-    Lip: "Jul",
-    Sie: "Aug",
-    Wrz: "Sep",
-    Paź: "Oct",
-    Lis: "Nov",
-    Gru: "Dec",
-  };
-
   let processedDate = dateStr;
-  Object.keys(plMonths).forEach((pl) => {
+  PL_MONTHS.forEach((pl, i) => {
     if (dateStr.includes(pl)) {
-      processedDate = dateStr.replace(pl, plMonths[pl]);
+      processedDate = processedDate.replace(pl, EN_MONTHS[i]!);
     }
   });
 

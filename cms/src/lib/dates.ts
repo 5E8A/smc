@@ -1,7 +1,5 @@
 import type { Lang } from "../types";
-
-const EN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const PL_MONTHS = ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"];
+import { EN_MONTHS, PL_MONTHS } from "../../../shared/months";
 
 const pad = (n: number): string => String(n).padStart(2, "0");
 

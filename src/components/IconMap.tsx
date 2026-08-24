@@ -20,8 +20,9 @@ import {
   WarningIcon,
   WrenchIcon,
 } from "@phosphor-icons/react";
+import type { KnownIconName } from "../../shared/icons";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<KnownIconName, React.ComponentType<{ className?: string }>> = {
   ArrowsClockwiseIcon,
   CpuIcon,
   DeviceMobileIcon,
@@ -45,7 +46,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const Icon = ({ name, className }: { name: string; className?: string }) => {
-  const Comp = iconMap[name];
+  const Comp = iconMap[name as KnownIconName];
   if (!Comp) return null;
   return <Comp className={className ?? "icon-inline text-green-400"} />;
 };

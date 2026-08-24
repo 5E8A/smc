@@ -11,9 +11,9 @@ import {
   LANGS,
   contentPath,
   mimeFor,
-  slugify,
   writeJsonAtomic,
 } from "./util.ts";
+import { slugify } from "../../shared/slug.ts";
 
 const IMAGE_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ImageIcon } from "@phosphor-icons/react";
 import type { BlogPost, Lang } from "../types";
 import { displayToIso, isoToDisplay } from "../lib/dates";
-import { slugify } from "../lib/slugs";
+import { slugify } from "../../../shared/slug";
 import { AssetThumb, useImagePicker } from "./ImagePicker";
 import { AuthorPicker } from "./AuthorPicker";
 import { MarkdownEditorPanel } from "./MarkdownEditorPanel";

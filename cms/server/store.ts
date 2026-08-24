@@ -9,6 +9,8 @@ import {
   type Kind,
   type Lang,
 } from "./util.ts";
+import { isKnownIcon } from "../../shared/icons.ts";
+import { EN_MONTHS, PL_MONTHS } from "../../shared/months.ts";
 import path from "path";
 
 export interface LocalizedText {
@@ -25,62 +27,12 @@ export interface Author {
 
 const AUTHORS_PATH = path.join(CONTENT_DIR, "authors.json");
 
-export interface BlogPost {
-  id: string;
-  slug: string;
-  title: string;
-  author: { name: string; avatar: string; bio: string };
-  date: string;
-  category: string;
-  coverImage: string;
-  summary: string;
-  content: string;
-}
-
-export interface WikiDoc {
-  id: string;
-  slug: string;
-  title: string;
-  author: { name: string; avatar: string; bio: string };
-  date: string;
-  category: string;
-  coverImage: string;
-  summary: string;
-  content: string;
-}
-
 export interface Issue {
   entry: number;
   field: string;
   message: string;
   severity: "error" | "warning";
 }
-
-export const EN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-export const PL_MONTHS = ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"];
-
-const KNOWN_ICONS = [
-  "ArrowsClockwiseIcon",
-  "CpuIcon",
-  "DeviceMobileIcon",
-  "DownloadIcon",
-  "FolderIcon",
-  "GearIcon",
-  "GlobeIcon",
-  "HouseIcon",
-  "ImageIcon",
-  "KeyboardIcon",
-  "NoteIcon",
-  "PushPinIcon",
-  "RocketIcon",
-  "ScissorsIcon",
-  "SparkleIcon",
-  "StarIcon",
-  "TelevisionIcon",
-  "UsersIcon",
-  "WarningIcon",
-  "WrenchIcon",
-];
 
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -253,7 +205,7 @@ function validateMarkdownContent(index: number, content: unknown, issues: Issue[
   const iconRegex = /:([A-Z][A-Za-z]+Icon):/g;
   let m: RegExpExecArray | null;
   while ((m = iconRegex.exec(content)) !== null) {
-    if (!KNOWN_ICONS.includes(m[1])) unknownIcons.add(m[1]);
+    if (!isKnownIcon(m[1])) unknownIcons.add(m[1]);
   }
   if (unknownIcons.size > 0) {
     issues.push({

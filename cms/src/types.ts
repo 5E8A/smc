@@ -13,13 +13,6 @@ export interface Author {
   bio: LocalizedText;
 }
 
-export interface Author {
-  id: string;
-  avatar: string;
-  name: LocalizedText;
-  bio: LocalizedText;
-}
-
 export interface BlogPost {
   id: string;
   slug: string;
