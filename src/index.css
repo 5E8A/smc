@@ -113,11 +113,11 @@
   --color-mc-text: #e4e4e7; /* Zinc 200 */
   --color-mc-text-muted: #b4b4bc; /* Zinc 400+ */
 
-  --background-image-deepslate: url("/smc/assets/static/deepslate.webp");
-  --background-image-dark-prismarine: url("/smc/assets/static/dark-prismarine.webp");
-  --background-image-warped-wart-block: url("/smc/assets/static/warped-wart-block.webp");
-  --background-image-bedrock: url("/smc/assets/static/bedrock.webp");
-  --background-image-polished-deepslate: url("/smc/assets/static/polished-deepslate.webp");
+  --background-image-deepslate: url("data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAACQAgCdASoQABAAAUAmJaQAEQY8XjtNGPTvFwgaAAD+8wMmCOLpzn9Eiz8dssBel8z/PyxyjMyohQSQr3/OX7fZy5C/YHsWC7CWxSgd0Kh9v+E6EMPT/OYM9gMNNMWCVHe/OU1BxfSqMjC5S0oZJnCxPjkPOYHYSM6LR7vHAAA=");
+  --background-image-dark-prismarine: url("data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwAgCdASoQABAAAUAmJYgAu/9IgJAD2KrUuAxakgAA/vbpPYKEnKvi9oaWzhE7VF/7AKZpfrkKKEpU9dA/pmZXqajK2e7pwe4ME04zPOYEwuO3yNKsI1w6v6TAJNjh/8AncFXfjIzOUNrArW4k8lMRmH/8R+1b/QS5OZ7iQ9jhSD1LAAA=");
+  --background-image-warped-wart-block: url("data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABwAgCdASoQABAAAUAmJbACdLoAEJAWEd1UcwIcAP7w/vPB6oufectm5zQ1cNNpfrM7NaNrzu731+uzDfwrSb/EfsdBD1xBwtflGSce5aMGQrjjAntNKvo1ORE8gs2NSdIFj55s2pMd3+LkQUksP/n5qXBAf+6gTgL/Zv1XC75AAA==");
+  --background-image-bedrock: url("data:image/webp;base64,UklGRsgAAABXRUJQVlA4ILwAAAAQBACdASoQABAAAUAmJaQAEPi/zvkv+QPYD/T7oAPYA/UkxFnI3CJgAAD+9dz5hOTZZ75CFJzTXwCvq5YgrkqJNzXF7C+6lohf0h9/Cyl5rv/2ytD4Y2W25BWxE+vj61YU5K5Nq+3mniAbnPQQDMCT9SN6hoC2s9DB9qpnJRE8wctUL8FAdL07eOrtFVlra1xPuDZwYsVELVjJ9OAcdsApH0GZg3RVaUmuNRX6HPqsivnY+fvL5OVzCBAAAA=");
+  --background-image-polished-deepslate: url("data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABQAgCdASoQABAAAUAmJaQAD5DweHG+aa+jYAAA/uz2a52gEuajwgo/IARA8VYIjx+wDGorZqPsdRqcnyCzZkXjWeKT7PBPP8vFOORvX+rBdtubmgy852qKqv0RVoq2WIqmJR6RN8GOVClgr4AgAA==");
 
   --radius-squircle: 22.37%;
 
@@ -135,8 +135,15 @@
   transform: translateZ(0) scale(1.05);
 }
 
+@utility icon-inline {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
 .parallax-bg {
-  background-image: url("/smc/assets/static/background.webp"), var(--_lqip-bg, none);
+  background-image: url("/smc/assets/static/background.webp");
   background-size: cover;
   background-position: 50% 50%;
   mix-blend-mode: screen;
@@ -165,15 +172,44 @@
 
 @media (max-width: 1023px) {
   .parallax-bg {
-    background-image: url("/smc/assets/static/background.mobile.webp"), var(--_lqip-bg, none);
+    background-image: url("/smc/assets/static/background.mobile.webp");
   }
 }
 
 .toast {
-  border-style: solid;
-  border-width: 3px 2px;
-  border-image: url("/smc/assets/static/toast.webp") 3 2 3 2 fill stretch;
-  background-color: #212121;
+  --toast-scale: 2;
+  --toast-tl: url("data:image/webp;base64,UklGRmAAAABXRUJQVlA4WAoAAAAQAAAAAwAAAwAAQUxQSBEAAAABDzD/ERFCIYAAKBJoIvof9ABWUDggKAAAAJABAJ0BKgQABAABQCYlpAAC50/dYAD+/HXp3iINvpFj1p9b3RsAAAA=");
+  --toast-tr: url("data:image/webp;base64,UklGRl4AAABXRUJQVlA4WAoAAAAQAAAAAwAAAwAAQUxQSBEAAAAA/wAAAP//AAD///8A/////wBWUDggJgAAAJABAJ0BKgQABAABQCYlpAAC51kBwAD+/HOtf4vUfxBsdgIfIAAA");
+  --toast-bl: url("data:image/webp;base64,UklGRmAAAABXRUJQVlA4WAoAAAAQAAAAAwAAAwAAQUxQSBEAAAAA/////wD///8AAP//AAAA/wBWUDggKAAAALABAJ0BKgQABAABQCYlpAAC50uWVAAA/vx0yr+PjH8QbFrkXMAAAAA=");
+  --toast-br: url("data:image/webp;base64,UklGRmAAAABXRUJQVlA4WAoAAAAQAAAAAwAAAwAAQUxQSBEAAAAA//////////////8A//8AAABWUDggKAAAAJABAJ0BKgQABAABQCYlpAAC50stAAD+/A5O0w8j3jUY0yB9cEEdAAA=");
+  --toast-t: url("data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAACQAQCdASoBAAMAAUAmJaQAAudFrAAA/vp4PgunV8HAXKAAAAA=");
+  --toast-b: url("data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAACQAQCdASoBAAMAAUAmJaQAAudZtgAA/v1g/7VHPTwAAA==");
+  --toast-l: url("data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAACQAQCdASoDAAEAAUAmJaQAAudZtgAA/voPrwve+WGAAAAA");
+  --toast-r: url("data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAACQAQCdASoDAAEAAUAmJaQAAudZtgAA/v0p9iE/8WGAAAAA");
+  background-image: var(--toast-tl), var(--toast-tr), var(--toast-bl), var(--toast-br), var(--toast-t), var(--toast-b),
+    var(--toast-l), var(--toast-r), linear-gradient(#020202, #020202);
+  background-position:
+    left top,
+    right top,
+    left bottom,
+    right bottom,
+    calc(var(--toast-scale) * 4px) 0,
+    calc(var(--toast-scale) * 4px) 100%,
+    0 calc(var(--toast-scale) * 4px),
+    100% calc(var(--toast-scale) * 4px),
+    center;
+  background-repeat: no-repeat;
+  background-size:
+    calc(var(--toast-scale) * 4px) calc(var(--toast-scale) * 4px),
+    calc(var(--toast-scale) * 4px) calc(var(--toast-scale) * 4px),
+    calc(var(--toast-scale) * 4px) calc(var(--toast-scale) * 4px),
+    calc(var(--toast-scale) * 4px) calc(var(--toast-scale) * 4px),
+    calc(100% - var(--toast-scale) * 8px) calc(var(--toast-scale) * 3px),
+    calc(100% - var(--toast-scale) * 8px) calc(var(--toast-scale) * 3px),
+    calc(var(--toast-scale) * 3px) calc(100% - var(--toast-scale) * 8px),
+    calc(var(--toast-scale) * 3px) calc(100% - var(--toast-scale) * 8px),
+    calc(100% - var(--toast-scale) * 6px) calc(100% - var(--toast-scale) * 6px);
+  padding-inline: calc(var(--toast-scale) * 2px);
   image-rendering: pixelated;
 }
 
@@ -312,123 +348,6 @@
 
 @utility chevron-pulse {
   animation: chevron-pulse 2s ease-in-out infinite;
-}
-
-/* CSS-only LQIP (Lean Rada) — decodes a 20-bit integer into 6 radial gradients + base color */
-.lqip[style*="--lqip:"] {
-  /* Unpack 6 brightness components (2 bits each) */
-  --lqip-ca: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 18))), 4);
-  --lqip-cb: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 16))), 4);
-  --lqip-cc: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 14))), 4);
-  --lqip-cd: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 12))), 4);
-  --lqip-ce: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 10))), 4);
-  --lqip-cf: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 8))), 4);
-
-  /* Unpack base color: ll (2 bits), aaa (3 bits), bbb (3 bits) */
-  --lqip-ll: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 6))), 4);
-  --lqip-aaa: mod(round(down, calc((var(--lqip) + pow(2, 19)) / pow(2, 3))), 8);
-  --lqip-bbb: mod(calc(var(--lqip) + pow(2, 19)), 8);
-
-  /* Grayscale brightness colors */
-  --lqip-ca-clr: hsl(0 0% calc(var(--lqip-ca) / 3 * 60% + 20%));
-  --lqip-cb-clr: hsl(0 0% calc(var(--lqip-cb) / 3 * 60% + 20%));
-  --lqip-cc-clr: hsl(0 0% calc(var(--lqip-cc) / 3 * 60% + 20%));
-  --lqip-cd-clr: hsl(0 0% calc(var(--lqip-cd) / 3 * 60% + 20%));
-  --lqip-ce-clr: hsl(0 0% calc(var(--lqip-ce) / 3 * 60% + 20%));
-  --lqip-cf-clr: hsl(0 0% calc(var(--lqip-cf) / 3 * 60% + 20%));
-
-  /* Base color in OkLab */
-  --lqip-base-clr: oklab(
-    calc(var(--lqip-ll) / 3 * 0.6 + 0.2) calc(var(--lqip-aaa) / 8 * 0.7 - 0.35)
-      calc((var(--lqip-bbb) + 1) / 8 * 0.7 - 0.35)
-  );
-
-  /* 6 radial gradients in a 3×2 grid with quadratic easing + base fill */
-  --_lqip-bg:
-    radial-gradient(
-      50% 75% at 16.67% 25%,
-      var(--lqip-ca-clr) 0%,
-      color-mix(in srgb, var(--lqip-ca-clr) 98%, transparent) 10%,
-      color-mix(in srgb, var(--lqip-ca-clr) 92%, transparent) 20%,
-      color-mix(in srgb, var(--lqip-ca-clr) 82%, transparent) 30%,
-      color-mix(in srgb, var(--lqip-ca-clr) 68%, transparent) 40%,
-      color-mix(in srgb, var(--lqip-ca-clr) 32%, transparent) 60%,
-      color-mix(in srgb, var(--lqip-ca-clr) 18%, transparent) 70%,
-      color-mix(in srgb, var(--lqip-ca-clr) 8%, transparent) 80%,
-      color-mix(in srgb, var(--lqip-ca-clr) 2%, transparent) 90%,
-      transparent 100%
-    ),
-    radial-gradient(
-      50% 75% at 50% 25%,
-      var(--lqip-cb-clr) 0%,
-      color-mix(in srgb, var(--lqip-cb-clr) 98%, transparent) 10%,
-      color-mix(in srgb, var(--lqip-cb-clr) 92%, transparent) 20%,
-      color-mix(in srgb, var(--lqip-cb-clr) 82%, transparent) 30%,
-      color-mix(in srgb, var(--lqip-cb-clr) 68%, transparent) 40%,
-      color-mix(in srgb, var(--lqip-cb-clr) 32%, transparent) 60%,
-      color-mix(in srgb, var(--lqip-cb-clr) 18%, transparent) 70%,
-      color-mix(in srgb, var(--lqip-cb-clr) 8%, transparent) 80%,
-      color-mix(in srgb, var(--lqip-cb-clr) 2%, transparent) 90%,
-      transparent 100%
-    ),
-    radial-gradient(
-      50% 75% at 83.33% 25%,
-      var(--lqip-cc-clr) 0%,
-      color-mix(in srgb, var(--lqip-cc-clr) 98%, transparent) 10%,
-      color-mix(in srgb, var(--lqip-cc-clr) 92%, transparent) 20%,
-      color-mix(in srgb, var(--lqip-cc-clr) 82%, transparent) 30%,
-      color-mix(in srgb, var(--lqip-cc-clr) 68%, transparent) 40%,
-      color-mix(in srgb, var(--lqip-cc-clr) 32%, transparent) 60%,
-      color-mix(in srgb, var(--lqip-cc-clr) 18%, transparent) 70%,
-      color-mix(in srgb, var(--lqip-cc-clr) 8%, transparent) 80%,
-      color-mix(in srgb, var(--lqip-cc-clr) 2%, transparent) 90%,
-      transparent 100%
-    ),
-    radial-gradient(
-      50% 75% at 16.67% 75%,
-      var(--lqip-cd-clr) 0%,
-      color-mix(in srgb, var(--lqip-cd-clr) 98%, transparent) 10%,
-      color-mix(in srgb, var(--lqip-cd-clr) 92%, transparent) 20%,
-      color-mix(in srgb, var(--lqip-cd-clr) 82%, transparent) 30%,
-      color-mix(in srgb, var(--lqip-cd-clr) 68%, transparent) 40%,
-      color-mix(in srgb, var(--lqip-cd-clr) 32%, transparent) 60%,
-      color-mix(in srgb, var(--lqip-cd-clr) 18%, transparent) 70%,
-      color-mix(in srgb, var(--lqip-cd-clr) 8%, transparent) 80%,
-      color-mix(in srgb, var(--lqip-cd-clr) 2%, transparent) 90%,
-      transparent 100%
-    ),
-    radial-gradient(
-      50% 75% at 50% 75%,
-      var(--lqip-ce-clr) 0%,
-      color-mix(in srgb, var(--lqip-ce-clr) 98%, transparent) 10%,
-      color-mix(in srgb, var(--lqip-ce-clr) 92%, transparent) 20%,
-      color-mix(in srgb, var(--lqip-ce-clr) 82%, transparent) 30%,
-      color-mix(in srgb, var(--lqip-ce-clr) 68%, transparent) 40%,
-      color-mix(in srgb, var(--lqip-ce-clr) 32%, transparent) 60%,
-      color-mix(in srgb, var(--lqip-ce-clr) 18%, transparent) 70%,
-      color-mix(in srgb, var(--lqip-ce-clr) 8%, transparent) 80%,
-      color-mix(in srgb, var(--lqip-ce-clr) 2%, transparent) 90%,
-      transparent 100%
-    ),
-    radial-gradient(
-      50% 75% at 83.33% 75%,
-      var(--lqip-cf-clr) 0%,
-      color-mix(in srgb, var(--lqip-cf-clr) 98%, transparent) 10%,
-      color-mix(in srgb, var(--lqip-cf-clr) 92%, transparent) 20%,
-      color-mix(in srgb, var(--lqip-cf-clr) 82%, transparent) 30%,
-      color-mix(in srgb, var(--lqip-cf-clr) 68%, transparent) 40%,
-      color-mix(in srgb, var(--lqip-cf-clr) 32%, transparent) 60%,
-      color-mix(in srgb, var(--lqip-cf-clr) 18%, transparent) 70%,
-      color-mix(in srgb, var(--lqip-cf-clr) 8%, transparent) 80%,
-      color-mix(in srgb, var(--lqip-cf-clr) 2%, transparent) 90%,
-      transparent 100%
-    ),
-    linear-gradient(0deg, var(--lqip-base-clr), var(--lqip-base-clr));
-}
-
-/* LQIP display: applies the decoded gradient as background-image (used by SmartImage) */
-.lqip-bg[style*="--lqip:"] {
-  background-image: var(--_lqip-bg);
 }
 
 /* Scrollbar */

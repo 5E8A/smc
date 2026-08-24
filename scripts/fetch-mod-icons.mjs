@@ -1,9 +1,10 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import sharp from "sharp";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const iconsDir = path.join(root, "originals", "assets", "mod-icons");
+const iconsDir = path.join(root, "public", "assets", "mod-icons");
 const modsFile = path.join(root, "src", "data", "mods.ts");
 
 const MODRINTH_API = "https://api.modrinth.com/v2";
@@ -60,10 +61,9 @@ const downloadIcon = async (slug, iconUrl) => {
     console.warn(`  ⚠ ${slug}: icon download failed (HTTP ${res.status}) — skipping icon`);
     return false;
   }
-  const ext = path.extname(new URL(iconUrl).pathname) || ".png";
-  const outPath = path.join(iconsDir, `${slug}${ext}`);
   const buffer = Buffer.from(await res.arrayBuffer());
-  fs.writeFileSync(outPath, buffer);
+  const webp = await sharp(buffer).webp({ quality: 80 }).toBuffer();
+  fs.writeFileSync(path.join(iconsDir, `${slug}.webp`), webp);
   return true;
 };
 
@@ -144,8 +144,7 @@ const main = async () => {
 
   fs.writeFileSync(modsFile, generateModFile(results));
   console.log(`\n✅ Generated ${modsFile}`);
-  console.log(`✅ Downloaded icons to ${iconsDir}`);
-  console.log(`\nNext: run "npm run process-assets" to optimize icons.`);
+  console.log(`✅ Converted icons to ${iconsDir}`);
 };
 
 main();

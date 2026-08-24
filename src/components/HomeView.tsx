@@ -55,7 +55,7 @@ const HomeView = () => {
           <div className="absolute top-0 left-1/2 size-full max-w-7xl -translate-x-1/2 rounded-full bg-mc-green/5 blur-[120px]"></div>
 
           <div className="@container relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col items-start justify-center px-4 py-10 sm:px-6 md:py-12 lg:px-8 lg:py-16">
-            <VersionBadge variant="achievement" version={versionContent} gameVersion={gameVersion} />
+            <VersionBadge version={versionContent} gameVersion={gameVersion} />
 
             <h1
               className="font-banner text-[min(90px,26cqi)] leading-none tracking-tight text-white uppercase font-pixel-shadow @min-[640px]:text-[min(125px,11.2cqi)] @min-[640px]:whitespace-nowrap"

@@ -21,6 +21,18 @@ export default defineConfig(({ mode }) => {
           autoSubfolderIndex: true,
           // filter: ({ path }) => !path.includes("/modrinth"),
         },
+        pages: [
+          { path: "/" },
+          {
+            path: "/404",
+            sitemap: { exclude: true },
+            prerender: {
+              enabled: true,
+              outputPath: "/404",
+              autoSubfolderIndex: false,
+            },
+          },
+        ],
       }),
       nitro({ baseURL: "/smc" }),
       react(),

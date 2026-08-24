@@ -20,7 +20,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/$lang" params={langParams} className="group flex items-center space-x-3">
             <SmartImage
-              src="/smc/assets/avatars/smc.webp"
+              src="/smc/assets/static/smc.webp"
               alt="SMC Logo"
               className="size-10 rounded-squircle"
               lazy={false}

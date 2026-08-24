@@ -32,13 +32,7 @@ export const parseRichText = (text: string): ReactNode[] => {
         className="font-semibold text-mc-green-text transition-colors hover:text-white hover:shadow-[inset_0_-1px_0_currentColor]"
       >
         {linkText}
-        <ArrowSquareOutIcon
-          aria-hidden
-          weight="bold"
-          size="1em"
-          className="ml-1 inline-block"
-          style={{ verticalAlign: "-0.125em" }}
-        />
+        <ArrowSquareOutIcon aria-hidden weight="bold" className="icon-inline ml-1" />
       </a>
     );
 

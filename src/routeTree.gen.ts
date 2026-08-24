@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LangRouteImport } from './routes/$lang'
+import { Route as R404RouteImport } from './routes/404'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangAboutRouteImport } from './routes/$lang/about'
 import { Route as LangArchiveRouteImport } from './routes/$lang/archive'
@@ -30,6 +31,11 @@ const IndexRoute = IndexRouteImport.update({
 const LangRoute = LangRouteImport.update({
   id: '/$lang',
   path: '/$lang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LangIndexRoute = LangIndexRouteImport.update({
@@ -94,6 +100,7 @@ const LangWikiSlugRoute = LangWikiSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteWithChildren
+  '/404': typeof R404Route
   '/$lang/about': typeof LangAboutRoute
   '/$lang/archive': typeof LangArchiveRoute
   '/$lang/credits': typeof LangCreditsRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/$lang/about': typeof LangAboutRoute
   '/$lang/archive': typeof LangArchiveRoute
   '/$lang/credits': typeof LangCreditsRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteWithChildren
+  '/404': typeof R404Route
   '/$lang/about': typeof LangAboutRoute
   '/$lang/archive': typeof LangArchiveRoute
   '/$lang/credits': typeof LangCreditsRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$lang'
+    | '/404'
     | '/$lang/about'
     | '/$lang/archive'
     | '/$lang/credits'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/404'
     | '/$lang/about'
     | '/$lang/archive'
     | '/$lang/credits'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$lang'
+    | '/404'
     | '/$lang/about'
     | '/$lang/archive'
     | '/$lang/credits'
@@ -180,6 +192,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangRoute: typeof LangRouteWithChildren
+  R404Route: typeof R404Route
   PostSlugRoute: typeof PostSlugRoute
   WikiSlugRoute: typeof WikiSlugRoute
 }
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       path: '/$lang'
       fullPath: '/$lang'
       preLoaderRoute: typeof LangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$lang/': {
@@ -300,6 +320,7 @@ const LangRouteWithChildren = LangRoute._addFileChildren(LangRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangRoute: LangRouteWithChildren,
+  R404Route: R404Route,
   PostSlugRoute: PostSlugRoute,
   WikiSlugRoute: WikiSlugRoute,
 }

@@ -1,11 +1,11 @@
-import { useParams, Navigate } from "@tanstack/react-router";
-import { getPostBySlug } from "../data/posts";
+import { useParams } from "@tanstack/react-router";
+import { getPostAvailability, getPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
-import Carousel from "./Carousel";
 import BackButton from "./BackButton";
 import { CalendarIcon, BookIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
-import { parseRichText } from "../utils/richText";
+import ContentMarkdown from "./ContentMarkdown";
+import LanguageMissingCard from "./LanguageMissingCard";
 import SmartImage from "./SmartImage";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
@@ -16,7 +16,12 @@ const ArticleView = () => {
   const post: BlogPost | undefined = slug ? getPostBySlug(slug, language) : undefined;
 
   if (!post) {
-    return <Navigate to="/$lang" params={{ lang: language }} replace />;
+    if (!slug) return null;
+    const availability = getPostAvailability(slug);
+    const availableLang = availability.en ? "en" : "pl";
+    const other = availability[availableLang];
+    if (!other) return null;
+    return <LanguageMissingCard kind="post" slug={slug} availableLang={availableLang} title={other.title} />;
   }
 
   return (
@@ -62,52 +67,10 @@ const ArticleView = () => {
               </div>
             </div>
 
-            {/* Carousel */}
-            {post.carouselImages && post.carouselImages.length > 0 && (
-              <div className="border-b border-white/5 p-8 md:p-12">
-                <div className="overflow-hidden rounded-xl border border-white/10 shadow-lg">
-                  <Carousel images={post.carouselImages} />
-                  <div className="border-t border-white/5 bg-black/40 p-3 text-center">
-                    <p className="text-xs tracking-widest text-mc-text-muted uppercase">Gallery</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Content */}
             <div className="p-8 md:p-12">
               <article className="max-w-none">
-                {post.content.map((block, index) => (
-                  <div key={index} className="mb-12">
-                    {block.header && (
-                      <h2 className="mb-6 flex items-center text-2xl font-bold text-white">
-                        <span className="mr-4 h-8 w-1 rounded-full bg-mc-green"></span>
-                        {block.header}
-                      </h2>
-                    )}
-
-                    {block.paragraph && (
-                      <p className="mb-6 text-lg leading-8 font-light text-gray-300">
-                        {parseRichText(block.paragraph)}
-                      </p>
-                    )}
-
-                    {block.image && (
-                      <figure className="my-8 overflow-hidden rounded-xl border border-white/10 bg-black/20">
-                        <img
-                          src={block.image}
-                          alt={block.imageCaption || block.header || "Article Image"}
-                          className="h-auto w-full object-cover"
-                        />
-                        {block.imageCaption && (
-                          <figcaption className="border-t border-white/5 bg-black/40 p-3 text-center text-sm text-mc-text-muted italic">
-                            {block.imageCaption}
-                          </figcaption>
-                        )}
-                      </figure>
-                    )}
-                  </div>
-                ))}
+                <ContentMarkdown content={post.content} />
               </article>
             </div>
 

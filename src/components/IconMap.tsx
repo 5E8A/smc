@@ -47,7 +47,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 const Icon = ({ name, className }: { name: string; className?: string }) => {
   const Comp = iconMap[name];
   if (!Comp) return null;
-  return <Comp className={className ?? "inline-block size-[1em] align-middle text-green-400"} />;
+  return <Comp className={className ?? "icon-inline text-green-400"} />;
 };
 
 export default Icon;

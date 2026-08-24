@@ -6,6 +6,7 @@ import {
 import type { ReactNode } from "react";
 import RootLayout from "../components/RootLayout";
 import NotFound from "../components/NotFound";
+import ErrorFallback from "../components/ErrorFallback";
 import { LanguageProvider } from "../context/LanguageContext";
 import "../index.css";
 
@@ -19,7 +20,7 @@ export const Route = createRootRoute({
       {
         rel: "icon",
         type: "image/png",
-        href: "/smc/assets/avatars/smc2.png",
+        href: "/smc/assets/static/smc2.png",
       },
       {
         rel: "preload",
@@ -46,6 +47,7 @@ export const Route = createRootRoute({
   }),
   component: RootLayout,
   notFoundComponent: NotFound,
+  errorComponent: ErrorFallback,
   shellComponent: RootDocument,
 });
 

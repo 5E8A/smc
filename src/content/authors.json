@@ -1,0 +1,26 @@
+[
+  {
+    "id": "5e8a",
+    "avatar": "/smc/assets/content/avatars/seba.webp",
+    "name": {
+      "en": "5E8A",
+      "pl": "5E8A"
+    },
+    "bio": {
+      "en": "Lead Developer of Fabric Boosted",
+      "pl": "Główny deweloper Fabric Boosted"
+    }
+  },
+  {
+    "id": "a-tui4m8pck",
+    "avatar": "/smc/assets/content/avatars/logy.webp",
+    "name": {
+      "en": "logy",
+      "pl": "logy"
+    },
+    "bio": {
+      "en": "Developer of the SMC website",
+      "pl": "Deweloper strony internetowej SMC"
+    }
+  }
+]

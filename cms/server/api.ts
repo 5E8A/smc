@@ -1,0 +1,272 @@
+import type { Plugin } from "vite";
+import type { IncomingMessage, ServerResponse } from "http";
+import { isKind, isLang, readRawBody, sendJson } from "./util.ts";
+import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } from "./store.ts";
+import { createDir, deleteDir, deleteImage, findRefs, listDirs, listImages, renameDir, renameImage, runLqip, saveUpload, serveAsset } from "./images.ts";
+import { clampMaxWidth, clampQuality } from "./images.ts";
+import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
+
+const MAX_JSON_BODY = 5 * 1024 * 1024;
+const MAX_UPLOAD = 26 * 1024 * 1024;
+
+async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const url = new URL(req.url ?? "/", "http://localhost");
+  const method = req.method ?? "GET";
+  const kind = url.searchParams.get("kind");
+  const lang = url.searchParams.get("lang");
+
+  switch (url.pathname) {
+    case "/content": {
+      if (!isKind(kind)) return void sendJson(res, 400, { error: "kind must be posts or wiki" });
+      if (!isLang(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
+
+      if (method === "GET") {
+        const data = await loadContent(kind, lang);
+        return void sendJson(res, 200, { data });
+      }
+
+      if (method === "PUT") {
+        let parsed: unknown;
+        try {
+          const body = await readRawBody(req, MAX_JSON_BODY);
+          parsed = JSON.parse(body.toString("utf8"));
+        } catch (err) {
+          return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+        }
+        const { issues } = await saveContent(kind, lang, parsed);
+        const hasErrors = issues.some((i) => i.severity === "error");
+        return void sendJson(res, hasErrors ? 400 : 200, { ok: !hasErrors, issues });
+      }
+
+      res.writeHead(405);
+      return void res.end();
+    }
+
+    case "/images": {
+      if (method === "GET") return void sendJson(res, 200, { images: listImages(), dirs: listDirs() });
+
+      if (method === "PUT") {
+        const dir = url.searchParams.get("dir") ?? "";
+        const name = url.searchParams.get("name") ?? "";
+        const quality = Number(url.searchParams.get("quality") ?? NaN);
+        const maxWidth = Number(url.searchParams.get("maxWidth") ?? NaN);
+        if (!name) return void sendJson(res, 400, { error: "name is required" });
+        try {
+          const body = await readRawBody(req, MAX_UPLOAD);
+          const result = await saveUpload(dir, name, body, {
+            quality: Number.isFinite(quality) ? quality : undefined,
+            maxWidth: Number.isFinite(maxWidth) ? maxWidth : undefined,
+          });
+          return void sendJson(res, 200, result);
+        } catch (err) {
+          return void sendJson(res, 400, { error: (err as Error).message });
+        }
+      }
+
+      res.writeHead(405);
+      return void res.end();
+    }
+
+    case "/dirs": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      let parsed: { action?: string; path?: string; newName?: string };
+      try {
+        const body = await readRawBody(req, MAX_JSON_BODY);
+        parsed = JSON.parse(body.toString("utf8"));
+      } catch (err) {
+        return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+      }
+      const target = parsed.path ?? "";
+      try {
+        if (parsed.action === "create") {
+          await createDir(target);
+          return void sendJson(res, 200, { ok: true });
+        }
+        if (parsed.action === "rename") {
+          if (!parsed.newName) return void sendJson(res, 400, { error: "newName is required" });
+          const rewritten = await renameDir(target, parsed.newName);
+          return void sendJson(res, 200, { ok: true, rewritten });
+        }
+        if (parsed.action === "delete") {
+          const result = deleteDir(target);
+          if (result.blocked) {
+            return void sendJson(res, 409, {
+              error: "Folder contains images still referenced by existing content.",
+              usages: result.usages,
+            });
+          }
+          return void sendJson(res, 200, { ok: true });
+        }
+        return void sendJson(res, 400, { error: "action must be create, rename or delete" });
+      } catch (err) {
+        return void sendJson(res, 400, { error: (err as Error).message });
+      }
+    }
+
+    case "/image": {
+      if (method === "PATCH") {
+        const p = url.searchParams.get("path") ?? "";
+        const name = url.searchParams.get("name") ?? "";
+        try {
+          const rewritten = await renameImage(p, name);
+          return void sendJson(res, 200, { ok: true, rewritten });
+        } catch (err) {
+          return void sendJson(res, 400, { error: (err as Error).message });
+        }
+      }
+      if (method !== "DELETE") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      const p = url.searchParams.get("path") ?? "";
+      try {
+        const result = deleteImage(p);
+        if (result.blocked) {
+          return void sendJson(res, 409, {
+            error: "Image is still referenced by existing content.",
+            usages: result.usages,
+          });
+        }
+        return void sendJson(res, 200, { ok: true });
+      } catch (err) {
+        return void sendJson(res, 400, { error: (err as Error).message });
+      }
+    }
+
+    case "/refs": {
+      if (method !== "GET") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      const paths = (url.searchParams.get("paths") ?? "").split(",").filter((s) => s.length > 0);
+      return void sendJson(res, 200, { usages: findRefs(paths) });
+    }
+
+    case "/authors": {
+      if (method === "GET") {
+        const data = await loadAuthors();
+        return void sendJson(res, 200, { data });
+      }
+
+      if (method === "PUT") {
+        let parsed: unknown;
+        try {
+          const body = await readRawBody(req, MAX_JSON_BODY);
+          parsed = JSON.parse(body.toString("utf8"));
+        } catch (err) {
+          return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+        }
+        const result = await saveAuthors(parsed);
+        if (result.blocked) {
+          return void sendJson(res, 409, {
+            error: "Author still referenced by existing content — reassign those entries first.",
+            usages: result.usages,
+          });
+        }
+        const hasErrors = result.issues.some((i) => i.severity === "error");
+        return void sendJson(res, hasErrors ? 400 : 200, {
+          ok: !hasErrors,
+          issues: result.issues,
+          ...(result.data ? { data: result.data } : {}),
+        });
+      }
+
+      res.writeHead(405);
+      return void res.end();
+    }
+
+    case "/validate": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      let parsed: { kind?: string; lang?: string; data?: unknown };
+      try {
+        const body = await readRawBody(req, MAX_JSON_BODY);
+        parsed = JSON.parse(body.toString("utf8"));
+      } catch (err) {
+        return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+      }
+      const kind = parsed.kind ?? null;
+      const lang = parsed.lang ?? null;
+      if (!isKind(kind)) return void sendJson(res, 400, { error: "kind must be posts or wiki" });
+      if (!isLang(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
+      const issues = await validateContent(kind, lang, parsed.data);
+      return void sendJson(res, 200, { issues });
+    }
+
+    case "/convert": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      try {
+        const body = await readRawBody(req, MAX_CONVERT_BODY);
+        const { fields, files } = parseMultipart(body, req.headers["content-type"]);
+        if (files.length === 0) return void sendJson(res, 400, { error: "no files in request" });
+        const result = await convertBatch(files, {
+          quality: clampQuality(Number(fields.quality) || 80),
+          resize: fields.resize === "1",
+          maxWidth: clampMaxWidth(Number(fields.maxWidth) || 1600),
+        });
+        if (result.converted.length === 0) {
+          return void sendJson(res, 400, {
+            error: `All ${result.errors.length} file(s) failed to convert`,
+            details: result.errors,
+          });
+        }
+        streamConvertedZip(res, result);
+      } catch (err) {
+        return void sendJson(res, 400, { error: (err as Error).message });
+      }
+      return;
+    }
+
+    case "/asset": {
+      if (method !== "GET") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      const p = url.searchParams.get("path") ?? "";
+      if (!serveAsset(p, res)) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("not found");
+      }
+      return;
+    }
+
+    case "/lqip": {
+      if (method !== "GET") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      runLqip(res);
+      return;
+    }
+
+    default:
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "unknown api route" }));
+  }
+}
+
+export function cmsApi(): Plugin {
+  return {
+    name: "cms-api",
+    configureServer(server) {
+      server.middlewares.use("/api", (req, res) => {
+        route(req, res).catch((err) => {
+          if (!res.headersSent) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: String(err?.stack ?? err) }));
+          } else {
+            res.end();
+          }
+        });
+      });
+    },
+  };
+}

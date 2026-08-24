@@ -15,8 +15,7 @@ export const translations = {
     },
     meta: {
       title: "SMC - Seba Modding Community",
-      description:
-        "Official blog for the Fabric Boosted modpack by 5E8A. News, updates, and optimization guides.",
+      description: "Official blog for the Fabric Boosted modpack by 5E8A. News, updates, and optimization guides.",
     },
     hero: {
       tag_prefix: "Version",
@@ -101,8 +100,7 @@ export const translations = {
       fonts_text:
         "Inter - (c) 2016 The Inter Project Authors. VT323 - (c) 2011 The VT323 Project Authors. Both are licensed under the SIL Open Font License 1.1 ([openfontlicense.org](https://openfontlicense.org)) and are used unmodified. Full license texts ship with the font files.",
       operator_title: "Site Operator",
-      operator_text:
-        "SMC - Seba Modding Community is operated by 5E8A. Contact: GitHub / Discord.",
+      operator_text: "SMC - Seba Modding Community is operated by 5E8A. Contact: GitHub / Discord.",
       affiliate_title: "Affiliate Disclosure",
       affiliate_text:
         "The hosting banner on the homepage is an affiliate link to Sparked Host. We may earn a commission at no extra cost to you.",
@@ -111,6 +109,12 @@ export const translations = {
       title: "Page Not Found",
       description: "The page you're looking for doesn't exist or has been moved.",
       back_home: "Back to Home",
+    },
+    unavailable: {
+      title: "Not available in English yet",
+      description: "This content hasn't been translated into English, but you can read it in Polish.",
+      read_in: "Read it in Polish",
+      back_to_archive: "Back to Archive",
     },
     open_app: {
       title: "Opening Modrinth App",
@@ -221,8 +225,7 @@ export const translations = {
       fonts_text:
         "Inter - (c) 2016 The Inter Project Authors. VT323 - (c) 2011 The VT323 Project Authors. Obie są licencjonowane na SIL Open Font License 1.1 ([openfontlicense.org](https://openfontlicense.org)) i używane bez modyfikacji. Pełne teksty licencji znajdują się przy plikach czcionek.",
       operator_title: "Operator Strony",
-      operator_text:
-        "SMC - Seba Modding Community jest prowadzone przez 5E8A. Kontakt: GitHub / Discord.",
+      operator_text: "SMC - Seba Modding Community jest prowadzone przez 5E8A. Kontakt: GitHub / Discord.",
       affiliate_title: "Informacja o Afiliacji",
       affiliate_text:
         "Baner hostingowy na stronie głównej to link partnerski do Sparked Host. Możemy otrzymać prowizję bez dodatkowych kosztów dla Ciebie.",
@@ -231,6 +234,12 @@ export const translations = {
       title: "Nie Znaleziono Strony",
       description: "Strona, której szukasz, nie istnieje lub została przeniesiona.",
       back_home: "Wróć na Stronę Główną",
+    },
+    unavailable: {
+      title: "Nie ma tego jeszcze po polsku",
+      description: "Ta treść nie została jeszcze przetłumaczona na język polski — możesz przeczytać ją po angielsku.",
+      read_in: "Przeczytaj po angielsku",
+      back_to_archive: "Wróć do archiwum",
     },
     open_app: {
       title: "Otwieranie Modrinth App",

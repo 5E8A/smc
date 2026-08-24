@@ -1,11 +1,12 @@
-import { useParams, Navigate } from "@tanstack/react-router";
-import { getWikiDocBySlug } from "../data/wiki";
+import { useParams } from "@tanstack/react-router";
+import { getWikiDocAvailability, getWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
 import BackButton from "./BackButton";
 import { CalendarIcon, BookIcon, ListIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
-import WikiMarkdownRenderer from "./WikiMarkdownRenderer";
+import ContentMarkdown from "./ContentMarkdown";
+import LanguageMissingCard from "./LanguageMissingCard";
 import WikiTOC from "./WikiTOC";
 import { useState } from "react";
 
@@ -18,7 +19,12 @@ const WikiDocView = () => {
   const [tocOpen, setTocOpen] = useState(false);
 
   if (!doc) {
-    return <Navigate to="/$lang/wiki" params={{ lang: language }} replace />;
+    if (!slug) return null;
+    const availability = getWikiDocAvailability(slug);
+    const availableLang = availability.en ? "en" : "pl";
+    const other = availability[availableLang];
+    if (!other) return null;
+    return <LanguageMissingCard kind="wiki" slug={slug} availableLang={availableLang} title={other.title} />;
   }
 
   return (
@@ -81,7 +87,7 @@ const WikiDocView = () => {
 
               <div className="p-8 md:p-12">
                 <article className="max-w-none">
-                  <WikiMarkdownRenderer content={doc.content} />
+                  <ContentMarkdown content={doc.content} />
                 </article>
               </div>
             </div>

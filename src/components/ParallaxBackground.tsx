@@ -1,9 +1,10 @@
 import { type CSSProperties } from "react";
 import { useEffect, useRef } from "react";
-import lqipMap from "@/data/lqip.json";
+import hashes from "@/data/blurhash.json";
+import { BlurhashCanvas } from "./BlurhashCanvas";
 
-const lqipIndex = lqipMap as Record<string, number>;
-const bgLqip = lqipIndex["assets/static/background.webp"] ?? lqipIndex["assets/static/background.mobile.webp"];
+const hashIndex = hashes as Record<string, string>;
+const bgHash = hashIndex["assets/static/background.webp"] ?? hashIndex["assets/static/background.mobile.webp"] ?? "";
 
 interface ParallaxBackgroundProps {
   className: string;
@@ -40,16 +41,18 @@ const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProp
     };
   }, [factor]);
 
-  const style: CSSProperties & Record<string, unknown> = { height: "100vh" };
-  if (bgLqip != null) style["--lqip"] = bgLqip;
+  const style: CSSProperties = { height: "100vh" };
 
   return (
     <div
       ref={ref}
       aria-hidden
-      className={`lqip -z-10 opacity-45 ${screenshotMode ? "absolute" : "fixed"} inset-0 will-change-transform ${className}`}
+      className={`-z-10 opacity-45 ${screenshotMode ? "absolute" : "fixed"} inset-0 will-change-transform`}
       style={style}
-    />
+    >
+      <BlurhashCanvas hash={bgHash} className="absolute inset-0 size-full" />
+      <div className={`parallax-bg absolute inset-0 ${className}`} />
+    </div>
   );
 };
 

@@ -1,7 +1,8 @@
 import { type CSSProperties } from "react";
-import lqipMap from "@/data/lqip.json";
+import hashes from "@/data/blurhash.json";
+import { BlurhashCanvas } from "./BlurhashCanvas";
 
-const lqipIndex = lqipMap as Record<string, number>;
+const hashIndex = hashes as Record<string, string>;
 
 interface SmartImageProps {
   src: string;
@@ -14,17 +15,17 @@ interface SmartImageProps {
 }
 
 const SmartImage = ({ src, alt, width, height, priority, lazy = true, className = "" }: SmartImageProps) => {
-  const lqip = lqipIndex[src.replace(/^\/smc\//, "")];
+  const hash = hashIndex[src.replace(/^\/smc\//, "")];
 
-  const wrapperStyle: CSSProperties & Record<string, unknown> = {};
-  if (lqip != null) wrapperStyle["--lqip"] = lqip;
+  const wrapperStyle: CSSProperties = {};
   if (width && height) {
     wrapperStyle.width = width;
     wrapperStyle.height = height;
   }
 
   return (
-    <div className={`lqip lqip-bg relative overflow-hidden ${className}`} style={wrapperStyle}>
+    <div className={`relative overflow-hidden ${className}`} style={wrapperStyle}>
+      <BlurhashCanvas hash={hash ?? ""} className="absolute inset-0 size-full" />
       <img
         src={src}
         alt={alt}

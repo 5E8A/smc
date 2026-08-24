@@ -1,4 +1,5 @@
-import { BlogPost } from "../types";
+import { BlogPost, BlogPostRaw } from "../types";
+import { resolveAuthor } from "./authors";
 import enPosts from "../content/en/posts.json";
 import plPosts from "../content/pl/posts.json";
 
@@ -37,9 +38,14 @@ const sortPosts = (a: BlogPost, b: BlogPost): number => {
   return parseInt(b.id) - parseInt(a.id);
 };
 
+const withAuthor = (post: BlogPostRaw, lang: "en" | "pl"): BlogPost => ({
+  ...post,
+  author: resolveAuthor(post.author, lang),
+});
+
 const postsByLanguage: Record<"en" | "pl", BlogPost[]> = {
-  en: [...(enPosts as BlogPost[])].sort(sortPosts),
-  pl: [...(plPosts as BlogPost[])].sort(sortPosts),
+  en: (enPosts as BlogPostRaw[]).map((p) => withAuthor(p, "en")).sort(sortPosts),
+  pl: (plPosts as BlogPostRaw[]).map((p) => withAuthor(p, "pl")).sort(sortPosts),
 };
 
 export const getPosts = (language: "en" | "pl"): BlogPost[] => postsByLanguage[language];
@@ -49,3 +55,10 @@ export const getRecentPosts = (language: "en" | "pl", limit: number): BlogPost[]
 
 export const getPostBySlug = (slug: string, language: "en" | "pl"): BlogPost | undefined =>
   getPosts(language).find((p) => p.slug === slug);
+
+export const getPostAvailability = (
+  slug: string,
+): { en: BlogPost | null; pl: BlogPost | null } => ({
+  en: getPostBySlug(slug, "en") ?? null,
+  pl: getPostBySlug(slug, "pl") ?? null,
+});

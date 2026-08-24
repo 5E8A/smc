@@ -3,104 +3,55 @@
     "id": "1",
     "slug": "Fabric-Boosted 1.21.11",
     "title": "Fabric Boosted 1.21.11 Released!",
-    "author": {
-      "name": "5E8A",
-      "bio": "Lead Developer of Fabric Boosted",
-      "avatar": "/smc/assets/avatars/seba.webp"
-    },
+    "author": "5e8a",
     "date": "16 Dec 2025",
     "category": "Updates",
-    "coverImage": "/smc/assets/posts/2.7.0-alpha1.webp",
+    "coverImage": "/smc/assets/content/posts/2.7.0-alpha1.webp",
     "summary": "We are excited to announce the release of Fabric Boosted 2.7.0-Alpha1 which supports 1.21.11",
-    "carouselImages": [],
-    "content": [
-      {
-        "header": "Fabric Boosted 2.7.0-Alpha1 Release",
-        "paragraph": "We are excited to announce the release of [Fabric Boosted 2.7.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/2.7.0-Alpha1) which supports Minecraft 1.21.11"
-      },
-      {
-        "header": "Update Info",
-        "paragraph": "Note that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
-      },
-      {
-        "header": "",
-        "paragraph": ""
-      }
-    ]
+    "content": "## Fabric Boosted 2.7.0-Alpha1 Release\n\nWe are excited to announce the release of [Fabric Boosted 2.7.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/2.7.0-Alpha1) which supports Minecraft 1.21.11\n\n## Update Info\n\nNote that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
   },
   {
     "id": "2",
     "slug": "30k-Downloads-Milestone",
     "title": "30k Downloads Milestone!",
-    "author": {
-      "name": "5E8A",
-      "bio": "Lead Developer of Fabric Boosted",
-      "avatar": "/smc/assets/avatars/seba.webp"
-    },
+    "author": "5e8a",
     "date": "11 Jan 2026",
     "category": "Announcements",
-    "coverImage": "/smc/assets/posts/30k.webp",
+    "coverImage": "/smc/assets/content/posts/30k.webp",
     "summary": "We are excited to announce that Fabric Boosted has reached 30,000 downloads on Modrinth!",
-    "carouselImages": [],
-    "content": [
-      {
-        "header": "30,000 Downloads!",
-        "paragraph": "We are thrilled to announce that Fabric Boosted has reached a milestone of 30,000 downloads on Modrinth! This achievement reflects the incredible support and enthusiasm from our community. We want to extend our heartfelt thanks to each and every one of you for being part of this journey."
-      },
-      {
-        "header": "Looking Ahead",
-        "paragraph": "We are excited to continue improving Fabric Boosted and bringing you more updates in the future. Stay tuned for more exciting content!"
-      }
-    ]
+    "content": "## 30,000 Downloads!\n\nWe are thrilled to announce that Fabric Boosted has reached a milestone of 30,000 downloads on Modrinth! This achievement reflects the incredible support and enthusiasm from our community. We want to extend our heartfelt thanks to each and every one of you for being part of this journey.\n\n## Looking Ahead\n\nWe are excited to continue improving Fabric Boosted and bringing you more updates in the future. Stay tuned for more exciting content!"
   },
   {
     "id": "3",
     "slug": "Fabric-Boosted 26.1",
     "title": "Fabric Boosted 26.1 Released!",
-    "author": {
-      "name": "5E8A",
-      "bio": "Lead Developer of Fabric Boosted",
-      "avatar": "/smc/assets/avatars/seba.webp"
-    },
+    "author": "5e8a",
     "date": "30 Mar 2026",
     "category": "Updates",
-    "coverImage": "/smc/assets/posts/3.0.0-alpha1.webp",
+    "coverImage": "/smc/assets/content/posts/3.0.0-alpha1.webp",
     "summary": "We are excited to announce the release of Fabric Boosted 3.0.0-Alpha1 which supports 26.1",
-    "carouselImages": [],
-    "content": [
-      {
-        "header": "Fabric Boosted 3.0.0-Alpha1 Release",
-        "paragraph": "We are excited to announce the release of [Fabric Boosted 3.0.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.0.0-Alpha1) which supports Minecraft 26.1"
-      },
-      {
-        "header": "Update Info",
-        "paragraph": "Note that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
-      }
-    ]
+    "content": "## Fabric Boosted 3.0.0-Alpha1 Release\n\nWe are excited to announce the release of [Fabric Boosted 3.0.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.0.0-Alpha1) which supports Minecraft 26.1\n\n## Update Info\n\nNote that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
   },
   {
     "id": "4",
     "slug": "Fabric-Boosted 26.2",
     "title": "Fabric Boosted 26.2 Released!",
-    "author": {
-      "name": "5E8A",
-      "bio": "Lead Developer of Fabric Boosted",
-      "avatar": "/smc/assets/avatars/seba.webp"
-    },
+    "author": "5e8a",
     "date": "18 Jun 2026",
     "category": "Updates",
-    "coverImage": "/smc/assets/posts/3.3.0-alpha1.webp",
+    "coverImage": "/smc/assets/content/posts/3.3.0-alpha1.webp",
     "summary": "We are excited to announce the release of Fabric Boosted 3.3.0-Alpha1 which supports 26.2",
-    "carouselImages": [],
-    "content": [
-      {
-        "header": "Fabric Boosted 3.3.0-Alpha1 Release",
-        "paragraph": "We are excited to announce the release of [Fabric Boosted 3.3.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.3.0-Alpha1) which supports Minecraft 26.2"
-      },
-      {
-        "header": "Update Info",
-        "paragraph": "Note that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
-      }
-    ]
+    "content": "## Fabric Boosted 3.3.0-Alpha1 Release\n\nWe are excited to announce the release of [Fabric Boosted 3.3.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.3.0-Alpha1) which supports Minecraft 26.2\n\n## Update Info\n\nNote that this is an Alpha release, meaning some mods may be missing or unstable.\nWe recommend backing up your worlds before updating. You can update via Modrinth App by selecting the Fabric Boosted instance and clicking 'Update pack'."
+  },
+  {
+    "id": "5",
+    "slug": "cms-markdown-test",
+    "title": "CMS Markdown Test",
+    "author": "a-tui4m8pck",
+    "date": "24 Aug 2026",
+    "category": "Announcements",
+    "coverImage": "/smc/assets/content/posts/benchmark.webp",
+    "summary": "Internal regression-test article for the unified markdown renderer and composable carousels.",
+    "content": "## :WrenchIcon: What this page tests\n\nThis entry exists to verify the **unified markdown pipeline** — the same renderer now powers wiki docs and blog articles. It also carries an external link test: [Fabric Boosted on Modrinth](https://modrinth.com/modpack/fabric-boosted).\n\nLine one after a hard break.\nLine two should sit directly below it.\n\n## :CpuIcon: Table check\n\n| Feature | Status |\n|---------|--------|\n| Unified renderer | works |\n| Hard breaks | works |\n| Composable carousel | works |\n\n## :ImageIcon: Inline image with caption\n\nAn image placed mid-article:\n\n![Benchmark banner used as a test image](/smc/assets/content/posts/benchmark.webp)\n\n## :RocketIcon: Carousel block number one\n\nThe carousel below lives inside the article flow:\n\n:carouselStart:\n![30k downloads banner](/smc/assets/content/posts/30k.webp)\n![Benchmark banner](/smc/assets/content/posts/benchmark.webp)\n![Alpha1 cover](/smc/assets/content/posts/2.7.0-alpha1.webp)\n:carouselEnd:\n\nText continues after the carousel to prove spacing survives.\n\n## :SparkleIcon: Carousel block number two\n\nA second carousel further down proves the blocks are composable:\n\n:carouselStart:\n![3.3.0 alpha cover](/smc/assets/content/posts/3.3.0-alpha1.webp)\n![3.0.0 alpha cover](/smc/assets/content/posts/3.0.0-alpha1.webp)\n:carouselEnd:"
   }
 ]
