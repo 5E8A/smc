@@ -128,7 +128,8 @@
     },
     {
       "files": [
-        "scripts/**/*.mjs"
+        "scripts/**/*.mjs",
+        "cms/server/**/*.ts"
       ],
       "env": {
         "node": true
