@@ -5,7 +5,7 @@ import { root } from "./config.mjs";
 export const STATIC_ROUTES = ["/", "/archive", "/wiki", "/about", "/credits"];
 
 const readContent = (lang, kind) => {
-  const file = path.join(root, "src", "content", lang, `${kind}.json`);
+  const file = path.join(root, "@web", "src", "content", lang, `${kind}.json`);
   return JSON.parse(fs.readFileSync(file, "utf8"));
 };
 
