@@ -56,10 +56,9 @@ export const WikiEditor = ({ doc, lang, categories, onChange }: WikiEditorProps)
             </label>
           </div>
         </Field>
+      </div>
 
-        <Field label="Author" variant="block" hint="Referenced by id from the shared registry">
-          <AuthorPicker value={doc.author} lang={lang} onChange={(author) => onChange({ ...doc, author })} />
-        </Field>
+      <div className="grid gap-4 md:grid-cols-2">
         <Field label="Category">
           <ComboInput
             id={`wiki-category-${lang}`}
@@ -68,8 +67,7 @@ export const WikiEditor = ({ doc, lang, categories, onChange }: WikiEditorProps)
             onChange={(e) => onChange({ ...doc, category: e.target.value })}
           />
         </Field>
-
-        <Field label="Date (ISO)">
+        <Field label="Date" hint={`Stored as "${doc.date}" (ISO)`}>
           <input
             type="date"
             value={doc.date}
@@ -77,6 +75,13 @@ export const WikiEditor = ({ doc, lang, categories, onChange }: WikiEditorProps)
             className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-100 outline-none focus:border-green-500 [color-scheme:dark]"
           />
         </Field>
+      </div>
+
+      <Field label="Author" variant="block" hint="Referenced by id from the shared registry">
+        <AuthorPicker value={doc.author} lang={lang} onChange={(author) => onChange({ ...doc, author })} />
+      </Field>
+
+      <div className="grid gap-4 md:grid-cols-2">
         <Field label="Cover image" variant="block">
           <div className="flex items-start gap-2">
             <AssetThumb path={doc.coverImage} />
@@ -94,11 +99,9 @@ export const WikiEditor = ({ doc, lang, categories, onChange }: WikiEditorProps)
           </div>
         </Field>
 
-        <div className="md:col-span-2">
-          <Field label="Summary">
-            <TextArea rows={2} value={doc.summary} onChange={(e) => onChange({ ...doc, summary: e.target.value })} />
-          </Field>
-        </div>
+        <Field label="Summary">
+          <TextArea rows={3} value={doc.summary} onChange={(e) => onChange({ ...doc, summary: e.target.value })} />
+        </Field>
       </div>
 
       <MarkdownEditorPanel
