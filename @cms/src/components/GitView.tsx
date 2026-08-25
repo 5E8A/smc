@@ -71,7 +71,9 @@ export function GitView() {
 
   const toggleAll = () => {
     if (!status) return;
-    setSelected((prev) => (prev.size === status.changes.length && status.changes.length > 0 ? new Set() : selectAll(status)));
+    setSelected((prev) =>
+      prev.size === status.changes.length && status.changes.length > 0 ? new Set() : selectAll(status)
+    );
   };
 
   const deploy = useCallback(async () => {
@@ -169,12 +171,18 @@ export function GitView() {
               <span className="font-mono text-zinc-500">↔ {status.upstream}</span>
             )}
             {status.ahead > 0 && (
-              <span title="unpushed local commits" className="rounded bg-green-950 px-1.5 py-0.5 font-mono font-bold text-green-400">
+              <span
+                title="unpushed local commits"
+                className="rounded bg-green-950 px-1.5 py-0.5 font-mono font-bold text-green-400"
+              >
                 ↑{status.ahead}
               </span>
             )}
             {status.behind > 0 && (
-              <span title="remote commits not pulled" className="rounded bg-amber-950 px-1.5 py-0.5 font-mono font-bold text-amber-400">
+              <span
+                title="remote commits not pulled"
+                className="rounded bg-amber-950 px-1.5 py-0.5 font-mono font-bold text-amber-400"
+              >
                 ↓{status.behind}
               </span>
             )}
@@ -261,7 +269,13 @@ export function GitView() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.nativeEvent.isComposing && !running && message.trim() && selected.size > 0) {
+                if (
+                  e.key === "Enter" &&
+                  !e.nativeEvent.isComposing &&
+                  !running &&
+                  message.trim() &&
+                  selected.size > 0
+                ) {
                   void deploy();
                 }
               }}

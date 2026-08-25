@@ -50,9 +50,7 @@ export async function runSsePost(
   const res = await fetch(url, {
     method: "POST",
     signal,
-    ...(body !== undefined
-      ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
-      : {}),
+    ...(body !== undefined ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {}),
   });
   await consumeSse(res, handlers);
 }
