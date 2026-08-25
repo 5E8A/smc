@@ -35,19 +35,32 @@ async function encodeFile(file) {
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  return encode(new Uint8Array(data), info.width, info.height, COMPONENTS_X, COMPONENTS_Y);
+  return {
+    hash: encode(new Uint8Array(data), info.width, info.height, COMPONENTS_X, COMPONENTS_Y),
+    width: info.width,
+    height: info.height,
+  };
 }
 
 const hashes = {};
+let transparentSkipped = 0;
 for (const file of walk(assetsDir)) {
   const key = "assets/" + path.relative(assetsDir, file).replace(/\\/g, "/");
   try {
-    const hash = await encodeFile(file);
-    if (hash) hashes[key] = hash;
+    const result = await encodeFile(file);
+    if (result) {
+      hashes[key] = result.hash;
+      console.log(`hash ${key} (${result.width}x${result.height}): ${result.hash}`);
+    } else {
+      transparentSkipped++;
+      console.log(`skip ${key}: transparent`);
+    }
   } catch (err) {
     console.warn(`skip ${key}: ${err.message}`);
   }
 }
 
 fs.writeFileSync(outFile, JSON.stringify(hashes, Object.keys(hashes).sort(), 2) + "\n");
-console.log(`wrote ${Object.keys(hashes).length} blurhashes to ${path.relative(root, outFile)}`);
+console.log(
+  `wrote ${Object.keys(hashes).length} blurhashes (${transparentSkipped} transparent skipped) to ${path.relative(root, outFile)}`
+);

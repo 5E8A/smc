@@ -32,6 +32,13 @@ const argOf = (name) => {
 
 const retries = Number.parseInt(argOf("retries") || "3", 10);
 const runBlurhash = !flag("no-blurhash");
+const quiet = flag("quiet");
+const failSlugs = new Set(
+  process.argv.filter((a) => a.startsWith("--fail-slug=")).map((a) => a.slice("--fail-slug=".length))
+);
+const flakySlugs = new Set(
+  process.argv.filter((a) => a.startsWith("--flaky-slug=")).map((a) => a.slice("--flaky-slug=".length))
+);
 if (!Number.isInteger(retries) || retries < 1) {
   console.error("--retries must be a positive integer");
   process.exit(1);
@@ -81,6 +88,8 @@ const mapLimit = async (items, limit, fn) => {
 
 const cachePath = (slug) => path.join(cacheDir, `${slug}.img`);
 
+const forcedFail = (slug, attempt) => failSlugs.has(slug) || (flakySlugs.has(slug) && attempt < retries);
+
 const fetchMetaBatch = async (slugs) => {
   const url = `${MODRINTH_API}/projects?ids=${encodeURIComponent(JSON.stringify(slugs))}`;
   const res = await fetch(url, {
@@ -101,24 +110,21 @@ const downloadIcon = async (slug, iconUrl) => {
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch {
-    return fs.existsSync(cachePath(slug)) ? "cached" : "transient";
+    return { outcome: fs.existsSync(cachePath(slug)) ? "kept" : "failed" };
   }
   if (res.status === 404) {
-    if (fs.existsSync(cachePath(slug))) {
-      console.warn(`  ⚠ ${slug}: icon URL gone (HTTP 404) - keeping cached icon`);
-      return "cached";
-    }
-    return "missing";
+    return { outcome: fs.existsSync(cachePath(slug)) ? "gone-kept" : "missing" };
   }
   if (!res.ok) {
-    return fs.existsSync(cachePath(slug)) ? "cached" : "transient";
+    return { outcome: fs.existsSync(cachePath(slug)) ? "kept" : "failed" };
   }
   const buffer = Buffer.from(await res.arrayBuffer());
-  if (buffer.length === 0) return fs.existsSync(cachePath(slug)) ? "cached" : "transient";
-  const existed = fs.existsSync(cachePath(slug));
+  if (buffer.length === 0) {
+    return { outcome: fs.existsSync(cachePath(slug)) ? "kept" : "failed" };
+  }
   fs.mkdirSync(cacheDir, { recursive: true });
   fs.writeFileSync(cachePath(slug), buffer);
-  return existed ? "cached" : "ok";
+  return { outcome: "written", bytes: buffer.length };
 };
 
 const verifyCached = async (slug) => {
@@ -132,7 +138,7 @@ const verifyCached = async (slug) => {
   }
 };
 
-const attemptOnce = async (targetSlugs, meta, permanent) => {
+const attemptOnce = async (targetSlugs, meta, permanent, attempt) => {
   const unseen = targetSlugs.filter((s) => !meta.has(s) && !permanent.has(s));
   if (unseen.length > 0) {
     const found = [];
@@ -144,21 +150,40 @@ const attemptOnce = async (targetSlugs, meta, permanent) => {
       const project = pool.get(slug) ?? found.find((p) => p.id === slug);
       if (!project) {
         permanent.set(slug, "not-found");
+        if (!quiet) console.log(`  ✗ ${slug}: not found on Modrinth - excluded`);
         continue;
       }
       meta.set(slug, project);
       if (!project.icon_url) permanent.set(slug, "no-icon");
+      if (!quiet)
+        console.log(`  ✓ ${slug}: found on Modrinth ("${project.title}")${project.icon_url ? "" : " - no icon set"}`);
     }
   }
 
   const want = targetSlugs.filter((s) => meta.has(s) && meta.get(s).icon_url && !permanent.has(s));
+  let saved = 0;
+  let kept = 0;
   if (want.length > 0) {
     await mapLimit(want, DOWNLOAD_CONCURRENCY, async (slug) => {
-      const status = await downloadIcon(slug, meta.get(slug).icon_url);
-      if (status === "missing") {
+      if (forcedFail(slug, attempt)) {
+        console.warn(`  ⚠ ${slug}: [forced] icon download failed - will retry`);
+        return;
+      }
+      const { outcome, bytes } = await downloadIcon(slug, meta.get(slug).icon_url);
+      if (outcome === "written") {
+        saved++;
+        if (!quiet)
+          console.log(`  ↓ ${slug}: icon saved to .cache/mod-icons/${slug}.img (${(bytes / 1024).toFixed(1)} KB)`);
+      } else if (outcome === "gone-kept") {
+        kept++;
+        console.warn(`  ⚠ ${slug}: icon URL gone (HTTP 404) - keeping cached icon`);
+      } else if (outcome === "kept") {
+        kept++;
+        if (!quiet) console.log(`  ↺ ${slug}: download failed - keeping cached copy`);
+      } else if (outcome === "missing") {
         permanent.set(slug, "icon-missing");
         console.warn(`  ⚠ ${slug}: icon unavailable (HTTP 404), no cached copy - falling back to placeholder tile`);
-      } else if (status === "transient") {
+      } else {
         console.warn(`  ⚠ ${slug}: icon download failed - will retry`);
       }
     });
@@ -166,9 +191,15 @@ const attemptOnce = async (targetSlugs, meta, permanent) => {
 
   const failed = [];
   for (const slug of want) {
-    if (!(await verifyCached(slug))) failed.push(slug);
+    if (forcedFail(slug, attempt)) {
+      failed.push(slug);
+      console.log(`  ✗ ${slug}: cached icon failed verification [forced]`);
+    } else if (!(await verifyCached(slug))) {
+      failed.push(slug);
+      if (!quiet) console.log(`  ✗ ${slug}: cached icon failed verification`);
+    }
   }
-  return failed;
+  return { failed, saved, kept };
 };
 
 const loadTile = async (slug, tileSize, placeholder) => {
@@ -252,6 +283,18 @@ const main = async () => {
     if (count > 1) console.warn(`  ⚠ duplicate slug "${slug}" appears ${count}× in mod list - tiles will repeat`);
   }
 
+  const knownSlugs = new Set(allSlugs);
+  const forcedNote = [...failSlugs].map((s) => `fail:${s}`).concat([...flakySlugs].map((s) => `flaky:${s}`));
+  for (const slug of [...failSlugs, ...flakySlugs]) {
+    if (!knownSlugs.has(slug)) console.warn(`  ⚠ forced-fail slug "${slug}" is not in the mod list - no effect`);
+  }
+
+  console.log(
+    `▶ sync-mods: ${allSlugs.length} slug(s) in ${categories.length} categories (retries=${retries}, blurhash=${
+      runBlurhash ? "on" : "off"
+    }${quiet ? ", quiet" : ""}${forcedNote.length > 0 ? `, FORCED FAILURES: ${forcedNote.join(", ")}` : ""})`
+  );
+
   const meta = new Map();
   const permanent = new Map();
   let target = [...allSlugs];
@@ -259,9 +302,9 @@ const main = async () => {
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     process.stdout.write(`\n[pass ${attempt}/${retries}] `);
-    let failed;
+    let result;
     try {
-      failed = await attemptOnce(target, meta, permanent);
+      result = await attemptOnce(target, meta, permanent, attempt);
     } catch (err) {
       if (attempt >= retries) {
         hardFails = [{ slug: "modrinth", message: err.message }];
@@ -270,11 +313,13 @@ const main = async () => {
       console.warn(`metadata fetch failed (${err.message}) - retrying`);
       continue;
     }
+    const { failed, saved, kept } = result;
     if (failed.length === 0) {
-      console.log("complete");
+      console.log(`complete - ${saved} downloaded, ${kept} from cache`);
       break;
     }
     console.warn(`\n  ⚠ ${failed.length} slug(s) failed verification, retrying: ${failed.join(", ")}`);
+    console.log(`  ${saved} downloaded, ${kept} from cache so far`);
     target = failed;
     if (attempt >= retries) {
       hardFails = failed.map((slug) => ({ slug, message: "no valid icon after retries" }));
