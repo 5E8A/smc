@@ -28,12 +28,14 @@ import { AuthorForm } from "./components/AuthorsView";
 import { AssetsView } from "./components/AssetsView";
 import { ConverterView } from "./components/ConverterView";
 import { ModsBoard } from "./components/ModsBoard";
+import { GitView } from "./components/GitView";
 import { PreviewWindow } from "./components/PreviewWindow";
+import { RunConsole } from "./components/RunConsole";
 import { invalidateAuthorCache } from "./lib/authorCache";
 import { Button } from "./components/fields";
 
-type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter";
-const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter"];
+type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy";
+const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter", "deploy"];
 
 interface TabState {
   entries: Entry[];
@@ -458,7 +460,11 @@ export const App = () => {
 
   const viewDirty = tab === "authors" ? authorsDirty : dirty;
   const paneReady =
-    tab === "assets" || tab === "converter" || tab === "mods" ? true : tab === "authors" ? !!authors : !!state;
+    tab === "assets" || tab === "converter" || tab === "mods" || tab === "deploy"
+      ? true
+      : tab === "authors"
+        ? !!authors
+        : !!state;
   const selectedAuthor = selectedAuthorIndex !== null ? (authors?.[selectedAuthorIndex] ?? null) : null;
   const selectedHasErrors =
     !!selected &&
@@ -622,7 +628,7 @@ export const App = () => {
           </>
         )}
 
-        <main className="min-w-0 flex-1 overflow-y-auto">
+        <main className="min-w-0 flex-1 overflow-y-auto scrollbar-gutter-stable">
           {!paneReady && !loading && !loadError && <div className="p-6 text-sm text-zinc-500">Select an item.</div>}
           {loading && (
             <div className="flex items-center gap-2 p-6 text-sm text-zinc-400">
@@ -645,7 +651,7 @@ export const App = () => {
                           ? "Converter"
                           : selected
                             ? selected.title || "(untitled)"
-                            : `${tab} · ${lang}`}
+                            : tab}
                   {viewDirty && (
                     <span className="ml-2 align-middle text-[10px] font-bold uppercase tracking-wider text-amber-400">
                       unsaved
@@ -773,11 +779,17 @@ export const App = () => {
                 <div hidden={tab !== "mods"}>
                   <ModsBoard />
                 </div>
+
+                <div hidden={tab !== "deploy"}>
+                  <GitView />
+                </div>
               </div>
             </>
           )}
         </main>
       </div>
+
+      <RunConsole />
 
       {previewOpen && <PreviewWindow entryPath={entryPreviewPath} onClose={() => setPreviewOpen(false)} />}
     </div>

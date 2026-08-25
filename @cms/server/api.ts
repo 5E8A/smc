@@ -18,6 +18,7 @@ import {
 import { clampMaxWidth, clampQuality } from "./images.ts";
 import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
 import { loadModList, saveModList, runSyncMods } from "./mods.ts";
+import { readGitStatus, streamGitDeploy, streamGitPull } from "./git.ts";
 
 const MAX_JSON_BODY = 5 * 1024 * 1024;
 const MAX_UPLOAD = 26 * 1024 * 1024;
@@ -298,6 +299,46 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         return void res.end();
       }
       runSyncMods(res);
+      return;
+    }
+
+    case "/git/status": {
+      if (method !== "GET") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      const data = await readGitStatus();
+      return void sendJson(res, 200, { data });
+    }
+
+    case "/git/deploy": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      let parsed: { message?: unknown; paths?: unknown };
+      try {
+        const body = await readRawBody(req, MAX_JSON_BODY);
+        parsed = JSON.parse(body.toString("utf8"));
+      } catch (err) {
+        return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+      }
+      const message = typeof parsed.message === "string" ? parsed.message.trim() : "";
+      if (!message) return void sendJson(res, 400, { error: "commit message is required" });
+      const paths = Array.isArray(parsed.paths)
+        ? parsed.paths.filter((p): p is string => typeof p === "string" && p.length > 0)
+        : [];
+      if (paths.length === 0) return void sendJson(res, 400, { error: "select at least one changed file" });
+      streamGitDeploy(res, message, paths);
+      return;
+    }
+
+    case "/git/pull": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      streamGitPull(res);
       return;
     }
 

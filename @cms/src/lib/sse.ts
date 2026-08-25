@@ -41,7 +41,18 @@ export async function consumeSse(res: Response, { onLog, onDone }: SseHandlers):
   onDone("closed");
 }
 
-export async function runSsePost(url: string, handlers: SseHandlers, signal?: AbortSignal): Promise<void> {
-  const res = await fetch(url, { method: "POST", signal });
+export async function runSsePost(
+  url: string,
+  handlers: SseHandlers,
+  signal?: AbortSignal,
+  body?: unknown
+): Promise<void> {
+  const res = await fetch(url, {
+    method: "POST",
+    signal,
+    ...(body !== undefined
+      ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
+      : {}),
+  });
   await consumeSse(res, handlers);
 }

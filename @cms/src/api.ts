@@ -47,6 +47,24 @@ export interface ModListSaveResult extends SaveResult {
 export const getModList = (): Promise<ModListColumn[]> =>
   request<{ data: ModListColumn[] }>("/api/mods").then((r) => r.data);
 
+export interface GitChange {
+  path: string;
+  x: string;
+  y: string;
+}
+
+export interface GitStatus {
+  branch: string;
+  upstream: string | null;
+  ahead: number;
+  behind: number;
+  changes: GitChange[];
+  lastCommit: { hash: string; subject: string; date: string } | null;
+}
+
+export const getGitStatus = (): Promise<GitStatus> =>
+  request<{ data: GitStatus }>("/api/git/status").then((r) => r.data);
+
 export const putModList = (data: ModListColumn[]): Promise<ModListSaveResult> =>
   request<{ ok: boolean; issues: Issue[]; data?: ModListColumn[] }>("/api/mods", {
     method: "PUT",
