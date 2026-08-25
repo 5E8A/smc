@@ -5,6 +5,7 @@ import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } f
 import { createDir, deleteDir, deleteImage, findRefs, listDirs, listImages, renameDir, renameImage, runLqip, saveUpload, serveAsset } from "./images.ts";
 import { clampMaxWidth, clampQuality } from "./images.ts";
 import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
+import { loadModList, saveModList, runSyncMods } from "./mods.ts";
 
 const MAX_JSON_BODY = 5 * 1024 * 1024;
 const MAX_UPLOAD = 26 * 1024 * 1024;
@@ -249,6 +250,42 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         return void res.end();
       }
       runLqip(res);
+      return;
+    }
+
+    case "/mods": {
+      if (method === "GET") {
+        const data = await loadModList();
+        return void sendJson(res, 200, { data });
+      }
+
+      if (method === "PUT") {
+        let parsed: unknown;
+        try {
+          const body = await readRawBody(req, MAX_JSON_BODY);
+          parsed = JSON.parse(body.toString("utf8"));
+        } catch (err) {
+          return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+        }
+        const result = await saveModList(parsed);
+        const hasErrors = result.issues.some((i) => i.severity === "error");
+        return void sendJson(res, hasErrors ? 400 : 200, {
+          ok: !hasErrors,
+          issues: result.issues,
+          ...(result.data ? { data: result.data } : {}),
+        });
+      }
+
+      res.writeHead(405);
+      return void res.end();
+    }
+
+    case "/mods/sync": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      runSyncMods(res);
       return;
     }
 
