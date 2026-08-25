@@ -179,7 +179,7 @@ export const ConverterView = () => {
         <h2 className="mr-auto text-sm font-bold text-white">
           Converter
           <span className="ml-2 text-xs font-normal text-zinc-500">
-            drop folders or pick them — everything is re-encoded to webp into a downloadable zip, nothing touches
+            drop folders or pick them, everything is re-encoded to webp into a downloadable zip and nothing touches
             public/assets
           </span>
         </h2>
@@ -245,7 +245,7 @@ export const ConverterView = () => {
             <UploadSimpleIcon size={34} className="text-zinc-600" />
             <p className="text-sm font-medium text-zinc-400">No files staged</p>
             <p className="text-xs text-zinc-600">
-              Drop folders here — nested sub-folders are discovered automatically. png / jpg / webp only.
+              Drop folders here, nested sub-folders are discovered automatically. png / jpg / webp only.
             </p>
           </div>
         ) : (
@@ -275,7 +275,7 @@ export const ConverterView = () => {
         )}
         {result && (
           <span className="text-green-400">
-            Downloaded webp-converter.zip — {result.converted} converted
+            Downloaded webp-converter.zip - {result.converted} converted
             {result.errors > 0 ? `, ${result.errors} failed (see CONVERSION-ERRORS.txt)` : ""}
           </span>
         )}

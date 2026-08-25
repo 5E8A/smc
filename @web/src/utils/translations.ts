@@ -249,7 +249,7 @@ export const translations = {
     },
     unavailable: {
       title: "Nie ma tego jeszcze po polsku",
-      description: "Ta treść nie została jeszcze przetłumaczona na język polski — możesz przeczytać ją po angielsku.",
+      description: "Ta treść nie została jeszcze przetłumaczona na język polski, możesz przeczytać ją po angielsku.",
       read_in: "Przeczytaj po angielsku",
       back_to_archive: "Wróć do archiwum",
     },

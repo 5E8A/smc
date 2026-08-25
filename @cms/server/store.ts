@@ -54,7 +54,7 @@ function validateAuthorReference(index: number, value: unknown, knownAuthorIds: 
     issues.push({
       entry: index,
       field: "author",
-      message: `Unknown author id "${value}" — pick an author in the Authors tab`,
+      message: `Unknown author id "${value}" - pick an author in the Authors tab`,
       severity: "error",
     });
   }
@@ -280,7 +280,7 @@ function validateMarkdownStructure(index: number, content: string, issues: Issue
       issues.push({
         entry: index,
         field: `content (line ${i + 1})`,
-        message: `Empty heading ("${h[1]}") — add text or remove the line`,
+        message: `Empty heading ("${h[1]}") - add text or remove the line`,
         severity: "error",
       });
       continue;
@@ -423,7 +423,7 @@ export async function validateContent(kind: Kind, lang: Lang, data: unknown): Pr
         issues.push({
           entry: i,
           field: "slug",
-          message: `No ${otherLang} counterpart with slug "${slug}" — this entry will be invisible in ${otherLang.toUpperCase()}`,
+          message: `No ${otherLang} counterpart with slug "${slug}", so this entry will be invisible in ${otherLang.toUpperCase()}`,
           severity: "warning",
         });
       }

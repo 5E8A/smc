@@ -168,7 +168,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const result = await saveAuthors(parsed);
         if (result.blocked) {
           return void sendJson(res, 409, {
-            error: "Author still referenced by existing content — reassign those entries first.",
+            error: "Author still referenced by existing content - reassign those entries first.",
             usages: result.usages,
           });
         }

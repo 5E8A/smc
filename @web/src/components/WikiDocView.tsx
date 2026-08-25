@@ -93,7 +93,7 @@ const WikiDocView = () => {
             </div>
           </div>
 
-          {/* Desktop sidebar TOC — right side */}
+          {/* Desktop sidebar TOC - right side */}
           <aside className="hidden w-64 shrink-0 md:block">
             <WikiTOC content={doc.content} />
           </aside>

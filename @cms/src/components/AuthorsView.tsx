@@ -12,7 +12,7 @@ export const AuthorForm = ({ author, onChange }: AuthorFormProps) => {
   if (!author) {
     return (
       <p className="text-sm text-zinc-500">
-        Authors are shared across languages. Picking one in the post/wiki editors links it by id — edits here propagate
+        Authors are shared across languages. Picking one in the post/wiki editors links it by id, edits here propagate
         to every page using them on the next site build.
       </p>
     );
@@ -70,7 +70,7 @@ function AuthorEditor({ author, onChange }: { author: Author; onChange: (next: A
       </div>
 
       <p className="text-[11px] text-zinc-600">
-        Posts and wiki docs reference this author by id — edits propagate everywhere on the next site build. Ids are
+        Posts and wiki docs reference this author by id, edits propagate everywhere on the next site build. Ids are
         generated automatically and never editable.
       </p>
     </div>

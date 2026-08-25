@@ -101,7 +101,7 @@ export function useMediaLibrary() {
           kind: "ok",
           text: `Converted ${files.length} file${files.length > 1 ? "s" : ""} to public/assets/content${
             dir ? `/${dir}` : ""
-          }/ — regenerating blurhash…`,
+          }/ - regenerating blurhash…`,
         });
         runLqip();
         return true;

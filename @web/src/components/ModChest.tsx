@@ -220,12 +220,12 @@ const ModChest = () => {
       }}
       onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
     >
-      {/* Unselected tabs — behind the chest (vanilla paint order) */}
+      {/* Unselected tabs - behind the chest (vanilla paint order) */}
       <div className="absolute inset-x-0 z-0" style={{ top: g.tabTop }}>
         {chests.map((_, col) => col !== activeCat && renderTab(col))}
       </div>
 
-      {/* Chests — all mounted, only active one visible */}
+      {/* Chests - all mounted, only active one visible */}
       <div className="relative" style={{ width: g.chestWidth, height: g.chestHeight }}>
         {chests.map((chest, i) => (
           <div
@@ -244,7 +244,7 @@ const ModChest = () => {
         ))}
       </div>
 
-      {/* Selected tab — over the chest */}
+      {/* Selected tab - over the chest */}
       <div className="absolute inset-x-0 z-20" style={{ top: g.tabTop }}>
         {renderTab(activeCat)}
       </div>

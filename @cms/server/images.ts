@@ -35,11 +35,11 @@ function webpDimensions(buf: Buffer): { width: number; height: number } | null {
   if (buf.toString("latin1", 0, 4) !== "RIFF" || buf.toString("latin1", 8, 12) !== "WEBP") return null;
   const chunk = buf.toString("latin1", 12, 16);
   if (chunk === "VP8 ") {
-    // lossy — frame header after the 3-byte frame tag + 0x9d 0x01 0x2a sync code
+    // lossy - frame header after the 3-byte frame tag + 0x9d 0x01 0x2a sync code
     return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff };
   }
   if (chunk === "VP8L") {
-    // lossless — 0x2f signature then packed 14-bit width-1 / height-1
+    // lossless - 0x2f signature then packed 14-bit width-1 / height-1
     const b0 = buf[21]!;
     const b1 = buf[22]!;
     const b2 = buf[23]!;
@@ -50,7 +50,7 @@ function webpDimensions(buf: Buffer): { width: number; height: number } | null {
     };
   }
   if (chunk === "VP8X") {
-    // extended — canvas size minus one as 24-bit LE pairs
+    // extended - canvas size minus one as 24-bit LE pairs
     return { width: 1 + buf.readUIntLE(24, 3), height: 1 + buf.readUIntLE(27, 3) };
   }
   return null;
@@ -179,7 +179,7 @@ export async function saveUpload(
   opts?: Partial<EncodeOptions>
 ): Promise<{ savedAs: string; publicPath: string; width: number; height: number }> {
   const ext = path.extname(rawName).toLowerCase();
-  if (!IMAGE_EXTS.has(ext)) throw new Error(`Unsupported file type "${ext}" — use png, jpg or webp`);
+  if (!IMAGE_EXTS.has(ext)) throw new Error(`Unsupported file type "${ext}" - use png, jpg or webp`);
   const base = slugify(path.basename(rawName, path.extname(rawName)))
     .toLowerCase()
     .replace(/^-+|-+$/g, "");

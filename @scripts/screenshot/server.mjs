@@ -77,7 +77,7 @@ export const probeScreenshotMode = async (baseUrl) => {
     try {
       await page.waitForLoadState("networkidle", { timeout: 10000 });
     } catch {
-      // third-party stat APIs may stall — proceed once the page has settled
+      // third-party stat APIs may stall - proceed once the page has settled
     }
     await page.waitForTimeout(1500);
     const fixed = await page.evaluate(() => {
@@ -97,13 +97,13 @@ export const ensureServer = async ({ port, reuse, prod }) => {
   if (inUse) {
     if (await waitUntilReady(baseUrl, 5000)) {
       if (!reuse) {
-        console.error(`✗ port ${port} is busy — use --reuse to reuse it, or stop it and rerun`);
+        console.error(`✗ port ${port} is busy - use --reuse to reuse it, or stop it and rerun`);
         process.exit(1);
       }
       const screenshotMode = await probeScreenshotMode(baseUrl);
       if (!screenshotMode) {
         console.error(
-          `✗ server on port ${port} is NOT running with VITE_SCREENSHOT=true — full-page backgrounds will be broken`
+          `✗ server on port ${port} is NOT running with VITE_SCREENSHOT=true - full-page backgrounds will be broken`
         );
         console.error(
           `  restart it with "npm run dev:screenshot" or drop --reuse to use a dedicated server on port ${SCREENSHOT_PORT}`
@@ -113,7 +113,7 @@ export const ensureServer = async ({ port, reuse, prod }) => {
       console.log(`✓ reusing server on port ${port} (screenshot mode verified)`);
       return { child: null, baseUrl };
     }
-    console.error(`✗ port ${port} is busy but not serving ${baseUrl} — stop the other process and retry`);
+    console.error(`✗ port ${port} is busy but not serving ${baseUrl} - stop the other process and retry`);
     process.exit(1);
   }
 

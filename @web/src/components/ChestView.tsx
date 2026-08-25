@@ -7,7 +7,7 @@ const ChestView = () => {
         <div className="mb-10">
           <h1 className="mb-2 font-mc text-4xl text-white font-pixel-shadow md:text-5xl">Chest Demo</h1>
           <p className="text-mc-text">
-            Dev demo — creative-inventory style tabs, hover slots for tooltips, click to open Modrinth.
+            Dev demo - creative-inventory style tabs, hover slots for tooltips, click to open Modrinth.
           </p>
         </div>
 

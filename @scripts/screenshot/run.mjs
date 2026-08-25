@@ -197,7 +197,7 @@ const main = async () => {
         const error = await attemptCapture(context, job);
         if (error) {
           failures.push({ ...job, error });
-          console.log(`✗ ${job.browser} ${job.viewport.name} ${job.route} — ${error.message}`);
+          console.log(`✗ ${job.browser} ${job.viewport.name} ${job.route} - ${error.message}`);
         } else {
           console.log(`✓ ${job.browser} ${job.viewport.name} ${job.route}`);
         }
@@ -209,7 +209,7 @@ const main = async () => {
   try {
     for (const browser of browsers) {
       const browserJobs = pending.filter((job) => job.browser === browser);
-      console.log(`\n▶ ${browser} — ${browserJobs.length} captures`);
+      console.log(`\n▶ ${browser} - ${browserJobs.length} captures`);
       const browserInstance = await BROWSERS[browser].launch();
       try {
         const byViewport = new Map();
@@ -241,7 +241,7 @@ const main = async () => {
   if (failures.length > 0) {
     console.log("failed:");
     for (const failure of failures) {
-      console.log(`  ✗ ${failure.browser} ${failure.viewport.name} ${failure.route} — ${failure.error.message}`);
+      console.log(`  ✗ ${failure.browser} ${failure.viewport.name} ${failure.route} - ${failure.error.message}`);
     }
     process.exit(1);
   }

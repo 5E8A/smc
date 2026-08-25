@@ -105,7 +105,7 @@ const downloadIcon = async (slug, iconUrl) => {
   }
   if (res.status === 404) {
     if (fs.existsSync(cachePath(slug))) {
-      console.warn(`  ⚠ ${slug}: icon URL gone (HTTP 404) — keeping cached icon`);
+      console.warn(`  ⚠ ${slug}: icon URL gone (HTTP 404) - keeping cached icon`);
       return "cached";
     }
     return "missing";
@@ -157,9 +157,9 @@ const attemptOnce = async (targetSlugs, meta, permanent) => {
       const status = await downloadIcon(slug, meta.get(slug).icon_url);
       if (status === "missing") {
         permanent.set(slug, "icon-missing");
-        console.warn(`  ⚠ ${slug}: icon unavailable (HTTP 404), no cached copy — falling back to placeholder tile`);
+        console.warn(`  ⚠ ${slug}: icon unavailable (HTTP 404), no cached copy - falling back to placeholder tile`);
       } else if (status === "transient") {
-        console.warn(`  ⚠ ${slug}: icon download failed — will retry`);
+        console.warn(`  ⚠ ${slug}: icon download failed - will retry`);
       }
     });
   }
@@ -247,7 +247,7 @@ const main = async () => {
   const slugCount = new Map();
   for (const slug of allSlugs) slugCount.set(slug, (slugCount.get(slug) ?? 0) + 1);
   for (const [slug, count] of slugCount) {
-    if (count > 1) console.warn(`  ⚠ duplicate slug "${slug}" appears ${count}× in mod list — tiles will repeat`);
+    if (count > 1) console.warn(`  ⚠ duplicate slug "${slug}" appears ${count}× in mod list - tiles will repeat`);
   }
 
   const meta = new Map();
@@ -265,7 +265,7 @@ const main = async () => {
         hardFails = [{ slug: "modrinth", message: err.message }];
         break;
       }
-      console.warn(`metadata fetch failed (${err.message}) — retrying`);
+      console.warn(`metadata fetch failed (${err.message}) - retrying`);
       continue;
     }
     if (failed.length === 0) {
@@ -281,7 +281,7 @@ const main = async () => {
   }
 
   if (hardFails) {
-    console.error(`\n✗ FATAL — ${hardFails.length} problem(s) survived ${retries} attempts:`);
+    console.error(`\n✗ FATAL - ${hardFails.length} problem(s) survived ${retries} attempts:`);
     for (const { slug, message } of hardFails) console.error(`    ${slug}: ${message}`);
     console.error("Fix the mod list / connection and rerun npm run sync-mods.");
     process.exit(1);
@@ -290,9 +290,9 @@ const main = async () => {
   const excluded = new Set([...permanent.entries()].filter(([, reason]) => reason === "not-found").map(([slug]) => slug));
   const warnings = [];
   for (const [slug, reason] of permanent) {
-    if (reason === "not-found") warnings.push(`project not found — excluded from the site (${slug})`);
-    else if (reason === "no-icon") warnings.push(`project has no icon — placeholder tile + cube fallback used (${slug})`);
-    else if (reason === "icon-missing") warnings.push(`icon unavailable, no cached copy — placeholder tile used (${slug})`);
+    if (reason === "not-found") warnings.push(`project not found - excluded from the site (${slug})`);
+    else if (reason === "no-icon") warnings.push(`project has no icon - placeholder tile + cube fallback used (${slug})`);
+    else if (reason === "icon-missing") warnings.push(`icon unavailable, no cached copy - placeholder tile used (${slug})`);
   }
 
   fs.mkdirSync(spritesDir, { recursive: true });

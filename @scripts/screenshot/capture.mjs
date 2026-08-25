@@ -35,7 +35,7 @@ export const capturePage = async (context, { url, fullPath, foldPath, openMenu }
     try {
       await page.waitForLoadState("networkidle", { timeout: 20000 });
     } catch {
-      // third-party stat APIs may stall — proceed once the page has settled
+      // third-party stat APIs may stall - proceed once the page has settled
     }
     await page.evaluate(() => document.fonts.ready);
     if (openMenu) await openMobileMenu(page);

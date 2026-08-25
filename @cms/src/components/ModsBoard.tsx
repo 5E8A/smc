@@ -313,7 +313,7 @@ export function ModsBoard() {
         >
           {issues.map((issue, i) => (
             <div key={i} className="font-mono">
-              [{issue.entry >= 0 ? issue.entry : "—"}] {issue.field}: {issue.message}
+              [{issue.entry >= 0 ? issue.entry : "-"}] {issue.field}: {issue.message}
             </div>
           ))}
         </div>

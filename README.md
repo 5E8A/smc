@@ -31,10 +31,10 @@ This project is a modern Single-Page Application (SPA) built with a focus on fas
 
 npm workspaces with a single hoisted `node_modules`:
 
-- `@web` (`@smc/web`) — the site: `src/`, `public/`, `vite.config.ts`.
-- `@cms` (`@smc/cms`) — local-only content editor at `127.0.0.1:4000`; edits `@web/src/content/…` and `@web/public/assets/…` via API middleware.
-- `@shared` (`@smc/shared`) — shared helpers (`icons`, `months`, `slug`), imported as `@smc/shared/<name>`.
-- `@scripts/` — repo-root tooling (content validation, blurhash/sprite generation, Playwright screenshot suite).
+- `@web` (`@smc/web`) - the site: `src/`, `public/`, `vite.config.ts`.
+- `@cms` (`@smc/cms`) - local-only content editor at `127.0.0.1:4000`; edits `@web/src/content/…` and `@web/public/assets/…` via API middleware.
+- `@shared` (`@smc/shared`) - shared helpers (`icons`, `months`, `slug`), imported as `@smc/shared/<name>`.
+- `@scripts/` - repo-root tooling (content validation, blurhash/sprite generation, Playwright screenshot suite).
 
 ### Architecture & Data Flow
 
@@ -96,7 +96,7 @@ npm run format     # format all files with Prettier
 
 ### Local task board
 
-`board.html` at the repo root is a zero-dependency task board (Backlog / In Progress / Done) for tracking small chores — open it directly in a browser. Cards persist in the browser's `localStorage`; use Export/Import JSON for backups. It is a local dev tool: not deployed, not part of the build.
+`board.html` at the repo root is a zero-dependency task board (Backlog / In Progress / Done) for tracking small chores, open it directly in a browser. Cards persist in the browser's `localStorage`; use Export/Import JSON for backups. It is a local dev tool: not deployed, not part of the build.
 
 ## 🚀 Deployment
 

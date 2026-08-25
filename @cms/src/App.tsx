@@ -261,7 +261,7 @@ export const App = () => {
           const lines = Object.entries(err.payload.usages)
             .map(([id, places]) => `${id}: ${places.join(", ")}`)
             .join(" | ");
-          setAuthorsError(`Cannot delete — still referenced by ${lines}`);
+          setAuthorsError(`Cannot delete - still referenced by ${lines}`);
         } else {
           setAuthorsError(String(err instanceof ApiError ? err.message : err));
         }
@@ -421,7 +421,7 @@ export const App = () => {
           const lines = Object.entries(err.payload.usages)
             .map(([id, places]) => `${id} → ${places.join(", ")}`)
             .join(" | ");
-          setAuthorsError(`Cannot delete — still referenced: ${lines}`);
+          setAuthorsError(`Cannot delete - still referenced: ${lines}`);
         } else {
           setAuthorsError(String(err instanceof ApiError ? err.message : err));
         }
@@ -672,7 +672,7 @@ export const App = () => {
                       Validation{" "}
                       {activeIssues.some((i) => i.severity === "error")
                         ? saveIssues
-                          ? "errors — nothing was written"
+                          ? "errors - nothing was written"
                           : "errors"
                         : "warnings"}
                       <span
@@ -697,7 +697,7 @@ export const App = () => {
                   <ul className="max-h-44 space-y-1 overflow-y-auto">
                     {activeIssues.map((issue, i) => (
                       <li key={i} className="font-mono">
-                        [{issue.entry >= 0 ? issue.entry : "—"}] {issue.field}: {issue.message}
+                        [{issue.entry >= 0 ? issue.entry : "-"}] {issue.field}: {issue.message}
                       </li>
                     ))}
                   </ul>
@@ -713,7 +713,7 @@ export const App = () => {
                     {selected && counterpartMissing && (
                       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-900/60 bg-amber-950/30 p-3 text-xs text-amber-300">
                         <span>
-                          No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot; — this entry is
+                          No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry is
                           invisible in {otherLang.toUpperCase()}.
                         </span>
                         <Button onClick={() => void createTranslation(selected)}>
@@ -729,7 +729,7 @@ export const App = () => {
                     )}
                     {selectedHasErrors && (
                       <p className="mt-3 text-xs text-red-400">
-                        This entry has validation errors — see the banner above.
+                        This entry has validation errors - see the banner above.
                       </p>
                     )}
                   </>

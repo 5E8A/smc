@@ -129,7 +129,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
     const valid = files.filter(isUploadable);
     setSkippedCount(files.length - valid.length);
     if (valid.length === 0) {
-      lib.setNotice({ kind: "err", text: "No supported files — use png, jpg or webp" });
+      lib.setNotice({ kind: "err", text: "No supported files - use png, jpg or webp" });
       return;
     }
     setUploadDir(currentTargetDir);
@@ -280,7 +280,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
         }
         lib.setNotice({
           kind: "ok",
-          text: `Renamed to ${dirLabel(newRel)}${result.rewritten ? ` — updated ${result.rewritten} reference(s) in content` : ""}`,
+          text: `Renamed to ${dirLabel(newRel)}${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
         });
         lib.runLqip();
       }
@@ -312,7 +312,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
       const result = await renameImage(filePrompt.path, name);
       lib.setNotice({
         kind: "ok",
-        text: `Renamed to ${name}.webp${result.rewritten ? ` — updated ${result.rewritten} reference(s) in content` : ""}`,
+        text: `Renamed to ${name}.webp${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
       });
       lib.runLqip();
       await lib.refresh();
@@ -586,7 +586,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
               <p className="text-xs text-zinc-600">
                 {images === null
                   ? ""
-                  : `Click to browse, or drop files${selectedDir === "all" ? "" : ` into ${dirLabel(selectedDir)}`} — converts to webp`}
+                  : `Click to browse, or drop files${selectedDir === "all" ? "" : ` into ${dirLabel(selectedDir)}`} - converts to webp`}
               </p>
             </button>
           ) : (
@@ -724,7 +724,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
           {skippedCount > 0 && (
             <p className="text-xs text-amber-400">
-              Skipped {skippedCount} unsupported file{skippedCount > 1 ? "s" : ""} — png, jpg or webp only
+              Skipped {skippedCount} unsupported file{skippedCount > 1 ? "s" : ""} - png, jpg or webp only
             </p>
           )}
 
@@ -770,7 +770,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           </div>
 
           <p className="text-[11px] text-zinc-600">
-            Files convert to webp on save into public/assets/content — blurhash regenerates afterwards.
+            Files convert to webp on save into public/assets/content - blurhash regenerates afterwards.
           </p>
 
           <div className="flex justify-end gap-2 pt-1">
@@ -801,7 +801,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           ) : imgRefs && Object.keys(imgRefs).length > 0 ? (
             <>
               <p className="flex items-center gap-1.5 text-sm font-semibold text-red-400">
-                <WarningCircleIcon size={15} /> Deletion blocked — still referenced by content:
+                <WarningCircleIcon size={15} /> Deletion blocked - still referenced by content:
               </p>
               {usagesList(imgRefs)}
               <p className="text-xs text-zinc-500">Remove these references first, then delete the image.</p>
@@ -817,7 +817,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
                 Permanently delete <span className="font-mono text-white">{imgDelete.path}</span>?
               </p>
               <p className="rounded-md border border-red-900/60 bg-red-950/40 p-2.5 text-xs text-red-300">
-                No references found — safe from the site&apos;s perspective, but the file will be gone forever. This
+                No references found, so it's safe from the site&apos;s perspective, but the file will be gone forever. This
                 action cannot be undone.
               </p>
               <div className="flex justify-end gap-2">
@@ -844,7 +844,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           ) : dirRefs && Object.keys(dirRefs).length > 0 ? (
             <>
               <p className="flex items-center gap-1.5 text-sm font-semibold text-red-400">
-                <WarningCircleIcon size={15} /> Deletion blocked — images in this folder are still referenced:
+                <WarningCircleIcon size={15} /> Deletion blocked - images in this folder are still referenced:
               </p>
               {usagesList(dirRefs)}
               <div className="flex justify-end">

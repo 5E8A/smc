@@ -51,7 +51,7 @@ function validateModList(data: unknown): ValidationResult {
       }
       const prev = seenSlugs.get(slug);
       if (prev != null) {
-        issues.push({ entry: i, field: "slugs", message: `slug "${slug}" already in column "${prev}" — it will repeat`, severity: "warning" });
+        issues.push({ entry: i, field: "slugs", message: `slug "${slug}" already in column "${prev}" - it will repeat`, severity: "warning" });
       }
       seenSlugs.set(slug, col.key);
     });

@@ -308,7 +308,7 @@
     if (item.note) lines.push(`Note: ${item.note}`);
     lines.push(`Column: ${col ? col.label : item.col}`);
     const text = lines.join("\n");
-    writeClipboard(text).then((ok) => status(ok ? "Copied to clipboard." : "Copy failed — select manually."));
+    writeClipboard(text).then((ok) => status(ok ? "Copied to clipboard." : "Copy failed, select manually."));
   }
 
   async function writeClipboard(text) {

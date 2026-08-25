@@ -271,7 +271,7 @@ export const PreviewWindow = ({ entryPath, onClose }: { entryPath: string | null
         <Button
           variant={locked ? "primary" : "ghost"}
           className="px-2 py-1 text-xs"
-          title={locked ? "Aspect ratio locked — click to unlock" : "Lock aspect ratio while resizing"}
+          title={locked ? "Aspect ratio locked - click to unlock" : "Lock aspect ratio while resizing"}
           onClick={toggleLock}
         >
           <FrameCornersIcon size={12} />

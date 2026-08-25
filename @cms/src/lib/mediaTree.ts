@@ -30,5 +30,5 @@ export const buildDirTree = (dirs: string[]): DirNode[] => {
   return roots;
 };
 
-/** Label for a relative dir — root shows as /content. */
+/** Label for a relative dir - root shows as /content. */
 export const dirLabel = (dir: string): string => (dir ? `/content/${dir}` : "/content");

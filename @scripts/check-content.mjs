@@ -24,7 +24,7 @@ const fail = (label, issues) => {
   for (const issue of issues) {
     if (issue.severity === "error") errors += 1;
     else warnings += 1;
-    const line = `[${label}] [${issue.entry >= 0 ? issue.entry : "—"}] ${issue.field}: ${issue.message}`;
+    const line = `[${label}] [${issue.entry >= 0 ? issue.entry : "-"}] ${issue.field}: ${issue.message}`;
     if (issue.severity === "error") console.error(`error   ${line}`);
     else console.warn(`warn    ${line}`);
   }
@@ -37,7 +37,7 @@ for (const kind of KINDS) {
     try {
       data = JSON.parse(readFileSync(path.join(root, "@web", "src", "content", lang, `${kind}.json`), "utf8"));
     } catch (err) {
-      console.error(`error   ${label}: cannot parse JSON — ${err.message}`);
+      console.error(`error   ${label}: cannot parse JSON - ${err.message}`);
       errors += 1;
       continue;
     }
