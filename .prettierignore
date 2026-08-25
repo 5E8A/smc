@@ -3,3 +3,4 @@ node_modules
 public
 package-lock.json
 @web/src/routeTree.gen.ts
+@web/src/data/mods.ts
