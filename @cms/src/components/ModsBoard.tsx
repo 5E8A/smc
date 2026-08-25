@@ -12,6 +12,7 @@ import {
 import { getModList, putModList } from "../api";
 import type { Issue, ModListColumn } from "../types";
 import { runSsePost } from "../lib/sse";
+import { useRunConsole } from "../lib/runConsole";
 import { Button } from "./fields";
 
 interface ModrinthProject {
@@ -89,8 +90,8 @@ export function ModsBoard() {
   const [justSaved, setJustSaved] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
-  const [logLines, setLogLines] = useState<string[]>([]);
   const [meta, setMeta] = useState<Map<string, ModrinthProject>>(new Map());
+  const runConsole = useRunConsole();
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   const [drag, setDrag] = useState<{ slug: string; from: string } | null>(null);
   const [dragOver, setDragOver] = useState<{ col: string; index: number } | null>(null);
@@ -224,6 +225,7 @@ export function ModsBoard() {
   const save = useCallback(async () => {
     if (saving || !columns) return;
     setSaving(true);
+    setError(null);
     setIssues(null);
     try {
       const result = await putModList(columns);
@@ -243,8 +245,9 @@ export function ModsBoard() {
 
   const sync = useCallback(() => {
     if (syncing) return;
-    setLogLines([]);
+    runConsole.begin("mods");
     setSyncing(true);
+    setError(null);
     setSyncStatus(null);
     const controller = new AbortController();
     abortRef.current = controller;
@@ -253,8 +256,13 @@ export function ModsBoard() {
         await runSsePost(
           "/api/mods/sync",
           {
-            onLog: (line) => setLogLines((prev) => [...prev, ...line.split("\n").filter(Boolean)]),
+            onLog: (line) => {
+              for (const l of line.split("\n")) {
+                if (l) runConsole.append("mods", l);
+              }
+            },
             onDone: (status) => {
+              runConsole.finish("mods", status === "ok" ? "ok" : `exit ${status}`);
               setSyncStatus(status === "ok" ? "Pipeline finished" : `Pipeline ${status}`);
               setSyncing(false);
               getModList()
@@ -269,13 +277,16 @@ export function ModsBoard() {
           controller.signal
         );
       } catch (err) {
-        if (!controller.signal.aborted) setError(err instanceof Error ? err.message : String(err));
+        if (!controller.signal.aborted) {
+          runConsole.finish("mods", "error");
+          setError(err instanceof Error ? err.message : String(err));
+        }
         setSyncing(false);
       } finally {
         if (abortRef.current === controller) abortRef.current = null;
       }
     })();
-  }, [syncing, refreshMeta]);
+  }, [syncing, refreshMeta, runConsole]);
 
   if (error && !columns) return <div className="m-6 rounded-md bg-red-950/50 p-4 text-sm text-red-300">{error}</div>;
   if (!columns) {
@@ -303,6 +314,20 @@ export function ModsBoard() {
           Drag to reorder or move between columns · save writes @scripts/mod-list.json
         </span>
       </div>
+
+      {error && (
+        <div className="flex items-start justify-between gap-3 rounded-md border border-red-900/60 bg-red-950/40 p-3 text-xs text-red-300">
+          <span className="font-mono break-all">{error}</span>
+          <button
+            type="button"
+            title="Dismiss"
+            onClick={() => setError(null)}
+            className="shrink-0 rounded p-0.5 text-red-400 hover:text-red-200"
+          >
+            <XIcon size={12} />
+          </button>
+        </div>
+      )}
 
       {issues && issues.length > 0 && (
         <div
@@ -540,20 +565,6 @@ export function ModsBoard() {
           );
         })}
       </div>
-
-      {(logLines.length > 0 || syncing) && (
-        <div className="rounded-md border border-zinc-800 bg-black/60 p-3">
-          <div className="mb-1.5 text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Sync output</div>
-          <pre className="max-h-64 overflow-y-auto whitespace-pre-wrap text-[11px] leading-relaxed text-zinc-400">
-            {logLines.map((line, i) => (
-              <span key={i} className={line.includes("⚠") || line.startsWith("✗") ? "text-amber-400" : ""}>
-                {line}
-                {"\n"}
-              </span>
-            ))}
-          </pre>
-        </div>
-      )}
     </div>
   );
 }

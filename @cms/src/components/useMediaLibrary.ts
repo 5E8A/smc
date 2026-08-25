@@ -4,14 +4,16 @@ import type { EncodeOptions } from "../api";
 import type { ImagesPayload } from "../types";
 import { loadMedia, type ImageNotice } from "../lib/mediaCache";
 import { runSsePost } from "../lib/sse";
+import { useRunConsole } from "../lib/runConsole";
 
 export function useMediaLibrary() {
   const [media, setMedia] = useState<ImagesPayload | null>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<string | null>(null);
   const [notice, setNotice] = useState<ImageNotice | null>(null);
-  const [logLines, setLogLines] = useState<string[]>([]);
   const [lqipRunning, setLqipRunning] = useState(false);
+  const runConsole = useRunConsole();
+  const [lqipStale, setLqipStale] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
@@ -32,7 +34,7 @@ export function useMediaLibrary() {
 
   const runLqip = useCallback(() => {
     if (lqipRunning) return;
-    setLogLines([]);
+    runConsole.begin("lqip");
     setLqipRunning(true);
     const controller = new AbortController();
     abortRef.current = controller;
@@ -41,23 +43,30 @@ export function useMediaLibrary() {
         await runSsePost(
           "/api/lqip",
           {
-            onLog: (line) => setLogLines((prev) => [...prev, line]),
-            onDone: () => finishLqip(),
+            onLog: (line) => {
+              for (const l of line.split("\n")) {
+                if (l) runConsole.append("lqip", l);
+              }
+            },
+            onDone: (status) => {
+              runConsole.finish("lqip", status === "ok" ? "ok" : `exit ${status}`);
+              setLqipStale(status !== "ok");
+              finishLqip();
+            },
           },
           controller.signal
         );
       } catch (err) {
-        setLqipRunning(false);
         if (!controller.signal.aborted) {
+          runConsole.finish("lqip", "error");
           setNotice({ kind: "err", text: err instanceof Error ? err.message : String(err) });
         }
+        setLqipRunning(false);
       } finally {
         if (abortRef.current === controller) abortRef.current = null;
       }
     })();
-  }, [lqipRunning, finishLqip]);
-
-  const clearLog = useCallback(() => setLogLines([]), []);
+  }, [lqipRunning, finishLqip, runConsole]);
 
   const uploadFiles = useCallback(
     async (files: File[], dir: string, encode?: EncodeOptions): Promise<boolean> => {
@@ -76,9 +85,9 @@ export function useMediaLibrary() {
           kind: "ok",
           text: `Converted ${files.length} file${files.length > 1 ? "s" : ""} to public/assets/content${
             dir ? `/${dir}` : ""
-          }/ - regenerating blurhash…`,
+          }/`,
         });
-        runLqip();
+        setLqipStale(true);
         return true;
       } catch (err) {
         setNotice({ kind: "err", text: err instanceof Error ? err.message : String(err) });
@@ -88,7 +97,7 @@ export function useMediaLibrary() {
         setProgress(null);
       }
     },
-    [refresh, runLqip]
+    [refresh]
   );
 
   return {
@@ -100,9 +109,9 @@ export function useMediaLibrary() {
     notice,
     setNotice,
     lqipRunning,
-    logLines,
+    lqipStale,
+    setLqipStale,
     runLqip,
-    clearLog,
     refresh,
     uploadFiles,
   };
