@@ -137,7 +137,7 @@ export const MarkdownEditorPanel = ({ id, value, onChange }: MarkdownEditorPanel
           className="min-h-[24rem] font-mono text-xs leading-5"
         />
         {mode === "split" && (
-          <div className="min-h-[24rem] overflow-y-auto rounded-md border border-zinc-800 bg-black/40 p-4">
+          <div className="min-h-[24rem] overflow-y-auto scrollbar-gutter-stable rounded-md border border-zinc-800 bg-black/40 p-4">
             <MarkdownPreview content={value} />
           </div>
         )}
