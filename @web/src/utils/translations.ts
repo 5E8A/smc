@@ -110,6 +110,12 @@ export const translations = {
       description: "The page you're looking for doesn't exist or has been moved.",
       back_home: "Back to Home",
     },
+    error_fallback: {
+      title: "Something went wrong",
+      description: "An unexpected error occurred while rendering this page.",
+      reload: "Reload",
+      home: "Home",
+    },
     unavailable: {
       title: "Not available in English yet",
       description: "This content hasn't been translated into English, but you can read it in Polish.",
@@ -234,6 +240,12 @@ export const translations = {
       title: "Nie Znaleziono Strony",
       description: "Strona, której szukasz, nie istnieje lub została przeniesiona.",
       back_home: "Wróć na Stronę Główną",
+    },
+    error_fallback: {
+      title: "Coś poszło nie tak",
+      description: "Wystąpił nieoczekiwany błąd podczas renderowania tej strony.",
+      reload: "Odśwież",
+      home: "Strona Główna",
     },
     unavailable: {
       title: "Nie ma tego jeszcze po polsku",
