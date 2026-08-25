@@ -18,12 +18,17 @@ import {
 import { clampMaxWidth, clampQuality } from "./images.ts";
 import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
 import { loadModList, saveModList, runSyncMods } from "./mods.ts";
+import { runIconsSync } from "./icons.ts";
 import { readGitStatus, streamGitDeploy, streamGitPull } from "./git.ts";
 
 const MAX_JSON_BODY = 5 * 1024 * 1024;
 const MAX_UPLOAD = 26 * 1024 * 1024;
 
-const ALLOWED_HOSTS = new Set(["127.0.0.1:4000", "localhost:4000"]);
+export const CMS_PORT = 4000;
+
+const ALLOWED_HOSTS = new Set([`127.0.0.1:${CMS_PORT}`, `localhost:${CMS_PORT}`]);
+const ALLOWED_ORIGINS = new Set([`http://127.0.0.1:${CMS_PORT}`, `http://localhost:${CMS_PORT}`]);
+const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
 async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (!ALLOWED_HOSTS.has((req.headers.host ?? "").toLowerCase())) {
@@ -31,6 +36,12 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
   const url = new URL(req.url ?? "/", "http://localhost");
   const method = req.method ?? "GET";
+  if (MUTATING_METHODS.has(method)) {
+    const origin = req.headers.origin;
+    if (origin !== undefined && !ALLOWED_ORIGINS.has(origin)) {
+      return void sendJson(res, 403, { error: "cross-origin request rejected" });
+    }
+  }
   const kind = url.searchParams.get("kind");
   const lang = url.searchParams.get("lang");
 
@@ -299,6 +310,15 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         return void res.end();
       }
       runSyncMods(res);
+      return;
+    }
+
+    case "/icons/sync": {
+      if (method !== "POST") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      runIconsSync(res, { force: url.searchParams.get("force") === "1" });
       return;
     }
 

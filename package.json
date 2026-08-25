@@ -42,6 +42,7 @@
     "generate-lqip": "npm -w @smc/web run generate-lqip",
     "check-content": "npm -w @smc/web run check-content",
     "sync-mods": "npm -w @smc/web run sync-mods",
+    "sync-icons": "node @scripts/sync-icons.mjs",
     "lint": "npm run lint --workspaces && oxlint @scripts/ --type-aware --type-check",
     "lint:fix": "npm run lint:fix --workspaces && oxlint --fix @scripts/ --type-aware",
     "format": "prettier --write .",

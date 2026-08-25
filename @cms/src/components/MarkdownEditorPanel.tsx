@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import { EyeIcon, ImageIcon, ImagesIcon, PencilSimpleIcon } from "@phosphor-icons/react";
-import { KNOWN_ICONS } from "@smc/shared/icons";
+import { EyeIcon, ImageIcon, ImagesIcon, PencilSimpleIcon, SparkleIcon } from "@phosphor-icons/react";
 import { useImagePicker } from "./useImagePicker";
 import { MarkdownPreview } from "./MarkdownPreview";
+import { IconPicker } from "./IconPicker";
+import { useIconsSync } from "../lib/useIconsSync";
 import { Button, TextArea } from "./fields";
 
 interface MarkdownEditorPanelProps {
@@ -15,7 +16,9 @@ const CAROUSEL_IMAGE_LINE = /^!\[[^\]]*\]\([^)\s]+\)$/;
 
 export const MarkdownEditorPanel = ({ id, value, onChange }: MarkdownEditorPanelProps) => {
   const [mode, setMode] = useState<"split" | "write">("split");
+  const [iconPickerOpen, setIconPickerOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const syncIcons = useIconsSync();
 
   const insert = (snippet: string) => {
     const el = textareaRef.current;
@@ -72,22 +75,14 @@ export const MarkdownEditorPanel = ({ id, value, onChange }: MarkdownEditorPanel
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <h3 className="mr-auto text-xs font-semibold tracking-wider text-zinc-500 uppercase">Content (markdown)</h3>
 
-        <select
-          value=""
-          onChange={(e) => {
-            if (e.target.value) insert(`:${e.target.value}:`);
-            e.target.value = "";
-          }}
-          className="cursor-pointer rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-zinc-300 outline-none hover:border-green-500"
-          title="Insert icon placeholder at cursor"
+        <Button
+          variant="default"
+          className="px-2.5 py-1 text-xs"
+          onClick={() => setIconPickerOpen(true)}
+          title="Insert an icon placeholder at cursor"
         >
-          <option value="">Insert icon…</option>
-          {KNOWN_ICONS.map((name) => (
-            <option key={name} value={name}>
-              :{name}:
-            </option>
-          ))}
-        </select>
+          <SparkleIcon size={13} /> Icon
+        </Button>
 
         <Button
           variant="default"
@@ -142,6 +137,16 @@ export const MarkdownEditorPanel = ({ id, value, onChange }: MarkdownEditorPanel
           </div>
         )}
       </div>
+
+      {iconPickerOpen && (
+        <IconPicker
+          onPick={(name) => {
+            insert(`:${name}:`);
+            syncIcons();
+          }}
+          onClose={() => setIconPickerOpen(false)}
+        />
+      )}
 
       {picker}
     </div>

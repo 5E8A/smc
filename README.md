@@ -1,4 +1,6 @@
-# <a href=https://5e8a.github.io/smc/#>SMC - Seba Modding Community Website</a>
+# <a href=https://5e8a.github.io/smc/en>SMC - Seba Modding Community Website</a>
+
+![pages](https://github.com/5e8a/smc/actions/workflows/deploy.yml/badge.svg)
 
 The official blog and documentation hub for the **Fabric Boosted** Minecraft modpack, created by 5E8A.
 

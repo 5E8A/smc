@@ -32,6 +32,7 @@ import { GitView } from "./components/GitView";
 import { PreviewWindow } from "./components/PreviewWindow";
 import { RunConsole } from "./components/RunConsole";
 import { invalidateAuthorCache } from "./lib/authorCache";
+import { useIconsSync } from "./lib/useIconsSync";
 import { Button } from "./components/fields";
 
 type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy";
@@ -107,6 +108,7 @@ export const App = () => {
   const [saveIssues, setSaveIssues] = useState<Issue[] | null>(null);
   const [justSaved, setJustSaved] = useState(false);
   const inflight = useRef<Set<string>>(new Set());
+  const syncIcons = useIconsSync();
 
   const [authors, setAuthors] = useState<Author[] | null>(null);
   const [authorsSnapshot, setAuthorsSnapshot] = useState("");
@@ -289,6 +291,7 @@ export const App = () => {
         });
         setJustSaved(true);
         window.setTimeout(() => setJustSaved(false), 2000);
+        syncIcons();
       }
       setSaveIssues(result.issues.length > 0 ? result.issues : null);
     } catch (err) {
@@ -300,7 +303,7 @@ export const App = () => {
     } finally {
       setSaving(false);
     }
-  }, [saving, tab, authors, authorsSnapshot, tabs, key, lang]);
+  }, [saving, tab, authors, authorsSnapshot, tabs, key, lang, syncIcons]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

@@ -9,7 +9,7 @@ import {
   type Kind,
   type Lang,
 } from "./util.ts";
-import { isKnownIcon } from "@smc/shared/icons";
+import { isKnownIcon } from "@smc/shared/icon-catalog";
 import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import { SLUG_PATTERN } from "@smc/shared/slug";
 import path from "path";
@@ -212,7 +212,7 @@ function validateMarkdownContent(index: number, content: unknown, issues: Issue[
     issues.push({
       entry: index,
       field: "content",
-      message: `Unknown icon placeholders (not rendered by the site): ${[...unknownIcons].join(", ")}`,
+      message: `Unknown icon placeholders (not in the Phosphor icon set): ${[...unknownIcons].join(", ")}`,
       severity: "warning",
     });
   }

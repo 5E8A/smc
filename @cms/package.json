@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     "./server/store": "./server/store.ts",
-    "./server/util": "./server/util.ts"
+    "./server/util": "./server/util.ts",
+    "./server/icons": "./server/icons.ts"
   },
   "scripts": {
     "dev": "vite",
@@ -13,6 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@phosphor-icons/core": "^2.1.1",
     "@phosphor-icons/react": "^2.1.10",
     "@smc/shared": "*",
     "react": "^19.2.8",

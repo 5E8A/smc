@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@utility icon-inline {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
 html {
   background-color: var(--color-zinc-950);
 }

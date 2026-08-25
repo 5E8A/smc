@@ -85,9 +85,53 @@ try {
   }
 }
 
+// --- icon map gate -----------------------------------------------------------
+// Every :XxxIcon: placeholder in content must exist in the generated web icon
+// map (@web/src/components/icon-map.generated.ts), otherwise the site renders
+// nothing for it. The CMS keeps the map in sync automatically; this gate
+// catches hand-edited JSON / fresh clones.
+const MARKER_PATTERN = /:([A-Z][A-Za-z]+Icon):/g;
+const usedIcons = new Set();
+for (const kind of KINDS) {
+  for (const lang of LANGS) {
+    try {
+      const text = readFileSync(path.join(root, "@web", "src", "content", lang, `${kind}.json`), "utf8");
+      for (const m of text.matchAll(MARKER_PATTERN)) usedIcons.add(m[1]);
+    } catch {
+      // JSON parse errors are already reported above
+    }
+  }
+}
+
+let mappedIcons = new Set();
+try {
+  const mapSource = readFileSync(path.join(root, "@web", "src", "components", "icon-map.generated.ts"), "utf8");
+  const bodyStart = mapSource.indexOf("= {");
+  const bodyEnd = mapSource.lastIndexOf("};");
+  if (bodyStart >= 0 && bodyEnd >= 0) {
+    mappedIcons = new Set(
+      [...mapSource.slice(bodyStart + 3, bodyEnd).matchAll(/\b([A-Z][A-Za-z]+Icon)\b/g)].map((m) => m[1])
+    );
+  }
+} catch {
+  console.error("error   icons: @web/src/components/icon-map.generated.ts is missing - run 'npm run sync-icons'");
+  errors += 1;
+}
+
+const unmapped = [...usedIcons].filter((name) => !mappedIcons.has(name)).sort();
+for (const name of unmapped) {
+  console.error(`error   icons: unmapped icon placeholder ":${name}:" - run 'npm run sync-icons'`);
+  errors += 1;
+}
+const stale = [...mappedIcons].filter((name) => !usedIcons.has(name)).sort();
+if (stale.length > 0) {
+  console.warn(`warn    icons: stale web icon map entries (${stale.join(", ")}) - prune with 'npm run sync-icons'`);
+  warnings += 1;
+}
+
 console.log(
   errors === 0 && warnings === 0
-    ? `check-content: ok (${KINDS.length * LANGS.length} files + authors)`
+    ? `check-content: ok (${KINDS.length * LANGS.length} files + authors, ${usedIcons.size} icons)`
     : `check-content: ${errors} error(s), ${warnings} warning(s)`
 );
 process.exit(errors === 0 ? 0 : 1);

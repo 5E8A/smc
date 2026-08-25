@@ -4,3 +4,7 @@ public
 package-lock.json
 @web/src/routeTree.gen.ts
 @web/src/data/mods.ts
+@web/src/data/blurhash.json
+@web/src/components/icon-map.generated.ts
+@cms/src/components/icon-map.generated.ts
+@shared/icon-catalog.ts

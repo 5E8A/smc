@@ -5,7 +5,9 @@
   "type": "module",
   "exports": {
     "./hue": "./hue.ts",
-    "./icons": "./icons.ts",
+    "./icon-catalog": "./icon-catalog.ts",
+    "./icon-search": "./icon-search.ts",
+    "./markdown": "./markdown.ts",
     "./months": "./months.ts",
     "./slug": "./slug.ts"
   },
