@@ -11,6 +11,7 @@ import {
 } from "./util.ts";
 import { isKnownIcon } from "@smc/shared/icons";
 import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
+import { SLUG_PATTERN } from "@smc/shared/slug";
 import path from "path";
 
 export interface LocalizedText {
@@ -346,6 +347,13 @@ function validateCommonFields(entry: Record<string, unknown>, index: number, iss
   const slug = entry.slug;
   if (!asString(slug) || !slug.trim()) {
     issues.push({ entry: index, field: "slug", message: "Slug is required", severity: "error" });
+  } else if (!SLUG_PATTERN.test(slug)) {
+    issues.push({
+      entry: index,
+      field: "slug",
+      message: `Slug must be kebab-case (a-z, 0-9, hyphens only, e.g. "my-awesome-post-1"): "${slug}"`,
+      severity: "error",
+    });
   }
   if (!asString(entry.title) || !entry.title.trim()) {
     issues.push({ entry: index, field: "title", message: "Title is required", severity: "error" });
