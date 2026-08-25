@@ -108,7 +108,7 @@ const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave }: ChestSlotProps) 
       onMouseEnter={() => onHover(mod, index)}
       onMouseLeave={onLeave}
     >
-      <ModIcon slug={mod.slug} icon={mod.icon} alt={mod.title} size={g.modIconSize} className="rounded-none" sprite={sprite} spriteIndex={index} />
+      <ModIcon sprite={sprite} spriteIndex={index} size={g.modIconSize} className="rounded-none" />
       <div className="pointer-events-none absolute inset-0 border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100"></div>
     </a>
   );
