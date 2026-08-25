@@ -167,7 +167,10 @@ export const App = () => {
   }, [tab, authors]);
 
   const dirty = useMemo(() => !!state && state.snapshot !== JSON.stringify(state.entries), [state]);
-  const authorsDirty = useMemo(() => !!authors && authorsSnapshot !== JSON.stringify(authors), [authors, authorsSnapshot]);
+  const authorsDirty = useMemo(
+    () => !!authors && authorsSnapshot !== JSON.stringify(authors),
+    [authors, authorsSnapshot]
+  );
   const anyDirty =
     Object.values(tabs).some((t) => t && t.snapshot !== JSON.stringify(t.entries)) ||
     (authors !== null && authorsSnapshot !== JSON.stringify(authors));
@@ -454,7 +457,8 @@ export const App = () => {
   }, [state]);
 
   const viewDirty = tab === "authors" ? authorsDirty : dirty;
-  const paneReady = tab === "assets" || tab === "converter" || tab === "mods" ? true : tab === "authors" ? !!authors : !!state;
+  const paneReady =
+    tab === "assets" || tab === "converter" || tab === "mods" ? true : tab === "authors" ? !!authors : !!state;
   const selectedAuthor = selectedAuthorIndex !== null ? (authors?.[selectedAuthorIndex] ?? null) : null;
   const selectedHasErrors =
     !!selected &&
@@ -713,8 +717,8 @@ export const App = () => {
                     {selected && counterpartMissing && (
                       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-900/60 bg-amber-950/30 p-3 text-xs text-amber-300">
                         <span>
-                          No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry is
-                          invisible in {otherLang.toUpperCase()}.
+                          No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry
+                          is invisible in {otherLang.toUpperCase()}.
                         </span>
                         <Button onClick={() => void createTranslation(selected)}>
                           Create {otherLang.toUpperCase()} translation

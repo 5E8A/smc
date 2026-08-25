@@ -36,15 +36,12 @@ const postsByLanguage: Record<"en" | "pl", BlogPost[]> = {
 
 export const getPosts = (language: "en" | "pl"): BlogPost[] => postsByLanguage[language];
 
-export const getRecentPosts = (language: "en" | "pl", limit: number): BlogPost[] =>
-  getPosts(language).slice(0, limit);
+export const getRecentPosts = (language: "en" | "pl", limit: number): BlogPost[] => getPosts(language).slice(0, limit);
 
 export const getPostBySlug = (slug: string, language: "en" | "pl"): BlogPost | undefined =>
   getPosts(language).find((p) => p.slug === slug);
 
-export const getPostAvailability = (
-  slug: string,
-): { en: BlogPost | null; pl: BlogPost | null } => ({
+export const getPostAvailability = (slug: string): { en: BlogPost | null; pl: BlogPost | null } => ({
   en: getPostBySlug(slug, "en") ?? null,
   pl: getPostBySlug(slug, "pl") ?? null,
 });

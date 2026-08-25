@@ -21,10 +21,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     const newLangPrefix = `/${newLang}`;
 
     let newPath: string;
-    if (
-      location.pathname === currentLangPrefix ||
-      location.pathname === `${currentLangPrefix}/`
-    ) {
+    if (location.pathname === currentLangPrefix || location.pathname === `${currentLangPrefix}/`) {
       newPath = newLangPrefix;
     } else if (location.pathname.startsWith(`${currentLangPrefix}/`)) {
       newPath = `${newLangPrefix}${location.pathname.slice(currentLangPrefix.length)}`;

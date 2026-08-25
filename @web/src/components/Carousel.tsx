@@ -40,12 +40,7 @@ const Carousel = ({ images }: CarouselProps) => {
     <div className="group relative size-full">
       {/* Main Image Container */}
       <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
-        <SmartImage
-          src={images[currentIndex]}
-          alt={`Slide ${currentIndex + 1}`}
-          className="size-full"
-          priority="low"
-        />
+        <SmartImage src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="size-full" priority="low" />
 
         {/* Subtle gradient overlay at bottom for dots */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent"></div>

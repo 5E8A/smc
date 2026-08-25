@@ -53,7 +53,7 @@ const loadModList = () => {
         cat &&
         typeof cat.key === "string" &&
         Array.isArray(cat.slugs) &&
-        cat.slugs.every((s) => typeof s === "string" && s.length > 0),
+        cat.slugs.every((s) => typeof s === "string" && s.length > 0)
     );
   if (!valid) {
     console.error(`mod list must be an array of { key: string, slugs: string[] }`);
@@ -231,7 +231,9 @@ const generateModFile = (categories) => {
     lines.push(`    key: "${cat.key}",`);
     lines.push("    mods: [");
     for (const mod of cat.mods) {
-      lines.push(`      { title: ${JSON.stringify(mod.title)}, slug: ${JSON.stringify(mod.slug)}, description: ${JSON.stringify(mod.description)} },`);
+      lines.push(
+        `      { title: ${JSON.stringify(mod.title)}, slug: ${JSON.stringify(mod.slug)}, description: ${JSON.stringify(mod.description)} },`
+      );
     }
     lines.push("    ],");
     lines.push("  },");
@@ -287,12 +289,16 @@ const main = async () => {
     process.exit(1);
   }
 
-  const excluded = new Set([...permanent.entries()].filter(([, reason]) => reason === "not-found").map(([slug]) => slug));
+  const excluded = new Set(
+    [...permanent.entries()].filter(([, reason]) => reason === "not-found").map(([slug]) => slug)
+  );
   const warnings = [];
   for (const [slug, reason] of permanent) {
     if (reason === "not-found") warnings.push(`project not found - excluded from the site (${slug})`);
-    else if (reason === "no-icon") warnings.push(`project has no icon - placeholder tile + cube fallback used (${slug})`);
-    else if (reason === "icon-missing") warnings.push(`icon unavailable, no cached copy - placeholder tile used (${slug})`);
+    else if (reason === "no-icon")
+      warnings.push(`project has no icon - placeholder tile + cube fallback used (${slug})`);
+    else if (reason === "icon-missing")
+      warnings.push(`icon unavailable, no cached copy - placeholder tile used (${slug})`);
   }
 
   fs.mkdirSync(spritesDir, { recursive: true });
@@ -318,7 +324,9 @@ const main = async () => {
     ]);
     const fullSize = (await fs.promises.stat(path.join(spritesDir, `${cat.key}.webp`))).size;
     const phSize = (await fs.promises.stat(path.join(spritesDir, `${cat.key}.placeholder.webp`))).size;
-    console.log(`  ${cat.key}: ${slugs.length} tiles (${(fullSize / 1024).toFixed(1)} KB + placeholder ${(phSize / 1024).toFixed(1)} KB)`);
+    console.log(
+      `  ${cat.key}: ${slugs.length} tiles (${(fullSize / 1024).toFixed(1)} KB + placeholder ${(phSize / 1024).toFixed(1)} KB)`
+    );
     outputMods.push({
       key: cat.key,
       mods: slugs.map((slug) => ({

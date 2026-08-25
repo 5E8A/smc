@@ -2,4 +2,4 @@ dist
 node_modules
 public
 package-lock.json
-src/routeTree.gen.ts
+@web/src/routeTree.gen.ts

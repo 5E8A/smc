@@ -258,7 +258,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
   const openFolderPrompt = (prompt: FolderPrompt) => {
     setFolderPrompt(prompt);
-    setFolderName(prompt.mode === "rename" ? prompt.dir.split("/").pop() ?? "" : "");
+    setFolderName(prompt.mode === "rename" ? (prompt.dir.split("/").pop() ?? "") : "");
   };
 
   const submitFolderPrompt = async () => {
@@ -324,8 +324,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
     }
   };
 
-  const toggleCollapse = (rel: string) =>
-    setCollapsed((prev) => ({ ...prev, [rel]: !(prev[rel] ?? false) }));
+  const toggleCollapse = (rel: string) => setCollapsed((prev) => ({ ...prev, [rel]: !(prev[rel] ?? false) }));
 
   const renderDirNode = (node: DirNode, depth: number): ReactNode => {
     const active = selectedDir === node.rel;
@@ -580,9 +579,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
               className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-zinc-800 py-20 text-center transition-colors hover:border-green-600"
             >
               <UploadSimpleIcon size={34} className="text-zinc-600" />
-              <p className="text-sm font-medium text-zinc-400">
-                {images === null ? "Loading…" : "No images here yet"}
-              </p>
+              <p className="text-sm font-medium text-zinc-400">{images === null ? "Loading…" : "No images here yet"}</p>
               <p className="text-xs text-zinc-600">
                 {images === null
                   ? ""
@@ -631,11 +628,20 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
             {manageFolders && !lib.uploading && (
               <span className="ml-auto flex shrink-0 items-center gap-2">
                 {lib.logLines.length > 0 && !lib.lqipRunning && (
-                  <button type="button" onClick={lib.clearLog} className="text-[11px] text-zinc-600 hover:text-zinc-300">
+                  <button
+                    type="button"
+                    onClick={lib.clearLog}
+                    className="text-[11px] text-zinc-600 hover:text-zinc-300"
+                  >
                     clear log
                   </button>
                 )}
-                <Button variant="default" className="px-2 py-1 text-xs" onClick={lib.runLqip} disabled={lib.lqipRunning}>
+                <Button
+                  variant="default"
+                  className="px-2 py-1 text-xs"
+                  onClick={lib.runLqip}
+                  disabled={lib.lqipRunning}
+                >
                   <HashIcon size={12} />
                   {lib.lqipRunning ? "Generating…" : "Regenerate blurhash"}
                 </Button>
@@ -710,7 +716,11 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
       )}
 
       {pending && (
-        <ModalShell title={`Upload ${pending.length} file${pending.length > 1 ? "s" : ""}`} onClose={cancelStaging} wide>
+        <ModalShell
+          title={`Upload ${pending.length} file${pending.length > 1 ? "s" : ""}`}
+          onClose={cancelStaging}
+          wide
+        >
           <div className="flex flex-wrap gap-2">
             {pending.map((p) => (
               <div key={p.url} className="w-28">
@@ -817,8 +827,8 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
                 Permanently delete <span className="font-mono text-white">{imgDelete.path}</span>?
               </p>
               <p className="rounded-md border border-red-900/60 bg-red-950/40 p-2.5 text-xs text-red-300">
-                No references found, so it's safe from the site&apos;s perspective, but the file will be gone forever. This
-                action cannot be undone.
+                No references found, so it's safe from the site&apos;s perspective, but the file will be gone forever.
+                This action cannot be undone.
               </p>
               <div className="flex justify-end gap-2">
                 <Button variant="ghost" onClick={() => setImgDelete(null)}>
@@ -878,7 +888,13 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
       {folderPrompt && (
         <ModalShell
-          title={folderPrompt.mode === "create" ? (folderPrompt.parent ? `New subfolder in ${folderPrompt.parent}` : "New folder") : `Rename ${folderPrompt.dir}`}
+          title={
+            folderPrompt.mode === "create"
+              ? folderPrompt.parent
+                ? `New subfolder in ${folderPrompt.parent}`
+                : "New folder"
+              : `Rename ${folderPrompt.dir}`
+          }
           onClose={() => setFolderPrompt(null)}
         >
           <form

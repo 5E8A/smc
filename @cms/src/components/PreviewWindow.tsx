@@ -233,8 +233,7 @@ export const PreviewWindow = ({ entryPath, onClose }: { entryPath: string | null
     setFrameKey((k) => k + 1);
   };
 
-  const dotCls =
-    online === true ? "bg-green-500" : online === false ? "bg-red-500" : "animate-pulse bg-amber-400";
+  const dotCls = online === true ? "bg-green-500" : online === false ? "bg-red-500" : "animate-pulse bg-amber-400";
 
   return (
     <div
@@ -307,10 +306,7 @@ export const PreviewWindow = ({ entryPath, onClose }: { entryPath: string | null
         </div>
         {gesturing && <div className="absolute inset-0 z-10 cursor-move" />}
         {ctrlHeld && (
-          <div
-            title="Ctrl+scroll to zoom preview"
-            className="absolute inset-0 z-[15] cursor-zoom-in bg-green-500/5"
-          />
+          <div title="Ctrl+scroll to zoom preview" className="absolute inset-0 z-[15] cursor-zoom-in bg-green-500/5" />
         )}
         {online === false && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-zinc-950 p-6 text-center">

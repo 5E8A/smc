@@ -111,9 +111,7 @@ export function ModsBoard() {
       if (!slug || slugSet.has(slug)) return;
       searchTimers.current[key] = window.setTimeout(() => {
         searchProjects(slug)
-          .then((hits) =>
-            setDrafts((d) => (d[key] ? { ...d, [key]: { ...d[key], hits, searching: false } } : d))
-          )
+          .then((hits) => setDrafts((d) => (d[key] ? { ...d, [key]: { ...d[key], hits, searching: false } } : d)))
           .catch(() => setDrafts((d) => (d[key] ? { ...d, [key]: { ...d[key], searching: false } } : d)));
         setDrafts((d) => (d[key] ? { ...d, [key]: { ...d[key], hits: [], searching: true } } : d));
       }, 300);
@@ -208,7 +206,10 @@ export function ModsBoard() {
       if (!draft) return;
       const slug = slugFromInput(draft.input);
       if (!slug) {
-        setDrafts((d) => ({ ...d, [key]: { ...d[key], error: "Enter a modrinth slug or a modrinth.com/mod/<slug> URL" } }));
+        setDrafts((d) => ({
+          ...d,
+          [key]: { ...d[key], error: "Enter a modrinth slug or a modrinth.com/mod/<slug> URL" },
+        }));
         return;
       }
       if (slugSet.has(slug)) {
@@ -447,7 +448,12 @@ export function ModsBoard() {
                             const inside = typed !== "" && slugSet.has(typed);
                             return {
                               ...d,
-                              [col.key]: { ...cur, input: value, error: null, hits: inside || typed === "" ? [] : cur.hits },
+                              [col.key]: {
+                                ...cur,
+                                input: value,
+                                error: null,
+                                hits: inside || typed === "" ? [] : cur.hits,
+                              },
                             };
                           });
                           scheduleSearch(col.key, value);

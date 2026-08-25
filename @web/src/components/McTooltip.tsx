@@ -10,15 +10,7 @@ interface McTooltipProps {
   ref?: Ref<HTMLDivElement>;
 }
 
-const McTooltip = ({
-  title,
-  description,
-  scale = 2,
-  width,
-  className = "",
-  style,
-  ref,
-}: McTooltipProps) => {
+const McTooltip = ({ title, description, scale = 2, width, className = "", style, ref }: McTooltipProps) => {
   return (
     <div
       ref={ref}

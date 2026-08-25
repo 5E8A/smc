@@ -73,10 +73,7 @@ const useSpritePreload = () => {
   }, []);
 };
 
-type TooltipState =
-  | { kind: "slot"; mod: ModData }
-  | { kind: "tab"; col: number }
-  | null;
+type TooltipState = { kind: "slot"; mod: ModData } | { kind: "tab"; col: number } | null;
 
 interface ChestSlotProps {
   mod: ModData | null;
@@ -114,7 +111,19 @@ const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave }: ChestSlotProps) 
   );
 };
 
-const Chest = ({ title, mods, g, sprite, onHover }: { title: string; mods: ModData[]; g: Geometry; sprite: string; onHover: (mod: ModData | null) => void }) => {
+const Chest = ({
+  title,
+  mods,
+  g,
+  sprite,
+  onHover,
+}: {
+  title: string;
+  mods: ModData[];
+  g: Geometry;
+  sprite: string;
+  onHover: (mod: ModData | null) => void;
+}) => {
   const slots: (ModData | null)[] = Array.from({ length: 27 }, (_, i) => mods[i] ?? null);
 
   return (
@@ -254,7 +263,11 @@ const ModChest = () => {
         <McTooltip
           ref={tooltipRef}
           className="fixed z-100"
-          style={{ left: tooltipPos.left, top: tooltipPos.top, whiteSpace: tooltip.kind === "tab" ? "nowrap" : undefined }}
+          style={{
+            left: tooltipPos.left,
+            top: tooltipPos.top,
+            whiteSpace: tooltip.kind === "tab" ? "nowrap" : undefined,
+          }}
           scale={g.scale}
           width={tooltip.kind === "slot" ? 96 * g.scale : undefined}
           title={tooltip.kind === "slot" ? tooltip.mod.title : t.mods[chests[tooltip.col].key as keyof typeof t.mods]}

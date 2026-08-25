@@ -18,9 +18,7 @@ export const getWikiDocs = (language: "en" | "pl"): WikiDoc[] => docsByLanguage[
 export const getWikiDocBySlug = (slug: string, language: "en" | "pl"): WikiDoc | undefined =>
   getWikiDocs(language).find((d) => d.slug === slug);
 
-export const getWikiDocAvailability = (
-  slug: string,
-): { en: WikiDoc | null; pl: WikiDoc | null } => ({
+export const getWikiDocAvailability = (slug: string): { en: WikiDoc | null; pl: WikiDoc | null } => ({
   en: getWikiDocBySlug(slug, "en") ?? null,
   pl: getWikiDocBySlug(slug, "pl") ?? null,
 });

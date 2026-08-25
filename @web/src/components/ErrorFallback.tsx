@@ -5,8 +5,7 @@ import { translations } from "../utils/translations";
 // Must work without the language context (this replaces the whole tree on
 // error), so the language is read straight from the URL, like the router's
 // $lang segment does: /smc/pl/... is Polish, everything else is English.
-const errorLanguage = () =>
-  window.location.pathname.replace(/^\/smc/, "").startsWith("/pl") ? "pl" : "en";
+const errorLanguage = () => (window.location.pathname.replace(/^\/smc/, "").startsWith("/pl") ? "pl" : "en");
 
 const ErrorFallback = () => {
   const language = errorLanguage();

@@ -54,7 +54,10 @@ export function parseMultipart(body: Buffer, contentType: string | undefined): M
 
 const sanitizeRelPath = (raw: string): string | null => {
   if (/[\p{Cc}]/u.test(raw)) return null;
-  const parts = raw.replace(/\\/g, "/").split("/").filter((s) => s.length > 0);
+  const parts = raw
+    .replace(/\\/g, "/")
+    .split("/")
+    .filter((s) => s.length > 0);
   for (const p of parts) {
     if (p === "." || p === ".." || p.includes(":")) return null;
   }

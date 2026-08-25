@@ -57,9 +57,7 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
     const onScroll = () => {
       if (scrollTimeout.current) return;
 
-      const atBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 50;
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
 
       if (atBottom && headings.length > 0) {
         setActiveId(headings[headings.length - 1].id);
@@ -99,7 +97,9 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
 
   return (
     <nav className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border border-white/5 bg-mc-surface/60 p-4">
-      <p className="mb-3 border-b border-white/5 pb-2 text-xs font-bold tracking-wider text-white/60 uppercase">On this page</p>
+      <p className="mb-3 border-b border-white/5 pb-2 text-xs font-bold tracking-wider text-white/60 uppercase">
+        On this page
+      </p>
       <ul className="space-y-0.5">
         {headings.map((h) => {
           const indent = h.level - minLevel;

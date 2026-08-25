@@ -58,11 +58,7 @@ interface CacheEntry<T> {
   ts: number;
 }
 
-const createCachedGetter = <T>(
-  label: string,
-  loader: () => Promise<T>,
-  onError: () => T
-): (() => Promise<T>) => {
+const createCachedGetter = <T>(label: string, loader: () => Promise<T>, onError: () => T): (() => Promise<T>) => {
   let entry: CacheEntry<T> | null = null;
   let inflight: Promise<T> | null = null;
 

@@ -17,10 +17,7 @@ export const getAuthorById = (id: string): AuthorRecord => {
   return author;
 };
 
-export const resolveAuthor = (
-  id: string,
-  lang: "en" | "pl",
-): { name: string; avatar: string; bio: string } => {
+export const resolveAuthor = (id: string, lang: "en" | "pl"): { name: string; avatar: string; bio: string } => {
   const author = getAuthorById(id);
   return { name: author.name[lang], avatar: author.avatar, bio: author.bio[lang] };
 };

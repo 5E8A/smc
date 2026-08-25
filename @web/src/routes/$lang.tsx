@@ -13,10 +13,7 @@ export const Route = createFileRoute("/$lang")({
     const lang = params.lang as Language;
     const meta = translations[lang].meta;
     return {
-      meta: [
-        { title: meta.title },
-        { name: "description", content: meta.description },
-      ],
+      meta: [{ title: meta.title }, { name: "description", content: meta.description }],
     };
   },
 });

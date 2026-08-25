@@ -22,8 +22,7 @@
 //
 // Vendored from https://github.com/woltapp/blurhash (TypeScript/src), trimmed to decode only.
 
-const digitCharacters =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%*+,-.:;=?@[]^_{|}~";
+const digitCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%*+,-.:;=?@[]^_{|}~";
 
 const decode83 = (str: string): number => {
   let value = 0;
@@ -45,8 +44,7 @@ const linearTosRGB = (value: number): number => {
   return Math.trunc((1.055 * Math.pow(v, 1 / 2.4) - 0.055) * 255 + 0.5);
 };
 
-const signPow = (val: number, exp: number): number =>
-  (val < 0 ? -1 : 1) * Math.pow(Math.abs(val), exp);
+const signPow = (val: number, exp: number): number => (val < 0 ? -1 : 1) * Math.pow(Math.abs(val), exp);
 
 const decodeDC = (value: number): [number, number, number] => [
   sRGBToLinear(value >> 16),

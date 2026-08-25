@@ -41,17 +41,32 @@ function validateModList(data: unknown): ValidationResult {
     seenKeys.add(col.key);
 
     if (!Array.isArray(col.slugs)) {
-      issues.push({ entry: i, field: "slugs", message: 'slugs must be an array of strings ("[a-z0-9-]")', severity: "error" });
+      issues.push({
+        entry: i,
+        field: "slugs",
+        message: 'slugs must be an array of strings ("[a-z0-9-]")',
+        severity: "error",
+      });
       return;
     }
     col.slugs.forEach((slug, j) => {
       if (typeof slug !== "string" || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
-        issues.push({ entry: i, field: "slugs", message: `slugs[${j}] must be a non-empty lowercase slug`, severity: "error" });
+        issues.push({
+          entry: i,
+          field: "slugs",
+          message: `slugs[${j}] must be a non-empty lowercase slug`,
+          severity: "error",
+        });
         return;
       }
       const prev = seenSlugs.get(slug);
       if (prev != null) {
-        issues.push({ entry: i, field: "slugs", message: `slug "${slug}" already in column "${prev}" - it will repeat`, severity: "warning" });
+        issues.push({
+          entry: i,
+          field: "slugs",
+          message: `slug "${slug}" already in column "${prev}" - it will repeat`,
+          severity: "warning",
+        });
       }
       seenSlugs.set(slug, col.key);
     });

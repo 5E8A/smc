@@ -120,16 +120,13 @@ export const deleteImage = (path: string): Promise<{ ok: boolean }> =>
   request<{ ok: boolean }>(`/api/image?path=${encodeURIComponent(path)}`, { method: "DELETE" });
 
 export const renameImage = (path: string, newName: string): Promise<DirActionResult> =>
-  request<DirActionResult>(
-    `/api/image?path=${encodeURIComponent(path)}&name=${encodeURIComponent(newName)}`,
-    { method: "PATCH" }
-  );
+  request<DirActionResult>(`/api/image?path=${encodeURIComponent(path)}&name=${encodeURIComponent(newName)}`, {
+    method: "PATCH",
+  });
 
 export const getRefs = (paths: string[]): Promise<RefUsages> => {
   if (paths.length === 0) return Promise.resolve({});
-  return request<{ usages: RefUsages }>(`/api/refs?paths=${encodeURIComponent(paths.join(","))}`).then(
-    (r) => r.usages
-  );
+  return request<{ usages: RefUsages }>(`/api/refs?paths=${encodeURIComponent(paths.join(","))}`).then((r) => r.usages);
 };
 
 export interface ConvertOptions {

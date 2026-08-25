@@ -245,8 +245,7 @@ function collectStrings(node: unknown, where: string, out: StringHit[]): void {
   }
 }
 
-const referencesPath = (value: string, target: string): boolean =>
-  value === target || value.includes(`](${target})`);
+const referencesPath = (value: string, target: string): boolean => value === target || value.includes(`](${target})`);
 
 export function findRefs(publicPaths: string[]): Record<string, string[]> {
   const targets = [...new Set(publicPaths)];

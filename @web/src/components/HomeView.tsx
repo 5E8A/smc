@@ -57,17 +57,21 @@ const HomeView = () => {
   }, [failed]);
 
   const versionContent =
-    version !== null
-      ? version.version_number
-      : failed
-        ? "N/A"
-        : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
+    version !== null ? (
+      version.version_number
+    ) : failed ? (
+      "N/A"
+    ) : (
+      <LoadingVersionText key="loading-version" format={"0.0.0"} />
+    );
   const gameVersion =
-    version !== null
-      ? version.game_version
-      : failed
-        ? "N/A"
-        : <LoadingVersionText key="loading-game-version" format={"00.00.0"} />;
+    version !== null ? (
+      version.game_version
+    ) : failed ? (
+      "N/A"
+    ) : (
+      <LoadingVersionText key="loading-game-version" format={"00.00.0"} />
+    );
 
   return (
     <div className="flex flex-col">
@@ -168,7 +172,13 @@ const HomeView = () => {
           className="group hidden h-20 shrink-0 items-center justify-center text-mc-text-muted sm:flex"
           aria-label="Scroll down"
         >
-          <svg viewBox="0 0 22 22" width={50} height={50} shapeRendering="crispEdges" className="chevron-bounce chevron-arrow">
+          <svg
+            viewBox="0 0 22 22"
+            width={50}
+            height={50}
+            shapeRendering="crispEdges"
+            className="chevron-bounce chevron-arrow"
+          >
             <path d="M0 4h22v2H0ZM0 6h2v2H0ZM20 6h2v2H20ZM2 8h2v2H2ZM18 8h2v2H18ZM4 10h2v2H4ZM16 10h2v2H16ZM6 12h2v2H6ZM14 12h2v2H14ZM8 14h2v2H8ZM12 14h2v2H12ZM10 16h2v2H10Z" />
             <path d="M2 6h16v2H2Z" />
             <path d="M18 6h2v2H18ZM4 8h12v2H4ZM6 10h8v2H6ZM8 12h4v2H8Z" />

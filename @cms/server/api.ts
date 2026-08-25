@@ -2,7 +2,19 @@ import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "http";
 import { isKind, isLang, readRawBody, sendJson } from "./util.ts";
 import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } from "./store.ts";
-import { createDir, deleteDir, deleteImage, findRefs, listDirs, listImages, renameDir, renameImage, runLqip, saveUpload, serveAsset } from "./images.ts";
+import {
+  createDir,
+  deleteDir,
+  deleteImage,
+  findRefs,
+  listDirs,
+  listImages,
+  renameDir,
+  renameImage,
+  runLqip,
+  saveUpload,
+  serveAsset,
+} from "./images.ts";
 import { clampMaxWidth, clampQuality } from "./images.ts";
 import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
 import { loadModList, saveModList, runSyncMods } from "./mods.ts";
