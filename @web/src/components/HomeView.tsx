@@ -16,6 +16,9 @@ import ModChest from "./ModChest";
 const HomeView = () => {
   const { t, language } = useLanguage();
   const [version, setVersion] = useState<VersionData | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [fading, setFading] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const posts: BlogPost[] = getRecentPosts(language, 3);
 
   const langParams = { lang: language };
@@ -26,7 +29,11 @@ const HomeView = () => {
       if (done) return;
       done = true;
       const latestVersion = await getLatestVersionData("dOLVvHgi");
-      startTransition(() => setVersion(latestVersion));
+      if (latestVersion !== null) {
+        startTransition(() => setVersion(latestVersion));
+      } else {
+        setFailed(true);
+      }
     };
 
     const observer = typeof PerformanceObserver !== "undefined" ? new PerformanceObserver(() => fetchVersion()) : null;
@@ -39,10 +46,28 @@ const HomeView = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!failed) return;
+    const fadeTimer = setTimeout(() => setFading(true), 1200);
+    const hideTimer = setTimeout(() => setHidden(true), 1700);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [failed]);
+
   const versionContent =
-    version !== null ? version.version_number : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
+    version !== null
+      ? version.version_number
+      : failed
+        ? "N/A"
+        : <LoadingVersionText key="loading-version" format={"0.0.0"} />;
   const gameVersion =
-    version !== null ? version.game_version : <LoadingVersionText key="loading-game-version" format={"00.00.0"} />;
+    version !== null
+      ? version.game_version
+      : failed
+        ? "N/A"
+        : <LoadingVersionText key="loading-game-version" format={"00.00.0"} />;
 
   return (
     <div className="flex flex-col">
@@ -57,7 +82,11 @@ const HomeView = () => {
           </div>
 
           <div className="@container relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col items-start justify-center px-4 py-6 sm:px-6 sm:py-10 md:py-12 lg:px-8 lg:py-16">
-            <VersionBadge version={versionContent} gameVersion={gameVersion} />
+            {!hidden && (
+              <div className={`transition-opacity duration-500 ${fading ? "opacity-0" : ""}`}>
+                <VersionBadge version={versionContent} gameVersion={gameVersion} />
+              </div>
+            )}
 
             <h1
               className="font-banner text-[min(72px,20cqi)] leading-none tracking-tight text-white uppercase font-pixel-shadow @min-[640px]:text-[min(125px,10.8cqi)] @min-[640px]:whitespace-nowrap"
@@ -136,11 +165,14 @@ const HomeView = () => {
             e.preventDefault();
             document.getElementById("mods-showcase")?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="hidden h-20 shrink-0 items-center justify-center text-mc-text-muted transition-colors hover:text-mc-green-text sm:flex"
+          className="group hidden h-20 shrink-0 items-center justify-center text-mc-text-muted sm:flex"
           aria-label="Scroll down"
         >
-          <svg viewBox="0 0 22 22" width={50} height={50} fill="currentColor" className="chevron-pulse">
-            <path d="M16 10H17V9H18V7H16V8H15V9H14V10H13V11H12V12H10V11H9V10H8V9H7V8H6V7H4V9H5V10H6V11H7V12H8V13H9V14H10V15H12V14H13V13H14V12H15V11H16" />
+          <svg viewBox="0 0 22 22" width={50} height={50} shapeRendering="crispEdges" className="chevron-bounce chevron-arrow">
+            <path d="M0 4h22v2H0ZM0 6h2v2H0ZM20 6h2v2H20ZM2 8h2v2H2ZM18 8h2v2H18ZM4 10h2v2H4ZM16 10h2v2H16ZM6 12h2v2H6ZM14 12h2v2H14ZM8 14h2v2H8ZM12 14h2v2H12ZM10 16h2v2H10Z" />
+            <path d="M2 6h16v2H2Z" />
+            <path d="M18 6h2v2H18ZM4 8h12v2H4ZM6 10h8v2H6ZM8 12h4v2H8Z" />
+            <path d="M16 8h2v2H16ZM14 10h2v2H14ZM12 12h2v2H12ZM10 14h2v2H10Z" />
           </svg>
         </a>
       </div>

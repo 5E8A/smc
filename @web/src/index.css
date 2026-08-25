@@ -330,10 +330,10 @@
   }
 }
 
-@keyframes chevron-pulse {
+@keyframes chevron-bounce {
   0%,
   100% {
-    opacity: 0.35;
+    opacity: 0.65;
     transform: translateY(0);
   }
   50% {
@@ -346,8 +346,36 @@
   text-shadow: 2px 2px 0px #000000;
 }
 
-@utility chevron-pulse {
-  animation: chevron-pulse 2s ease-in-out infinite;
+@utility chevron-bounce {
+  animation: chevron-bounce 2s ease-in-out infinite;
+}
+
+.chevron-arrow {
+  --chev-outline: hsl(0 0% 0%);
+  --chev-highlight: hsl(0 0% 100%);
+  --chev-body: hsl(260 3% 55%);
+  --chev-shadow: hsl(270 2% 22%);
+}
+.chevron-arrow path {
+  transition: fill 120ms ease;
+}
+.chevron-arrow path:nth-of-type(1) {
+  fill: var(--chev-outline);
+}
+.chevron-arrow path:nth-of-type(2) {
+  fill: var(--chev-highlight);
+}
+.chevron-arrow path:nth-of-type(3) {
+  fill: var(--chev-body);
+}
+.chevron-arrow path:nth-of-type(4) {
+  fill: var(--chev-shadow);
+}
+.group:hover .chevron-arrow {
+  --chev-outline: hsl(236 91% 13%);
+  --chev-highlight: hsl(300 100% 100%);
+  --chev-body: hsl(235 39% 68%);
+  --chev-shadow: hsl(234 36% 34%);
 }
 
 /* Scrollbar */
