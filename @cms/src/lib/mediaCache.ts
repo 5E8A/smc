@@ -7,10 +7,17 @@ let cachePromise: Promise<ImagesPayload> | null = null;
 export const loadMedia = (force = false): Promise<ImagesPayload> => {
   if (!force && cache) return Promise.resolve(cache);
   if (!cachePromise || force) {
-    cachePromise = getMedia().then((payload) => {
-      cache = payload;
-      return payload;
-    });
+    const p = getMedia().then(
+      (payload) => {
+        cache = payload;
+        return payload;
+      },
+      (err) => {
+        if (cachePromise === p) cachePromise = null;
+        throw err;
+      }
+    );
+    cachePromise = p;
   }
   return cachePromise;
 };

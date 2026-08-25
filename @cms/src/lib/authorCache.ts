@@ -7,10 +7,17 @@ let cachePromise: Promise<Author[]> | null = null;
 export const loadAuthorsList = (force = false): Promise<Author[]> => {
   if (!force && cache) return Promise.resolve(cache);
   if (!cachePromise || force) {
-    cachePromise = getAuthors().then((a) => {
-      cache = a;
-      return a;
-    });
+    const p = getAuthors().then(
+      (a) => {
+        cache = a;
+        return a;
+      },
+      (err) => {
+        if (cachePromise === p) cachePromise = null;
+        throw err;
+      }
+    );
+    cachePromise = p;
   }
   return cachePromise;
 };
@@ -18,11 +25,6 @@ export const loadAuthorsList = (force = false): Promise<Author[]> => {
 export const invalidateAuthorCache = (): void => {
   cache = null;
   cachePromise = null;
-};
-
-export const setAuthorsCache = (authors: Author[]): void => {
-  cache = authors;
-  cachePromise = Promise.resolve(authors);
 };
 
 export const getCachedAuthors = (): Author[] | null => cache;
