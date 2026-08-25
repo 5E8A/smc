@@ -99,6 +99,42 @@
       .toolbar .spacer {
         flex: 1;
       }
+      .inject-panel {
+        margin-top: 8px;
+        padding: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .inject-panel textarea {
+        width: 100%;
+        min-height: 110px;
+        padding: 8px 10px;
+        background: var(--surface-2);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font:
+          13px/1.5 ui-monospace,
+          "Cascadia Code",
+          monospace;
+        resize: vertical;
+      }
+      .inject-panel textarea:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      .inject-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .inject-hint {
+        align-self: center;
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 12px;
+      }
       .board {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -233,7 +269,22 @@
         <span class="spacer"></span>
         <button id="export-btn" type="button" title="Download board as JSON">Export</button>
         <button id="import-btn" type="button" title="Load board from JSON">Import</button>
+        <button id="inject-btn" type="button" title="Paste many cards at once">Inject</button>
         <input id="import-file" type="file" accept="application/json" hidden />
+      </div>
+
+      <div class="inject-panel" id="inject-panel" hidden>
+        <textarea
+          id="inject-text"
+          spellcheck="false"
+          placeholder='Paste a JSON array of { title, note?, col? } objects (same shape as the Export format) or one card per line as "title | note".'
+        ></textarea>
+        <div class="inject-actions">
+          <button id="inject-append-btn" class="primary" type="button">Append</button>
+          <button id="inject-replace-btn" type="button">Replace</button>
+          <button id="inject-close-btn" type="button">Close</button>
+          <span class="inject-hint">Append adds atop existing cards; Replace clears the board first.</span>
+        </div>
       </div>
 
       <div class="board" id="board"></div>
@@ -580,6 +631,80 @@
         } catch {
           status("Import failed: not a valid smc-board JSON.");
         }
+      });
+
+      // --- inject (bulk add) ---
+      const injectPanel = document.getElementById("inject-panel");
+      const injectText = document.getElementById("inject-text");
+
+      document.getElementById("inject-btn").addEventListener("click", () => {
+        if (!injectPanel.hidden) {
+          injectPanel.hidden = true;
+          return;
+        }
+        injectText.value = "";
+        injectPanel.hidden = false;
+        injectText.focus();
+      });
+      document.getElementById("inject-close-btn").addEventListener("click", () => {
+        injectPanel.hidden = true;
+      });
+
+      function parseInjected(text) {
+        const trimmed = text.trim();
+        if (!trimmed) return [];
+        if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+          let data;
+          try {
+            data = JSON.parse(trimmed);
+          } catch {
+            return null;
+          }
+          const arr = Array.isArray(data) ? data : [data];
+          return arr
+            .filter((x) => x && typeof x.title === "string" && x.title.trim())
+            .map((x) => ({
+              id: crypto.randomUUID(),
+              title: x.title.trim(),
+              note: typeof x.note === "string" && x.note.trim() ? x.note.trim() : null,
+              col: COLS.some((c) => c.id === x.col) ? x.col : "backlog",
+              createdAt: typeof x.createdAt === "number" ? x.createdAt : Date.now(),
+            }));
+        }
+        return trimmed
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .map((line) => {
+            const i = line.indexOf("|");
+            const [t, n] = i >= 0 ? [line.slice(0, i).trim(), line.slice(i + 1).trim()] : [line, ""];
+            return { id: crypto.randomUUID(), title: t, note: n || null, col: "backlog", createdAt: Date.now() };
+          });
+      }
+
+      function applyInjectable(parsed, replace) {
+        if (replace) state = parsed;
+        else state = [...state, ...parsed];
+        save();
+        render();
+        status(
+          `${replace ? "Replaced board with" : "Injected"} ${parsed.length} card${parsed.length === 1 ? "" : "s"}.`
+        );
+      }
+
+      document.getElementById("inject-append-btn").addEventListener("click", () => {
+        const parsed = parseInjected(injectText.value);
+        if (parsed === null) return status("Inject failed: not valid JSON.");
+        if (parsed.length === 0) return status("Nothing to inject - need at least one title.");
+        injectPanel.hidden = true;
+        applyInjectable(parsed, false);
+      });
+      document.getElementById("inject-replace-btn").addEventListener("click", () => {
+        const parsed = parseInjected(injectText.value);
+        if (parsed === null) return status("Inject failed: not valid JSON.");
+        if (parsed.length === 0) return status("Nothing to inject - need at least one title.");
+        injectPanel.hidden = true;
+        applyInjectable(parsed, true);
       });
 
       document.getElementById("clear-done").addEventListener("click", () => {
