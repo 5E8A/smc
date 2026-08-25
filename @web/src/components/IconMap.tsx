@@ -20,7 +20,7 @@ import {
   WarningIcon,
   WrenchIcon,
 } from "@phosphor-icons/react";
-import type { KnownIconName } from "../../shared/icons";
+import type { KnownIconName } from "@smc/shared/icons";
 
 const iconMap: Record<KnownIconName, React.ComponentType<{ className?: string }>> = {
   ArrowsClockwiseIcon,

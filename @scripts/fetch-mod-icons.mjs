@@ -4,8 +4,8 @@ import { fileURLToPath } from "url";
 import sharp from "sharp";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const iconsDir = path.join(root, "public", "assets", "mod-icons");
-const modsFile = path.join(root, "src", "data", "mods.ts");
+const iconsDir = path.join(root, "@web", "public", "assets", "mod-icons");
+const modsFile = path.join(root, "@web", "src", "data", "mods.ts");
 
 const MODRINTH_API = "https://api.modrinth.com/v2";
 const USER_AGENT = "SMCSite/fetch-mod-icons (https://github.com/5E8A/smc)";

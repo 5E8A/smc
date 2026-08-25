@@ -4,8 +4,8 @@ import sharp from "sharp";
 import { fileURLToPath } from "url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const iconsDir = path.join(root, "public", "assets", "mod-icons");
-const outDir = path.join(root, "public", "assets", "mod-sprites");
+const iconsDir = path.join(root, "@web", "public", "assets", "mod-icons");
+const outDir = path.join(root, "@web", "public", "assets", "mod-sprites");
 
 const SPRITE_COLS = 9;
 const TILE_FULL = 128;

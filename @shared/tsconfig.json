@@ -4,13 +4,11 @@
     "module": "ESNext",
     "lib": ["ES2022"],
     "skipLibCheck": true,
-    "types": ["node"],
     "moduleResolution": "bundler",
-    "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "allowJs": true,
+    "strict": true,
     "noEmit": true
   },
-  "include": ["@scripts/**/*.mjs"]
+  "include": ["*.ts"]
 }

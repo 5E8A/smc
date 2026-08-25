@@ -1,6 +1,6 @@
 import { BlogPost, BlogPostRaw } from "../types";
 import { resolveAuthor } from "./authors";
-import { EN_MONTHS, PL_MONTHS } from "../../shared/months";
+import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import enPosts from "../content/en/posts.json";
 import plPosts from "../content/pl/posts.json";
 

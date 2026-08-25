@@ -1,0 +1,14 @@
+{
+  "name": "@smc/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./icons": "./icons.ts",
+    "./months": "./months.ts",
+    "./slug": "./slug.ts"
+  },
+  "scripts": {
+    "lint": "oxlint . --type-aware --type-check"
+  }
+}

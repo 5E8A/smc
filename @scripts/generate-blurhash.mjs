@@ -5,8 +5,8 @@ import sharp from "sharp";
 import { encode } from "blurhash";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const assetsDir = path.join(root, "public", "assets");
-const outFile = path.join(root, "src", "data", "blurhash.json");
+const assetsDir = path.join(root, "@web", "public", "assets");
+const outFile = path.join(root, "@web", "src", "data", "blurhash.json");
 
 const COMPONENTS_X = 4;
 const COMPONENTS_Y = 3;

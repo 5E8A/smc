@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { EyeIcon, ImageIcon, ImagesIcon, PencilSimpleIcon } from "@phosphor-icons/react";
-import { KNOWN_ICONS } from "../../../shared/icons";
+import { KNOWN_ICONS } from "@smc/shared/icons";
 import { useImagePicker } from "./ImagePicker";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { Button, TextArea } from "./fields";

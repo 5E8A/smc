@@ -2,15 +2,26 @@
 
 ## Project
 Static blog/wiki SPA for the SMC (Seba Modding Community) Minecraft modpack site.
-React 19 + TypeScript 6 + Vite 8 (Rolldown) + Tailwind 4 + TanStack Router.
-Deployed to GitHub Pages under `/smc` via artifacts.
+npm workspaces monorepo: `@web` (React 19 + TypeScript 6 + Vite 8 (Rolldown) + Tailwind 4 + TanStack Router), `@cms` (local-only content editor), `@shared` (`@smc/shared` helpers).
+Single hoisted `node_modules` + root `package-lock.json`. Deployed to GitHub Pages under `/smc` via artifacts.
+
+## Workspace layout
+- `@web/` — the site (`src/`, `public/`, `vite.config.ts`, `tsconfig.json`, package `@smc/web`; no own `package-lock` — root lockfile only).
+- `@cms/` — standalone CMS sub-app (package `@smc/cms`), edits `@web/src/content/…` and `@web/public/assets/…` via API middleware; exports `@smc/cms/server/store` + `@smc/cms/server/util` (used by `@scripts/check-content.mjs`).
+- `@shared/` — package `@smc/shared` (icons/months/slug helpers, `.ts` sources exported directly). Import as `@smc/shared/<name>`, never relative paths.
+- `@scripts/` — repo-root tooling (`check-content`, `generate-blurhash`, `generate-sprites`, `fetch-mod-icons`, `screenshot/`). Runs with Node >= 22.7 (native TS stripping for `@smc/cms` imports).
+- Root `package.json` (`@smc`, private) is a delegator: `npm run dev`, `web:*`, `cms:*` wrappers; real per-workspace scripts live in each package. Workspace selectors use package names (`npm -w @smc/web …`).
 
 ## Commands
-- `npm run dev` / `build` / `preview` / `lint` / `lint:fix` / `format` / `format:check`
-- `npm run cms` — local-only CMS (`cms/`, standalone sub-package) at `127.0.0.1:4000`: edits `src/content/{en,pl}/{posts,wiki}.json` via API middleware, converts uploads to webp on the fly into `public/assets/content/<bucket>/` (quality + max-width adjustable per upload in the UI) and auto-regenerates blurhashes afterwards.
-- `npm run generate-lqip` — rescans `public/assets` and regenerates `src/data/blurhash.json` (blurhash placeholders; transparent images are skipped). Runs automatically after CMS uploads.
-- `npm run analyze` — bundle size visualizer (writes `dist/stats.html`)
-- `npm run screenshot` — Playwright cross-browser screenshot suite (`scripts/screenshot/`). Full-page + fold captures per route × viewport × browser; output in `screenshots/` (gitignored). Flags: `--browsers=`, `--viewports=`, `--only=`, `--no-fold`, `--menu-open` (extra `-menu` variant with the mobile hamburger open on viewports <768px), `--lang=pl`, `--prod`, `--reuse`, `--skip-existing`, `--list`, `--out=`, `--concurrency=`. Spawns its own server on port 3100 with `VITE_SCREENSHOT=true`; `--reuse` verifies an existing server on 3000 really is in screenshot mode before reusing. Dynamic routes (posts/wiki) auto-discovered from `src/content/`. `npm run screenshot:install` — installs Playwright browsers (chromium, firefox, webkit).
+- `npm install` / `npm run web:install` / `npm run cms:install` — install all workspaces into the single root `node_modules` (no per-package installs).
+- `npm run dev` / `build` / `preview` / `start` — site (delegate to `@smc/web`). `check-content` gate runs inside the build.
+- `npm run web:ci` — `npm ci -w @smc/web` + lint + check-content + vite build.
+- `npm run cms` — local-only CMS (`@cms/`) at `127.0.0.1:4000`: edits `@web/src/content/{en,pl}/{posts,wiki}.json` + `authors.json` via API middleware, converts uploads to webp on the fly into `@web/public/assets/content/<bucket>/` (quality + max-width adjustable per upload) and auto-regenerates blurhashes afterwards.
+- `npm run lint` — lints `@web`, `@cms`, `@shared` workspaces + root `@scripts/` (oxlint, type-aware). `lint:fix` likewise.
+- `npm run generate-lqip` — rescans `@web/public/assets` and regenerates `@web/src/data/blurhash.json` (blurhash placeholders; transparent images skipped). Runs automatically after CMS uploads.
+- `npm run analyze` — bundle size visualizer (writes `@web/dist/stats.html`).
+- `npm run screenshot` — Playwright cross-browser screenshot suite (`@scripts/screenshot/`). Full-page + fold captures per route × viewport × browser; output in `screenshots/` (gitignored). Flags: `--browsers=`, `--viewports=`, `--only=`, `--no-fold`, `--menu-open` (extra `-menu` variant with the mobile hamburger open on viewports <768px), `--lang=pl`, `--prod`, `--reuse`, `--skip-existing`, `--list`, `--out=`, `--concurrency=`. Spawns its own server on port 3100 with `VITE_SCREENSHOT=true`; `--reuse` verifies an existing server on 3000 really is in screenshot mode before reusing. Dynamic routes (posts/wiki) auto-discovered from `@web/src/content/`. `npm run screenshot:install` — installs Playwright browsers (chromium, firefox, webkit).
+- `npm run format` / `format:check` — Prettier over the whole repo (root config).
 
 ## Committing
 - Never commit without explicit user approval — always ask permission first.
@@ -18,19 +29,20 @@ Deployed to GitHub Pages under `/smc` via artifacts.
 - Commits: small, logical, one concern each.
 
 ## Architecture / oddities
-- **Routing**: file-based TanStack Router. Route files in `src/routes/`, lazy views as `.lazy.tsx` siblings (views load on demand). `src/routeTree.gen.ts` is auto-generated by the vite plugin — commit it, don't edit it (also in .prettierignore/eslint ignores). After adding/renaming routes, run a build to regenerate; if `tsc` fails on a stale gen file, run `npx vite build` once.
-- **Base path `/smc`** everywhere (vite `base` + router `basepath`). Typed links use `to="/post/$slug"` + `params`. `dist/404.html` (emitted by the spaFallback404 plugin in `vite.config.ts`) makes GH Pages deep links work.
-- **Tailwind v4 is CSS-first**: theme tokens live in `src/index.css` `@theme` (kebab-case only — `mc-text-muted`, not `mc-textMuted`), custom utilities via `@utility` (e.g. `cover-zoom`). No `tailwind.config` file.
-- **i18n is custom, no library**: strings in `src/utils/translations.ts` (`en`/`pl`); `useLanguage` hook from `src/context/useLanguage.ts`. `LanguageProvider` syncs `<html lang>`, `document.title` and the meta description.
-- **Images**: route every `<img>` through `SmartImage` (lazy loading + blurhash placeholder from `src/data/blurhash.json`, rendered by `BlurhashCanvas` — no placeholder image files). All CMS content assets live in `public/assets/content/{posts,banners,avatars}` and are the committed source of truth; there is no `originals/` dir. Upload via the CMS (on-the-fly webp conversion); regenerate blurhashes with `npm run generate-lqip`. `public/assets/static` is site-owned chrome (background, tiles, branding `smc.webp`/`smc2.png`) edited directly.
-- **Content CMS**: posts/wiki live in `src/content/{en,pl}/{posts,wiki}.json`, imported at build time (JSON inlined into route chunks); synchronous access via `src/data/posts.ts` / `src/data/wiki.ts`. `coverImage`/`avatar` paths there point into `public/assets/content/`. Content edits require a rebuild.
-- **API**: only `src/services/api.ts` — a typed `fetch` wrapper for Modrinth/Discord stat reads. Nothing else.
+- **Routing**: file-based TanStack Router. Route files in `@web/src/routes/`, lazy views as `.lazy.tsx` siblings (views load on demand). `@web/src/routeTree.gen.ts` is auto-generated by the vite plugin — commit it, don't edit it (also in .prettierignore/oxlint ignores). After adding/renaming routes, run a build to regenerate; if `tsc` fails on a stale gen file, run `npx vite build` once.
+- **Base path `/smc`** everywhere (vite `base` + router `basepath`). Typed links use `to="/post/$slug"` + `params`. `@web/dist/404.html` (emitted by the spaFallback404 plugin in `@web/vite.config.ts`) makes GH Pages deep links work.
+- **Tailwind v4 is CSS-first**: theme tokens live in `@web/src/index.css` `@theme` (kebab-case only — `mc-text-muted`, not `mc-textMuted`), custom utilities via `@utility` (e.g. `cover-zoom`). No `tailwind.config` file.
+- **i18n is custom, no library**: strings in `@web/src/utils/translations.ts` (`en`/`pl`); `useLanguage` hook from `@web/src/context/useLanguage.ts`. `LanguageProvider` syncs `<html lang>`, `document.title` and the meta description.
+- **Images**: route every `<img>` through `SmartImage` (lazy loading + blurhash placeholder from `@web/src/data/blurhash.json`, rendered by `BlurhashCanvas` — no placeholder image files). All CMS content assets live in `@web/public/assets/content/{posts,banners,avatars}` and are the committed source of truth; there is no `originals/` dir. Upload via the CMS (on-the-fly webp conversion); regenerate blurhashes with `npm run generate-lqip`. `@web/public/assets/static` is site-owned chrome (background, tiles, branding `smc.webp`/`smc2.png`) edited directly.
+- **Content CMS**: posts/wiki live in `@web/src/content/{en,pl}/{posts,wiki}.json`, imported at build time (JSON inlined into route chunks); synchronous access via `@web/src/data/posts.ts` / `@web/src/data/wiki.ts`. `coverImage`/`avatar` paths there point into `@web/public/assets/content/`. Content edits require a rebuild.
+- **API**: only `@web/src/services/api.ts` — a typed `fetch` wrapper for Modrinth/Discord stat reads (with a 10s abort timeout). Nothing else.
 - **Bundling**: `manualChunks` (react/router/icons) + lazy routes + `preload="intent"` on nav links. Keep it that way — new pages must be lazy route files, never heavy imports into the eager entry.
 
 ## Conventions
 - **Named React imports only** — never `import React from "react"`, never `React.FC`; plain `const Cmp = ({ ... }: Props) => ...`.
-- ESLint flat config; `scripts/` gets node globals via config.
+- oxlint flat config at root (`.oxlintrc.json`); `@scripts/` gets node globals via override there.
 - **Do NOT bump TypeScript past 6.x** — `typescript-eslint` peer range is `<6.1.0`; TS 7 breaks linting.
+- Shared logic goes into `@shared/` (`@smc/shared`) — never duplicate helpers between `@web` and `@cms`.
 
 ## Hard constraints
 - **No backward compatibility. Ever.** Modern evergreen browsers only — no legacy fallbacks, no polyfills, no old-browser support, no graceful degradation for unsupported features. This is a static blog.

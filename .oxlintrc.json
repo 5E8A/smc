@@ -1,22 +1,13 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "unicorn"
-  ],
+  "plugins": ["typescript", "unicorn"],
   "categories": {
     "correctness": "off"
   },
   "env": {
     "builtin": true
   },
-  "ignorePatterns": [
-    "dist",
-    "node_modules",
-    "public",
-    "src/routeTree.gen.ts",
-    ".output"
-  ],
+  "ignorePatterns": ["dist", "node_modules", "public", "**/src/routeTree.gen.ts", ".output"],
   "rules": {
     "constructor-super": "error",
     "for-direction": "error",
@@ -97,12 +88,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "rules": {
         "constructor-super": "off",
         "getter-return": "off",
@@ -128,17 +114,15 @@
     },
     {
       "files": [
-        "scripts/**/*.mjs",
-        "cms/server/**/*.ts"
+        "scripts/**/*.mjs"
+        // "cms/server/**/*.ts"
       ],
       "env": {
         "node": true
       }
     },
     {
-      "files": [
-        "**/*.{ts,tsx}"
-      ],
+      "files": ["**/*.{ts,tsx}"],
       "rules": {
         "no-unused-vars": [
           "error",
@@ -167,9 +151,7 @@
           }
         ]
       },
-      "plugins": [
-        "react"
-      ]
+      "plugins": ["react"]
     }
   ]
 }

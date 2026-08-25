@@ -13,7 +13,7 @@ import {
   mimeFor,
   writeJsonAtomic,
 } from "./util.ts";
-import { slugify } from "../../shared/slug.ts";
+import { slugify } from "@smc/shared/slug";
 
 const IMAGE_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 

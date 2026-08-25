@@ -1,14 +1,20 @@
 {
-  "name": "smc-cms",
+  "name": "@smc/cms",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "exports": {
+    "./server/store": "./server/store.ts",
+    "./server/util": "./server/util.ts"
+  },
   "scripts": {
     "dev": "vite",
+    "lint": "oxlint src server vite.config.ts --type-aware --type-check",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
+    "@smc/shared": "*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",

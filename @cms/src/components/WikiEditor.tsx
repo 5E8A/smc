@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ImageIcon } from "@phosphor-icons/react";
 import type { Lang, WikiDoc } from "../types";
-import { slugify } from "../../../shared/slug";
+import { slugify } from "@smc/shared/slug";
 import { AssetThumb, useImagePicker } from "./ImagePicker";
 import { AuthorPicker } from "./AuthorPicker";
 import { MarkdownEditorPanel } from "./MarkdownEditorPanel";

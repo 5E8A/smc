@@ -2,8 +2,8 @@ import path from "path";
 import fs from "fs";
 
 export const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..");
-export const CONTENT_DIR = path.join(REPO_ROOT, "src", "content");
-export const PUBLIC_ASSETS_DIR = path.join(REPO_ROOT, "public", "assets");
+export const CONTENT_DIR = path.join(REPO_ROOT, "@web", "src", "content");
+export const PUBLIC_ASSETS_DIR = path.join(REPO_ROOT, "@web", "public", "assets");
 export const CONTENT_ASSETS_DIR = path.join(PUBLIC_ASSETS_DIR, "content");
 
 export const KINDS = ["posts", "wiki"] as const;

@@ -9,8 +9,8 @@ import {
   type Kind,
   type Lang,
 } from "./util.ts";
-import { isKnownIcon } from "../../shared/icons.ts";
-import { EN_MONTHS, PL_MONTHS } from "../../shared/months.ts";
+import { isKnownIcon } from "@smc/shared/icons";
+import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import path from "path";
 
 export interface LocalizedText {

@@ -1,6 +1,6 @@
 // Build-time content gate: runs the exact same validation the CMS enforces
-// (cms/server/store.ts) over src/content, so bad data fails the build instead
-// of crashing the deployed SPA (an unknown author id throws at module init).
+// (@smc/cms/server/store) over @web/src/content, so bad data fails the build
+// instead of crashing the deployed SPA (an unknown author id throws at module init).
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -9,14 +9,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 let store;
 try {
-  store = await import("../cms/server/store.ts");
+  store = await import("@smc/cms/server/store");
 } catch (err) {
-  console.error("check-content: could not load cms/server/store.ts");
+  console.error("check-content: could not load @smc/cms/server/store");
   console.error("(requires Node >= 22.7 for built-in TypeScript stripping)");
   throw err;
 }
 const { validateContent } = store;
-const { KINDS, LANGS } = await import("../cms/server/util.ts");
+const { KINDS, LANGS } = await import("@smc/cms/server/util");
 
 let errors = 0;
 let warnings = 0;
@@ -35,7 +35,7 @@ for (const kind of KINDS) {
     const label = `${lang}/${kind}`;
     let data;
     try {
-      data = JSON.parse(readFileSync(path.join(root, "src", "content", lang, `${kind}.json`), "utf8"));
+      data = JSON.parse(readFileSync(path.join(root, "@web", "src", "content", lang, `${kind}.json`), "utf8"));
     } catch (err) {
       console.error(`error   ${label}: cannot parse JSON — ${err.message}`);
       errors += 1;
@@ -46,7 +46,7 @@ for (const kind of KINDS) {
 }
 
 try {
-  const authors = JSON.parse(readFileSync(path.join(root, "src", "content", "authors.json"), "utf8"));
+  const authors = JSON.parse(readFileSync(path.join(root, "@web", "src", "content", "authors.json"), "utf8"));
   if (!Array.isArray(authors)) throw new Error("authors.json root must be an array");
   const seen = new Map();
   authors.forEach((a, i) => {

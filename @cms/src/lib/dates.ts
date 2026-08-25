@@ -1,5 +1,5 @@
 import type { Lang } from "../types";
-import { EN_MONTHS, PL_MONTHS } from "../../../shared/months";
+import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 
 const pad = (n: number): string => String(n).padStart(2, "0");
 
