@@ -27,12 +27,13 @@ import { WikiEditor } from "./components/WikiEditor";
 import { AuthorForm } from "./components/AuthorsView";
 import { AssetsView } from "./components/AssetsView";
 import { ConverterView } from "./components/ConverterView";
+import { ModsBoard } from "./components/ModsBoard";
 import { PreviewWindow } from "./components/PreviewWindow";
 import { invalidateAuthorCache } from "./components/AuthorPicker";
 import { Button } from "./components/fields";
 
-type Tab = "posts" | "wiki" | "authors" | "assets" | "converter";
-const TABS: Tab[] = ["posts", "wiki", "authors", "assets", "converter"];
+type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter";
+const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter"];
 
 interface TabState {
   entries: Entry[];
@@ -453,7 +454,7 @@ export const App = () => {
   }, [state]);
 
   const viewDirty = tab === "authors" ? authorsDirty : dirty;
-  const paneReady = tab === "assets" || tab === "converter" ? true : tab === "authors" ? !!authors : !!state;
+  const paneReady = tab === "assets" || tab === "converter" || tab === "mods" ? true : tab === "authors" ? !!authors : !!state;
   const selectedAuthor = selectedAuthorIndex !== null ? (authors?.[selectedAuthorIndex] ?? null) : null;
   const selectedHasErrors =
     !!selected &&
@@ -632,13 +633,15 @@ export const App = () => {
                 <h2 className="mr-auto truncate text-sm font-bold capitalize text-white">
                   {tab === "assets"
                     ? "Assets"
-                    : tab === "authors"
-                      ? "Authors registry"
-                      : tab === "converter"
-                        ? "Converter"
-                        : selected
-                          ? selected.title || "(untitled)"
-                          : `${tab} · ${lang}`}
+                    : tab === "mods"
+                      ? "Mods board"
+                      : tab === "authors"
+                        ? "Authors registry"
+                        : tab === "converter"
+                          ? "Converter"
+                          : selected
+                            ? selected.title || "(untitled)"
+                            : `${tab} · ${lang}`}
                   {viewDirty && (
                     <span className="ml-2 align-middle text-[10px] font-bold uppercase tracking-wider text-amber-400">
                       unsaved
@@ -762,6 +765,10 @@ export const App = () => {
                 {tab === "assets" && <AssetsView />}
 
                 {tab === "converter" && <ConverterView />}
+
+                <div hidden={tab !== "mods"}>
+                  <ModsBoard />
+                </div>
               </div>
             </>
           )}

@@ -63,3 +63,8 @@ export interface ImagesPayload {
 }
 
 export type RefUsages = Record<string, string[]>;
+
+export interface ModListColumn {
+  key: string;
+  slugs: string[];
+}

@@ -1,4 +1,4 @@
-import type { Author, ImagesPayload, Issue, Kind, Lang, RefUsages } from "./types";
+import type { Author, ImagesPayload, Issue, Kind, Lang, ModListColumn, RefUsages } from "./types";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -39,6 +39,20 @@ export const putContent = (kind: Kind, lang: Lang, data: unknown[]): Promise<Sav
   });
 
 export const getAuthors = (): Promise<Author[]> => request<{ data: Author[] }>("/api/authors").then((r) => r.data);
+
+export interface ModListSaveResult extends SaveResult {
+  data?: ModListColumn[];
+}
+
+export const getModList = (): Promise<ModListColumn[]> =>
+  request<{ data: ModListColumn[] }>("/api/mods").then((r) => r.data);
+
+export const putModList = (data: ModListColumn[]): Promise<ModListSaveResult> =>
+  request<{ ok: boolean; issues: Issue[]; data?: ModListColumn[] }>("/api/mods", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 
 export interface AuthorsSaveResult extends SaveResult {
   data?: Author[];
