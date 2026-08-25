@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Task Board</title>
+<style>
+  :root {
+    --bg: #0d0d10;
+    --surface: #17171c;
+    --surface-2: #1d1d24;
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #e4e4e7;
+    --muted: #8d8d94;
+    --accent: #55c243;
+    --accent-ink: #0d0d10;
+    --red: #ef4444;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.5 system-ui, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+  header h1 {
+    margin: 0 0 4px;
+    font: 700 20px/1.2 ui-monospace, "Cascadia Code", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  header p { margin: 0 0 16px; color: var(--muted); }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .toolbar input, .toolbar select {
+    padding: 8px 10px;
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+  }
+  .toolbar input:focus, .toolbar select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #title-input { flex: 1 1 220px; }
+  #note-input { flex: 2 1 260px; }
+  button {
+    padding: 8px 12px;
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .toolbar .spacer { flex: 1; }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+    align-items: start;
+  }
+  @media (max-width: 780px) { .board { grid-template-columns: 1fr; } }
+  .col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+  }
+  .col.dropping { border-color: var(--accent); }
+  .col header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font: 600 12px/1 ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .col header .count {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .cards { display: flex; flex-direction: column; gap: 8px; padding: 10px; min-height: 100px; }
+  .card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: grab;
+  }
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.45; }
+  .card .title { font-weight: 600; white-space: pre-wrap; }
+  .card .note { margin-top: 2px; color: var(--muted); font-size: 13px; white-space: pre-wrap; }
+  .card [contenteditable]:focus { outline: 1px dashed var(--accent); border-radius: 4px; }
+  .card .actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+  .card:hover .actions, .card:focus-within .actions { opacity: 1; }
+  .card .actions button { padding: 2px 7px; font-size: 12px; }
+  .card .actions button.danger:hover { border-color: var(--red); color: var(--red); }
+  .empty { color: var(--muted); font-size: 13px; text-align: center; padding: 14px 6px; }
+  footer {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer .spacer { flex: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Task Board</h1>
+    <p>Small things that need some care. Layered: backlog &rsaquo; in progress &rsaquo; done.</p>
+  </header>
+
+  <div class="toolbar">
+    <input id="title-input" type="text" placeholder="What needs doing?" maxlength="120" />
+    <input id="note-input" type="text" placeholder="Optional note…" maxlength="300" />
+    <select id="col-select" aria-label="Column">
+      <option value="backlog">Backlog</option>
+      <option value="inprog">In progress</option>
+      <option value="done">Done</option>
+    </select>
+    <button id="add-btn" class="primary" type="button">Add</button>
+    <span class="spacer"></span>
+    <button id="export-btn" type="button" title="Download board as JSON">Export</button>
+    <button id="import-btn" type="button" title="Load board from JSON">Import</button>
+    <input id="import-file" type="file" accept="application/json" hidden />
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <footer>
+    <button id="clear-done" type="button">Clear done</button>
+    <span class="spacer"></span>
+    <span id="status"></span>
+  </footer>
+</div>
+
+<script>
+  const KEY = "smc-board";
+  const COLS = [
+    { id: "backlog", label: "Backlog" },
+    { id: "inprog", label: "In progress" },
+    { id: "done", label: "Done" },
+  ];
+  const SEED = [
+    { title: "Hero version badge: show error fallback when the version API fails", note: "LoadingVersionText skeleton currently spins forever on failure (web/src/services/api.ts).", col: "backlog" },
+    { title: "Post-restructure regression pass: Playwright screenshots", note: "Check 360x640, 1280x800 and --lang=pl home columns after monorepo move.", col: "backlog" },
+    { title: "CMS end-to-end sanity after monorepo move", note: "Save a post in the CMS and confirm it lands in web/src/content/.", col: "backlog" },
+  ];
+
+  let state = load();
+
+  function load() {
+    const raw = localStorage.getItem(KEY);
+    if (raw === null) {
+      const seeded = SEED.map((s, i) => ({ ...s, id: crypto.randomUUID(), createdAt: Date.now() + i }));
+      save(seeded);
+      return seeded;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((x) => x && typeof x.title === "string");
+    } catch {
+      return [];
+    }
+  }
+
+  function save(items = state) {
+    localStorage.setItem(KEY, JSON.stringify(items));
+  }
+
+  function status(msg) {
+    const el = document.getElementById("status");
+    el.textContent = msg ?? "";
+  }
+
+  function render() {
+    const board = document.getElementById("board");
+    board.innerHTML = "";
+    for (const col of COLS) {
+      const items = state.filter((i) => i.col === col.id);
+      const section = document.createElement("section");
+      section.className = "col";
+      section.dataset.col = col.id;
+
+      const header = document.createElement("header");
+      const name = document.createElement("span");
+      name.textContent = col.label;
+      const count = document.createElement("span");
+      count.className = "count";
+      count.textContent = String(items.length);
+      header.append(name, count);
+      section.appendChild(header);
+
+      const list = document.createElement("div");
+      list.className = "cards";
+      for (const item of items) list.appendChild(cardEl(item));
+      section.appendChild(list);
+      board.appendChild(section);
+    }
+  }
+
+  function cardEl(item) {
+    const el = document.createElement("article");
+    el.className = "card";
+    el.draggable = true;
+    el.dataset.id = item.id;
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = item.title;
+    title.title = "Double-click to edit";
+    title.addEventListener("dblclick", () => startEdit(el, title, item, "title"));
+    el.appendChild(title);
+
+    if (item.note) {
+      const note = document.createElement("div");
+      note.className = "note";
+      note.textContent = item.note;
+      note.title = "Double-click to edit";
+      note.addEventListener("dblclick", () => startEdit(el, note, item, "note"));
+      el.appendChild(note);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+    const colIndex = COLS.findIndex((c) => c.id === item.col);
+    const mk = (label, title2, fn, disabled, cls) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.title = title2;
+      b.disabled = disabled;
+      b.className = cls ?? "";
+      b.addEventListener("click", fn);
+      return b;
+    };
+    actions.appendChild(
+      mk("\u25c0", "Move to previous column", () => move(item.id, COLS[colIndex - 1].id), colIndex <= 0)
+    );
+    actions.appendChild(
+      mk("\u25b6", "Move to next column", () => move(item.id, COLS[colIndex + 1].id), colIndex >= COLS.length - 1)
+    );
+    actions.appendChild(mk("\u29c9", "Copy as prompt", () => copyCard(item)));
+    actions.appendChild(mk("\u270e", "Edit", () => startEdit(el, title, item, "title")));
+    if (item.note) actions.appendChild(mk("\u270e*", "Edit note", () => startEdit(el, note, item, "note")));
+    actions.appendChild(mk("\u2715", "Delete", () => remove(item.id), false, "danger"));
+    el.appendChild(actions);
+
+    return el;
+  }
+
+  function move(id, colId) {
+    const item = state.find((i) => i.id === id);
+    if (!item || colId === item.col) return;
+    // Keep natural order: when moving, place next to its previous neighbors.
+    const next = COLS.find((c) => c.id === colId);
+    const idx = state.findIndex((i) => i.id === id);
+    state.splice(idx, 1);
+    if (next) item.col = colId;
+    state.push(item);
+    save();
+    render();
+  }
+
+  function remove(id) {
+    state = state.filter((i) => i.id !== id);
+    save();
+    render();
+  }
+
+  function copyCard(item) {
+    const col = COLS.find((c) => c.id === item.col);
+    const lines = [`Task: ${item.title}`];
+    if (item.note) lines.push(`Note: ${item.note}`);
+    lines.push(`Column: ${col ? col.label : item.col}`);
+    const text = lines.join("\n");
+    writeClipboard(text).then((ok) => status(ok ? "Copied to clipboard." : "Copy failed — select manually."));
+  }
+
+  async function writeClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        ta.remove();
+        return ok;
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  function startEdit(card, el, item, field) {
+    card.draggable = false;
+    el.contentEditable = "true";
+    el.focus();
+    document.getSelection().selectAllChildren(el);
+    const finish = (commit) => {
+      el.contentEditable = "false";
+      el.removeAttribute("contenteditable");
+      card.draggable = true;
+      if (commit) {
+        const text = el.textContent.trim();
+        if (text) item[field] = text;
+        else if (field === "note") delete item.note;
+        save();
+      }
+      render();
+    };
+    el.addEventListener("blur", () => finish(true), { once: true });
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        el.blur();
+      }
+      if (e.key === "Escape") finish(false);
+    });
+  }
+
+  // --- add flow ---
+  const titleInput = document.getElementById("title-input");
+  const noteInput = document.getElementById("note-input");
+  const colSelect = document.getElementById("col-select");
+  document.getElementById("add-btn").addEventListener("click", add);
+  [titleInput, noteInput].forEach((el) =>
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") add();
+    })
+  );
+
+  function add() {
+    const title = titleInput.value.trim();
+    if (!title) {
+      titleInput.focus();
+      return;
+    }
+    state.push({
+      id: crypto.randomUUID(),
+      title,
+      note: noteInput.value.trim() || null,
+      col: colSelect.value,
+      createdAt: Date.now(),
+    });
+    titleInput.value = "";
+    noteInput.value = "";
+    save();
+    render();
+    titleInput.focus();
+  }
+
+  // --- drag & drop ---
+  const board = document.getElementById("board");
+  let draggedId = null;
+
+  board.addEventListener("dragstart", (e) => {
+    const card = e.target.closest(".card");
+    if (!card) return;
+    draggedId = card.dataset.id;
+    card.classList.add("dragging");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", draggedId);
+  });
+
+  board.addEventListener("dragend", () => {
+    draggedId = null;
+    document.querySelectorAll(".card.dragging, .col.dropping").forEach((el) => el.classList.remove("dragging", "dropping"));
+  });
+
+  board.addEventListener("dragover", (e) => {
+    if (!draggedId) return;
+    e.preventDefault();
+    const target = e.target.closest(".col");
+    if (target) target.classList.add("dropping");
+  });
+
+  board.addEventListener("dragleave", (e) => {
+    const col = e.target.closest(".col");
+    if (col && !col.contains(e.relatedTarget)) col.classList.remove("dropping");
+  });
+
+  board.addEventListener("drop", (e) => {
+    if (!draggedId) return;
+    e.preventDefault();
+    const col = e.target.closest(".col");
+    document.querySelectorAll(".col.dropping").forEach((el) => el.classList.remove("dropping"));
+    if (!col) return;
+
+    const item = state.find((i) => i.id === draggedId);
+    if (!item) return;
+    const prevColId = item.col;
+    if (prevColId !== col.dataset.col) {
+      item.col = col.dataset.col;
+      save();
+      render();
+      return;
+    }
+
+    // Same column: reorder relative to the hovered card.
+    const hovered = e.target.closest(".card");
+    if (hovered && hovered.dataset.id !== draggedId) {
+      const arr = state.filter((i) => i.col === item.col);
+      const from = arr.findIndex((i) => i.id === draggedId);
+      const toIdx = arr.findIndex((i) => i.id === hovered.dataset.id);
+      arr.splice(from, 1);
+      arr.splice(toIdx, 0, item);
+      const rest = state.filter((i) => i.col !== item.col);
+      state = [...rest, ...arr];
+      save();
+      render();
+    }
+  });
+
+  // --- export / import ---
+  document.getElementById("export-btn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "smc-board.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    status("Exported.");
+  });
+
+  document.getElementById("import-btn").addEventListener("click", () => document.getElementById("import-file").click());
+  document.getElementById("import-file").addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!Array.isArray(data)) throw new Error("not an array");
+      state = data.filter((x) => x && typeof x.title === "string").map((x) => ({
+        id: typeof x.id === "string" ? x.id : crypto.randomUUID(),
+        title: String(x.title),
+        note: typeof x.note === "string" ? x.note : null,
+        col: COLS.some((c) => c.id === x.col) ? x.col : "backlog",
+        createdAt: typeof x.createdAt === "number" ? x.createdAt : Date.now(),
+      }));
+      save();
+      render();
+      status("Imported.");
+    } catch {
+      status("Import failed: not a valid smc-board JSON.");
+    }
+  });
+
+  document.getElementById("clear-done").addEventListener("click", () => {
+    const done = state.filter((i) => i.col === "done").length;
+    if (done === 0) return;
+    state = state.filter((i) => i.col !== "done");
+    save();
+    render();
+    status(`Removed ${done} done.`);
+  });
+
+  render();
+</script>
+</body>
+</html>
