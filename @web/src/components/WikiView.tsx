@@ -50,7 +50,7 @@ const WikiView = () => {
                 className="group flex flex-col overflow-hidden rounded-xl border border-white/10 bg-mc-surface transition-all duration-300 hover:border-green-500/50 hover:shadow-xl"
               >
                 <div className="flex h-full flex-col md:flex-row">
-                  <div className="relative h-48 overflow-hidden md:h-auto md:w-1/3">
+                  <div className="relative h-48 overflow-hidden md:aspect-square md:h-auto md:w-1/3">
                     <div className="absolute inset-0 z-10 bg-black/2 transition-colors group-hover:bg-transparent"></div>
                     <SmartImage
                       src={doc.coverImage}
