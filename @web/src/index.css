@@ -146,7 +146,6 @@
   background-image: url("/smc/assets/static/background.webp");
   background-size: cover;
   background-position: 50% 50%;
-  mix-blend-mode: screen;
 }
 
 @media (min-aspect-ratio: 1/1) {
