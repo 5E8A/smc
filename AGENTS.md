@@ -8,8 +8,8 @@ Single hoisted `node_modules` + root `package-lock.json`. Deployed to GitHub Pag
 ## Workspace layout
 - `@web/` — the site (`src/`, `public/`, `vite.config.ts`, `tsconfig.json`, package `@smc/web`; no own `package-lock` — root lockfile only).
 - `@cms/` — standalone CMS sub-app (package `@smc/cms`), edits `@web/src/content/…` and `@web/public/assets/…` via API middleware; exports `@smc/cms/server/store` + `@smc/cms/server/util` (used by `@scripts/check-content.mjs`).
-- `@shared/` — package `@smc/shared` (icons/months/slug helpers, `.ts` sources exported directly). Import as `@smc/shared/<name>`, never relative paths.
-- `@scripts/` — repo-root tooling (`check-content`, `generate-blurhash`, `generate-sprites`, `fetch-mod-icons`, `screenshot/`). Runs with Node >= 22.7 (native TS stripping for `@smc/cms` imports).
+- `@shared/` — package `@smc/shared` (hue/icons/months/slug helpers, `.ts` sources exported directly). Import as `@smc/shared/<name>`, never relative paths.
+- `@scripts/` — repo-root tooling (`check-content`, `generate-blurhash`, `sync-mods`, `screenshot/`). Runs with Node >= 22.7 (native TS stripping for `@smc/cms` imports).
 - Root `package.json` (`@smc`, private) is a delegator: `npm run dev`, `web:*`, `cms:*` wrappers; real per-workspace scripts live in each package. Workspace selectors use package names (`npm -w @smc/web …`).
 
 ## Commands
@@ -19,6 +19,7 @@ Single hoisted `node_modules` + root `package-lock.json`. Deployed to GitHub Pag
 - `npm run cms` — local-only CMS (`@cms/`) at `127.0.0.1:4000`: edits `@web/src/content/{en,pl}/{posts,wiki}.json` + `authors.json` via API middleware, converts uploads to webp on the fly into `@web/public/assets/content/<bucket>/` (quality + max-width adjustable per upload) and auto-regenerates blurhashes afterwards.
 - `npm run lint` — lints `@web`, `@cms`, `@shared` workspaces + root `@scripts/` (oxlint, type-aware). `lint:fix` likewise.
 - `npm run generate-lqip` — rescans `@web/public/assets` and regenerates `@web/src/data/blurhash.json` (blurhash placeholders; transparent images skipped). Runs automatically after CMS uploads.
+- `npm run sync-mods` — one-shot mod-icon pipeline: fetches Modrinth metadata + icons for `@scripts/mod-list.json` (single source of truth: `[{ key, slugs[] }]`), caches raw downloads in `.cache/mod-icons/` (gitignored), verifies every icon decodes, reruns failed slugs (`--retries=N`, default 3), warns on permanent problems (project gone / no icon — hue-tinted cube tile baked into the sprite), then regenerates `@web/public/assets/mod-sprites/` (`{key}.webp` + `{key}.placeholder.webp`, 9-col grids) and `@web/src/data/mods.ts` (no per-mod icon files — everything renders from the sprite sheets; `mod-icons/` is removed), and chains blurhash regen (`--no-blurhash` to skip). Exit 1 only if fetches survive retries — CMS-update-flow friendly.
 - `npm run analyze` — bundle size visualizer (writes `@web/dist/stats.html`).
 - `npm run screenshot` — Playwright cross-browser screenshot suite (`@scripts/screenshot/`). Full-page + fold captures per route × viewport × browser; output in `screenshots/` (gitignored). Flags: `--browsers=`, `--viewports=`, `--only=`, `--no-fold`, `--menu-open` (extra `-menu` variant with the mobile hamburger open on viewports <768px), `--lang=pl`, `--prod`, `--reuse`, `--skip-existing`, `--list`, `--out=`, `--concurrency=`. Spawns its own server on port 3100 with `VITE_SCREENSHOT=true`; `--reuse` verifies an existing server on 3000 really is in screenshot mode before reusing. Dynamic routes (posts/wiki) auto-discovered from `@web/src/content/`. `npm run screenshot:install` — installs Playwright browsers (chromium, firefox, webkit).
 - `npm run format` / `format:check` — Prettier over the whole repo (root config).
