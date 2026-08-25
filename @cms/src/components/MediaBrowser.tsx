@@ -209,7 +209,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
       await deleteImage(imgDelete.path);
       setImgDelete(null);
       await lib.refresh();
-      lib.runLqip();
+      lib.setLqipStale(true);
       lib.setNotice({ kind: "ok", text: `Deleted ${imgDelete.path}` });
     } catch (err) {
       if (err instanceof ApiError && err.payload.usages) {
@@ -242,7 +242,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
       setDirDelete(null);
       setSelectedDir("all");
       await lib.refresh();
-      lib.runLqip();
+      lib.setLqipStale(true);
       lib.setNotice({ kind: "ok", text: `Deleted folder ${dirLabel(dirDelete.dir)}` });
     } catch (err) {
       if (err instanceof ApiError && err.payload.usages) {
@@ -282,7 +282,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           kind: "ok",
           text: `Renamed to ${dirLabel(newRel)}${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
         });
-        lib.runLqip();
+        lib.setLqipStale(true);
       }
       await lib.refresh();
       setFolderPrompt(null);
@@ -314,7 +314,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
         kind: "ok",
         text: `Renamed to ${name}.webp${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
       });
-      lib.runLqip();
+      lib.setLqipStale(true);
       await lib.refresh();
       setFilePrompt(null);
     } catch (err) {
@@ -543,6 +543,17 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
             <UploadSimpleIcon size={14} />
             Upload files
           </Button>
+          {manageFolders && (
+            <Button
+              variant="default"
+              className="px-2.5 py-1.5 text-xs"
+              onClick={lib.runLqip}
+              disabled={lib.lqipRunning}
+            >
+              <HashIcon size={14} />
+              {lib.lqipRunning ? "Generating…" : "Regenerate blurhash"}
+            </Button>
+          )}
         </div>
 
         <div
@@ -610,7 +621,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           )}
         </div>
 
-        {(lib.notice || lib.uploading || lib.lqipRunning || lib.logLines.length > 0) && (
+        {(lib.notice || lib.uploading || lib.lqipRunning || lib.lqipStale) && (
           <div className="mt-3 flex items-center gap-2 text-xs">
             {lib.uploading ? (
               <span className="flex items-center gap-1.5 text-zinc-300">
@@ -620,40 +631,16 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
               <span className="flex items-center gap-1.5 text-zinc-500">
                 <HashIcon size={13} className="animate-pulse" /> Regenerating blurhash…
               </span>
+            ) : lib.lqipStale ? (
+              <span className="flex items-center gap-1.5 text-amber-400">
+                <WarningCircleIcon size={13} /> Blurhash placeholders are out of date - run Regenerate blurhash
+              </span>
             ) : (
               lib.notice && (
                 <span className={lib.notice.kind === "ok" ? "text-green-400" : "text-red-400"}>{lib.notice.text}</span>
               )
             )}
-            {manageFolders && !lib.uploading && (
-              <span className="ml-auto flex shrink-0 items-center gap-2">
-                {lib.logLines.length > 0 && !lib.lqipRunning && (
-                  <button
-                    type="button"
-                    onClick={lib.clearLog}
-                    className="text-[11px] text-zinc-600 hover:text-zinc-300"
-                  >
-                    clear log
-                  </button>
-                )}
-                <Button
-                  variant="default"
-                  className="px-2 py-1 text-xs"
-                  onClick={lib.runLqip}
-                  disabled={lib.lqipRunning}
-                >
-                  <HashIcon size={12} />
-                  {lib.lqipRunning ? "Generating…" : "Regenerate blurhash"}
-                </Button>
-              </span>
-            )}
           </div>
-        )}
-
-        {(lib.logLines.length > 0 || lib.lqipRunning) && (
-          <pre className="mt-2 max-h-40 overflow-y-auto rounded-md bg-black p-2 font-mono text-[11px] leading-4 text-zinc-500">
-            {lib.logLines.length > 0 ? lib.logLines.slice(-200).join("") : "Generating blurhash…\n"}
-          </pre>
         )}
       </section>
 
@@ -780,7 +767,8 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           </div>
 
           <p className="text-[11px] text-zinc-600">
-            Files convert to webp on save into public/assets/content - blurhash regenerates afterwards.
+            Files convert to webp on save into public/assets/content - run Regenerate blurhash afterwards to update
+            placeholders.
           </p>
 
           <div className="flex justify-end gap-2 pt-1">
@@ -952,8 +940,8 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
               />
             </label>
             <p className="text-[11px] text-zinc-600">
-              Saved as .webp. References in posts/wiki/authors update automatically; blurhash regenerates after the
-              rename.
+              Saved as .webp. References in posts/wiki/authors update automatically; run Regenerate blurhash afterwards
+              to update placeholders.
             </p>
             <div className="flex justify-end gap-2">
               <Button variant="ghost" type="button" onClick={() => setFilePrompt(null)}>
