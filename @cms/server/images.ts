@@ -412,7 +412,7 @@ export function runLqip(res: import("http").ServerResponse): void {
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 
-  const child = spawn(process.execPath, ["scripts/generate-blurhash.mjs"], {
+  const child = spawn(process.execPath, ["@scripts/generate-blurhash.mjs"], {
     cwd: REPO_ROOT,
     windowsHide: true,
   });
