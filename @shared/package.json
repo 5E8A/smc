@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
+    "./hue": "./hue.ts",
     "./icons": "./icons.ts",
     "./months": "./months.ts",
     "./slug": "./slug.ts"
