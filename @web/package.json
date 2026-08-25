@@ -15,8 +15,7 @@
     "analyze": "vite build --mode analyze",
     "generate-lqip": "node ../@scripts/generate-blurhash.mjs",
     "check-content": "node ../@scripts/check-content.mjs",
-    "generate-sprites": "node ../@scripts/generate-sprites.mjs",
-    "fetch-mods": "node ../@scripts/fetch-mod-icons.mjs",
+    "sync-mods": "node ../@scripts/sync-mods.mjs",
     "lint": "oxlint src/ vite.config.ts --type-aware --type-check",
     "lint:fix": "oxlint --fix src/ vite.config.ts --type-aware",
     "typecheck": "tsc --noEmit"

@@ -1,0 +1,82 @@
+[
+  {
+    "key": "performance",
+    "slugs": [
+      "sodium",
+      "sodium-extra",
+      "lithium",
+      "ferrite-core",
+      "entity-culling",
+      "moreculling",
+      "immediatelyfast",
+      "nvidium",
+      "krypton",
+      "modernfix",
+      "vmp-fabric",
+      "c2me-fabric",
+      "zfastnoise",
+      "badoptimizations",
+      "better-block-entities",
+      "scalablelux"
+    ]
+  },
+  {
+    "key": "optifine",
+    "slugs": [
+      "continuity",
+      "capes",
+      "zoomify",
+      "entitytexturefeatures",
+      "animaticarefabricated",
+      "entity-model-features",
+      "lambdynamiclights",
+      "optigui",
+      "skyboxify",
+      "iris",
+      "polytone",
+      "bettergrassify"
+    ]
+  },
+  {
+    "key": "qol",
+    "slugs": [
+      "voxelmap-updated",
+      "shulkerboxtooltip",
+      "morechathistory",
+      "gamma-utils",
+      "talk-balloons",
+      "durability-viewer-updated",
+      "ping-view",
+      "chat-heads",
+      "rrls",
+      "essential",
+      "jei",
+      "no-chat-reports",
+      "fastquit",
+      "dcch",
+      "litematica",
+      "bobby",
+      "health-indicator-txf",
+      "forcecloseworldloadingscreen",
+      "smooth-skies"
+    ]
+  },
+  {
+    "key": "utility",
+    "slugs": [
+      "modmenu",
+      "puzzle",
+      "reeses-sodium-options",
+      "spark",
+      "notenoughcrashes",
+      "auth-me",
+      "respackopts",
+      "craftpresence",
+      "fast-ip-ping",
+      "crash-assistant",
+      "main-menu-credits",
+      "debugify",
+      "mixintrace"
+    ]
+  }
+]

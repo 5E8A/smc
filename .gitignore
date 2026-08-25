@@ -26,3 +26,4 @@ screenshots/
 tools/
 .output/
 .tanstack/
+.cache/
