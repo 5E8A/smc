@@ -1,8 +1,5 @@
-import { useState, type ReactNode } from "react";
 import { XIcon } from "@phosphor-icons/react";
 import { MediaBrowser } from "./MediaBrowser";
-
-export { AssetThumb } from "./ImageLibrary";
 
 interface PickerProps {
   onClose: () => void;
@@ -27,21 +24,3 @@ export const ImagePicker = ({ onClose, onSelect }: PickerProps) => (
     </div>
   </div>
 );
-
-export function useImagePicker(onPick: (path: string, target: string) => void): {
-  open: (target: string) => void;
-  picker: ReactNode;
-} {
-  const [target, setTarget] = useState<string | null>(null);
-  const picker =
-    target !== null ? (
-      <ImagePicker
-        onClose={() => setTarget(null)}
-        onSelect={(path) => {
-          onPick(path, target);
-          setTarget(null);
-        }}
-      />
-    ) : null;
-  return { open: setTarget, picker };
-}

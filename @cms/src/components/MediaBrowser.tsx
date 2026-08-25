@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   CaretRightIcon,
   CircleNotchIcon,
@@ -17,7 +17,7 @@ import {
 import { createDir, deleteDir, deleteImage, getRefs, renameDir, renameImage, ApiError } from "../api";
 import type { ImageInfo, RefUsages } from "../types";
 import { buildDirTree, dirLabel, type DirNode } from "../lib/mediaTree";
-import { useMediaLibrary } from "./ImageLibrary";
+import { useMediaLibrary } from "./useMediaLibrary";
 import { Button } from "./fields";
 
 const VALID_UPLOAD_EXTS = [".png", ".jpg", ".jpeg", ".webp"];
@@ -138,11 +138,11 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
   const openFileDialog = () => fileInputRef.current?.click();
 
-  const cancelStaging = () => {
+  const cancelStaging = useCallback(() => {
     pending?.forEach((p) => URL.revokeObjectURL(p.url));
     setPending(null);
     setSkippedCount(0);
-  };
+  }, [pending]);
 
   useEffect(() => {
     if (!anyModalOpen) return;
@@ -159,7 +159,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [anyModalOpen, pending]);
+  }, [anyModalOpen, pending, cancelStaging]);
 
   useEffect(() => {
     if (!menu) return;

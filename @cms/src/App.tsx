@@ -29,7 +29,7 @@ import { AssetsView } from "./components/AssetsView";
 import { ConverterView } from "./components/ConverterView";
 import { ModsBoard } from "./components/ModsBoard";
 import { PreviewWindow } from "./components/PreviewWindow";
-import { invalidateAuthorCache } from "./components/AuthorPicker";
+import { invalidateAuthorCache } from "./lib/authorCache";
 import { Button } from "./components/fields";
 
 type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter";
@@ -167,7 +167,7 @@ export const App = () => {
   }, [tab, authors]);
 
   const dirty = useMemo(() => !!state && state.snapshot !== JSON.stringify(state.entries), [state]);
-  const authorsDirty = useMemo(() => !!authors && authorsSnapshot !== JSON.stringify(authors), [authors]);
+  const authorsDirty = useMemo(() => !!authors && authorsSnapshot !== JSON.stringify(authors), [authors, authorsSnapshot]);
   const anyDirty =
     Object.values(tabs).some((t) => t && t.snapshot !== JSON.stringify(t.entries)) ||
     (authors !== null && authorsSnapshot !== JSON.stringify(authors));

@@ -1,28 +1,11 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, UserPlusIcon, XIcon } from "@phosphor-icons/react";
-import { ApiError, getAuthors, putAuthors } from "../api";
+import { ApiError, putAuthors } from "../api";
 import type { Author, Lang } from "../types";
-import { AssetThumb, useImagePicker } from "./ImagePicker";
+import { loadAuthorsList, setAuthorsCache, getCachedAuthors } from "../lib/authorCache";
+import { AssetThumb } from "./ImageLibrary";
+import { useImagePicker } from "./useImagePicker";
 import { Button, Field, TextArea, TextInput } from "./fields";
-
-let cache: Author[] | null = null;
-let cachePromise: Promise<Author[]> | null = null;
-
-export const loadAuthorsList = (force = false): Promise<Author[]> => {
-  if (!force && cache) return Promise.resolve(cache);
-  if (!cachePromise || force) {
-    cachePromise = getAuthors().then((a) => {
-      cache = a;
-      return a;
-    });
-  }
-  return cachePromise;
-};
-
-export const invalidateAuthorCache = (): void => {
-  cache = null;
-  cachePromise = null;
-};
 
 const emptyAuthor = (): Author => ({ id: "", avatar: "", name: { en: "", pl: "" }, bio: { en: "", pl: "" } });
 
@@ -107,13 +90,13 @@ const NewAuthorForm = ({
 };
 
 const AuthorPickerModal = ({ lang, onClose, onSelect }: PickerProps) => {
-  const [authors, setAuthors] = useState<Author[] | null>(cache);
+  const [authors, setAuthors] = useState<Author[] | null>(getCachedAuthors());
   const [query, setQuery] = useState("");
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!cache) {
+    if (!getCachedAuthors()) {
       loadAuthorsList()
         .then(setAuthors)
         .catch((e) => setError(String(e)));
@@ -132,8 +115,7 @@ const AuthorPickerModal = ({ lang, onClose, onSelect }: PickerProps) => {
       const next = [...(authors ?? []), draft];
       const result = await putAuthors(next);
       const canonical = result.data ?? next;
-      cache = canonical;
-      cachePromise = Promise.resolve(canonical);
+      setAuthorsCache(canonical);
       setAuthors(canonical);
       const created = canonical[canonical.length - 1];
       onSelect(created.id);
@@ -215,10 +197,10 @@ interface AuthorPickerProps {
 
 export const AuthorPicker = ({ value, lang, onChange }: AuthorPickerProps) => {
   const [openState, setOpenState] = useState(false);
-  const [authors, setAuthors] = useState<Author[] | null>(cache);
+  const [authors, setAuthors] = useState<Author[] | null>(getCachedAuthors());
 
   useEffect(() => {
-    if (!cache) {
+    if (!getCachedAuthors()) {
       loadAuthorsList()
         .then(setAuthors)
         .catch(() => {});

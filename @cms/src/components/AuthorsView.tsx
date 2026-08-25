@@ -1,6 +1,6 @@
-import { useImagePicker } from "./ImagePicker";
+import { useImagePicker } from "./useImagePicker";
 import type { Author } from "../types";
-import { AssetThumb } from "./ImagePicker";
+import { AssetThumb } from "./ImageLibrary";
 import { Button, Field, TextArea, TextInput } from "./fields";
 
 interface AuthorFormProps {
