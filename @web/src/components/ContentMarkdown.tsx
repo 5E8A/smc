@@ -13,6 +13,7 @@ import {
 } from "@smc/shared/markdown";
 import Icon from "./IconMap";
 import Carousel from "./Carousel";
+import SmartImage from "./SmartImage";
 
 type MarkdownComponents = Components & {
   icon: React.ComponentType<{ name?: string; className?: string; node?: unknown }>;
@@ -165,9 +166,9 @@ const components: MarkdownComponents = {
     </td>
   ),
   hr: ({ node, ...props }) => <hr className="my-8 border-white/5" {...props} />,
-  img: ({ src, alt, title, node, ...props }) => (
+  img: ({ src, alt, title }) => (
     <figure className="my-6 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
-      <img src={src} alt={alt || ""} className="block h-auto w-auto max-w-full" {...props} />
+      <SmartImage src={typeof src === "string" ? src : ""} alt={alt || ""} fit="natural" />
       {title && <figcaption className="bg-black/40 p-2 text-center text-xs text-mc-text-muted">{title}</figcaption>}
     </figure>
   ),

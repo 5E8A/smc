@@ -136,6 +136,10 @@ export const translations = {
       prev: "Previous image",
       next: "Next image",
     },
+    media: {
+      play: "Play animation",
+      stop: "Stop animation",
+    },
   },
   pl: {
     nav: {
@@ -273,6 +277,10 @@ export const translations = {
       close: "Zamknij",
       prev: "Poprzedni obraz",
       next: "Następny obraz",
+    },
+    media: {
+      play: "Odtwórz animację",
+      stop: "Zatrzymaj animację",
     },
   },
 };

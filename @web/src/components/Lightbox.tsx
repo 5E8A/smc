@@ -4,7 +4,10 @@ import { createPortal } from "react-dom";
 import { CaretLeftIcon, CaretRightIcon, XIcon } from "@phosphor-icons/react";
 import SmartImage from "@/components/SmartImage";
 import { BlurhashCanvas } from "@/components/BlurhashCanvas";
+import { PlaybackToggleButton } from "@/components/PlaybackToggleButton";
+import { usePlaybackGate, usePrefersReducedMotion } from "@/hooks/usePlaybackGate";
 import { getHash } from "@/utils/blurhash";
+import { isAnimatedAsset, staticVariantSrc } from "@/utils/media";
 import { useLanguage } from "@/context/useLanguage";
 
 interface LightboxProps {
@@ -47,6 +50,10 @@ const Stage = ({ src, alt, onClose, onSwipe }: StageProps) => {
   const frameRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+
+  const reduced = usePrefersReducedMotion();
+  const gated = isAnimatedAsset(src) && reduced;
+  const gate = usePlaybackGate(gated);
 
   const [zoom, setZoom] = useState(MIN_ZOOM);
   const [origin, setOrigin] = useState({ x: 50, y: 50 });
@@ -194,6 +201,7 @@ const Stage = ({ src, alt, onClose, onSwipe }: StageProps) => {
       onPointerCancel={endGesture}
       onClick={onStageClick}
       onContextMenu={onContextMenu}
+      {...gate.hoverProps}
       className={`flex size-full min-h-0 touch-none select-none items-center justify-center ${
         zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
       }`}
@@ -210,7 +218,7 @@ const Stage = ({ src, alt, onClose, onSwipe }: StageProps) => {
         <BlurhashCanvas hash={getHash(src) ?? ""} className="absolute inset-0 size-full" />
         <img
           ref={imgRef}
-          src={src}
+          src={gated && !gate.playing ? staticVariantSrc(src) : src}
           alt={alt}
           loading="eager"
           decoding="async"
@@ -221,6 +229,9 @@ const Stage = ({ src, alt, onClose, onSwipe }: StageProps) => {
             ratio ? "" : "invisible"
           }`}
         />
+        {gated && (
+          <PlaybackToggleButton playing={gate.playing} onToggle={gate.toggle} className="absolute right-2 bottom-2" />
+        )}
       </div>
     </div>
   );

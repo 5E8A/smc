@@ -6,14 +6,17 @@ import { encode } from "blurhash";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const assetsDir = path.join(root, "@web", "public", "assets");
-const outFile = path.join(root, "@web", "src", "data", "blurhash.json");
+const outDir = path.join(root, "@web", "src", "data");
+const outFile = path.join(outDir, "blurhash.json");
+const mediaOutFile = path.join(outDir, "media.json");
 
 const COMPONENTS_X = 4;
 const COMPONENTS_Y = 3;
 const ENCODE_MAX_WIDTH = 128;
 
 const SKIP_DIRS = new Set(["fonts"]);
-const isVariant = (name) => name.includes(".placeholder.") || name.includes(".mobile.");
+const isVariant = (name) =>
+  name.includes(".placeholder.") || name.includes(".mobile.") || name.includes(".static.");
 
 const walk = (dir) =>
   fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -43,10 +46,19 @@ async function encodeFile(file) {
 }
 
 const hashes = {};
+const animatedKeys = [];
 let transparentSkipped = 0;
 for (const file of walk(assetsDir)) {
   const key = "assets/" + path.relative(assetsDir, file).replace(/\\/g, "/");
   try {
+    const meta = await sharp(file).metadata();
+    if ((meta.pages ?? 1) > 1) {
+      animatedKeys.push(key);
+      const staticSibling = file.replace(/\.webp$/i, ".static.webp");
+      if (/\.webp$/i.test(file) && !fs.existsSync(staticSibling)) {
+        console.warn(`warn ${key}: animated but missing ${path.basename(staticSibling)} static fallback`);
+      }
+    }
     const result = await encodeFile(file);
     if (result) {
       hashes[key] = result.hash;
@@ -63,4 +75,10 @@ for (const file of walk(assetsDir)) {
 fs.writeFileSync(outFile, JSON.stringify(hashes, Object.keys(hashes).sort(), 2) + "\n");
 console.log(
   `wrote ${Object.keys(hashes).length} blurhashes (${transparentSkipped} transparent skipped) to ${path.relative(root, outFile)}`
+);
+
+animatedKeys.sort();
+fs.writeFileSync(mediaOutFile, JSON.stringify({ animated: animatedKeys }, ["animated"], 2) + "\n");
+console.log(
+  `wrote ${animatedKeys.length} animated asset${animatedKeys.length === 1 ? "" : "s"} to ${path.relative(root, mediaOutFile)}`
 );

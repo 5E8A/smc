@@ -1,6 +1,9 @@
 import { type CSSProperties } from "react";
 import { getHash } from "@/utils/blurhash";
+import { isAnimatedAsset, staticVariantSrc } from "@/utils/media";
+import { usePlaybackGate, usePrefersReducedMotion } from "@/hooks/usePlaybackGate";
 import { BlurhashCanvas } from "./BlurhashCanvas";
+import { PlaybackToggleButton } from "./PlaybackToggleButton";
 
 interface SmartImageProps {
   src: string;
@@ -9,7 +12,7 @@ interface SmartImageProps {
   height?: number;
   priority?: "high" | "low";
   lazy?: boolean;
-  fit?: "cover" | "contain";
+  fit?: "cover" | "contain" | "natural";
   className?: string;
 }
 
@@ -24,6 +27,10 @@ const SmartImage = ({
   className = "",
 }: SmartImageProps) => {
   const hash = getHash(src);
+  const animated = isAnimatedAsset(src);
+  const reduced = usePrefersReducedMotion();
+  const gated = animated && reduced;
+  const gate = usePlaybackGate(gated);
 
   const wrapperStyle: CSSProperties = {};
   if (width && height) {
@@ -31,19 +38,35 @@ const SmartImage = ({
     wrapperStyle.height = height;
   }
 
+  const imgLayout =
+    fit === "natural"
+      ? "relative block h-auto max-w-full"
+      : `absolute inset-0 size-full ${fit === "contain" ? "object-contain" : "object-cover"}`;
+
+  const imgProps = {
+    alt,
+    width,
+    height,
+    loading: (lazy ? "lazy" : "eager") as "lazy" | "eager",
+    decoding: "async" as const,
+    fetchPriority: priority,
+  };
+
   return (
-    <div className={`relative overflow-hidden ${className}`} style={wrapperStyle}>
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={wrapperStyle}
+      {...(gated ? gate.hoverProps : {})}
+    >
       <BlurhashCanvas hash={hash ?? ""} className="absolute inset-0 size-full" />
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        loading={lazy ? "lazy" : "eager"}
-        decoding="async"
-        fetchPriority={priority}
-        className={`absolute inset-0 size-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
-      />
+      {gated ? (
+        <>
+          <img {...imgProps} src={gate.playing ? src : staticVariantSrc(src)} draggable={false} className={imgLayout} />
+          <PlaybackToggleButton playing={gate.playing} onToggle={gate.toggle} className="absolute right-2 bottom-2" />
+        </>
+      ) : (
+        <img {...imgProps} src={src} className={imgLayout} />
+      )}
     </div>
   );
 };
