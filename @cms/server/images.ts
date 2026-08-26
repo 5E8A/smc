@@ -159,6 +159,8 @@ export function serveAsset(publicPath: string, res: import("http").ServerRespons
     "Content-Type": mimeFor(abs),
     "Content-Length": stat.size,
     "Cache-Control": "no-store",
+    "Content-Security-Policy": "sandbox",
+    "X-Content-Type-Options": "nosniff",
   });
   fs.createReadStream(abs).pipe(res);
   return true;

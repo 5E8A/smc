@@ -374,9 +374,10 @@ export function cmsApi(): Plugin {
     configureServer(server) {
       server.middlewares.use("/api", (req, res) => {
         route(req, res).catch((err) => {
+          console.error("[cms-api]", err);
           if (!res.headersSent) {
             res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: String(err?.stack ?? err) }));
+            res.end(JSON.stringify({ error: "internal server error" }));
           } else {
             res.end();
           }

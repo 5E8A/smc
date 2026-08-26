@@ -23,7 +23,11 @@ interface ModrinthProject {
 }
 
 const MODRINTH_API = "https://api.modrinth.com/v2";
+const MODRINTH_CDN = "https://cdn.modrinth.com/";
 const USER_AGENT = "SMCSite/cms-mods";
+
+const safeIconUrl = (url: string | null | undefined): string | null =>
+  typeof url === "string" && url.startsWith(MODRINTH_CDN) ? url : null;
 
 const slugFromInput = (input: string): string => {
   const trimmed = input.trim();
@@ -346,6 +350,7 @@ export function ModsBoard() {
               <ul className="space-y-1.5">
                 {col.slugs.map((slug, index) => {
                   const project = meta.get(slug);
+                  const iconUrl = safeIconUrl(project?.icon_url);
                   const isDragging = drag?.slug === slug;
                   return (
                     <li
@@ -376,9 +381,9 @@ export function ModsBoard() {
                             : "border-zinc-800 bg-zinc-900"
                       }`}
                     >
-                      {project?.icon_url ? (
+                      {iconUrl ? (
                         <img
-                          src={project.icon_url}
+                          src={iconUrl}
                           alt=""
                           width={24}
                           height={24}
@@ -488,32 +493,35 @@ export function ModsBoard() {
                     {draft.error && <p className="mt-1 text-[10px] text-red-400">{draft.error}</p>}
                     {draft.hits.length > 0 && (
                       <ul className="absolute inset-x-0 top-full z-30 mt-1 max-h-48 overflow-y-auto rounded-md border border-zinc-700 bg-zinc-900 py-1 shadow-xl">
-                        {draft.hits.map((hit) => (
-                          <li key={hit.slug}>
-                            <button
-                              type="button"
-                              onClick={() => addSlug(col.key, hit.slug)}
-                              className="flex w-full items-center gap-2 px-2 py-1.5 text-left hover:bg-zinc-800"
-                            >
-                              {hit.icon_url ? (
-                                <img
-                                  src={hit.icon_url}
-                                  alt=""
-                                  width={20}
-                                  height={20}
-                                  loading="lazy"
-                                  className="h-5 w-5 shrink-0 rounded object-cover"
-                                />
-                              ) : (
-                                <span className="h-5 w-5 shrink-0 rounded bg-zinc-800" />
-                              )}
-                              <span className="min-w-0">
-                                <span className="block truncate text-xs font-semibold text-white">{hit.title}</span>
-                                <span className="block truncate text-[10px] text-zinc-500">{hit.slug}</span>
-                              </span>
-                            </button>
-                          </li>
-                        ))}
+                        {draft.hits.map((hit) => {
+                          const iconUrl = safeIconUrl(hit.icon_url);
+                          return (
+                            <li key={hit.slug}>
+                              <button
+                                type="button"
+                                onClick={() => addSlug(col.key, hit.slug)}
+                                className="flex w-full items-center gap-2 px-2 py-1.5 text-left hover:bg-zinc-800"
+                              >
+                                {iconUrl ? (
+                                  <img
+                                    src={iconUrl}
+                                    alt=""
+                                    width={20}
+                                    height={20}
+                                    loading="lazy"
+                                    className="h-5 w-5 shrink-0 rounded object-cover"
+                                  />
+                                ) : (
+                                  <span className="h-5 w-5 shrink-0 rounded bg-zinc-800" />
+                                )}
+                                <span className="min-w-0">
+                                  <span className="block truncate text-xs font-semibold text-white">{hit.title}</span>
+                                  <span className="block truncate text-[10px] text-zinc-500">{hit.slug}</span>
+                                </span>
+                              </button>
+                            </li>
+                          );
+                        })}
                       </ul>
                     )}
                     {draft.searching && (

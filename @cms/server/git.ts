@@ -122,11 +122,40 @@ function runStreamStep(res: ServerResponse, args: string[]): Promise<number> {
   });
 }
 
-export function streamGitDeploy(res: ServerResponse, message: string, paths: string[]): void {
+function changedPathsFromStatus(status: GitResult): Set<string> {
+  const known = new Set<string>();
+  for (const line of status.out.split(/\r?\n/)) {
+    if (line.length < 4) continue;
+    const p = line.slice(3);
+    const arrow = p.indexOf(" -> ");
+    if (arrow !== -1) {
+      known.add(p.slice(0, arrow));
+      known.add(p.slice(arrow + 4));
+    } else {
+      known.add(p);
+    }
+  }
+  return known;
+}
+
+export async function streamGitDeploy(res: ServerResponse, message: string, paths: string[]): Promise<void> {
   if (running) {
     sendJson(res, 409, { error: "a git operation is already running" });
     return;
   }
+
+  const status = await runGit(["status", "--porcelain=v1"]);
+  if (status.code !== 0) {
+    sendJson(res, 400, { error: `git status failed: ${status.err || `exit ${status.code}`}` });
+    return;
+  }
+  const known = changedPathsFromStatus(status);
+  const invalid = paths.filter((p) => !known.has(p));
+  if (invalid.length > 0) {
+    sendJson(res, 400, { error: `path(s) not modified in the working tree: ${invalid.join(", ")}` });
+    return;
+  }
+
   running = true;
   openSse(res);
 
