@@ -1,12 +1,14 @@
 import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "http";
-import { isKind, isLang, readRawBody, sendJson } from "./util.ts";
+import path from "path";
+import { BodyTooLargeError, isKind, isLang, readRawBody, sendJson } from "./util.ts";
 import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } from "./store.ts";
 import {
   createDir,
   deleteDir,
   deleteImage,
   findRefs,
+  formatMb,
   listDirs,
   listImages,
   renameDir,
@@ -14,15 +16,15 @@ import {
   runLqip,
   saveUpload,
   serveAsset,
+  uploadLimitFor,
 } from "./images.ts";
 import { clampMaxWidth, clampQuality } from "./images.ts";
-import { convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
+import { buildZip, convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
 import { loadModList, saveModList, runSyncMods } from "./mods.ts";
 import { runIconsSync } from "./icons.ts";
 import { readGitStatus, streamGitDeploy, streamGitPull } from "./git.ts";
 
 const MAX_JSON_BODY = 5 * 1024 * 1024;
-const MAX_UPLOAD = 26 * 1024 * 1024;
 
 export const CMS_PORT = 4000;
 
@@ -80,15 +82,49 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const name = url.searchParams.get("name") ?? "";
         const quality = Number(url.searchParams.get("quality") ?? NaN);
         const maxWidth = Number(url.searchParams.get("maxWidth") ?? NaN);
+        const streamProgress = url.searchParams.get("progress") === "1";
         if (!name) return void sendJson(res, 400, { error: "name is required" });
+        const limit = uploadLimitFor(path.extname(name).toLowerCase());
+        const declaredLength = Number(req.headers["content-length"] ?? 0);
+        if (Number.isFinite(declaredLength) && declaredLength > limit) {
+          return void sendJson(res, 413, {
+            error: `${name} is ${formatMb(declaredLength)} - the upload limit is ${formatMb(limit)}`,
+          });
+        }
         try {
-          const body = await readRawBody(req, MAX_UPLOAD);
-          const result = await saveUpload(dir, name, body, {
+          const body = await readRawBody(req, limit);
+          const encodeOpts = {
             quality: Number.isFinite(quality) ? quality : undefined,
             maxWidth: Number.isFinite(maxWidth) ? maxWidth : undefined,
-          });
+          };
+          if (streamProgress) {
+            res.writeHead(200, {
+              "Content-Type": "application/x-ndjson",
+              "Cache-Control": "no-store",
+            });
+            const send = (line: unknown): void => {
+              res.write(JSON.stringify(line) + "\n");
+            };
+            try {
+              const result = await saveUpload(dir, name, body, {
+                ...encodeOpts,
+                onProgress: (event) => send({ file: name, ...event }),
+              });
+              send({ result });
+            } catch (err) {
+              send({ error: (err as Error).message });
+            }
+            res.end();
+            return;
+          }
+          const result = await saveUpload(dir, name, body, encodeOpts);
           return void sendJson(res, 200, result);
         } catch (err) {
+          if (err instanceof BodyTooLargeError) {
+            return void sendJson(res, 413, {
+              error: `${name} is over the upload limit of ${formatMb(err.limit)}`,
+            });
+          }
           return void sendJson(res, 400, { error: (err as Error).message });
         }
       }
@@ -121,7 +157,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
           return void sendJson(res, 200, { ok: true, rewritten });
         }
         if (parsed.action === "delete") {
-          const result = deleteDir(target);
+          const result = await deleteDir(target);
           if (result.blocked) {
             return void sendJson(res, 409, {
               error: "Folder contains images still referenced by existing content.",
@@ -153,7 +189,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       }
       const p = url.searchParams.get("path") ?? "";
       try {
-        const result = deleteImage(p);
+        const result = await deleteImage(p);
         if (result.blocked) {
           return void sendJson(res, 409, {
             error: "Image is still referenced by existing content.",
@@ -233,15 +269,50 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         res.writeHead(405);
         return void res.end();
       }
+      const streamProgress = url.searchParams.get("progress") === "1";
       try {
         const body = await readRawBody(req, MAX_CONVERT_BODY);
         const { fields, files } = parseMultipart(body, req.headers["content-type"]);
         if (files.length === 0) return void sendJson(res, 400, { error: "no files in request" });
-        const result = await convertBatch(files, {
+        const convertOpts = {
           quality: clampQuality(Number(fields.quality) || 80),
           resize: fields.resize === "1",
           maxWidth: clampMaxWidth(Number(fields.maxWidth) || 1600),
-        });
+        };
+        if (streamProgress) {
+          res.writeHead(200, {
+            "Content-Type": "application/x-ndjson",
+            "Cache-Control": "no-store",
+          });
+          const send = (line: unknown): void => {
+            res.write(JSON.stringify(line) + "\n");
+          };
+          try {
+            const result = await convertBatch(files, {
+              ...convertOpts,
+              onProgress: (event) => send(event),
+            });
+            if (result.converted.length === 0) {
+              send({
+                error: `All ${result.errors.length} file(s) failed to convert`,
+                details: result.errors,
+              });
+              res.end();
+              return;
+            }
+            send({ summary: { converted: result.converted.length, errors: result.errors.length } });
+            send({ zip: true });
+            const zipfile = buildZip(result);
+            zipfile.outputStream.on("error", () => res.destroy());
+            zipfile.outputStream.pipe(res);
+            return;
+          } catch (err) {
+            send({ error: (err as Error).message });
+            res.end();
+            return;
+          }
+        }
+        const result = await convertBatch(files, convertOpts);
         if (result.converted.length === 0) {
           return void sendJson(res, 400, {
             error: `All ${result.errors.length} file(s) failed to convert`,
@@ -250,6 +321,9 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         }
         streamConvertedZip(res, result);
       } catch (err) {
+        if (err instanceof BodyTooLargeError) {
+          return void sendJson(res, 413, { error: `Batch exceeds the ${formatMb(err.limit)} total size limit` });
+        }
         return void sendJson(res, 400, { error: (err as Error).message });
       }
       return;

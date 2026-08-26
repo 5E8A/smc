@@ -28,6 +28,6 @@ export const invalidateMediaCache = (): void => {
 };
 
 export interface ImageNotice {
-  kind: "ok" | "err";
+  kind: "success" | "warn" | "error";
   text: string;
 }

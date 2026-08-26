@@ -51,10 +51,12 @@ export interface Issue {
 export interface ImageInfo {
   path: string;
   url: string;
+  staticUrl?: string;
   dir: string;
   name: string;
   width: number;
   height: number;
+  animated: boolean;
 }
 
 export interface ImagesPayload {

@@ -3,12 +3,14 @@ import {
   CaretRightIcon,
   CircleNotchIcon,
   CopyIcon,
+  FileVideoIcon,
   FolderIcon,
   FolderPlusIcon,
   HashIcon,
   ImagesIcon,
   MagnifyingGlassIcon,
   PencilSimpleIcon,
+  PlayIcon,
   TrashIcon,
   UploadSimpleIcon,
   WarningCircleIcon,
@@ -17,15 +19,21 @@ import {
 import { createDir, deleteDir, deleteImage, getRefs, renameDir, renameImage, ApiError } from "../api";
 import type { ImageInfo, RefUsages } from "../types";
 import { buildDirTree, dirLabel, type DirNode } from "../lib/mediaTree";
-import { useMediaLibrary } from "./useMediaLibrary";
+import { formatUploadStage } from "../lib/stageLabels";
+import { useMediaLibrary, type UploadJob } from "./useMediaLibrary";
+import { Banner } from "./Banner";
 import { Button } from "./fields";
 
-const VALID_UPLOAD_EXTS = [".png", ".jpg", ".jpeg", ".webp"];
+const VALID_UPLOAD_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".apng", ".mp4", ".m4v", ".webm", ".mov", ".mkv"];
+const VIDEO_EXTS = new Set([".mp4", ".m4v", ".webm", ".mov", ".mkv"]);
 
-const isUploadable = (f: File): boolean => {
-  const dot = f.name.lastIndexOf(".");
-  return dot >= 0 && VALID_UPLOAD_EXTS.includes(f.name.slice(dot).toLowerCase());
+const extOf = (name: string): string => {
+  const dot = name.lastIndexOf(".");
+  return dot >= 0 ? name.slice(dot).toLowerCase() : "";
 };
+
+const isUploadable = (f: File): boolean => VALID_UPLOAD_EXTS.includes(extOf(f.name));
+const isVideoFile = (f: File): boolean => VIDEO_EXTS.has(extOf(f.name));
 
 interface PendingFile {
   file: File;
@@ -64,10 +72,115 @@ const iconBtn =
 const numberInputCls =
   "w-14 rounded bg-zinc-900 px-1 py-0.5 text-xs text-zinc-200 outline-none focus:border-green-500 border border-zinc-700";
 
+const UploadJobBanner = ({ job, onDismiss }: { job: UploadJob; onDismiss: () => void }) => {
+  if (job.status === "success") {
+    return (
+      <Banner variant="success" title={job.name} dismissable onDismiss={onDismiss}>
+        Converted to webp
+        {job.animated ? ` - animated${job.frames ? ` (${job.frames} frames)` : ""}` : ""}
+      </Banner>
+    );
+  }
+  if (job.status === "error") {
+    return (
+      <Banner variant="error" title={`${job.name} failed`} dismissable onDismiss={onDismiss}>
+        {job.error}
+      </Banner>
+    );
+  }
+  return (
+    <Banner variant="info" busy title={job.name}>
+      <div className="flex items-center gap-2">
+        <span className="h-1 w-full max-w-48 overflow-hidden rounded bg-black/40">
+          {job.pct != null ? (
+            <span
+              className="block h-full bg-green-400 transition-all duration-200"
+              style={{ width: `${Math.max(3, Math.round(job.pct))}%` }}
+            />
+          ) : (
+            <span className="block h-full w-full animate-pulse bg-green-400/60" />
+          )}
+        </span>
+        <span className="shrink-0 whitespace-nowrap">{formatUploadStage(job)}</span>
+      </div>
+    </Banner>
+  );
+};
+
 const TARGET_ROW_HEIGHT = 160;
 const GRID_GAP = 12;
 
 const aspectRatioOf = (img: ImageInfo): number => Math.min(Math.max(img.width / img.height, 0.2), 5);
+
+interface MediaTileProps {
+  img: ImageInfo;
+  rowHeight: number;
+  stretch: boolean;
+  gridWidth: number;
+  showDir: boolean;
+  onSelect?: (path: string) => void;
+  onOpenMenu: (e: React.MouseEvent) => void;
+}
+
+const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOpenMenu }: MediaTileProps) => {
+  const [hovered, setHovered] = useState(false);
+  const hoverSwappable = img.animated && !!img.staticUrl;
+  const src = !hoverSwappable || hovered ? img.url : img.staticUrl!;
+
+  const inner = (
+    <>
+      <div
+        className="relative overflow-hidden bg-zinc-950"
+        style={{ height: rowHeight }}
+        {...(hoverSwappable ? { onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false) } : {})}
+      >
+        <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+        {img.animated && (
+          <span
+            className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase"
+            title={hoverSwappable ? "Animated - hover to play" : "Animated webp"}
+          >
+            <PlayIcon size={9} weight="bold" /> anim
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-1 bg-zinc-900 px-1.5 py-1">
+        <span className="min-w-0 flex-1 truncate text-left text-[10px] text-zinc-400" title={img.path}>
+          {showDir ? `${img.dir ? `${img.dir}/` : ""}${img.name}` : img.name}
+        </span>
+      </div>
+    </>
+  );
+  const cls = `relative min-w-0 overflow-hidden rounded-lg border border-zinc-800 ${
+    onSelect ? "transition-colors hover:border-green-500" : ""
+  }`;
+  const style = stretch
+    ? { width: Math.min(aspectRatioOf(img) * rowHeight, gridWidth) }
+    : { flexGrow: aspectRatioOf(img), flexBasis: 0 };
+
+  if (onSelect) {
+    return (
+      <button
+        type="button"
+        title={img.path}
+        style={style}
+        className={cls}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(img.path);
+        }}
+        onContextMenu={onOpenMenu}
+      >
+        {inner}
+      </button>
+    );
+  }
+  return (
+    <div title={img.path} style={style} className={cls} onContextMenu={onOpenMenu}>
+      {inner}
+    </div>
+  );
+};
 
 export interface MediaBrowserProps {
   manageFolders?: boolean;
@@ -224,17 +337,12 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
     };
   }, [menu]);
 
-  const startUpload = async () => {
-    if (!pending || lib.uploading) return;
-    const ok = await lib.uploadFiles(
-      pending.map((p) => p.file),
-      uploadDir,
-      { quality, maxWidth }
-    );
-    if (ok) {
-      cancelStaging();
-      setSelectedDir(uploadDir);
-    }
+  const startUpload = () => {
+    if (!pending) return;
+    const files = pending.map((p) => p.file);
+    cancelStaging();
+    setSelectedDir(uploadDir);
+    void lib.uploadFiles(files, uploadDir, { quality, maxWidth });
   };
 
   const beginImgDelete = (img: ImageInfo) => {
@@ -243,7 +351,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
     setScanning(true);
     getRefs([img.path])
       .then(setImgRefs)
-      .catch((err) => lib.setNotice({ kind: "err", text: String(err) }))
+      .catch((err) => lib.setNotice({ kind: "error", text: String(err) }))
       .finally(() => setScanning(false));
   };
 
@@ -255,12 +363,12 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
       setImgDelete(null);
       await lib.refresh();
       lib.setLqipStale(true);
-      lib.setNotice({ kind: "ok", text: `Deleted ${imgDelete.path}` });
+      lib.setNotice({ kind: "success", text: `Deleted ${imgDelete.path}` });
     } catch (err) {
       if (err instanceof ApiError && err.payload.usages) {
         setImgRefs(err.payload.usages);
       } else {
-        lib.setNotice({ kind: "err", text: String(err instanceof ApiError ? err.message : err) });
+        lib.setNotice({ kind: "error", text: String(err instanceof ApiError ? err.message : err) });
         setImgDelete(null);
       }
     } finally {
@@ -275,7 +383,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
     setScanning(true);
     getRefs(contained.map((i) => i.path))
       .then((usages) => setDirRefs(Object.keys(usages).length > 0 ? usages : {}))
-      .catch((err) => lib.setNotice({ kind: "err", text: String(err) }))
+      .catch((err) => lib.setNotice({ kind: "error", text: String(err) }))
       .finally(() => setScanning(false));
   };
 
@@ -288,12 +396,12 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
       setSelectedDir("all");
       await lib.refresh();
       lib.setLqipStale(true);
-      lib.setNotice({ kind: "ok", text: `Deleted folder ${dirLabel(dirDelete.dir)}` });
+      lib.setNotice({ kind: "success", text: `Deleted folder ${dirLabel(dirDelete.dir)}` });
     } catch (err) {
       if (err instanceof ApiError && err.payload.usages) {
         setDirRefs(err.payload.usages);
       } else {
-        lib.setNotice({ kind: "err", text: String(err instanceof ApiError ? err.message : err) });
+        lib.setNotice({ kind: "error", text: String(err instanceof ApiError ? err.message : err) });
         setDirDelete(null);
       }
     } finally {
@@ -315,7 +423,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
       if (folderPrompt.mode === "create") {
         const rel = folderPrompt.parent ? `${folderPrompt.parent}/${name}` : name;
         await createDir(rel);
-        lib.setNotice({ kind: "ok", text: `Created folder ${dirLabel(rel)}` });
+        lib.setNotice({ kind: "success", text: `Created folder ${dirLabel(rel)}` });
       } else {
         const result = await renameDir(folderPrompt.dir, name);
         const segs = folderPrompt.dir.split("/");
@@ -324,7 +432,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
           setSelectedDir(newRel + selectedDir.slice(folderPrompt.dir.length));
         }
         lib.setNotice({
-          kind: "ok",
+          kind: "success",
           text: `Renamed to ${dirLabel(newRel)}${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
         });
         lib.setLqipStale(true);
@@ -332,7 +440,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
       await lib.refresh();
       setFolderPrompt(null);
     } catch (err) {
-      lib.setNotice({ kind: "err", text: String(err instanceof ApiError ? err.message : err) });
+      lib.setNotice({ kind: "error", text: String(err instanceof ApiError ? err.message : err) });
     } finally {
       setBusy(false);
     }
@@ -340,7 +448,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
   const copyPath = (img: ImageInfo) => {
     void navigator.clipboard.writeText(img.path);
-    lib.setNotice({ kind: "ok", text: `Copied ${img.path}` });
+    lib.setNotice({ kind: "success", text: `Copied ${img.path}` });
   };
 
   const openFilePrompt = (img: ImageInfo) => {
@@ -356,14 +464,14 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
     try {
       const result = await renameImage(filePrompt.path, name);
       lib.setNotice({
-        kind: "ok",
+        kind: "success",
         text: `Renamed to ${name}.webp${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
       });
       lib.setLqipStale(true);
       await lib.refresh();
       setFilePrompt(null);
     } catch (err) {
-      lib.setNotice({ kind: "err", text: String(err instanceof ApiError ? err.message : err) });
+      lib.setNotice({ kind: "error", text: String(err instanceof ApiError ? err.message : err) });
     } finally {
       setBusy(false);
     }
@@ -480,24 +588,6 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
   }, [visible, gridWidth]);
 
   const renderTile = (img: ImageInfo, rowHeight: number, stretch: boolean): ReactNode => {
-    const inner = (
-      <>
-        <div className="overflow-hidden bg-zinc-950" style={{ height: rowHeight }}>
-          <img src={img.url} alt="" loading="lazy" className="h-full w-full object-cover" />
-        </div>
-        <div className="flex items-center gap-1 bg-zinc-900 px-1.5 py-1">
-          <span className="min-w-0 flex-1 truncate text-left text-[10px] text-zinc-400" title={img.path}>
-            {selectedDir === "all" ? `${img.dir ? `${img.dir}/` : ""}${img.name}` : img.name}
-          </span>
-        </div>
-      </>
-    );
-    const cls = `relative min-w-0 overflow-hidden rounded-lg border border-zinc-800 ${
-      onSelect ? "transition-colors hover:border-green-500" : ""
-    }`;
-    const style = stretch
-      ? { width: Math.min(aspectRatioOf(img) * rowHeight, gridWidth) }
-      : { flexGrow: aspectRatioOf(img), flexBasis: 0 };
     const openMenu = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -507,28 +597,17 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
         img,
       });
     };
-    if (onSelect) {
-      return (
-        <button
-          key={img.path}
-          type="button"
-          title={img.path}
-          style={style}
-          className={cls}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(img.path);
-          }}
-          onContextMenu={openMenu}
-        >
-          {inner}
-        </button>
-      );
-    }
     return (
-      <div key={img.path} title={img.path} style={style} className={cls} onContextMenu={openMenu}>
-        {inner}
-      </div>
+      <MediaTile
+        key={img.path}
+        img={img}
+        rowHeight={rowHeight}
+        stretch={stretch}
+        gridWidth={gridWidth}
+        showDir={selectedDir === "all"}
+        onSelect={onSelect}
+        onOpenMenu={openMenu}
+      />
     );
   };
 
@@ -630,24 +709,59 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
           )}
         </div>
 
-        {rejectedNames.length > 0 && (
-          <div className="mb-3 flex items-start justify-between gap-3 rounded-xl border border-red-800 bg-red-950/40 px-3 py-2.5">
-            <p className="flex items-start gap-2 text-xs text-red-300">
-              <WarningCircleIcon size={15} className="mt-px shrink-0" />
-              <span>
-                Skipped {rejectedNames.length} unsupported file{rejectedNames.length > 1 ? "s" : ""}:{" "}
-                {rejectedNames.slice(0, 5).join(", ")}
-                {rejectedNames.length > 5 && ` +${rejectedNames.length - 5} more`} - use png, jpg or webp
-              </span>
-            </p>
-            <button
-              type="button"
-              aria-label="Dismiss"
-              onClick={() => setRejectedNames([])}
-              className="mt-0.5 shrink-0 text-red-400 transition-colors hover:text-red-200"
-            >
-              <XIcon size={13} />
-            </button>
+        {(lib.uploads.length > 0 || lib.notice || lib.lqipRunning || lib.lqipStale || rejectedNames.length > 0) && (
+          <div className="mb-3 space-y-2">
+            {lib.uploads.map((job) => (
+              <UploadJobBanner key={job.id} job={job} onDismiss={() => lib.dismissUpload(job.id)} />
+            ))}
+            {lib.lqipRunning && (
+              <Banner busy variant="info" title="Regenerating blurhash…">
+                Updating image placeholders
+              </Banner>
+            )}
+            {lib.lqipStale && (
+              <Banner
+                variant="warn"
+                title="Blurhash placeholders are out of date"
+                actions={
+                  manageFolders && (
+                    <Button
+                      variant="default"
+                      className="px-2.5 py-1.5 text-xs"
+                      onClick={lib.runLqip}
+                      disabled={lib.lqipRunning}
+                    >
+                      <HashIcon size={14} /> Regenerate blurhash
+                    </Button>
+                  )
+                }
+              >
+                Run Regenerate blurhash to refresh the site&apos;s image placeholders.
+              </Banner>
+            )}
+            {lib.notice && (
+              <Banner
+                variant={lib.notice.kind === "success" ? "success" : lib.notice.kind === "warn" ? "warn" : "error"}
+                dismissable
+                onDismiss={() => lib.setNotice(null)}
+              >
+                {lib.notice.text}
+              </Banner>
+            )}
+            {rejectedNames.length > 0 && (
+              <Banner
+                variant="error"
+                title={`Skipped ${rejectedNames.length} unsupported file${rejectedNames.length > 1 ? "s" : ""}`}
+                dismissable
+                onDismiss={() => setRejectedNames([])}
+              >
+                <p>
+                  {rejectedNames.slice(0, 5).join(", ")}
+                  {rejectedNames.length > 5 && ` +${rejectedNames.length - 5} more`} - use png, jpg, webp, gif, apng or
+                  video
+                </p>
+              </Banner>
+            )}
           </div>
         )}
 
@@ -689,35 +803,13 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
             </div>
           )}
         </div>
-
-        {(lib.notice || lib.uploading || lib.lqipRunning || lib.lqipStale) && (
-          <div className="mt-3 flex items-center gap-2 text-xs">
-            {lib.uploading ? (
-              <span className="flex items-center gap-1.5 text-zinc-300">
-                <CircleNotchIcon size={13} className="animate-spin" /> Uploading {lib.progress}
-              </span>
-            ) : lib.lqipRunning ? (
-              <span className="flex items-center gap-1.5 text-zinc-500">
-                <HashIcon size={13} className="animate-pulse" /> Regenerating blurhash…
-              </span>
-            ) : lib.lqipStale ? (
-              <span className="flex items-center gap-1.5 text-amber-400">
-                <WarningCircleIcon size={13} /> Blurhash placeholders are out of date - run Regenerate blurhash
-              </span>
-            ) : (
-              lib.notice && (
-                <span className={lib.notice.kind === "ok" ? "text-green-400" : "text-red-400"}>{lib.notice.text}</span>
-              )
-            )}
-          </div>
-        )}
       </section>
 
       <input
         ref={fileInputRef}
         type="file"
         multiple
-        accept=".png,.jpg,.jpeg,.webp"
+        accept=".png,.jpg,.jpeg,.webp,.gif,.apng,.mp4,.m4v,.webm,.mov,.mkv"
         className="hidden"
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => {
@@ -790,7 +882,13 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
           <div className="flex flex-wrap gap-2">
             {pending.map((p) => (
               <div key={p.url} className="w-28">
-                <img src={p.url} alt="" className="h-20 w-28 rounded-md border border-zinc-800 object-cover" />
+                {isVideoFile(p.file) ? (
+                  <div className="flex h-20 w-28 items-center justify-center rounded-md border border-zinc-800 bg-zinc-900">
+                    <FileVideoIcon size={26} className="text-zinc-500" />
+                  </div>
+                ) : (
+                  <img src={p.url} alt="" className="h-20 w-28 rounded-md border border-zinc-800 object-cover" />
+                )}
                 <p className="mt-0.5 truncate text-center text-[10px] text-zinc-500" title={p.file.name}>
                   {p.file.name}
                 </p>
@@ -800,7 +898,8 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
           {skippedCount > 0 && (
             <p className="text-xs text-amber-400">
-              Skipped {skippedCount} unsupported file{skippedCount > 1 ? "s" : ""} - png, jpg or webp only
+              Skipped {skippedCount} unsupported file{skippedCount > 1 ? "s" : ""} - png, jpg, webp, gif, apng or video
+              only
             </p>
           )}
 
@@ -846,24 +945,16 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
           </div>
 
           <p className="text-[11px] text-zinc-600">
-            Files convert to webp on save into public/assets/content - run Regenerate blurhash afterwards to update
-            placeholders.
+            Files convert to webp on save into public/assets/content - gifs, apngs and videos become animated webp (plus
+            a .static.webp first-frame fallback). Run Regenerate blurhash afterwards to update placeholders.
           </p>
 
           <div className="flex justify-end gap-2 pt-1">
-            <Button variant="ghost" onClick={cancelStaging} disabled={lib.uploading}>
+            <Button variant="ghost" onClick={cancelStaging}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={() => void startUpload()} disabled={lib.uploading}>
-              {lib.uploading ? (
-                <>
-                  <CircleNotchIcon size={14} className="animate-spin" /> {lib.progress}
-                </>
-              ) : (
-                <>
-                  <UploadSimpleIcon size={14} /> Upload {pending.length} file{pending.length > 1 ? "s" : ""}
-                </>
-              )}
+            <Button variant="primary" onClick={startUpload}>
+              <UploadSimpleIcon size={14} /> Upload {pending.length} file{pending.length > 1 ? "s" : ""}
             </Button>
           </div>
         </ModalShell>

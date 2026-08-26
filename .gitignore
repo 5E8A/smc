@@ -28,3 +28,4 @@ tools/
 .tanstack/
 .cache/
 tmp-ci-test/
+@scripts/studio/work/

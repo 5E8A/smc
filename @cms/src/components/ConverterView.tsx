@@ -8,6 +8,8 @@ import {
   WarningCircleIcon,
 } from "@phosphor-icons/react";
 import { convertImages, downloadBlob } from "../api";
+import type { ConvertStageEvent } from "../api";
+import { formatConvertStage } from "../lib/stageLabels";
 import { Button } from "./fields";
 
 interface StagedFile {
@@ -20,7 +22,7 @@ interface Discovered {
   skipped: number;
 }
 
-const SUPPORTED_EXTS = [".png", ".jpg", ".jpeg", ".webp"];
+const SUPPORTED_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".apng", ".mp4", ".m4v", ".webm", ".mov", ".mkv"];
 
 const isSupportedName = (name: string): boolean => {
   const dot = name.lastIndexOf(".");
@@ -87,6 +89,7 @@ export const ConverterView = () => {
   const [resize, setResize] = useState(false);
   const [maxWidth, setMaxWidth] = useState(1600);
   const [converting, setConverting] = useState(false);
+  const [live, setLive] = useState<ConvertStageEvent | null>(null);
   const [result, setResult] = useState<{ converted: number; errors: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,16 +140,18 @@ export const ConverterView = () => {
   const runConvert = async (): Promise<void> => {
     if (!items.length || converting) return;
     setConverting(true);
+    setLive(null);
     setError(null);
     setResult(null);
     try {
-      const outcome = await convertImages(items, { quality, resize, maxWidth });
+      const outcome = await convertImages(items, { quality, resize, maxWidth, onProgress: setLive });
       downloadBlob(outcome.blob, "webp-converter.zip");
       setResult({ converted: outcome.converted, errors: outcome.errors });
     } catch (err) {
       setError(String(err instanceof Error ? err.message : err));
     } finally {
       setConverting(false);
+      setLive(null);
     }
   };
 
@@ -179,8 +184,8 @@ export const ConverterView = () => {
         <h2 className="mr-auto text-sm font-bold text-white">
           Converter
           <span className="ml-2 text-xs font-normal text-zinc-500">
-            drop folders or pick them, everything is re-encoded to webp into a downloadable zip and nothing touches
-            public/assets
+            drop folders or pick them, everything is re-encoded to webp (animations included) into a downloadable zip
+            and nothing touches public/assets
           </span>
         </h2>
       </div>
@@ -245,7 +250,8 @@ export const ConverterView = () => {
             <UploadSimpleIcon size={34} className="text-zinc-600" />
             <p className="text-sm font-medium text-zinc-400">No files staged</p>
             <p className="text-xs text-zinc-600">
-              Drop folders here, nested sub-folders are discovered automatically. png / jpg / webp only.
+              Drop folders here, nested sub-folders are discovered automatically. png / jpg / webp / gif / apng /
+              video.
             </p>
           </div>
         ) : (
@@ -263,7 +269,13 @@ export const ConverterView = () => {
       </div>
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-        {items.length > 0 && (
+        {converting && live && (
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <CircleNotchIcon size={13} className="animate-spin" />
+            {formatConvertStage(live)}
+          </span>
+        )}
+        {items.length > 0 && !converting && (
           <span className="text-zinc-500">
             {items.length} file{items.length === 1 ? "" : "s"} · {formatSize(totalBytes)} staged
           </span>
@@ -308,7 +320,7 @@ export const ConverterView = () => {
         ref={filesInputRef}
         type="file"
         multiple
-        accept=".png,.jpg,.jpeg,.webp"
+        accept=".png,.jpg,.jpeg,.webp,.gif,.apng,.mp4,.m4v,.webm,.mov,.mkv"
         className="hidden"
         onChange={(e) => {
           addFromList([...(e.target.files ?? [])]);

@@ -56,6 +56,13 @@ const MIME: Record<string, string> = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".svg": "image/svg+xml",
+  ".gif": "image/gif",
+  ".apng": "image/apng",
+  ".mp4": "video/mp4",
+  ".m4v": "video/mp4",
+  ".webm": "video/webm",
+  ".mov": "video/quicktime",
+  ".mkv": "video/x-matroska",
 };
 
 export function mimeFor(filePath: string): string {
@@ -71,20 +78,46 @@ export function sendJson(res: import("http").ServerResponse, status: number, dat
   res.end(body);
 }
 
+export class BodyTooLargeError extends Error {
+  readonly limit: number;
+
+  constructor(limit: number) {
+    super(`Body exceeds ${formatBytes(limit)} limit`);
+    this.limit = limit;
+  }
+}
+
+const formatBytes = (bytes: number): string =>
+  bytes >= 1024 * 1024 ? `${Math.round(bytes / (1024 * 1024))} MB` : `${Math.round(bytes / 1024)} KB`;
+
 export function readRawBody(req: import("http").IncomingMessage, maxBytes: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
+    const fail = (): void => {
+      req.resume();
+      reject(new BodyTooLargeError(maxBytes));
+    };
     const chunks: Buffer[] = [];
     let size = 0;
+    let settled = false;
     req.on("data", (chunk: Buffer) => {
+      if (settled) return;
       size += chunk.length;
       if (size > maxBytes) {
-        reject(new Error(`Body exceeds ${maxBytes} bytes`));
-        req.destroy();
+        settled = true;
+        fail();
         return;
       }
       chunks.push(chunk);
     });
-    req.on("end", () => resolve(Buffer.concat(chunks)));
-    req.on("error", reject);
+    req.on("end", () => {
+      if (settled) return;
+      settled = true;
+      resolve(Buffer.concat(chunks));
+    });
+    req.on("error", (err) => {
+      if (settled) return;
+      settled = true;
+      reject(err);
+    });
   });
 }

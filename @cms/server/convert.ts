@@ -1,9 +1,13 @@
 import path from "path";
 import sharp from "sharp";
 import yazl from "yazl";
-import { clampMaxWidth, clampQuality } from "./images.ts";
+import { clampMaxWidth, clampQuality, formatMb, MAX_ANIMATION_FRAMES, uploadLimitFor } from "./images.ts";
+import { convertVideoToWebp, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
 
-export const CONVERT_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
+const STATIC_IMAGE_EXTS = [".png", ".jpg", ".jpeg"];
+const ANIMATED_IMAGE_EXTS = [".webp", ".gif"];
+
+export const CONVERT_EXTS = new Set([...STATIC_IMAGE_EXTS, ...ANIMATED_IMAGE_EXTS, ".apng"]);
 
 const MAX_CONVERT_BODY = 512 * 1024 * 1024;
 export { MAX_CONVERT_BODY };
@@ -66,27 +70,105 @@ const sanitizeRelPath = (raw: string): string | null => {
 
 const toWebpName = (rel: string): string => rel.replace(/\.[^.]+$/, "") + ".webp";
 
+const toStaticName = (rel: string): string => rel.replace(/\.[^.]+$/, "") + ".static.webp";
+
 export interface ConvertResult {
   converted: Array<{ relPath: string; data: Buffer }>;
   errors: Array<{ file: string; reason: string }>;
 }
 
+export type ConvertProgressEvent = ConvertProgressEnvelope & ConvertProgressStage;
+
+type ConvertProgressEnvelope = { file: string; i: number; n: number };
+
+type ConvertProgressStage =
+  | { stage: "decoding" }
+  | { stage: "re-encoding" }
+  | { stage: "transcode"; pct: number | null; speed: string | null }
+  | { stage: "static-frame" };
+
+export type OnConvertProgress = (event: ConvertProgressEvent) => void;
+
+interface ConvertedFile {
+  webp: Buffer;
+  staticFrame: Buffer | null;
+}
+
+async function convertRaster(
+  f: MultipartFile,
+  ext: string,
+  opts: { quality: number; maxWidth: number; resize?: boolean },
+  report: (stage: Exclude<ConvertProgressStage, { stage: "transcode" }>) => void
+): Promise<ConvertedFile> {
+  report({ stage: "decoding" });
+  let meta;
+  try {
+    meta = await sharp(f.data).metadata();
+  } catch {
+    throw new Error("decode failure");
+  }
+  const frames = meta.pages ?? 1;
+  if (frames > MAX_ANIMATION_FRAMES) {
+    throw new Error(`animation has ${frames} frames - the limit is ${MAX_ANIMATION_FRAMES}`);
+  }
+  const animated = frames > 1 || ext === ".gif";
+  if (animated) report({ stage: "re-encoding" });
+  let pipeline = animated ? sharp(f.data, { animated: true }) : sharp(f.data);
+  pipeline = pipeline.rotate();
+  if (opts.resize) pipeline = pipeline.resize({ width: opts.maxWidth, withoutEnlargement: true });
+  const webp = await pipeline.webp({ quality: opts.quality }).toBuffer();
+  let staticFrame: Buffer | null = null;
+  if (animated) {
+    report({ stage: "static-frame" });
+    let framePipeline = sharp(f.data).rotate();
+    if (opts.resize) framePipeline = framePipeline.resize({ width: opts.maxWidth, withoutEnlargement: true });
+    staticFrame = await framePipeline.webp({ quality: opts.quality }).toBuffer();
+  }
+  return { webp, staticFrame };
+}
+
+async function convertOne(
+  f: MultipartFile,
+  ext: string,
+  opts: { quality: number; maxWidth: number; resize?: boolean },
+  report: (stage: ConvertProgressStage) => void
+): Promise<ConvertedFile> {
+  if (needsFfmpeg(ext)) {
+    if (!(await resolveFfmpeg())) {
+      throw new Error("ffmpeg is required for video/apng conversion - run npm run cms:ffmpeg or install ffmpeg");
+    }
+    const result = await convertVideoToWebp(f.data, {
+      quality: opts.quality,
+      maxWidth: opts.maxWidth,
+      ...(ext === ".apng" ? {} : { fps: VIDEO_FPS }),
+      onProgress: (p) => {
+        if (p.stage === "transcode") report({ stage: "transcode", pct: p.pct, speed: p.speed });
+        else if (p.stage === "static-frame") report({ stage: "static-frame" });
+        else report({ stage: "decoding" });
+      },
+    });
+    return { webp: result.webp, staticFrame: result.staticFrame };
+  }
+  return convertRaster(f, ext, opts, report);
+}
+
 export async function convertBatch(
   files: MultipartFile[],
-  opts: { quality?: number; resize?: boolean; maxWidth?: number }
+  opts: { quality?: number; resize?: boolean; maxWidth?: number; onProgress?: OnConvertProgress }
 ): Promise<ConvertResult> {
   const quality = clampQuality(opts.quality ?? 80);
   const maxWidth = clampMaxWidth(opts.maxWidth ?? 1600);
   const converted: ConvertResult["converted"] = [];
   const errors: ConvertResult["errors"] = [];
+  const total = files.length;
 
+  let index = 0;
   for (const f of files) {
+    index += 1;
+    const envelope = (): ConvertProgressEnvelope => ({ file: f.filename, i: index, n: total });
+    const report = opts.onProgress ?? null;
     if (f.data.length === 0) {
       errors.push({ file: f.filename, reason: "empty file" });
-      continue;
-    }
-    if (f.data.length > 100 * 1024 * 1024) {
-      errors.push({ file: f.filename, reason: "exceeds 100 MB per-file limit" });
       continue;
     }
     const rel = sanitizeRelPath(f.filename);
@@ -95,20 +177,41 @@ export async function convertBatch(
       continue;
     }
     const ext = path.extname(rel).toLowerCase();
-    if (!CONVERT_EXTS.has(ext)) {
+    if (!CONVERT_EXTS.has(ext) && !needsFfmpeg(ext)) {
       errors.push({ file: rel, reason: `unsupported type "${ext}"` });
       continue;
     }
+    if (f.data.length > uploadLimitFor(ext)) {
+      errors.push({ file: rel, reason: `exceeds the ${formatMb(uploadLimitFor(ext))} per-file limit` });
+      continue;
+    }
     try {
-      let pipeline = sharp(f.data).rotate();
-      if (opts.resize) pipeline = pipeline.resize({ width: maxWidth, withoutEnlargement: true });
-      const data = await pipeline.webp({ quality }).toBuffer();
-      converted.push({ relPath: toWebpName(rel), data });
+      const result = await convertOne(
+        f,
+        ext,
+        { quality, maxWidth, resize: opts.resize },
+        report ? (stage) => report({ ...envelope(), ...stage }) : (): void => {}
+      );
+      converted.push({ relPath: toWebpName(rel), data: result.webp });
+      if (result.staticFrame) {
+        converted.push({ relPath: toStaticName(rel), data: result.staticFrame });
+      }
     } catch (err) {
       errors.push({ file: rel, reason: (err as Error).message || "decode failure" });
     }
   }
   return { converted, errors };
+}
+
+export function buildZip(result: ConvertResult): yazl.ZipFile {
+  const zipfile = new yazl.ZipFile();
+  for (const c of result.converted) zipfile.addBuffer(c.data, c.relPath);
+  if (result.errors.length > 0) {
+    const report = result.errors.map((e) => `${e.file}: ${e.reason}\n`).join("");
+    zipfile.addBuffer(Buffer.from(report, "utf8"), "CONVERSION-ERRORS.txt");
+  }
+  zipfile.end();
+  return zipfile;
 }
 
 export function streamConvertedZip(res: import("http").ServerResponse, result: ConvertResult): void {
@@ -119,14 +222,7 @@ export function streamConvertedZip(res: import("http").ServerResponse, result: C
     "X-Errors": String(result.errors.length),
     "Cache-Control": "no-store",
   });
-
-  const zipfile = new yazl.ZipFile();
-  for (const c of result.converted) zipfile.addBuffer(c.data, c.relPath);
-  if (result.errors.length > 0) {
-    const report = result.errors.map((e) => `${e.file}: ${e.reason}\n`).join("");
-    zipfile.addBuffer(Buffer.from(report, "utf8"), "CONVERSION-ERRORS.txt");
-  }
-  zipfile.end();
+  const zipfile = buildZip(result);
   zipfile.outputStream.on("error", () => res.destroy());
   zipfile.outputStream.pipe(res);
 }

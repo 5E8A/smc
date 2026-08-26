@@ -14,29 +14,50 @@ import {
   writeJsonAtomic,
 } from "./util.ts";
 import { slugify } from "@smc/shared/slug";
+import { convertVideoToWebp, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
+
+sharp.cache(false);
 
 const IMAGE_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
+/** Raster formats whose animation sharp decodes natively (apng is handled by ffmpeg instead). */
+const SHARP_ANIMATED_EXTS = new Set([".gif"]);
+
+export const UPLOAD_EXTS = new Set([...IMAGE_EXTS, ...SHARP_ANIMATED_EXTS, ".apng"]);
+
+export const UPLOAD_LIMITS = {
+  image: 25 * 1024 * 1024,
+  video: 128 * 1024 * 1024,
+} as const;
+
+export const uploadLimitFor = (ext: string): number => (needsFfmpeg(ext) ? UPLOAD_LIMITS.video : UPLOAD_LIMITS.image);
+
+export const formatMb = (bytes: number): string =>
+  bytes >= 1024 * 1024 ? `${Math.round(bytes / (1024 * 1024))} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+
+export const MAX_ANIMATION_FRAMES = 600;
 
 export interface ImageInfo {
   path: string;
   url: string;
+  staticUrl?: string;
   dir: string;
   name: string;
   width: number;
   height: number;
+  animated: boolean;
 }
 
 export const CONTENT_PUBLIC_PREFIX = "/smc/assets/content/";
 
 const HEADER_BYTES = 32;
 
-function webpDimensions(buf: Buffer): { width: number; height: number } | null {
+function webpDimensions(buf: Buffer): { width: number; height: number; animated: boolean } | null {
   if (buf.length < HEADER_BYTES) return null;
   if (buf.toString("latin1", 0, 4) !== "RIFF" || buf.toString("latin1", 8, 12) !== "WEBP") return null;
   const chunk = buf.toString("latin1", 12, 16);
   if (chunk === "VP8 ") {
     // lossy - frame header after the 3-byte frame tag + 0x9d 0x01 0x2a sync code
-    return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff };
+    return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff, animated: false };
   }
   if (chunk === "VP8L") {
     // lossless - 0x2f signature then packed 14-bit width-1 / height-1
@@ -47,24 +68,29 @@ function webpDimensions(buf: Buffer): { width: number; height: number } | null {
     return {
       width: 1 + (((b1 & 0x3f) << 8) | b0),
       height: 1 + ((b3 << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6)),
+      animated: false,
     };
   }
   if (chunk === "VP8X") {
-    // extended - canvas size minus one as 24-bit LE pairs
-    return { width: 1 + buf.readUIntLE(24, 3), height: 1 + buf.readUIntLE(27, 3) };
+    // extended - canvas size minus one as 24-bit LE pairs; flags byte carries the animation bit
+    return {
+      width: 1 + buf.readUIntLE(24, 3),
+      height: 1 + buf.readUIntLE(27, 3),
+      animated: (buf[20]! & 0x02) !== 0,
+    };
   }
   return null;
 }
 
-function readWebpDimensions(file: string): { width: number; height: number } {
+function readWebpDimensions(file: string): { width: number; height: number; animated: boolean } {
   let fd: number | undefined;
   try {
     const buf = Buffer.alloc(HEADER_BYTES);
     fd = fs.openSync(file, "r");
     const read = fs.readSync(fd, buf, 0, HEADER_BYTES, 0);
-    return webpDimensions(buf.subarray(0, read)) ?? { width: 1, height: 1 };
+    return webpDimensions(buf.subarray(0, read)) ?? { width: 1, height: 1, animated: false };
   } catch {
-    return { width: 1, height: 1 };
+    return { width: 1, height: 1, animated: false };
   } finally {
     if (fd !== undefined) fs.closeSync(fd);
   }
@@ -107,20 +133,33 @@ export function listImages(): ImageInfo[] {
     .filter((f) => {
       const base = path.basename(f);
       const ext = path.extname(f).toLowerCase();
-      return ext === ".webp" && !base.includes(".placeholder.") && !base.includes(".mobile.");
+      return (
+        ext === ".webp" &&
+        !base.includes(".placeholder.") &&
+        !base.includes(".mobile.") &&
+        !base.includes(".static.")
+      );
     })
     .sort((a, b) => a.localeCompare(b))
     .map((f) => {
       const relDir = path.relative(CONTENT_ASSETS_DIR, path.dirname(f)).replace(/\\/g, "/");
-      const { width, height } = readWebpDimensions(f);
-      return {
+      const { width, height, animated } = readWebpDimensions(f);
+      const info: ImageInfo = {
         path: toPublicPath(f),
         url: `/api/asset?path=${encodeURIComponent(toPublicPath(f))}`,
         dir: relDir === "." ? "" : relDir,
         name: path.basename(f),
         width,
         height,
+        animated,
       };
+      if (animated) {
+        const staticAbs = f.replace(/\.webp$/i, ".static.webp");
+        if (staticAbs !== f && fs.existsSync(staticAbs)) {
+          info.staticUrl = `/api/asset?path=${encodeURIComponent(toPublicPath(staticAbs))}`;
+        }
+      }
+      return info;
     });
 }
 
@@ -171,33 +210,143 @@ export interface EncodeOptions {
   maxWidth: number;
 }
 
+export type UploadProgressEvent =
+  | { stage: "probe" }
+  | { stage: "transcode"; pct: number | null; speed: string | null }
+  | { stage: "decoding" }
+  | { stage: "re-encoding" }
+  | { stage: "static-frame" }
+  | { stage: "writing" };
+
+export type OnUploadProgress = (event: UploadProgressEvent) => void;
+
+export interface UploadResult {
+  savedAs: string;
+  publicPath: string;
+  width: number;
+  height: number;
+  animated: boolean;
+  frames?: number;
+  staticPath?: string;
+}
+
 export const clampQuality = (v: number): number => Math.min(Math.max(Math.round(v), 1), 100);
 export const clampMaxWidth = (v: number): number => Math.min(Math.max(Math.round(v), 64), 4096);
+
+const RETRYABLE_FS_CODES = new Set(["EBUSY", "EPERM", "EACCES"]);
+
+async function fsRetry(fn: () => void, tries = 5, delayMs = 250): Promise<void> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      fn();
+      return;
+    } catch (err) {
+      if (attempt >= tries || !RETRYABLE_FS_CODES.has((err as NodeJS.ErrnoException).code ?? "")) throw err;
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+}
+
+interface EncodedUpload {
+  webp: Buffer;
+  staticFrame: Buffer | null;
+  frames: number;
+  width: number;
+  height: number;
+}
+
+async function encodeRaster(
+  body: Buffer,
+  ext: string,
+  opts: EncodeOptions & { onProgress?: OnUploadProgress }
+): Promise<EncodedUpload> {
+  const report = opts.onProgress ?? ((): void => {});
+  report({ stage: "decoding" });
+  let meta;
+  try {
+    meta = await sharp(body).metadata();
+  } catch {
+    throw new Error("Could not decode image");
+  }
+  const frames = meta.pages ?? 1;
+  if (frames > MAX_ANIMATION_FRAMES) {
+    throw new Error(`Animation has ${frames} frames - the limit is ${MAX_ANIMATION_FRAMES}`);
+  }
+  const animated = frames > 1 || SHARP_ANIMATED_EXTS.has(ext);
+  if (animated) report({ stage: "re-encoding" });
+  const pipeline = animated ? sharp(body, { animated: true }) : sharp(body);
+  const webp = await pipeline
+    .rotate()
+    .resize({ width: opts.maxWidth, withoutEnlargement: true })
+    .webp({ quality: opts.quality })
+    .toBuffer();
+  const outMeta = await sharp(webp).metadata();
+  let staticFrame: Buffer | null = null;
+  if (animated) {
+    report({ stage: "static-frame" });
+    staticFrame = await sharp(body)
+      .rotate()
+      .resize({ width: opts.maxWidth, withoutEnlargement: true })
+      .webp({ quality: opts.quality })
+      .toBuffer();
+  }
+  return { webp, staticFrame, frames: animated ? frames : 1, width: outMeta.width ?? 1, height: outMeta.height ?? 1 };
+}
+
+async function encodeVideo(
+  body: Buffer,
+  ext: string,
+  opts: EncodeOptions & { onProgress?: OnUploadProgress }
+): Promise<EncodedUpload> {
+  if (!needsFfmpeg(ext)) throw new Error(`Unsupported animated type "${ext}"`);
+  if (!(await resolveFfmpeg())) {
+    throw new Error("ffmpeg is required for video/apng uploads - run npm run cms:ffmpeg or install ffmpeg");
+  }
+  const result = await convertVideoToWebp(body, {
+    quality: opts.quality,
+    maxWidth: opts.maxWidth,
+    ...(ext === ".apng" ? {} : { fps: VIDEO_FPS }),
+    ...(opts.onProgress ? { onProgress: opts.onProgress } : {}),
+  });
+  const meta = await sharp(result.webp).metadata();
+  return {
+    webp: result.webp,
+    staticFrame: result.staticFrame,
+    frames: result.frames,
+    width: meta.width ?? 1,
+    height: meta.height ?? 1,
+  };
+}
 
 export async function saveUpload(
   dir: string,
   rawName: string,
   body: Buffer,
-  opts?: Partial<EncodeOptions>
-): Promise<{ savedAs: string; publicPath: string; width: number; height: number }> {
+  opts?: Partial<EncodeOptions> & { onProgress?: OnUploadProgress }
+): Promise<UploadResult> {
   const ext = path.extname(rawName).toLowerCase();
-  if (!IMAGE_EXTS.has(ext)) throw new Error(`Unsupported file type "${ext}" - use png, jpg or webp`);
+  const useFfmpeg = needsFfmpeg(ext);
+  if (!UPLOAD_EXTS.has(ext) && !useFfmpeg) {
+    throw new Error(`Unsupported file type "${ext}" - use png, jpg, webp, gif, apng, mp4 or webm`);
+  }
   const base = slugify(path.basename(rawName, path.extname(rawName)))
     .toLowerCase()
     .replace(/^-+|-+$/g, "");
   if (!base) throw new Error("File name contains no usable characters");
   if (body.length === 0) throw new Error("Empty upload");
-  if (body.length > 25 * 1024 * 1024) throw new Error("File exceeds 25 MB limit");
+  const limit = uploadLimitFor(ext);
+  if (body.length > limit) {
+    throw new Error(
+      `File is ${formatMb(body.length)} - the limit for ${needsFfmpeg(ext) ? "video/animation" : "image"} uploads is ${formatMb(limit)}`
+    );
+  }
 
-  const quality = clampQuality(opts?.quality ?? 80);
-  const maxWidth = clampMaxWidth(opts?.maxWidth ?? 1600);
-
-  const webp = await sharp(body)
-    .rotate()
-    .resize({ width: maxWidth, withoutEnlargement: true })
-    .webp({ quality })
-    .toBuffer();
-  const meta = await sharp(webp).metadata();
+  const encodeOpts = {
+    quality: clampQuality(opts?.quality ?? 80),
+    maxWidth: clampMaxWidth(opts?.maxWidth ?? 1600),
+    ...(opts?.onProgress ? { onProgress: opts.onProgress } : {}),
+  };
+  const encoded = await (useFfmpeg ? encodeVideo(body, ext, encodeOpts) : encodeRaster(body, ext, encodeOpts));
 
   const parts = safeSegments(dir);
   if (parts === null) throw new Error("Invalid target folder");
@@ -211,13 +360,25 @@ export async function saveUpload(
     n += 1;
   }
 
-  await fs.promises.writeFile(path.join(dirAbs, fileName), webp);
+  opts?.onProgress?.({ stage: "writing" });
+  await fs.promises.writeFile(path.join(dirAbs, fileName), encoded.webp);
   const publicPath = CONTENT_PUBLIC_PREFIX + [...parts, fileName].join("/");
+
+  let staticPath: string | undefined;
+  if (encoded.staticFrame) {
+    const staticName = fileName.replace(/\.webp$/, ".static.webp");
+    await fs.promises.writeFile(path.join(dirAbs, staticName), encoded.staticFrame);
+    staticPath = CONTENT_PUBLIC_PREFIX + [...parts, staticName].join("/");
+  }
+
   return {
     savedAs: "public/assets/content/" + [...parts, fileName].join("/"),
     publicPath,
-    width: meta.width ?? 1,
-    height: meta.height ?? 1,
+    width: encoded.width,
+    height: encoded.height,
+    animated: encoded.frames > 1 || !!encoded.staticFrame,
+    ...(encoded.frames > 1 ? { frames: encoded.frames } : {}),
+    ...(staticPath ? { staticPath } : {}),
   };
 }
 
@@ -338,7 +499,7 @@ export async function renameDir(oldRel: string, newName: string): Promise<number
 
 export type DeletionResult = { blocked: true; usages: Record<string, string[]> } | { blocked: false };
 
-export function deleteDir(rel: string): DeletionResult {
+export async function deleteDir(rel: string): Promise<DeletionResult> {
   const parts = safeSegments(rel);
   if (parts === null) throw new Error("Invalid folder path");
   if (parts.length === 0) throw new Error("Cannot delete the content root");
@@ -347,11 +508,11 @@ export function deleteDir(rel: string): DeletionResult {
   const targets = walk(abs).map(toPublicPath);
   const usages = findRefs(targets);
   if (Object.keys(usages).length > 0) return { blocked: true, usages };
-  fs.rmSync(abs, { recursive: true, force: true });
+  await fsRetry(() => fs.rmSync(abs, { recursive: true, force: true }));
   return { blocked: false };
 }
 
-export function deleteImage(publicPath: string): DeletionResult {
+export async function deleteImage(publicPath: string): Promise<DeletionResult> {
   if (!publicPath.startsWith(CONTENT_PUBLIC_PREFIX)) {
     throw new Error("Path must point inside public/assets/content");
   }
@@ -361,7 +522,9 @@ export function deleteImage(publicPath: string): DeletionResult {
   if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) throw new Error("File does not exist");
   const usages = findRefs([publicPath]);
   if (Object.keys(usages).length > 0) return { blocked: true, usages };
-  fs.unlinkSync(abs);
+  await fsRetry(() => fs.unlinkSync(abs));
+  const staticAbs = abs.replace(/\.webp$/, ".static.webp");
+  if (staticAbs !== abs && fs.existsSync(staticAbs)) await fsRetry(() => fs.unlinkSync(staticAbs));
   return { blocked: false };
 }
 
@@ -383,7 +546,11 @@ export async function renameImage(publicPath: string, newName: string): Promise<
   const dirParts = parts.slice(0, -1);
   const targetAbs = path.join(absOf(dirParts), fileName);
   if (fs.existsSync(targetAbs)) throw new Error("A file with that name already exists in that folder");
-  fs.renameSync(abs, targetAbs);
+  await fsRetry(() => fs.renameSync(abs, targetAbs));
+  const staticAbs = abs.replace(/\.webp$/, ".static.webp");
+  if (staticAbs !== abs && fs.existsSync(staticAbs)) {
+    await fsRetry(() => fs.renameSync(staticAbs, targetAbs.replace(/\.webp$/, ".static.webp")));
+  }
   const newPath = CONTENT_PUBLIC_PREFIX + [...dirParts, fileName].join("/");
   return rewriteRefsInContent((value) => {
     if (value === publicPath) return { next: newPath, hits: 1 };

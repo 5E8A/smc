@@ -97,22 +97,118 @@ export interface UploadResult {
   publicPath: string;
   width: number;
   height: number;
+  animated?: boolean;
+  frames?: number;
+  staticPath?: string;
 }
+
+export type UploadStage =
+  | "probe"
+  | "transcode"
+  | "decoding"
+  | "re-encoding"
+  | "static-frame"
+  | "writing";
+
+export interface UploadStageEvent {
+  file: string;
+  stage: UploadStage;
+  pct?: number | null;
+  speed?: string | null;
+}
+
+export type ConvertStageEvent =
+  | { file: string; i: number; n: number; stage: "decoding" }
+  | { file: string; i: number; n: number; stage: "re-encoding" }
+  | { file: string; i: number; n: number; stage: "transcode"; pct: number | null; speed: string | null }
+  | { file: string; i: number; n: number; stage: "static-frame" };
 
 export interface EncodeOptions {
   quality?: number;
   maxWidth?: number;
 }
 
-export const uploadImage = (file: File, dir: string, opts: EncodeOptions = {}): Promise<UploadResult> => {
+async function* ndjsonLines(body: ReadableStream<Uint8Array>): AsyncGenerator<Record<string, unknown>> {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (value) buffer += decoder.decode(value, { stream: true });
+      if (done) buffer += decoder.decode();
+      let nl = buffer.indexOf("\n");
+      while (nl !== -1) {
+        const line = buffer.slice(0, nl).trim();
+        buffer = buffer.slice(nl + 1);
+        if (line) yield JSON.parse(line) as Record<string, unknown>;
+        nl = buffer.indexOf("\n");
+      }
+      if (done) return;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+const UPLOAD_LIMITS = { image: 25 * 1024 * 1024, video: 128 * 1024 * 1024 };
+const FFMPEG_EXTS = new Set([".mp4", ".m4v", ".webm", ".mov", ".mkv", ".apng"]);
+
+const uploadLimitFor = (name: string): number => {
+  const dot = name.lastIndexOf(".");
+  const ext = dot >= 0 ? name.slice(dot).toLowerCase() : "";
+  return FFMPEG_EXTS.has(ext) ? UPLOAD_LIMITS.video : UPLOAD_LIMITS.image;
+};
+
+const formatMb = (bytes: number): string => `${Math.round(bytes / (1024 * 1024))} MB`;
+
+export const uploadImage = async (
+  file: File,
+  dir: string,
+  opts: EncodeOptions & { onProgress?: (event: UploadStageEvent) => void } = {}
+): Promise<UploadResult> => {
+  const limit = uploadLimitFor(file.name);
+  if (file.size > limit) {
+    throw new ApiError(413, {
+      error: `${file.name} is ${formatMb(file.size)} - the upload limit is ${formatMb(limit)}`,
+    });
+  }
   const params = new URLSearchParams({ dir, name: file.name });
   if (opts.quality != null) params.set("quality", String(opts.quality));
   if (opts.maxWidth != null) params.set("maxWidth", String(opts.maxWidth));
-  return request<UploadResult>(`/api/images?${params}`, {
+  if (opts.onProgress) params.set("progress", "1");
+  const res = await fetch(`/api/images?${params}`, {
     method: "PUT",
     headers: { "Content-Type": "application/octet-stream" },
     body: file,
   });
+  if (!res.ok) {
+    let payload: { error?: string } = {};
+    try {
+      payload = await res.json();
+    } catch {
+      payload = {};
+    }
+    throw new ApiError(res.status, payload);
+  }
+  if (!opts.onProgress || !res.body) return (await res.json()) as UploadResult;
+
+  let final: UploadResult | null = null;
+  let errorText: string | null = null;
+  for await (const line of ndjsonLines(res.body)) {
+    if (line.result) final = line.result as UploadResult;
+    else if (typeof line.error === "string") errorText = line.error;
+    else if (typeof line.stage === "string") {
+      opts.onProgress({
+        file: typeof line.file === "string" ? line.file : file.name,
+        stage: line.stage as UploadStage,
+        pct: typeof line.pct === "number" ? line.pct : null,
+        speed: typeof line.speed === "string" ? line.speed : null,
+      });
+    }
+  }
+  if (!final) throw new ApiError(res.status, { error: errorText ?? "Upload failed" });
+  return final;
 };
 
 export interface DirActionResult {
@@ -151,6 +247,7 @@ export interface ConvertOptions {
   quality?: number;
   resize?: boolean;
   maxWidth?: number;
+  onProgress?: (event: ConvertStageEvent) => void;
 }
 
 export interface ConvertOutcome {
@@ -159,16 +256,20 @@ export interface ConvertOutcome {
   errors: number;
 }
 
-export const convertImages = async (
-  files: Array<{ file: File; relPath: string }>,
-  opts: ConvertOptions
-): Promise<ConvertOutcome> => {
+const concatBytes = (a: Uint8Array, b: Uint8Array): Uint8Array => {
+  const out = new Uint8Array(a.length + b.length);
+  out.set(a);
+  out.set(b, a.length);
+  return out;
+};
+
+export const convertImages = async (files: Array<{ file: File; relPath: string }>, opts: ConvertOptions): Promise<ConvertOutcome> => {
   const fd = new FormData();
   fd.set("quality", String(opts.quality ?? 80));
   fd.set("resize", opts.resize ? "1" : "0");
   fd.set("maxWidth", String(opts.maxWidth ?? 1600));
   for (const { file, relPath } of files) fd.append("files", file, relPath);
-  const res = await fetch("/api/convert", { method: "POST", body: fd });
+  const res = await fetch(opts.onProgress ? "/api/convert?progress=1" : "/api/convert", { method: "POST", body: fd });
   if (!res.ok) {
     let payload: { error?: string } = {};
     try {
@@ -178,10 +279,79 @@ export const convertImages = async (
     }
     throw new ApiError(res.status, payload);
   }
+  if (!opts.onProgress || !res.body) {
+    return {
+      blob: await res.blob(),
+      converted: Number(res.headers.get("X-Converted") ?? 0),
+      errors: Number(res.headers.get("X-Errors") ?? 0),
+    };
+  }
+
+  const reader = res.body.getReader();
+  let carry: Uint8Array = new Uint8Array(0);
+  let inZip = false;
+  const zipChunks: BlobPart[] = [];
+  let summary: { converted: number; errors: number } | null = null;
+  let errorMessage: string | null = null;
+
+  type LineResult =
+    | { kind: "stage" }
+    | { kind: "zip" }
+    | { kind: "error"; message: string }
+    | { kind: "summary"; converted: number; errors: number };
+
+  const parseLine = (text: string): LineResult => {
+    const parsed = JSON.parse(text) as Record<string, unknown>;
+    if (parsed.stage) {
+      opts.onProgress?.(parsed as unknown as ConvertStageEvent);
+      return { kind: "stage" };
+    }
+    if (parsed.zip) return { kind: "zip" };
+    if (typeof parsed.error === "string") return { kind: "error", message: parsed.error };
+    const s = parsed.summary as Record<string, unknown> | undefined;
+    return s
+      ? { kind: "summary", converted: Number(s.converted) || 0, errors: Number(s.errors) || 0 }
+      : { kind: "stage" };
+  };
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (value) {
+      if (inZip) {
+        zipChunks.push(value as BlobPart);
+      } else {
+        carry = concatBytes(carry, value);
+        for (;;) {
+          const nl = carry.indexOf(10);
+          if (nl === -1) break;
+          const lineText = new TextDecoder().decode(carry.slice(0, nl)).trim();
+          const rest = carry.slice(nl + 1);
+          carry = rest;
+          if (!lineText) continue;
+          const line = parseLine(lineText);
+          if (line.kind === "zip") {
+            inZip = true;
+            if (rest.length > 0) zipChunks.push(rest as BlobPart);
+            carry = new Uint8Array(0);
+            break;
+          }
+          if (line.kind === "summary") summary = { converted: line.converted, errors: line.errors };
+          else if (line.kind === "error") errorMessage = line.message;
+        }
+      }
+    }
+    if (done) break;
+  }
+  if (errorMessage !== null) {
+    throw new ApiError(res.status, { error: errorMessage });
+  }
+  if (summary === null) {
+    throw new ApiError(res.status, { error: "Conversion failed" });
+  }
   return {
-    blob: await res.blob(),
-    converted: Number(res.headers.get("X-Converted") ?? 0),
-    errors: Number(res.headers.get("X-Errors") ?? 0),
+    blob: new Blob(zipChunks, { type: "application/zip" }),
+    converted: summary.converted,
+    errors: summary.errors,
   };
 };
 
