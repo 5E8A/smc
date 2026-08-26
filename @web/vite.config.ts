@@ -4,10 +4,10 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
-import { visualizer } from "rollup-plugin-visualizer";
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
   const analyze = mode === "analyze";
+  const visualizer = analyze ? (await import("rollup-plugin-visualizer")).visualizer : null;
   return {
     server: {
       port: 3000,
@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
       nitro({ baseURL: "/smc" }),
       react(),
       tailwindcss(),
-      ...(analyze ? [visualizer({ filename: "dist/stats.html", open: true, gzipSize: true })] : []),
+      ...(visualizer ? [visualizer({ filename: "dist/stats.html", open: true, gzipSize: true })] : []),
     ],
     resolve: {
       alias: {
@@ -47,7 +47,7 @@ export default defineConfig(({ mode }) => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks(id) {
+          manualChunks(id: string) {
             if (
               id.includes("node_modules/react") ||
               id.includes("node_modules/react-dom") ||

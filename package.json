@@ -51,7 +51,10 @@
   "devDependencies": {
     "oxlint": "^1.79.0",
     "oxlint-tsgolint": "^7.0.2001",
+    "playwright": "^1.62.1",
     "prettier": "^3.0.0",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "sharp": "^0.35.3",
     "typescript": "^6.0.3"
   }
 }

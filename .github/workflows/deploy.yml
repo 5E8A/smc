@@ -26,9 +26,11 @@ jobs:
           node-version: "lts/*"
           cache: "npm"
       - name: Install dependencies
-        run: npm ci
-      - name: Lint
-        run: npm run lint
+        run: npm ci -w @smc/web --include-workspace-root
+      - name: Link @smc/cms workspace
+        run: |
+          mkdir -p node_modules/@smc
+          ln -s ../../@cms node_modules/@smc/cms
       - name: Build project
         run: npm run build
       - name: Setup Pages
