@@ -88,6 +88,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
   const [pending, setPending] = useState<PendingFile[] | null>(null);
   const [skippedCount, setSkippedCount] = useState(0);
+  const [rejectedNames, setRejectedNames] = useState<string[]>([]);
   const [uploadDir, setUploadDir] = useState("");
   const [quality, setQuality] = useState(80);
   const [maxWidth, setMaxWidth] = useState(1600);
@@ -127,11 +128,10 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
   const stageFiles = (files: File[]) => {
     const valid = files.filter(isUploadable);
-    setSkippedCount(files.length - valid.length);
-    if (valid.length === 0) {
-      lib.setNotice({ kind: "err", text: "No supported files - use png, jpg or webp" });
-      return;
-    }
+    const rejected = files.filter((f) => !isUploadable(f)).map((f) => f.name);
+    setSkippedCount(rejected.length);
+    setRejectedNames(rejected);
+    if (valid.length === 0) return;
     setUploadDir(currentTargetDir);
     setPending(valid.map((file) => ({ file, url: URL.createObjectURL(file) })));
   };
@@ -555,6 +555,27 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
             </Button>
           )}
         </div>
+
+        {rejectedNames.length > 0 && (
+          <div className="flex items-start justify-between gap-3 rounded-xl border border-red-800 bg-red-950/40 px-3 py-2.5">
+            <p className="flex items-start gap-2 text-xs text-red-300">
+              <WarningCircleIcon size={15} className="mt-px shrink-0" />
+              <span>
+                Skipped {rejectedNames.length} unsupported file{rejectedNames.length > 1 ? "s" : ""}:{" "}
+                {rejectedNames.slice(0, 5).join(", ")}
+                {rejectedNames.length > 5 && ` +${rejectedNames.length - 5} more`} - use png, jpg or webp
+              </span>
+            </p>
+            <button
+              type="button"
+              aria-label="Dismiss"
+              onClick={() => setRejectedNames([])}
+              className="mt-0.5 shrink-0 text-red-400 transition-colors hover:text-red-200"
+            >
+              <XIcon size={13} />
+            </button>
+          </div>
+        )}
 
         <div
           className="relative"
