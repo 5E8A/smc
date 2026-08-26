@@ -1,5 +1,13 @@
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
-import { RunConsoleContext, type RunConsoleEntry, type RunConsoleValue, type RunStatus } from "./runConsole";
+import { runSsePost } from "./sse";
+import {
+  RunConsoleContext,
+  defaultMapDone,
+  type RunConsoleEntry,
+  type RunConsoleValue,
+  type RunStatus,
+  type RunTaskOptions,
+} from "./runConsole";
 
 const SOURCE_BATCH = 40;
 
@@ -8,6 +16,7 @@ export const RunConsoleProvider = ({ children }: { children: ReactNode }) => {
   const [statuses, setStatuses] = useState<Record<string, RunStatus>>({});
   const [collapsed, setCollapsed] = useState(true);
   const batches = useRef(new Map<string, RunConsoleEntry[]>());
+  const controllers = useRef(new Map<string, AbortController>());
 
   const flush = useCallback(() => {
     for (const batch of batches.current.values()) {
@@ -50,9 +59,48 @@ export const RunConsoleProvider = ({ children }: { children: ReactNode }) => {
 
   const anyRunning = useMemo(() => Object.values(statuses).some((s) => s.running), [statuses]);
 
+  const start = useCallback(
+    (source: string, url: string, opts?: RunTaskOptions): Promise<boolean> => {
+      if (controllers.current.has(source)) return Promise.resolve(false);
+      const controller = new AbortController();
+      controllers.current.set(source, controller);
+      begin(source);
+      const mapDone = opts?.mapDone ?? defaultMapDone;
+      return runSsePost(
+        url,
+        {
+          onLog: (line) => {
+            for (const l of line.split("\n")) {
+              if (l) append(source, l);
+            }
+          },
+          onDone: (status) => {
+            finish(source, mapDone(status));
+            opts?.onDone?.(status);
+          },
+        },
+        controller.signal,
+        opts?.body
+      )
+        .catch((err: unknown) => {
+          if (controller.signal.aborted) finish(source, "cancelled");
+          else {
+            finish(source, "error");
+            opts?.onError?.(err);
+          }
+        })
+        .finally(() => {
+          if (controllers.current.get(source) === controller) controllers.current.delete(source);
+          opts?.onSettled?.();
+        })
+        .then(() => true);
+    },
+    [begin, append, finish]
+  );
+
   const value = useMemo<RunConsoleValue>(
-    () => ({ entries, statuses, collapsed, setCollapsed, begin, append, finish, clear, anyRunning }),
-    [entries, statuses, collapsed, begin, append, finish, clear, anyRunning]
+    () => ({ entries, statuses, collapsed, setCollapsed, begin, append, finish, clear, anyRunning, start }),
+    [entries, statuses, collapsed, begin, append, finish, clear, anyRunning, start]
   );
 
   return <RunConsoleContext.Provider value={value}>{children}</RunConsoleContext.Provider>;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ArrowsCounterClockwiseIcon,
   CircleNotchIcon,
@@ -7,8 +7,7 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 import { getGitStatus, type GitStatus } from "../api";
-import { runSsePost } from "../lib/sse";
-import { useRunConsole } from "../lib/runConsole";
+import { useRunConsole, defaultMapDone } from "../lib/runConsole";
 import { Button } from "./fields";
 
 const statusLabel: Record<string, string> = {
@@ -34,11 +33,10 @@ export function GitView() {
   const [status, setStatus] = useState<GitStatus | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [message, setMessage] = useState("");
-  const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const runConsole = useRunConsole();
-  const abortRef = useRef<AbortController | null>(null);
+  const running = !!(runConsole.statuses.deploy?.running || runConsole.statuses.pull?.running);
 
   const refresh = useCallback(async () => {
     try {
@@ -57,7 +55,6 @@ export function GitView() {
         setSelected(selectAll(next));
       })
       .catch((err) => setError(err instanceof Error ? err.message : String(err)));
-    return () => abortRef.current?.abort();
   }, []);
 
   const toggle = (path: string) => {
@@ -76,87 +73,44 @@ export function GitView() {
     );
   };
 
-  const deploy = useCallback(async () => {
+  const deploy = useCallback(() => {
     if (running || !status) return;
     const paths = [...selected];
     const msg = message.trim();
     if (paths.length === 0 || !msg) return;
     if (!window.confirm(`Commit ${paths.length} file${paths.length === 1 ? "" : "s"} and deploy to main?`)) return;
-    setRunning(true);
     setError(null);
     setNotice(null);
-    const controller = new AbortController();
-    abortRef.current = controller;
-    runConsole.begin("deploy");
-    try {
-      await runSsePost(
-        "/api/git/deploy",
-        {
-          onLog: (line) => runConsole.append("deploy", line),
-          onDone: (result) => {
-            if (result === "ok") {
-              runConsole.finish("deploy", "ok");
-              setNotice("Deployed - GitHub Pages is rebuilding the site");
-              setMessage("");
-            } else if (result === "nothing to commit") {
-              runConsole.finish("deploy", "none");
-              setNotice("Nothing to commit");
-            } else {
-              runConsole.finish("deploy", `exit ${result}`);
-              setError(`Deploy failed: ${result} - see the runner console`);
-            }
-          },
-        },
-        controller.signal,
-        { message: msg, paths }
-      );
-    } catch (err) {
-      if (!controller.signal.aborted) {
-        runConsole.finish("deploy", "error");
-        setError(err instanceof Error ? err.message : String(err));
-      }
-    } finally {
-      if (abortRef.current === controller) abortRef.current = null;
-      setRunning(false);
-      void refresh();
-    }
+    void runConsole.start("deploy", "/api/git/deploy", {
+      body: { message: msg, paths },
+      mapDone: (result) => (result === "nothing to commit" ? "none" : defaultMapDone(result)),
+      onDone: (result) => {
+        if (result === "ok") {
+          setNotice("Deployed - GitHub Pages is rebuilding the site");
+          setMessage("");
+        } else if (result === "nothing to commit") {
+          setNotice("Nothing to commit");
+        } else {
+          setError(`Deploy failed: ${result} - see the runner console`);
+        }
+      },
+      onError: (err) => setError(err instanceof Error ? err.message : String(err)),
+      onSettled: () => void refresh(),
+    });
   }, [running, status, selected, message, refresh, runConsole]);
 
-  const pull = useCallback(async () => {
+  const pull = useCallback(() => {
     if (running || !status || status.behind === 0) return;
-    setRunning(true);
     setError(null);
     setNotice(null);
-    const controller = new AbortController();
-    abortRef.current = controller;
-    runConsole.begin("pull");
-    try {
-      await runSsePost(
-        "/api/git/pull",
-        {
-          onLog: (line) => runConsole.append("pull", line),
-          onDone: (result) => {
-            if (result === "ok") {
-              runConsole.finish("pull", "ok");
-              setNotice("Pulled latest changes");
-            } else {
-              runConsole.finish("pull", `exit ${result}`);
-              setError(`Pull failed (${result}) - your branch may have diverged, sync in a terminal`);
-            }
-          },
-        },
-        controller.signal
-      );
-    } catch (err) {
-      if (!controller.signal.aborted) {
-        runConsole.finish("pull", "error");
-        setError(err instanceof Error ? err.message : String(err));
-      }
-    } finally {
-      if (abortRef.current === controller) abortRef.current = null;
-      setRunning(false);
-      void refresh();
-    }
+    void runConsole.start("pull", "/api/git/pull", {
+      onDone: (result) => {
+        if (result === "ok") setNotice("Pulled latest changes");
+        else setError(`Pull failed (${result}) - your branch may have diverged, sync in a terminal`);
+      },
+      onError: (err) => setError(err instanceof Error ? err.message : String(err)),
+      onSettled: () => void refresh(),
+    });
   }, [running, status, refresh, runConsole]);
 
   return (

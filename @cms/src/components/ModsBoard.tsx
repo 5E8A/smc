@@ -11,7 +11,6 @@ import {
 } from "@phosphor-icons/react";
 import { getModList, putModList } from "../api";
 import type { Issue, ModListColumn } from "../types";
-import { runSsePost } from "../lib/sse";
 import { useRunConsole } from "../lib/runConsole";
 import { Button } from "./fields";
 
@@ -88,14 +87,13 @@ export function ModsBoard() {
   const [issues, setIssues] = useState<Issue[] | null>(null);
   const [saving, setSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
-  const [syncing, setSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
   const [meta, setMeta] = useState<Map<string, ModrinthProject>>(new Map());
   const runConsole = useRunConsole();
+  const syncing = !!runConsole.statuses.mods?.running;
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   const [drag, setDrag] = useState<{ slug: string; from: string } | null>(null);
   const [dragOver, setDragOver] = useState<{ col: string; index: number } | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
   const searchTimers = useRef<Record<string, number>>({});
 
   const slack = useMemo(() => (columns ? columns.flatMap((c) => c.slugs) : []), [columns]);
@@ -134,7 +132,6 @@ export function ModsBoard() {
         setSnapshot(JSON.stringify(list));
       })
       .catch((err) => setError(String(err)));
-    return () => abortRef.current?.abort();
   }, []);
 
   const refreshMeta = useCallback(async (list: ModListColumn[]) => {
@@ -245,47 +242,21 @@ export function ModsBoard() {
 
   const sync = useCallback(() => {
     if (syncing) return;
-    runConsole.begin("mods");
-    setSyncing(true);
     setError(null);
     setSyncStatus(null);
-    const controller = new AbortController();
-    abortRef.current = controller;
-    void (async () => {
-      try {
-        await runSsePost(
-          "/api/mods/sync",
-          {
-            onLog: (line) => {
-              for (const l of line.split("\n")) {
-                if (l) runConsole.append("mods", l);
-              }
-            },
-            onDone: (status) => {
-              runConsole.finish("mods", status === "ok" ? "ok" : `exit ${status}`);
-              setSyncStatus(status === "ok" ? "Pipeline finished" : `Pipeline ${status}`);
-              setSyncing(false);
-              getModList()
-                .then((list) => {
-                  setColumns(list);
-                  setSnapshot(JSON.stringify(list));
-                  void refreshMeta(list);
-                })
-                .catch(() => {});
-            },
-          },
-          controller.signal
-        );
-      } catch (err) {
-        if (!controller.signal.aborted) {
-          runConsole.finish("mods", "error");
-          setError(err instanceof Error ? err.message : String(err));
-        }
-        setSyncing(false);
-      } finally {
-        if (abortRef.current === controller) abortRef.current = null;
-      }
-    })();
+    void runConsole.start("mods", "/api/mods/sync", {
+      onDone: (status) => {
+        setSyncStatus(status === "ok" ? "Pipeline finished" : `Pipeline ${status}`);
+        getModList()
+          .then((list) => {
+            setColumns(list);
+            setSnapshot(JSON.stringify(list));
+            void refreshMeta(list);
+          })
+          .catch(() => {});
+      },
+      onError: (err) => setError(err instanceof Error ? err.message : String(err)),
+    });
   }, [syncing, refreshMeta, runConsole]);
 
   if (error && !columns) return <div className="m-6 rounded-md bg-red-950/50 p-4 text-sm text-red-300">{error}</div>;

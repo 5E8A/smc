@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { uploadImage } from "../api";
 import type { EncodeOptions } from "../api";
 import type { ImagesPayload } from "../types";
-import { loadMedia, type ImageNotice } from "../lib/mediaCache";
-import { runSsePost } from "../lib/sse";
+import { loadMedia, invalidateMediaCache, type ImageNotice } from "../lib/mediaCache";
 import { useRunConsole } from "../lib/runConsole";
 
 export function useMediaLibrary() {
@@ -11,10 +10,8 @@ export function useMediaLibrary() {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<string | null>(null);
   const [notice, setNotice] = useState<ImageNotice | null>(null);
-  const [lqipRunning, setLqipRunning] = useState(false);
   const runConsole = useRunConsole();
   const [lqipStale, setLqipStale] = useState(false);
-  const abortRef = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
     setMedia(await loadMedia(true));
@@ -24,49 +21,25 @@ export function useMediaLibrary() {
     loadMedia()
       .then(setMedia)
       .catch((e) => setNotice({ kind: "err", text: String(e) }));
-    return () => abortRef.current?.abort();
   }, []);
 
-  const finishLqip = useCallback(() => {
-    setLqipRunning(false);
-    void refresh();
-  }, [refresh]);
+  const lqipRunning = !!runConsole.statuses.lqip?.running;
+  const prevLqipRunning = useRef(false);
+  useEffect(() => {
+    const last = runConsole.statuses.lqip?.last;
+    if (prevLqipRunning.current && !lqipRunning && last) {
+      setLqipStale(last !== "ok");
+      void refresh();
+    }
+    prevLqipRunning.current = lqipRunning;
+  }, [lqipRunning, runConsole.statuses, refresh]);
 
   const runLqip = useCallback(() => {
-    if (lqipRunning) return;
-    runConsole.begin("lqip");
-    setLqipRunning(true);
-    const controller = new AbortController();
-    abortRef.current = controller;
-    void (async () => {
-      try {
-        await runSsePost(
-          "/api/lqip",
-          {
-            onLog: (line) => {
-              for (const l of line.split("\n")) {
-                if (l) runConsole.append("lqip", l);
-              }
-            },
-            onDone: (status) => {
-              runConsole.finish("lqip", status === "ok" ? "ok" : `exit ${status}`);
-              setLqipStale(status !== "ok");
-              finishLqip();
-            },
-          },
-          controller.signal
-        );
-      } catch (err) {
-        if (!controller.signal.aborted) {
-          runConsole.finish("lqip", "error");
-          setNotice({ kind: "err", text: err instanceof Error ? err.message : String(err) });
-        }
-        setLqipRunning(false);
-      } finally {
-        if (abortRef.current === controller) abortRef.current = null;
-      }
-    })();
-  }, [lqipRunning, finishLqip, runConsole]);
+    void runConsole.start("lqip", "/api/lqip", {
+      onDone: () => invalidateMediaCache(),
+      onError: (err) => setNotice({ kind: "err", text: err instanceof Error ? err.message : String(err) }),
+    });
+  }, [runConsole]);
 
   const uploadFiles = useCallback(
     async (files: File[], dir: string, encode?: EncodeOptions): Promise<boolean> => {

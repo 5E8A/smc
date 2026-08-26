@@ -10,6 +10,17 @@ export interface RunStatus {
   last: string | null;
 }
 
+export interface RunTaskOptions {
+  body?: unknown;
+  mapDone?: (status: string) => string;
+  onDone?: (status: string) => void;
+  onError?: (err: unknown) => void;
+  onSettled?: () => void;
+}
+
+export const defaultMapDone = (status: string): string =>
+  status === "ok" ? "ok" : status === "error" ? "error" : `exit ${status}`;
+
 export interface RunConsoleValue {
   entries: RunConsoleEntry[];
   statuses: Record<string, RunStatus>;
@@ -20,6 +31,7 @@ export interface RunConsoleValue {
   finish: (source: string, status: string) => void;
   clear: () => void;
   anyRunning: boolean;
+  start: (source: string, url: string, opts?: RunTaskOptions) => Promise<boolean>;
 }
 
 export const RunConsoleContext = createContext<RunConsoleValue | null>(null);

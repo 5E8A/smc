@@ -1,5 +1,4 @@
 import { useCallback, useRef } from "react";
-import { runSsePost } from "./sse";
 import { useRunConsole } from "./runConsole";
 
 /**
@@ -8,7 +7,7 @@ import { useRunConsole } from "./runConsole";
  * serialized: overlapping requests coalesce into one follow-up run.
  */
 export function useIconsSync(): () => void {
-  const runConsole = useRunConsole();
+  const { start } = useRunConsole();
   const runningRef = useRef(false);
   const pendingRef = useRef(false);
 
@@ -18,26 +17,13 @@ export function useIconsSync(): () => void {
       return;
     }
     runningRef.current = true;
-    runConsole.begin("icons");
     void (async () => {
       for (;;) {
         pendingRef.current = false;
-        try {
-          await runSsePost("/api/icons/sync", {
-            onLog: (line) => {
-              for (const l of line.split("\n")) {
-                if (l) runConsole.append("icons", l);
-              }
-            },
-            onDone: (status) =>
-              runConsole.finish("icons", status === "ok" ? "ok" : status === "error" ? "error" : `exit ${status}`),
-          });
-        } catch {
-          runConsole.finish("icons", "error");
-        }
+        await start("icons", "/api/icons/sync");
         if (!pendingRef.current) break;
       }
       runningRef.current = false;
     })();
-  }, [runConsole]);
+  }, [start]);
 }
