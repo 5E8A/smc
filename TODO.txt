@@ -1,0 +1,48 @@
+# SMC TODO - work top to bottom, one item per session
+
+## Verify / loose ends
+[ ] 1. Decide fate of "CMS Markdown Test" post in @web/src/content/en/posts.json
+       (committed via 5d265d8; playground for preview parity vs real content -
+       remove before deploy if not wanted; check PL counterpart too)
+[ ] 2. Confirm Node20 deprecation warning gone from next GH Actions run
+       (deploy.yml action pins bumped in 23192b8)
+
+## Shared-export migration (scan done 25.08, only markdown/icons moved so far)
+[ ] 3. @shared/content - Lang/Kind/LANGS/KINDS/isLang/isKind/LocalizedText/Author/
+       raw BlogPost+WikiDoc/Entry/isBlogPost/Issue/ModListColumn + id conventions
+       (dupes: @cms/src/types.ts, @cms/server/{util,store,mods}.ts, @web/src/types.ts)
+[ ] 4. @shared/dates - todayIso/isoToDisplay/displayToIso/monthsFor/ISO_DATE
+       (dupes: @cms/src/lib/dates.ts, @cms/server/store.ts, @web/src/data/posts.ts)
+[ ] 5. @shared/assets - /smc/assets/ prefixes, toPublicPath, blurhashKey,
+       placeholder/mobile variant naming, image-ext allowlist, toWebpName
+       (dupes: @cms/server/*, MediaBrowser.tsx, ConverterView.tsx, SmartImage.tsx,
+       @scripts/generate-blurhash.mjs)
+[ ] 6. @shared/slug additions - slugifyFileBase (3x in images.ts), slugFromInput
+       (Modrinth URL parse in ModsBoard.tsx)
+[ ] 7. SPRITE_COLS=9 constant - duped in @web ModIcon/ModChest vs @scripts/sync-mods.mjs
+[ ] 8. formatNumber (@web/src/utils/numFormat.ts) - move to @shared or delete (unused)
+[ ] 9. Export validateAuthors from @cms/server/store so check-content stops
+       inlining its second copy
+
+## CMS audit findings still open (25.08 audits)
+[ ] 10. M4: invalidateMediaCache dead export (@cms/src/lib/mediaCache.ts:25) -
+        wire it or drop it
+[ ] 11. L1-L14 tail: immortal loadError; authors loading flash; Ctrl+S inert on
+        Mods tab; dirty marker only on authors tab strip; ModsBoard fetchProjects
+        unhandled rejection; silent inline AuthorPicker load failure; picker assumes
+        last author id; issue-index misattribution after edits; non-recursive folder
+        filter vs recursive delete count; unclamped quality/maxWidth inputs;
+        no timeout in cms request(); eager ModsBoard mount fetches; AssetsView
+        unmount kills LQIP SSE silently; beforeunload returnValue
+[ ] 12. Server LOWs: no locking/last-write-wins (incl. rewriteRefsInContent race);
+        writeJsonAtomic tmp orphan cleanup/fsync; blurhash.json written non-atomic
+        (@scripts/generate-blurhash.mjs:63) + possible concurrent writers; swallowed
+        read errors under-report refs (findRefs/loadKnownAuthorIds); createDir vs
+        renameDir normalization mismatch; err.stack echoed at @cms/server/api.ts:379
+
+## Feature candidates (scoped, not started)
+[ ] 13. Screenshot tab in CMS - full plan exists (backend screens routes +
+        ScreensView builder/viewer); see session notes or re-scope fresh
+[ ] 14. Decide on TanStack Query for stats/version fetching (analysis done:
+        memory-only OK, ~7-9KB gzip; current module caches work fine)
+[ ] 15. QoL mod-list consolidation - swap several mods for multi-function ones
