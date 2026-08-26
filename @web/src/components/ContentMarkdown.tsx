@@ -31,9 +31,6 @@ const components: MarkdownComponents = {
     return (
       <div className="my-8 overflow-hidden rounded-xl border border-white/10 shadow-lg" {...rest}>
         <Carousel images={imgs.map((i) => i.src)} />
-        <div className="border-t border-white/5 bg-black/40 p-3 text-center">
-          <p className="text-xs tracking-widest text-mc-text-muted uppercase">Gallery</p>
-        </div>
       </div>
     );
   },
@@ -168,10 +165,10 @@ const components: MarkdownComponents = {
     </td>
   ),
   hr: ({ node, ...props }) => <hr className="my-8 border-white/5" {...props} />,
-  img: ({ src, alt, node, ...props }) => (
-    <figure className="my-6 overflow-hidden rounded-xl border border-white/10">
-      <img src={src} alt={alt || ""} className="h-auto w-full object-cover" {...props} />
-      {alt && <figcaption className="bg-black/40 p-2 text-center text-xs text-mc-text-muted">{alt}</figcaption>}
+  img: ({ src, alt, title, node, ...props }) => (
+    <figure className="my-6 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
+      <img src={src} alt={alt || ""} className="block h-auto w-auto max-w-full" {...props} />
+      {title && <figcaption className="bg-black/40 p-2 text-center text-xs text-mc-text-muted">{title}</figcaption>}
     </figure>
   ),
 };
