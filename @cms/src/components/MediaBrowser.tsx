@@ -631,7 +631,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
         </div>
 
         {rejectedNames.length > 0 && (
-          <div className="flex items-start justify-between gap-3 rounded-xl border border-red-800 bg-red-950/40 px-3 py-2.5">
+          <div className="mb-3 flex items-start justify-between gap-3 rounded-xl border border-red-800 bg-red-950/40 px-3 py-2.5">
             <p className="flex items-start gap-2 text-xs text-red-300">
               <WarningCircleIcon size={15} className="mt-px shrink-0" />
               <span>
