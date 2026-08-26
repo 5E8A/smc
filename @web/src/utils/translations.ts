@@ -129,6 +129,13 @@ export const translations = {
       description_after: ", or open in browser using the link below.",
       fallback_link: "Open in browser",
     },
+    lightbox: {
+      label: "Image viewer",
+      open: "Open fullscreen",
+      close: "Close",
+      prev: "Previous image",
+      next: "Next image",
+    },
   },
   pl: {
     nav: {
@@ -259,6 +266,13 @@ export const translations = {
       description_link: "zainstaluj tutaj",
       description_after: ", lub otwórz w przeglądarce za pomocą poniższego przycisku.",
       fallback_link: "Otwórz w przeglądarce",
+    },
+    lightbox: {
+      label: "Przeglądarka obrazów",
+      open: "Otwórz pełny ekran",
+      close: "Zamknij",
+      prev: "Poprzedni obraz",
+      next: "Następny obraz",
     },
   },
 };

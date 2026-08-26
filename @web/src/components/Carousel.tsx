@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { CaretLeftIcon, CaretRightIcon, ImageIcon } from "@phosphor-icons/react";
+import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosphor-icons/react";
 import SmartImage from "@/components/SmartImage";
+import Lightbox from "@/components/Lightbox";
+import { useLanguage } from "@/context/useLanguage";
 
 interface CarouselProps {
   images: string[];
 }
 
+const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mc-accent";
+
 const Carousel = ({ images }: CarouselProps) => {
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   if (!images || images.length === 0) {
     return (
@@ -42,37 +48,67 @@ const Carousel = ({ images }: CarouselProps) => {
       <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
         <SmartImage src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="size-full" priority="low" />
 
-        {/* Subtle gradient overlay at bottom for dots */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent"></div>
-      </div>
+        {/* Fullscreen open trigger covering the image */}
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          aria-label={t.lightbox.open}
+          className={`absolute inset-0 z-10 cursor-zoom-in ${focusRing}`}
+        ></button>
 
+        {/* Expand icon */}
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          aria-label={t.lightbox.open}
+          className={`absolute top-3 right-3 z-30 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-mc-green hover:text-black ${focusRing}`}
+        >
+          <CornersOutIcon size={20} />
+        </button>
+      </div>
       {/* Navigation Buttons - Hidden by default, show on hover */}
       <button
-        className="absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-mc-green hover:text-black"
+        type="button"
+        aria-label={t.lightbox.prev}
+        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-mc-green hover:text-black ${focusRing}`}
         onClick={prevSlide}
       >
         <CaretLeftIcon size={24} />
       </button>
 
       <button
-        className="absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-mc-green hover:text-black"
+        type="button"
+        aria-label={t.lightbox.next}
+        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-mc-green hover:text-black ${focusRing}`}
         onClick={nextSlide}
       >
         <CaretRightIcon size={24} />
       </button>
 
       {/* Modern Dots */}
-      <div className="absolute inset-x-0 bottom-6 z-20 flex justify-center gap-2">
+      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/50 px-3 py-2 backdrop-blur-sm">
         {images.map((slide, slideIndex) => (
-          <div
+          <button
             key={slideIndex}
+            type="button"
+            aria-label={`Slide ${slideIndex + 1}`}
+            aria-current={currentIndex === slideIndex || undefined}
             onClick={() => goToSlide(slideIndex)}
-            className={`size-2 cursor-pointer rounded-full transition-all duration-300 ${
-              currentIndex === slideIndex ? "w-6 bg-white" : "bg-white/30 hover:bg-white/60"
+            className={`h-2 cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+              currentIndex === slideIndex ? "w-6 bg-white" : "w-2 bg-white/30 hover:bg-white/60"
             }`}
-          ></div>
+          ></button>
         ))}
       </div>
+
+      {lightboxOpen && (
+        <Lightbox
+          images={images}
+          index={currentIndex}
+          onIndexChange={setCurrentIndex}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 };

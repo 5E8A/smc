@@ -1,8 +1,6 @@
 import { type CSSProperties } from "react";
-import hashes from "@/data/blurhash.json";
+import { getHash } from "@/utils/blurhash";
 import { BlurhashCanvas } from "./BlurhashCanvas";
-
-const hashIndex = hashes as Record<string, string>;
 
 interface SmartImageProps {
   src: string;
@@ -11,11 +9,21 @@ interface SmartImageProps {
   height?: number;
   priority?: "high" | "low";
   lazy?: boolean;
+  fit?: "cover" | "contain";
   className?: string;
 }
 
-const SmartImage = ({ src, alt, width, height, priority, lazy = true, className = "" }: SmartImageProps) => {
-  const hash = hashIndex[src.replace(/^\/smc\//, "")];
+const SmartImage = ({
+  src,
+  alt,
+  width,
+  height,
+  priority,
+  lazy = true,
+  fit = "cover",
+  className = "",
+}: SmartImageProps) => {
+  const hash = getHash(src);
 
   const wrapperStyle: CSSProperties = {};
   if (width && height) {
@@ -34,7 +42,7 @@ const SmartImage = ({ src, alt, width, height, priority, lazy = true, className 
         loading={lazy ? "lazy" : "eager"}
         decoding="async"
         fetchPriority={priority}
-        className="absolute inset-0 size-full object-cover"
+        className={`absolute inset-0 size-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
       />
     </div>
   );
