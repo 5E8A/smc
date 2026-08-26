@@ -27,3 +27,4 @@ tools/
 .output/
 .tanstack/
 .cache/
+tmp-ci-test/
