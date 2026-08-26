@@ -72,9 +72,10 @@ const aspectRatioOf = (img: ImageInfo): number => Math.min(Math.max(img.width / 
 export interface MediaBrowserProps {
   manageFolders?: boolean;
   onSelect?: (path: string) => void;
+  fullPageDrop?: boolean;
 }
 
-export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserProps) => {
+export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = false }: MediaBrowserProps) => {
   const lib = useMediaLibrary();
   const { images, dirs } = lib;
 
@@ -126,15 +127,59 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
 
   const currentTargetDir = selectedDir === "all" ? "" : selectedDir;
 
-  const stageFiles = (files: File[]) => {
-    const valid = files.filter(isUploadable);
-    const rejected = files.filter((f) => !isUploadable(f)).map((f) => f.name);
-    setSkippedCount(rejected.length);
-    setRejectedNames(rejected);
-    if (valid.length === 0) return;
-    setUploadDir(currentTargetDir);
-    setPending(valid.map((file) => ({ file, url: URL.createObjectURL(file) })));
-  };
+  const stageFiles = useCallback(
+    (files: File[]) => {
+      const valid = files.filter(isUploadable);
+      const rejected = files.filter((f) => !isUploadable(f)).map((f) => f.name);
+      setSkippedCount(rejected.length);
+      setRejectedNames(rejected);
+      if (valid.length === 0) return;
+      setUploadDir(currentTargetDir);
+      setPending(valid.map((file) => ({ file, url: URL.createObjectURL(file) })));
+    },
+    [currentTargetDir]
+  );
+
+  useEffect(() => {
+    if (!fullPageDrop) return;
+    const hasFiles = (e: DragEvent): boolean => [...(e.dataTransfer?.types ?? [])].includes("Files");
+    const onDragEnter = (e: DragEvent): void => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current += 1;
+      setDragging(true);
+    };
+    const onDragOver = (e: DragEvent): void => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+    };
+    const onDragLeave = (e: DragEvent): void => {
+      if (!hasFiles(e)) return;
+      dragDepth.current -= 1;
+      if (dragDepth.current <= 0) {
+        dragDepth.current = 0;
+        setDragging(false);
+      }
+    };
+    const onDrop = (e: DragEvent): void => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current = 0;
+      setDragging(false);
+      stageFiles([...(e.dataTransfer?.files ?? [])]);
+    };
+    window.addEventListener("dragenter", onDragEnter);
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("dragleave", onDragLeave);
+    window.addEventListener("drop", onDrop);
+    return () => {
+      window.removeEventListener("dragenter", onDragEnter);
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("dragleave", onDragLeave);
+      window.removeEventListener("drop", onDrop);
+    };
+  }, [fullPageDrop, stageFiles]);
 
   const openFileDialog = () => fileInputRef.current?.click();
 
@@ -499,6 +544,35 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
     </ul>
   );
 
+  const scopedDropHandlers = fullPageDrop
+    ? {}
+    : ({
+        onDragEnter: (e: React.DragEvent) => {
+          e.preventDefault();
+          if (![...e.dataTransfer.types].includes("Files")) return;
+          dragDepth.current += 1;
+          setDragging(true);
+        },
+        onDragOver: (e: React.DragEvent) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "copy";
+        },
+        onDragLeave: (e: React.DragEvent) => {
+          e.preventDefault();
+          dragDepth.current -= 1;
+          if (dragDepth.current <= 0) {
+            dragDepth.current = 0;
+            setDragging(false);
+          }
+        },
+        onDrop: (e: React.DragEvent) => {
+          e.preventDefault();
+          dragDepth.current = 0;
+          setDragging(false);
+          stageFiles([...e.dataTransfer.files]);
+        },
+      } satisfies Pick<React.HTMLAttributes<HTMLDivElement>, "onDragEnter" | "onDragOver" | "onDragLeave" | "onDrop">);
+
   return (
     <div className="flex items-stretch gap-4">
       <aside className="w-52 shrink-0 self-start rounded-lg border border-zinc-800 bg-zinc-950 p-2">
@@ -577,33 +651,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
           </div>
         )}
 
-        <div
-          className="relative"
-          onDragEnter={(e) => {
-            e.preventDefault();
-            if (![...e.dataTransfer.types].includes("Files")) return;
-            dragDepth.current += 1;
-            setDragging(true);
-          }}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = "copy";
-          }}
-          onDragLeave={(e) => {
-            e.preventDefault();
-            dragDepth.current -= 1;
-            if (dragDepth.current <= 0) {
-              dragDepth.current = 0;
-              setDragging(false);
-            }
-          }}
-          onDrop={(e) => {
-            e.preventDefault();
-            dragDepth.current = 0;
-            setDragging(false);
-            stageFiles([...e.dataTransfer.files]);
-          }}
-        >
+        <div className="relative" {...scopedDropHandlers}>
           {visible.length === 0 ? (
             <button
               type="button"
@@ -633,7 +681,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
             </div>
           )}
 
-          {dragging && (
+          {dragging && !fullPageDrop && (
             <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-green-500 bg-green-950/80 backdrop-blur-sm">
               <UploadSimpleIcon size={42} className="text-green-400" />
               <p className="text-lg font-bold text-green-300">Drop to upload</p>
@@ -720,6 +768,16 @@ export const MediaBrowser = ({ manageFolders = false, onSelect }: MediaBrowserPr
               </button>
             </>
           )}
+        </div>
+      )}
+
+      {dragging && fullPageDrop && (
+        <div className="pointer-events-none fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-6 backdrop-blur-sm">
+          <div className="flex aspect-video w-full max-w-3xl flex-col items-center justify-center gap-4 rounded-3xl border-4 border-dashed border-green-500 bg-green-950/80">
+            <UploadSimpleIcon size={72} className="text-green-400" />
+            <p className="text-5xl font-black tracking-tight text-green-300">Drop to upload</p>
+            <p className="text-lg font-medium text-zinc-300">target folder: {dirLabel(currentTargetDir)}</p>
+          </div>
         </div>
       )}
 
