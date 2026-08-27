@@ -429,3 +429,30 @@
     animation: none;
   }
 }
+
+/* Hide native browser video controls (shadow DOM) in all modes including fullscreen */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+/* Custom fullscreen presentation for [data-video-wrapper] targets: the promoted
+   wrapper fills the viewport, but its children keep their inline layout — so we
+   center the video, strip every size cap, and hide the LQIP behind letterboxing. */
+[data-video-wrapper]:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: black;
+  border-radius: 0;
+}
+[data-video-wrapper]:fullscreen > canvas {
+  display: none;
+}
+[data-video-wrapper]:fullscreen > video {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+}

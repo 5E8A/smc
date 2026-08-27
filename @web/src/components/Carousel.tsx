@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosphor-icons/react";
 import SmartImage from "@/components/SmartImage";
 import Lightbox from "@/components/Lightbox";
@@ -8,12 +8,38 @@ interface CarouselProps {
   images: string[];
 }
 
-const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mc-accent";
+const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 const Carousel = ({ images }: CarouselProps) => {
   const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [initialTime, setInitialTime] = useState(0);
+  const videoElRef = useRef<HTMLVideoElement | null>(null);
+
+  const openLightbox = useCallback(() => {
+    const el = videoElRef.current;
+    if (el) {
+      setInitialTime(el.currentTime);
+      el.pause();
+    }
+    setLightboxOpen(true);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false);
+    requestAnimationFrame(() => {
+      const el = videoElRef.current;
+      if (el) {
+        el.currentTime = 0;
+        void el.play();
+      }
+    });
+  }, []);
+
+  const handleVideoRef = useCallback((el: HTMLVideoElement | null) => {
+    videoElRef.current = el;
+  }, []);
 
   if (!images || images.length === 0) {
     return (
@@ -46,12 +72,19 @@ const Carousel = ({ images }: CarouselProps) => {
     <div className="group relative size-full">
       {/* Main Image Container */}
       <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
-        <SmartImage src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="size-full" priority="low" />
+        <SmartImage
+          src={images[currentIndex]}
+          alt={`Slide ${currentIndex + 1}`}
+          className="size-full"
+          priority="low"
+          controls={false}
+          onVideoRef={handleVideoRef}
+        />
 
         {/* Fullscreen open trigger covering the image */}
         <button
           type="button"
-          onClick={() => setLightboxOpen(true)}
+          onClick={openLightbox}
           aria-label={t.lightbox.open}
           className={`absolute inset-0 z-10 cursor-zoom-in ${focusRing}`}
         ></button>
@@ -59,9 +92,9 @@ const Carousel = ({ images }: CarouselProps) => {
         {/* Expand icon */}
         <button
           type="button"
-          onClick={() => setLightboxOpen(true)}
+          onClick={openLightbox}
           aria-label={t.lightbox.open}
-          className={`absolute top-3 right-3 z-30 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-mc-green hover:text-black ${focusRing}`}
+          className={`absolute top-3 right-3 z-30 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         >
           <CornersOutIcon size={20} />
         </button>
@@ -70,7 +103,7 @@ const Carousel = ({ images }: CarouselProps) => {
       <button
         type="button"
         aria-label={t.lightbox.prev}
-        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-mc-green hover:text-black ${focusRing}`}
+        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={prevSlide}
       >
         <CaretLeftIcon size={24} />
@@ -79,7 +112,7 @@ const Carousel = ({ images }: CarouselProps) => {
       <button
         type="button"
         aria-label={t.lightbox.next}
-        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:bg-mc-green hover:text-black ${focusRing}`}
+        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={nextSlide}
       >
         <CaretRightIcon size={24} />
@@ -105,8 +138,9 @@ const Carousel = ({ images }: CarouselProps) => {
         <Lightbox
           images={images}
           index={currentIndex}
+          initialTime={initialTime}
           onIndexChange={setCurrentIndex}
-          onClose={() => setLightboxOpen(false)}
+          onClose={closeLightbox}
         />
       )}
     </div>

@@ -168,7 +168,7 @@ const components: MarkdownComponents = {
   hr: ({ node, ...props }) => <hr className="my-8 border-white/5" {...props} />,
   img: ({ src, alt, title }) => (
     <figure className="my-6 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
-      <SmartImage src={typeof src === "string" ? src : ""} alt={alt || ""} fit="natural" />
+      <SmartImage src={typeof src === "string" ? src : ""} alt={alt || ""} fit="natural" controls />
       {title && <figcaption className="bg-black/40 p-2 text-center text-xs text-mc-text-muted">{title}</figcaption>}
     </figure>
   ),
