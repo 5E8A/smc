@@ -100,15 +100,12 @@ export interface UploadResult {
   animated?: boolean;
   frames?: number;
   staticPath?: string;
+  format?: "webm" | "webp";
+  mbPerSec?: number;
+  oversized?: boolean;
 }
 
-export type UploadStage =
-  | "probe"
-  | "transcode"
-  | "decoding"
-  | "re-encoding"
-  | "static-frame"
-  | "writing";
+export type UploadStage = "probe" | "transcode" | "decoding" | "re-encoding" | "static-frame" | "writing";
 
 export interface UploadStageEvent {
   file: string;
@@ -126,6 +123,8 @@ export type ConvertStageEvent =
 export interface EncodeOptions {
   quality?: number;
   maxWidth?: number;
+  /** Output format override for animated sources; only honored for gif/`.webp` (others are webm-only). */
+  format?: "webm" | "webp";
 }
 
 async function* ndjsonLines(body: ReadableStream<Uint8Array>): AsyncGenerator<Record<string, unknown>> {
@@ -176,6 +175,7 @@ export const uploadImage = async (
   const params = new URLSearchParams({ dir, name: file.name });
   if (opts.quality != null) params.set("quality", String(opts.quality));
   if (opts.maxWidth != null) params.set("maxWidth", String(opts.maxWidth));
+  if (opts.format) params.set("format", opts.format);
   if (opts.onProgress) params.set("progress", "1");
   const res = await fetch(`/api/images?${params}`, {
     method: "PUT",
@@ -208,6 +208,56 @@ export const uploadImage = async (
     }
   }
   if (!final) throw new ApiError(res.status, { error: errorText ?? "Upload failed" });
+  return final;
+};
+
+export const replaceImage = async (
+  path: string,
+  file: File,
+  opts: EncodeOptions & { onProgress?: (event: UploadStageEvent) => void } = {}
+): Promise<UploadResult> => {
+  const limit = uploadLimitFor(file.name);
+  if (file.size > limit) {
+    throw new ApiError(413, {
+      error: `${file.name} is ${formatMb(file.size)} - the upload limit is ${formatMb(limit)}`,
+    });
+  }
+  const params = new URLSearchParams({ path, name: file.name });
+  if (opts.quality != null) params.set("quality", String(opts.quality));
+  if (opts.maxWidth != null) params.set("maxWidth", String(opts.maxWidth));
+  if (opts.format) params.set("format", opts.format);
+  if (opts.onProgress) params.set("progress", "1");
+  const res = await fetch(`/api/image/replace?${params}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/octet-stream" },
+    body: file,
+  });
+  if (!res.ok) {
+    let payload: { error?: string } = {};
+    try {
+      payload = await res.json();
+    } catch {
+      payload = {};
+    }
+    throw new ApiError(res.status, payload);
+  }
+  if (!opts.onProgress || !res.body) return (await res.json()) as UploadResult;
+
+  let final: UploadResult | null = null;
+  let errorText: string | null = null;
+  for await (const line of ndjsonLines(res.body)) {
+    if (line.result) final = line.result as UploadResult;
+    else if (typeof line.error === "string") errorText = line.error;
+    else if (typeof line.stage === "string") {
+      opts.onProgress({
+        file: typeof line.file === "string" ? line.file : file.name,
+        stage: line.stage as UploadStage,
+        pct: typeof line.pct === "number" ? line.pct : null,
+        speed: typeof line.speed === "string" ? line.speed : null,
+      });
+    }
+  }
+  if (!final) throw new ApiError(res.status, { error: errorText ?? "Replace failed" });
   return final;
 };
 
@@ -263,7 +313,10 @@ const concatBytes = (a: Uint8Array, b: Uint8Array): Uint8Array => {
   return out;
 };
 
-export const convertImages = async (files: Array<{ file: File; relPath: string }>, opts: ConvertOptions): Promise<ConvertOutcome> => {
+export const convertImages = async (
+  files: Array<{ file: File; relPath: string }>,
+  opts: ConvertOptions
+): Promise<ConvertOutcome> => {
   const fd = new FormData();
   fd.set("quality", String(opts.quality ?? 80));
   fd.set("resize", opts.resize ? "1" : "0");

@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import {
+  ArrowUUpLeftIcon,
   CaretRightIcon,
   CircleNotchIcon,
+  ClockIcon,
   CopyIcon,
-  FileVideoIcon,
   FolderIcon,
   FolderPlusIcon,
   HashIcon,
   ImagesIcon,
+  LockSimpleIcon,
   MagnifyingGlassIcon,
   PencilSimpleIcon,
   PlayIcon,
@@ -16,7 +19,7 @@ import {
   WarningCircleIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { createDir, deleteDir, deleteImage, getRefs, renameDir, renameImage, ApiError } from "../api";
+import { createDir, deleteDir, deleteImage, getRefs, renameDir, renameImage, replaceImage, ApiError } from "../api";
 import type { ImageInfo, RefUsages } from "../types";
 import { buildDirTree, dirLabel, type DirNode } from "../lib/mediaTree";
 import { formatUploadStage } from "../lib/stageLabels";
@@ -26,6 +29,10 @@ import { Button } from "./fields";
 
 const VALID_UPLOAD_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".apng", ".mp4", ".m4v", ".webm", ".mov", ".mkv"];
 const VIDEO_EXTS = new Set([".mp4", ".m4v", ".webm", ".mov", ".mkv"]);
+/** Animated sources sharp can re-encode to animated webp (so the webm/webp choice applies). */
+const WEBP_CHOOSABLE = new Set([".gif", ".webp"]);
+
+type AnimFormat = "webm" | "webp";
 
 const extOf = (name: string): string => {
   const dot = name.lastIndexOf(".");
@@ -34,10 +41,116 @@ const extOf = (name: string): string => {
 
 const isUploadable = (f: File): boolean => VALID_UPLOAD_EXTS.includes(extOf(f.name));
 const isVideoFile = (f: File): boolean => VIDEO_EXTS.has(extOf(f.name));
+/** Whether this animated source can optionally be output as animated webp (gif / animated webp). */
+const canChooseWebp = (f: File): boolean => WEBP_CHOOSABLE.has(extOf(f.name));
+/** Smart output default: gif/animated webp → webp (lightweight <img>, best for short loops); video/apng → webm. */
+const smartFormat = (f: File): AnimFormat => (canChooseWebp(f) ? "webp" : "webm");
+
+const formatBytes = (bytes: number): string => {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes >= 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${bytes} B`;
+};
+
+const formatDurSec = (s: number): string => {
+  if (!Number.isFinite(s) || s <= 0) return "";
+  if (s < 60) return `${Math.round(s)}s`;
+  const m = Math.floor(s / 60);
+  const sec = Math.round(s % 60);
+  return `${m}m ${sec}s`;
+};
 
 interface PendingFile {
   file: File;
   url: string;
+  format: AnimFormat;
+  durationSec?: number;
+  animated?: boolean;
+  probingVideo?: boolean;
+}
+
+/** Probe metadata for a staged upload so the modal can show a duration/animated hint before upload. */
+function probeFileMeta(file: File, onMeta: (m: { durationSec?: number; animated?: boolean }) => void): () => void {
+  const url = URL.createObjectURL(file);
+  const ext = extOf(file.name);
+  let cancelled = false;
+  let img: HTMLImageElement | null = null;
+  const finish = (m: { durationSec?: number; animated?: boolean }) => {
+    if (!cancelled) onMeta(m);
+    cleanup();
+  };
+  const cleanup = () => {
+    cancelled = true;
+    if (img) img.src = "";
+    URL.revokeObjectURL(url);
+  };
+
+  if (ext === ".gif") {
+    img = new Image();
+    img.onerror = () => finish({});
+    img.onload = () => finish({ animated: true });
+    img.src = url;
+    return cleanup;
+  }
+
+  if (ext === ".webp") {
+    img = new Image();
+    img.onerror = () => finish({});
+    img.onload = () => {
+      if (cancelled || !img) return;
+      let animated = false;
+      try {
+        const canvas = document.createElement("canvas");
+        const w = img.naturalWidth || 1;
+        const h = img.naturalHeight || 1;
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          const a = ctx.getImageData(0, 0, 1, 1).data[0];
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0);
+          const b = ctx.getImageData(0, 0, 1, 1).data[0];
+          animated = a !== b;
+        }
+      } catch {
+        animated = false;
+      }
+      finish({ animated });
+    };
+    img.src = url;
+    return cleanup;
+  }
+
+  const video = document.createElement("video");
+  let videoShown = false;
+  const videoCleanup = () => {
+    cancelled = true;
+    if (videoShown) {
+      video.src = "";
+    }
+    URL.revokeObjectURL(url);
+  };
+  video.muted = true;
+  video.preload = "metadata";
+  video.onloadedmetadata = () => {
+    if (cancelled) return;
+    const d = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : undefined;
+    if (!cancelled) onMeta({ durationSec: d, animated: d !== undefined });
+    cancelled = true;
+    video.src = "";
+    URL.revokeObjectURL(url);
+  };
+  video.onerror = () => {
+    if (!cancelled) onMeta({});
+    cancelled = true;
+    URL.revokeObjectURL(url);
+  };
+  videoShown = true;
+  video.src = url;
+  video.load();
+  return videoCleanup;
 }
 
 type FolderPrompt = { mode: "create"; parent: string } | { mode: "rename"; dir: string };
@@ -47,12 +160,13 @@ interface ModalShellProps {
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
+  xwide?: boolean;
 }
 
-const ModalShell = ({ title, onClose, children, wide = false }: ModalShellProps) => (
+const ModalShell = ({ title, onClose, children, wide = false, xwide = false }: ModalShellProps) => (
   <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-6" onClick={onClose}>
     <div
-      className={`flex max-h-full w-full ${wide ? "max-w-2xl" : "max-w-md"} flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-2xl`}
+      className={`flex max-h-full w-full ${xwide ? "max-w-4xl" : wide ? "max-w-2xl" : "max-w-md"} flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-2xl`}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-zinc-800 px-4 py-3">
@@ -70,14 +184,17 @@ const iconBtn =
   "rounded p-1 text-zinc-500 transition-colors hover:text-zinc-200 disabled:pointer-events-none disabled:opacity-40";
 
 const numberInputCls =
-  "w-14 rounded bg-zinc-900 px-1 py-0.5 text-xs text-zinc-200 outline-none focus:border-green-500 border border-zinc-700";
+  "w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-200 outline-none focus:border-green-500";
 
 const UploadJobBanner = ({ job, onDismiss }: { job: UploadJob; onDismiss: () => void }) => {
   if (job.status === "success") {
     return (
       <Banner variant="success" title={job.name} dismissable onDismiss={onDismiss}>
-        Converted to webp
-        {job.animated ? ` - animated${job.frames ? ` (${job.frames} frames)` : ""}` : ""}
+        Converted to {job.animated ? (job.format === "webm" ? "webm" : "animated webp") : "webp"}
+        {job.animated && job.frames ? ` (${job.frames} frames)` : ""}
+        {job.oversized && job.mbPerSec != null
+          ? ` - unusually large (${job.mbPerSec.toFixed(1)} MB/s): consider lowering quality or trimming`
+          : ""}
       </Banner>
     );
   }
@@ -122,24 +239,82 @@ interface MediaTileProps {
   onOpenMenu: (e: React.MouseEvent) => void;
 }
 
+const PREVIEW_GAP = 12;
+const PREVIEW_MAX_WIDTH = 480;
+const PREVIEW_MAX_HEIGHT_RATIO = 0.75;
+
+interface ImagePreviewOverlayProps {
+  img: ImageInfo;
+  tileRect: DOMRect;
+  onHover: () => void;
+  onLeave: () => void;
+}
+
+const ImagePreviewOverlay = ({ img, tileRect, onHover, onLeave }: ImagePreviewOverlayProps) => {
+  const dims = useMemo(() => {
+    const maxW = Math.min(img.width, PREVIEW_MAX_WIDTH);
+    const maxH = Math.min(img.height, window.innerHeight * PREVIEW_MAX_HEIGHT_RATIO);
+    const ratio = img.width / img.height;
+    let w = maxW;
+    let h = w / ratio;
+    if (h > maxH) {
+      h = maxH;
+      w = h * ratio;
+    }
+    return { width: Math.round(w), height: Math.round(h) };
+  }, [img.width, img.height]);
+
+  const viewW = window.innerWidth;
+  let left = tileRect.left;
+  if (left + dims.width > viewW - 16) left = viewW - dims.width - 16;
+  if (left < 16) left = 16;
+
+  let top = tileRect.top - PREVIEW_GAP - dims.height;
+  if (top < 8) top = tileRect.bottom + PREVIEW_GAP;
+
+  return createPortal(
+    <div
+      className="pointer-events-auto overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950 shadow-2xl"
+      style={{ position: "fixed", zIndex: 50, left, top, width: dims.width, height: dims.height }}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+    >
+      {img.format === "webm" ? (
+        <video
+          key={img.url}
+          src={img.url}
+          poster={img.staticUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="h-full w-full object-contain"
+        />
+      ) : (
+        <img src={img.url} alt={img.name} className="h-full w-full object-contain" draggable={false} />
+      )}
+      {img.animated && (
+        <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase">
+          <PlayIcon size={9} weight="bold" /> anim
+        </span>
+      )}
+    </div>,
+    document.body
+  );
+};
+
 const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOpenMenu }: MediaTileProps) => {
-  const [hovered, setHovered] = useState(false);
-  const hoverSwappable = img.animated && !!img.staticUrl;
-  const src = !hoverSwappable || hovered ? img.url : img.staticUrl!;
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [tileRect, setTileRect] = useState<DOMRect | null>(null);
+
+  const src = img.staticUrl ?? img.url;
 
   const inner = (
     <>
-      <div
-        className="relative overflow-hidden bg-zinc-950"
-        style={{ height: rowHeight }}
-        {...(hoverSwappable ? { onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false) } : {})}
-      >
+      <div className="relative overflow-hidden bg-zinc-950" style={{ height: rowHeight }}>
         <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
         {img.animated && (
-          <span
-            className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase"
-            title={hoverSwappable ? "Animated - hover to play" : "Animated webp"}
-          >
+          <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase">
             <PlayIcon size={9} weight="bold" /> anim
           </span>
         )}
@@ -158,27 +333,58 @@ const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOp
     ? { width: Math.min(aspectRatioOf(img) * rowHeight, gridWidth) }
     : { flexGrow: aspectRatioOf(img), flexBasis: 0 };
 
+  const handleTileEnter = (e: React.MouseEvent) => {
+    setTileRect(e.currentTarget.getBoundingClientRect());
+    setPreviewVisible(true);
+  };
+  const handleLeave = () => setPreviewVisible(false);
+
+  const preview =
+    previewVisible && tileRect ? (
+      <ImagePreviewOverlay
+        img={img}
+        tileRect={tileRect}
+        onHover={() => setPreviewVisible(true)}
+        onLeave={handleLeave}
+      />
+    ) : null;
+
   if (onSelect) {
     return (
-      <button
-        type="button"
-        title={img.path}
-        style={style}
-        className={cls}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(img.path);
-        }}
-        onContextMenu={onOpenMenu}
-      >
-        {inner}
-      </button>
+      <>
+        <button
+          type="button"
+          title={img.path}
+          style={style}
+          className={cls}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(img.path);
+          }}
+          onMouseEnter={handleTileEnter}
+          onMouseLeave={handleLeave}
+          onContextMenu={onOpenMenu}
+        >
+          {inner}
+        </button>
+        {preview}
+      </>
     );
   }
   return (
-    <div title={img.path} style={style} className={cls} onContextMenu={onOpenMenu}>
-      {inner}
-    </div>
+    <>
+      <div
+        title={img.path}
+        style={style}
+        className={cls}
+        onMouseEnter={handleTileEnter}
+        onMouseLeave={handleLeave}
+        onContextMenu={onOpenMenu}
+      >
+        {inner}
+      </div>
+      {preview}
+    </>
   );
 };
 
@@ -199,6 +405,9 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
   const [dragging, setDragging] = useState(false);
   const dragDepth = useRef(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const replaceInputRef = useRef<HTMLInputElement | null>(null);
+  const replaceDialogOpen = useRef(false);
+  const probeCleanups = useRef<Array<() => void>>([]);
 
   const [pending, setPending] = useState<PendingFile[] | null>(null);
   const [skippedCount, setSkippedCount] = useState(0);
@@ -222,9 +431,11 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
   const [fileName, setFileName] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const [replaceTarget, setReplaceTarget] = useState<ImageInfo | null>(null);
+
   const [menu, setMenu] = useState<{ x: number; y: number; img: ImageInfo } | null>(null);
 
-  const anyModalOpen = !!pending || !!imgDelete || !!dirDelete || !!folderPrompt || !!filePrompt;
+  const anyModalOpen = !!pending || !!imgDelete || !!dirDelete || !!folderPrompt || !!filePrompt || !!replaceTarget;
 
   const tree = useMemo(() => buildDirTree(dirs), [dirs]);
 
@@ -242,13 +453,28 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
   const stageFiles = useCallback(
     (files: File[]) => {
+      probeCleanups.current.forEach((c) => c());
+      probeCleanups.current = [];
       const valid = files.filter(isUploadable);
       const rejected = files.filter((f) => !isUploadable(f)).map((f) => f.name);
       setSkippedCount(rejected.length);
       setRejectedNames(rejected);
       if (valid.length === 0) return;
       setUploadDir(currentTargetDir);
-      setPending(valid.map((file) => ({ file, url: URL.createObjectURL(file) })));
+      const staged: PendingFile[] = valid.map((file) => ({
+        file,
+        url: URL.createObjectURL(file),
+        format: smartFormat(file),
+      }));
+      const cleanups = staged.map((p, i) =>
+        probeFileMeta(p.file, (m) => {
+          setPending((prev) =>
+            prev ? prev.map((x, j) => (j === i ? { ...x, durationSec: m.durationSec, animated: m.animated } : x)) : prev
+          );
+        })
+      );
+      probeCleanups.current = cleanups;
+      setPending(staged);
     },
     [currentTargetDir]
   );
@@ -296,7 +522,16 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
   const openFileDialog = () => fileInputRef.current?.click();
 
+  useEffect(() => {
+    if (replaceTarget && !replaceDialogOpen.current) {
+      replaceDialogOpen.current = true;
+      replaceInputRef.current?.click();
+    }
+  }, [replaceTarget]);
+
   const cancelStaging = useCallback(() => {
+    probeCleanups.current.forEach((c) => c());
+    probeCleanups.current = [];
     pending?.forEach((p) => URL.revokeObjectURL(p.url));
     setPending(null);
     setSkippedCount(0);
@@ -339,10 +574,27 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
   const startUpload = () => {
     if (!pending) return;
-    const files = pending.map((p) => p.file);
+    const items = pending.map((p) => ({ file: p.file, format: p.format }));
     cancelStaging();
     setSelectedDir(uploadDir);
-    void lib.uploadFiles(files, uploadDir, { quality, maxWidth });
+    void lib.uploadFiles(items, uploadDir, { quality, maxWidth });
+  };
+
+  const startReplace = async () => {
+    if (!pending || !replaceTarget) return;
+    const file = pending[0].file;
+    const target = replaceTarget;
+    const format = pending[0].format;
+    cancelStaging();
+    setReplaceTarget(null);
+    try {
+      await replaceImage(target.path, file, { quality, maxWidth, format });
+      await lib.refresh();
+      lib.setLqipStale(true);
+      lib.setNotice({ kind: "success", text: `Replaced ${target.name}` });
+    } catch (err) {
+      lib.setNotice({ kind: "error", text: String(err instanceof ApiError ? err.message : err) });
+    }
   };
 
   const beginImgDelete = (img: ImageInfo) => {
@@ -453,7 +705,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
   const openFilePrompt = (img: ImageInfo) => {
     setFilePrompt(img);
-    setFileName(img.name.replace(/\.webp$/i, ""));
+    setFileName(img.name.replace(/\.[^.]+$/i, ""));
   };
 
   const submitFilePrompt = async () => {
@@ -462,10 +714,11 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
     if (!name) return;
     setBusy(true);
     try {
+      const ext = filePrompt.name.match(/\.[^.]+$/i)?.[0] ?? ".webp";
       const result = await renameImage(filePrompt.path, name);
       lib.setNotice({
         kind: "success",
-        text: `Renamed to ${name}.webp${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
+        text: `Renamed to ${name}${ext}${result.rewritten ? ` - updated ${result.rewritten} reference(s) in content` : ""}`,
       });
       lib.setLqipStale(true);
       await lib.refresh();
@@ -777,7 +1030,7 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
               <p className="text-xs text-zinc-600">
                 {images === null
                   ? ""
-                  : `Click to browse, or drop files${selectedDir === "all" ? "" : ` into ${dirLabel(selectedDir)}`} - converts to webp`}
+                  : `Click to browse, or drop files${selectedDir === "all" ? "" : ` into ${dirLabel(selectedDir)}`} - converts to webp / webm`}
               </p>
             </button>
           ) : (
@@ -817,6 +1070,34 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
           e.target.value = "";
         }}
       />
+      <input
+        ref={replaceInputRef}
+        type="file"
+        accept=".png,.jpg,.jpeg,.webp,.gif,.apng,.mp4,.m4v,.webm,.mov,.mkv"
+        className="hidden"
+        onClick={(e) => e.stopPropagation()}
+        onBlur={() => {
+          if (replaceDialogOpen.current && replaceTarget && !pending) {
+            replaceDialogOpen.current = false;
+            setReplaceTarget(null);
+          }
+        }}
+        onChange={(e) => {
+          const file = (e.target.files ?? [])[0];
+          e.target.value = "";
+          replaceDialogOpen.current = false;
+          if (!file || !replaceTarget) {
+            setReplaceTarget(null);
+            return;
+          }
+          if (!isUploadable(file)) {
+            setReplaceTarget(null);
+            return;
+          }
+          setUploadDir(replaceTarget.dir);
+          setPending([{ file, url: URL.createObjectURL(file), format: smartFormat(file) }]);
+        }}
+      />
 
       {menu && (
         <div
@@ -849,6 +1130,17 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
               </button>
               <button
                 type="button"
+                className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                onClick={() => {
+                  const img = menu.img;
+                  setMenu(null);
+                  setReplaceTarget(img);
+                }}
+              >
+                <ArrowUUpLeftIcon size={13} className="text-zinc-500" /> Replace…
+              </button>
+              <button
+                type="button"
                 className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-red-400 hover:bg-red-950/60 hover:text-red-300"
                 onClick={() => {
                   const img = menu.img;
@@ -875,25 +1167,93 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
 
       {pending && (
         <ModalShell
-          title={`Upload ${pending.length} file${pending.length > 1 ? "s" : ""}`}
-          onClose={cancelStaging}
-          wide
+          title={
+            replaceTarget
+              ? `Replace ${replaceTarget.name}`
+              : `Upload ${pending.length} file${pending.length > 1 ? "s" : ""}`
+          }
+          onClose={() => {
+            if (replaceTarget) setReplaceTarget(null);
+            cancelStaging();
+          }}
+          xwide
         >
-          <div className="flex flex-wrap gap-2">
-            {pending.map((p) => (
-              <div key={p.url} className="w-28">
-                {isVideoFile(p.file) ? (
-                  <div className="flex h-20 w-28 items-center justify-center rounded-md border border-zinc-800 bg-zinc-900">
-                    <FileVideoIcon size={26} className="text-zinc-500" />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            {pending.map((p, i) => {
+              const choosable = p.animated && canChooseWebp(p.file);
+              const lockedVideo = isVideoFile(p.file) || extOf(p.file.name) === ".apng";
+              return (
+                <div
+                  key={p.url}
+                  className="flex flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900"
+                >
+                  <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-black">
+                    {isVideoFile(p.file) ? (
+                      <video src={p.url} muted loop autoPlay playsInline className="h-full w-full object-cover" />
+                    ) : (
+                      <img src={p.url} alt="" className="h-full w-full object-contain" />
+                    )}
+                    <span className="absolute top-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-200">
+                      {extOf(p.file.name).slice(1).toUpperCase()}
+                    </span>
+                    {p.durationSec ? (
+                      <span className="absolute right-1 bottom-1 flex items-center gap-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-zinc-200">
+                        <ClockIcon size={11} /> {formatDurSec(p.durationSec)}
+                      </span>
+                    ) : null}
                   </div>
-                ) : (
-                  <img src={p.url} alt="" className="h-20 w-28 rounded-md border border-zinc-800 object-cover" />
-                )}
-                <p className="mt-0.5 truncate text-center text-[10px] text-zinc-500" title={p.file.name}>
-                  {p.file.name}
-                </p>
-              </div>
-            ))}
+                  <div className="flex min-h-0 flex-1 flex-col gap-1.5 p-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-[11px] leading-tight font-medium text-zinc-200" title={p.file.name}>
+                        {p.file.name}
+                      </p>
+                      <p className="text-[10px] text-zinc-500">{formatBytes(p.file.size)}</p>
+                    </div>
+                    {choosable || lockedVideo ? (
+                      <div className="mt-auto">
+                        <span className="mb-1 block text-[10px] font-semibold tracking-wide text-zinc-500 uppercase">
+                          Output
+                        </span>
+                        {choosable ? (
+                          <div className="flex rounded-md border border-zinc-700 text-[11px] font-semibold">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setPending((prev) =>
+                                  prev ? prev.map((x, j) => (j === i ? { ...x, format: "webp" } : x)) : prev
+                                )
+                              }
+                              className={`flex-1 rounded-l-md px-2 py-1 ${
+                                p.format === "webp" ? "bg-green-700 text-white" : "text-zinc-300 hover:bg-zinc-800"
+                              }`}
+                            >
+                              webp
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setPending((prev) =>
+                                  prev ? prev.map((x, j) => (j === i ? { ...x, format: "webm" } : x)) : prev
+                                )
+                              }
+                              className={`flex-1 rounded-r-md px-2 py-1 ${
+                                p.format === "webm" ? "bg-green-700 text-white" : "text-zinc-300 hover:bg-zinc-800"
+                              }`}
+                            >
+                              webm
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-[11px] text-zinc-300">
+                            <LockSimpleIcon size={11} /> webm
+                          </span>
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {skippedCount > 0 && (
@@ -903,58 +1263,78 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
             </p>
           )}
 
-          <div className="grid grid-cols-3 gap-3">
-            <label className="col-span-3 block text-xs text-zinc-400 sm:col-span-1">
-              <span className="mb-1 block font-semibold tracking-wide uppercase">Folder</span>
-              <select
-                value={uploadDir}
-                onChange={(e) => setUploadDir(e.target.value)}
-                className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-200 outline-none focus:border-green-500"
-              >
-                <option value="">/content (root)</option>
-                {dirs.map((d) => (
-                  <option key={d} value={d}>
-                    /content/{d}
-                  </option>
-                ))}
-              </select>
-            </label>
+          <div className="grid grid-cols-1 gap-3 border-t border-zinc-800 pt-3 sm:grid-cols-3">
+            {!replaceTarget && (
+              <label className="block text-xs text-zinc-400">
+                <span className="mb-1 block font-semibold tracking-wide uppercase">Folder</span>
+                <select
+                  value={uploadDir}
+                  onChange={(e) => setUploadDir(e.target.value)}
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-200 outline-none focus:border-green-500"
+                >
+                  <option value="">/content (root)</option>
+                  {dirs.map((d) => (
+                    <option key={d} value={d}>
+                      /content/{d}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
             <label className="block text-xs text-zinc-400">
               <span className="mb-1 block font-semibold tracking-wide uppercase">Quality</span>
-              <input
-                type="number"
-                min={1}
-                max={100}
-                value={quality}
-                onChange={(e) => setQuality(Number(e.target.value))}
-                className={`${numberInputCls} w-full`}
-              />
+              <div className="relative">
+                <input
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={quality}
+                  onChange={(e) => setQuality(Number(e.target.value))}
+                  className={`${numberInputCls} pr-8`}
+                />
+                <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs text-zinc-500">
+                  %
+                </span>
+              </div>
             </label>
             <label className="block text-xs text-zinc-400">
               <span className="mb-1 block font-semibold tracking-wide uppercase">Max width</span>
-              <input
-                type="number"
-                min={64}
-                max={4096}
-                step={64}
-                value={maxWidth}
-                onChange={(e) => setMaxWidth(Number(e.target.value))}
-                className={`${numberInputCls} w-full`}
-              />
+              <div className="relative">
+                <input
+                  type="number"
+                  min={64}
+                  max={4096}
+                  step={64}
+                  value={maxWidth}
+                  onChange={(e) => setMaxWidth(Number(e.target.value))}
+                  className={`${numberInputCls} pr-9`}
+                />
+                <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs text-zinc-500">
+                  px
+                </span>
+              </div>
             </label>
           </div>
 
-          <p className="text-[11px] text-zinc-600">
-            Files convert to webp on save into public/assets/content - gifs, apngs and videos become animated webp (plus
-            a .static.webp first-frame fallback). Run Regenerate blurhash afterwards to update placeholders.
+          <p className="text-[11px] leading-relaxed text-zinc-600">
+            Files convert on save into public/assets/content (animated ones get a .static.webp first-frame poster). Gifs
+            and animated webp default to a lightweight webp - great for short loops - but you can switch each to VP9
+            webm. Video and apng always become webm. Run Regenerate blurhash afterwards to update placeholders.
           </p>
 
           <div className="flex justify-end gap-2 pt-1">
-            <Button variant="ghost" onClick={cancelStaging}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (replaceTarget) setReplaceTarget(null);
+                cancelStaging();
+              }}
+            >
               Cancel
             </Button>
-            <Button variant="primary" onClick={startUpload}>
-              <UploadSimpleIcon size={14} /> Upload {pending.length} file{pending.length > 1 ? "s" : ""}
+            <Button variant="primary" onClick={replaceTarget ? startReplace : startUpload}>
+              <UploadSimpleIcon size={14} />
+              {replaceTarget ? "Replace" : `Upload ${pending.length} file${pending.length > 1 ? "s" : ""}`}
             </Button>
           </div>
         </ModalShell>
@@ -1110,8 +1490,8 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
               />
             </label>
             <p className="text-[11px] text-zinc-600">
-              Saved as .webp. References in posts/wiki/authors update automatically; run Regenerate blurhash afterwards
-              to update placeholders.
+              Saved as .webp (or .webm for video/animation). References in posts/wiki/authors update automatically; run
+              Regenerate blurhash afterwards to update placeholders.
             </p>
             <div className="flex justify-end gap-2">
               <Button variant="ghost" type="button" onClick={() => setFilePrompt(null)}>

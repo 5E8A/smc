@@ -12,6 +12,7 @@ import {
   remarkUnwrapBlocks,
 } from "@smc/shared/markdown";
 import { assetUrl } from "../api";
+import { isVideoSrc, videoPosterSrc } from "../lib/videoAsset";
 import Carousel from "./Carousel";
 import { ICON_COMPONENTS } from "./icon-map.generated";
 
@@ -158,18 +159,34 @@ const components: MarkdownComponents = {
     </td>
   ),
   hr: ({ node, ...props }) => <hr className="my-5 border-white/5" {...props} />,
-  img: ({ src, alt, title, node, ...props }) => (
-    <figure className="my-4 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
-      <img
-        src={typeof src === "string" && src.startsWith("/smc/assets/") ? assetUrl(src) : src}
-        alt={alt || ""}
-        loading="lazy"
-        className="block h-auto w-auto max-w-full"
-        {...props}
-      />
-      {title && <figcaption className="bg-black/40 p-1.5 text-center text-[11px] text-zinc-400">{title}</figcaption>}
-    </figure>
-  ),
+  img: ({ src, alt, title, node, ...props }) => {
+    const raw = typeof src === "string" ? src : "";
+    const resolve = (p: string): string => (p.startsWith("/smc/assets/") ? assetUrl(p) : p);
+    return (
+      <figure className="my-4 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
+        {isVideoSrc(raw) ? (
+          <video
+            src={resolve(raw)}
+            poster={resolve(videoPosterSrc(raw))}
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="block h-auto w-auto max-w-full"
+          />
+        ) : (
+          <img
+            src={resolve(raw) || undefined}
+            alt={alt || ""}
+            loading="lazy"
+            className="block h-auto w-auto max-w-full"
+            {...props}
+          />
+        )}
+        {title && <figcaption className="bg-black/40 p-1.5 text-center text-[11px] text-zinc-400">{title}</figcaption>}
+      </figure>
+    );
+  },
 };
 
 export const MarkdownPreview = ({ content }: { content: string }) => (

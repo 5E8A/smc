@@ -184,8 +184,8 @@ export const ConverterView = () => {
         <h2 className="mr-auto text-sm font-bold text-white">
           Converter
           <span className="ml-2 text-xs font-normal text-zinc-500">
-            drop folders or pick them, everything is re-encoded to webp (animations included) into a downloadable zip
-            and nothing touches public/assets
+            drop folders or pick them, everything is re-encoded to webp / webm (animations included) into a
+            downloadable zip and nothing touches public/assets
           </span>
         </h2>
       </div>
@@ -287,7 +287,7 @@ export const ConverterView = () => {
         )}
         {result && (
           <span className="text-green-400">
-            Downloaded webp-converter.zip - {result.converted} converted
+            Downloaded conversion zip - {result.converted} converted
             {result.errors > 0 ? `, ${result.errors} failed (see CONVERSION-ERRORS.txt)` : ""}
           </span>
         )}

@@ -6,11 +6,24 @@ export interface LocalizedText {
   pl: string;
 }
 
+export interface SocialLink {
+  url: string;
+  label?: string;
+}
+
+export interface AuthorSocials {
+  twitter?: SocialLink;
+  youtube?: SocialLink;
+  github?: SocialLink;
+  discord?: SocialLink;
+}
+
 export interface Author {
   id: string;
   avatar: string;
   name: LocalizedText;
   bio: LocalizedText;
+  socials?: AuthorSocials;
 }
 
 export interface BlogPost {
@@ -57,6 +70,7 @@ export interface ImageInfo {
   width: number;
   height: number;
   animated: boolean;
+  format?: "webm";
 }
 
 export interface ImagesPayload {

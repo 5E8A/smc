@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { assetUrl } from "../api";
+import { isVideoSrc, videoPosterSrc } from "../lib/videoAsset";
 
 const resolveSrc = (src: string) => (src.startsWith("/smc/assets/") ? assetUrl(src) : src);
 
@@ -24,12 +25,25 @@ const Carousel = ({ images }: { images: string[] }) => {
   return (
     <div className="group relative size-full">
       <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
-        <img
-          src={resolveSrc(images[currentIndex])}
-          alt={`Slide ${currentIndex + 1}`}
-          loading="lazy"
-          className="size-full object-cover"
-        />
+        {isVideoSrc(images[currentIndex]) ? (
+          <video
+            key={images[currentIndex]}
+            src={resolveSrc(images[currentIndex])}
+            poster={resolveSrc(videoPosterSrc(images[currentIndex]))}
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="size-full object-cover"
+          />
+        ) : (
+          <img
+            src={resolveSrc(images[currentIndex])}
+            alt={`Slide ${currentIndex + 1}`}
+            loading="lazy"
+            className="size-full object-cover"
+          />
+        )}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent"></div>
       </div>
 

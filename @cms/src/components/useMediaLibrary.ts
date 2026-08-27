@@ -15,6 +15,9 @@ export interface UploadJob {
   error?: string;
   animated?: boolean;
   frames?: number;
+  format?: "webm" | "webp";
+  mbPerSec?: number;
+  oversized?: boolean;
 }
 
 const MAX_PARALLEL_UPLOADS = 3;
@@ -74,9 +77,13 @@ export function useMediaLibrary() {
   }, []);
 
   const uploadFiles = useCallback(
-    async (files: File[], dir: string, encode?: EncodeOptions): Promise<void> => {
-      if (files.length === 0) return;
-      const jobs: UploadJob[] = files.map((file) => ({
+    async (
+      items: Array<{ file: File; format?: "webm" | "webp" }>,
+      dir: string,
+      encode?: EncodeOptions
+    ): Promise<void> => {
+      if (items.length === 0) return;
+      const jobs: UploadJob[] = items.map(({ file }) => ({
         id: nextJobId.current++,
         name: file.name,
         status: "queued",
@@ -91,13 +98,15 @@ export function useMediaLibrary() {
       let cursor = 0;
       const outcomes: Array<{ ok: boolean; animated: boolean }> = [];
       const worker = async (): Promise<void> => {
-        while (cursor < files.length) {
+        while (cursor < items.length) {
           const index = cursor++;
           const job = jobs[index];
+          const { file, format } = items[index];
           patchJob(job.id, { status: "uploading", stage: "sending", pct: null, speed: null });
           try {
-            const result = await uploadImage(files[index], dir, {
+            const result = await uploadImage(file, dir, {
               ...encode,
+              ...(format ? { format } : {}),
               onProgress: (event) =>
                 patchJob(job.id, {
                   stage: event.stage,
@@ -112,6 +121,9 @@ export function useMediaLibrary() {
               speed: null,
               animated: result.animated,
               frames: result.frames,
+              format: result.format,
+              mbPerSec: result.mbPerSec,
+              oversized: result.oversized,
             });
             outcomes.push({ ok: true, animated: !!result.animated });
             window.setTimeout(() => dismissUpload(job.id), SUCCESS_BANNER_MS);
@@ -129,30 +141,28 @@ export function useMediaLibrary() {
       };
 
       try {
-        await Promise.all(
-          Array.from({ length: Math.min(MAX_PARALLEL_UPLOADS, files.length) }, () => worker())
-        );
+        await Promise.all(Array.from({ length: Math.min(MAX_PARALLEL_UPLOADS, items.length) }, () => worker()));
         await refresh();
         setLqipStale(true);
         const succeeded = outcomes.filter((o) => o.ok).length;
-        const failed = files.length - succeeded;
+        const failed = items.length - succeeded;
         const animatedCount = outcomes.filter((o) => o.ok && o.animated).length;
         if (failed === 0) {
           setNotice({
             kind: "success",
-            text: `Uploaded ${files.length} file${files.length > 1 ? "s" : ""} to public/assets/content${
+            text: `Uploaded ${items.length} file${items.length > 1 ? "s" : ""} to public/assets/content${
               dir ? `/${dir}` : ""
             }${animatedCount > 0 ? ` - ${animatedCount} animated` : ""}`,
           });
         } else if (succeeded > 0) {
           setNotice({
             kind: "warn",
-            text: `Uploaded ${succeeded}/${files.length} files - ${failed} failed, see the banner${
+            text: `Uploaded ${succeeded}/${items.length} files - ${failed} failed, see the banner${
               failed > 1 ? "s" : ""
             } above`,
           });
         } else {
-          setNotice({ kind: "error", text: `All ${files.length} upload(s) failed - see the banners above` });
+          setNotice({ kind: "error", text: `All ${items.length} upload(s) failed - see the banners above` });
         }
       } finally {
         activeBatches.current -= 1;
