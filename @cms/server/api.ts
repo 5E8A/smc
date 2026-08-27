@@ -1,7 +1,7 @@
 import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "http";
 import path from "path";
-import { BodyTooLargeError, isKind, isLang, readRawBody, sendJson } from "./util.ts";
+import { attachHttpGuards, BodyTooLargeError, installProcessGuards, isKind, isLang, isResponseClosed, readRawBody, sendJson } from "./util.ts";
 import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } from "./store.ts";
 import {
   createDir,
@@ -107,6 +107,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
               "Cache-Control": "no-store",
             });
             const send = (line: unknown): void => {
+              if (isResponseClosed(res)) return;
               res.write(JSON.stringify(line) + "\n");
             };
             try {
@@ -505,21 +506,37 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
 }
 
+interface MiddlewareStack {
+  middlewares: {
+    use(route: string, handler: (req: IncomingMessage, res: ServerResponse) => void): unknown;
+  };
+}
+
+function mountApi(host: MiddlewareStack): void {
+  host.middlewares.use("/api", (req, res) => {
+    attachHttpGuards(req, res);
+    route(req, res).catch((err) => {
+      console.error("[cms-api]", err);
+      if (!res.headersSent) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "internal server error" }));
+      } else if (!res.writableEnded) {
+        res.end();
+      }
+    });
+  });
+}
+
 export function cmsApi(): Plugin {
   return {
     name: "cms-api",
-    configureServer(server) {
-      server.middlewares.use("/api", (req, res) => {
-        route(req, res).catch((err) => {
-          console.error("[cms-api]", err);
-          if (!res.headersSent) {
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "internal server error" }));
-          } else {
-            res.end();
-          }
-        });
-      });
+    configureServer(server: MiddlewareStack) {
+      installProcessGuards();
+      mountApi(server);
+    },
+    configurePreviewServer(server: MiddlewareStack) {
+      installProcessGuards();
+      mountApi(server);
     },
   };
 }

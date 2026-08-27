@@ -154,3 +154,37 @@ export function readRawBody(req: import("http").IncomingMessage, maxBytes: numbe
     });
   });
 }
+
+const stamp = (): string => new Date().toISOString();
+
+function logGuarded(kind: string, err: unknown): void {
+  console.error(`[cms-server] ${stamp()} ${kind}:`, err instanceof Error ? (err.stack ?? err.message) : err);
+}
+
+let processGuardsInstalled = false;
+
+/** Keeps a stray async error from silently killing the whole CMS process. */
+export function installProcessGuards(): void {
+  // Vite re-evaluates the config module on every restart - key off globalThis
+  // so handlers are registered exactly once per node process.
+  const g = globalThis as typeof globalThis & { __smcCmsProcessGuards?: boolean };
+  if (g.__smcCmsProcessGuards || processGuardsInstalled) return;
+  g.__smcCmsProcessGuards = true;
+  processGuardsInstalled = true;
+  console.log(`[cms-server] ${stamp()} process guards installed`);
+  process.on("uncaughtException", (err) => logGuarded("uncaughtException", err));
+  process.on("unhandledRejection", (reason) => logGuarded("unhandledRejection", reason));
+}
+
+/**
+ * Attaches logging error listeners to request/response streams so client
+ * disconnects, aborted uploads and mid-stream kills can never surface as an
+ * uncaught "error" event and take the server down.
+ */
+export function attachHttpGuards(req: import("http").IncomingMessage, res: import("http").ServerResponse): void {
+  req.on("error", (err) => logGuarded("request stream error", err));
+  res.on("error", (err) => logGuarded("response stream error", err));
+}
+
+export const isResponseClosed = (res: import("http").ServerResponse): boolean =>
+  res.destroyed || res.writableEnded;

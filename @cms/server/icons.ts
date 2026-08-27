@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import type { ServerResponse } from "http";
-import { REPO_ROOT, CONTENT_DIR, KINDS, LANGS, mdDir } from "./util.ts";
+import { REPO_ROOT, CONTENT_DIR, isResponseClosed, KINDS, LANGS, mdDir } from "./util.ts";
 import { icons as coreIcons } from "@phosphor-icons/core";
 
 export const ICON_CATALOG_FILE = path.join(REPO_ROOT, "@shared", "icon-catalog.ts");
@@ -286,6 +286,7 @@ export function runIconsSync(res: ServerResponse, opts: { force?: boolean } = {}
   });
 
   const send = (event: string, data: string): void => {
+    if (isResponseClosed(res)) return;
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 

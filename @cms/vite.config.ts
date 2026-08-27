@@ -10,4 +10,9 @@ export default defineConfig({
     host: "127.0.0.1",
     strictPort: true,
   },
+  preview: {
+    port: CMS_PORT,
+    host: "127.0.0.1",
+    strictPort: true,
+  },
 });

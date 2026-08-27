@@ -10,6 +10,7 @@ import {
   KINDS,
   LANGS,
   contentPath,
+  isResponseClosed,
   mdDir,
   mimeFor,
   writeJsonAtomic,
@@ -767,6 +768,7 @@ export function runLqip(res: import("http").ServerResponse): void {
   });
 
   const send = (event: string, data: string) => {
+    if (isResponseClosed(res)) return;
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 

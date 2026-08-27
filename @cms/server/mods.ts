@@ -1,6 +1,6 @@
 import path from "path";
 import { spawn } from "child_process";
-import { REPO_ROOT, readJson, writeJsonAtomic } from "./util.ts";
+import { REPO_ROOT, isResponseClosed, readJson, writeJsonAtomic } from "./util.ts";
 
 export const MOD_LIST_FILE = path.join(REPO_ROOT, "@scripts", "mod-list.json");
 
@@ -105,6 +105,7 @@ export function runSyncMods(res: import("http").ServerResponse): void {
   });
 
   const send = (event: string, data: string) => {
+    if (isResponseClosed(res)) return;
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 
