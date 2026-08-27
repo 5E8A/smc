@@ -1,5 +1,5 @@
 import { useImagePicker } from "./useImagePicker";
-import type { Author } from "../types";
+import type { Author, AuthorSocials, SocialLink } from "../types";
 import { AssetThumb } from "./ImageLibrary";
 import { Button, Field, TextArea, TextInput } from "./fields";
 
@@ -25,6 +25,21 @@ function AuthorEditor({ author, onChange }: { author: Author; onChange: (next: A
 
   const loc = (field: "name" | "bio", l: "en" | "pl", v: string) =>
     onChange({ ...author, [field]: { ...author[field], [l]: v } });
+
+  const socialField = (key: keyof AuthorSocials, field: keyof SocialLink, v: string) => {
+    const prev = author.socials?.[key] as SocialLink | undefined;
+    const next = { ...prev, [field]: v };
+    const hasValue = next.url || next.label;
+    onChange({
+      ...author,
+      socials: { ...author.socials, [key]: hasValue ? next : undefined },
+    });
+  };
+
+  const getSocial = (key: keyof AuthorSocials, field: keyof SocialLink): string => {
+    const link = author.socials?.[key] as SocialLink | undefined;
+    return link?.[field] ?? "";
+  };
 
   return (
     <div className="space-y-4">
@@ -67,6 +82,35 @@ function AuthorEditor({ author, onChange }: { author: Author; onChange: (next: A
         <Field label="Bio (PL)">
           <TextArea rows={3} value={author.bio.pl} onChange={(e) => loc("bio", "pl", e.target.value)} />
         </Field>
+      </div>
+
+      <div className="space-y-3">
+        <span className="block text-xs font-semibold tracking-wide text-zinc-400 uppercase">Social Links</span>
+        {(
+          [
+            ["twitter", "Twitter / X URL", "https://x.com/...", "@username"],
+            ["youtube", "YouTube URL", "https://youtube.com/...", "@handle"],
+            ["github", "GitHub URL", "https://github.com/...", "username"],
+            ["discord", "Discord Profile URL", "https://discord.com/users/...", "display name"],
+          ] as const
+        ).map(([key, urlLabel, urlPlaceholder, labelPlaceholder]) => (
+          <div key={key} className="grid grid-cols-[1fr_1fr] gap-3">
+            <Field label={urlLabel}>
+              <TextInput
+                value={getSocial(key, "url")}
+                onChange={(e) => socialField(key, "url", e.target.value)}
+                placeholder={urlPlaceholder}
+              />
+            </Field>
+            <Field label="Display Name" hint="Optional label next to the icon">
+              <TextInput
+                value={getSocial(key, "label")}
+                onChange={(e) => socialField(key, "label", e.target.value)}
+                placeholder={labelPlaceholder}
+              />
+            </Field>
+          </div>
+        ))}
       </div>
 
       <p className="text-[11px] text-zinc-600">

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import type { ServerResponse } from "http";
-import { REPO_ROOT, CONTENT_DIR, KINDS, LANGS } from "./util.ts";
+import { REPO_ROOT, CONTENT_DIR, KINDS, LANGS, mdDir } from "./util.ts";
 import { icons as coreIcons } from "@phosphor-icons/core";
 
 export const ICON_CATALOG_FILE = path.join(REPO_ROOT, "@shared", "icon-catalog.ts");
@@ -144,24 +144,37 @@ export async function scanUsedMarkers(log: LogFn): Promise<Set<string>> {
   let files = 0;
   for (const lang of LANGS) {
     for (const kind of KINDS) {
-      const filePath = path.join(CONTENT_DIR, lang, `${kind}.json`);
-      let data: unknown;
+      // Scan metadata JSON (may still have some markers in titles/descriptions)
+      const jsonPath = path.join(CONTENT_DIR, lang, `${kind}.json`);
       try {
-        data = JSON.parse(await fs.promises.readFile(filePath, "utf8"));
+        const data = JSON.parse(await fs.promises.readFile(jsonPath, "utf8"));
+        files += 1;
+        const visit = (node: unknown): void => {
+          if (typeof node === "string") {
+            for (const match of node.matchAll(MARKER_PATTERN)) markers.add(match[1]);
+          } else if (Array.isArray(node)) {
+            for (const item of node) visit(item);
+          } else if (typeof node === "object" && node !== null) {
+            for (const value of Object.values(node)) visit(value);
+          }
+        };
+        visit(data);
       } catch {
-        continue;
+        // continue to md scan
       }
-      files += 1;
-      const visit = (node: unknown): void => {
-        if (typeof node === "string") {
-          for (const match of node.matchAll(MARKER_PATTERN)) markers.add(match[1]);
-        } else if (Array.isArray(node)) {
-          for (const item of node) visit(item);
-        } else if (typeof node === "object" && node !== null) {
-          for (const value of Object.values(node)) visit(value);
+      // Scan md files for icon markers
+      const dir = mdDir(kind, lang);
+      try {
+        const mdFiles = await fs.promises.readdir(dir);
+        for (const file of mdFiles) {
+          if (!file.endsWith(".md")) continue;
+          const content = await fs.promises.readFile(path.join(dir, file), "utf8");
+          files += 1;
+          for (const match of content.matchAll(MARKER_PATTERN)) markers.add(match[1]);
         }
-      };
-      visit(data);
+      } catch {
+        // dir may not exist
+      }
     }
   }
   log(`scanned ${files} content file(s): ${markers.size} unique icon reference(s)`);

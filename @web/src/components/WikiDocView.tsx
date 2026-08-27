@@ -2,6 +2,7 @@ import { useParams } from "@tanstack/react-router";
 import { getWikiDocAvailability, getWikiDocBySlug } from "../data/wiki";
 import { WikiDoc } from "../types";
 import BackButton from "./BackButton";
+import AuthorCard from "./AuthorCard";
 import { CalendarIcon, BookIcon, ListIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
@@ -12,10 +13,15 @@ import { useState } from "react";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
-const WikiDocView = () => {
+interface WikiDocViewProps {
+  body?: string | null;
+}
+
+const WikiDocView = ({ body }: WikiDocViewProps) => {
   const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
   const doc: WikiDoc | undefined = slug ? getWikiDocBySlug(slug, language) : undefined;
+  const content = body ?? null;
   const [tocOpen, setTocOpen] = useState(false);
 
   if (!doc) {
@@ -49,9 +55,9 @@ const WikiDocView = () => {
         </div>
 
         {/* Mobile TOC drawer */}
-        {tocOpen && (
+        {tocOpen && content && (
           <div className="mb-6 rounded-xl border border-white/5 bg-mc-surface/95 p-4 backdrop-blur-md md:hidden">
-            <WikiTOC content={doc.content} />
+            <WikiTOC content={content} />
           </div>
         )}
 
@@ -87,15 +93,17 @@ const WikiDocView = () => {
 
               <div className="p-8 md:p-12">
                 <article className="max-w-none">
-                  <ContentMarkdown content={doc.content} />
+                  {content ? <ContentMarkdown content={content} /> : <div className="h-32 animate-pulse bg-white/5 rounded" />}
                 </article>
               </div>
+
+              <AuthorCard author={doc.author} />
             </div>
           </div>
 
           {/* Desktop sidebar TOC - right side */}
           <aside className="hidden w-64 shrink-0 md:block">
-            <WikiTOC content={doc.content} />
+            {content && <WikiTOC content={content} />}
           </aside>
         </div>
       </div>

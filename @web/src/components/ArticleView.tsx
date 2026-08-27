@@ -2,6 +2,7 @@ import { useParams } from "@tanstack/react-router";
 import { getPostAvailability, getPostBySlug } from "../data/posts";
 import { BlogPost } from "../types";
 import BackButton from "./BackButton";
+import AuthorCard from "./AuthorCard";
 import { CalendarIcon, BookIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
 import ContentMarkdown from "./ContentMarkdown";
@@ -10,10 +11,15 @@ import SmartImage from "./SmartImage";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
-const ArticleView = () => {
+interface ArticleViewProps {
+  body?: string | null;
+}
+
+const ArticleView = ({ body }: ArticleViewProps) => {
   const { slug } = useParams({ strict: false });
   const { language } = useLanguage();
   const post: BlogPost | undefined = slug ? getPostBySlug(slug, language) : undefined;
+  const content = body ?? null;
 
   if (!post) {
     if (!slug) return null;
@@ -68,20 +74,18 @@ const ArticleView = () => {
             </div>
 
             {/* Content */}
-            <div className="p-8 md:p-12">
+            <div className="px-8 md:px-12">
               <article className="max-w-none">
-                <ContentMarkdown content={post.content} />
+                {content ? (
+                  <ContentMarkdown content={content} />
+                ) : (
+                  <div className="h-32 animate-pulse bg-white/5 rounded" />
+                )}
               </article>
             </div>
 
             {/* Author box */}
-            <div className="mx-8 mb-8 flex items-center space-x-6 rounded-xl border border-white/5 bg-black/20 p-6 md:mx-12 md:mb-12">
-              <img src={post.author.avatar} alt={post.author.name} className="size-16 rounded-full object-cover" />
-              <div>
-                <h3 className="mb-1 text-lg font-bold text-white">{post.author.name}</h3>
-                <p className="text-sm text-mc-text-muted">{post.author.bio}</p>
-              </div>
-            </div>
+            <AuthorCard author={post.author} />
           </div>
         </div>
       </div>
