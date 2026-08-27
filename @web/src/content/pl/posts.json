@@ -7,8 +7,7 @@
     "date": "16 Gru 2025",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/2.7.0-alpha1.webp",
-    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 2.7.0-Alpha1, który obsługuje wersję 1.21.11",
-    "content": "## Wydanie Fabric Boosted 2.7.0-Alpha1\n\nZ radością ogłaszamy wydanie [Fabric Boosted 2.7.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/2.7.0-Alpha1), która obsługuje Minecraft 1.21.11\n\n## Informacje o Aktualizacji\n\nPamiętaj, że jest to wydanie Alpha, co oznacza, że niektóre mody mogą być niekompletne lub niestabilne.\nZalecamy wykonanie kopii zapasowej światów przed aktualizacją. Aktualizacji możesz dokonać za pośrednictwem Aplikacji Modrinth, wybierając instancję Fabric Boosted i klikając 'Aktualizuj paczkę'."
+    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 2.7.0-Alpha1, który obsługuje wersję 1.21.11"
   },
   {
     "id": "2",
@@ -18,8 +17,7 @@
     "date": "11 Sty 2026",
     "category": "Ogłoszenia",
     "coverImage": "/smc/assets/content/posts/30k.webp",
-    "summary": "Z radością ogłaszamy, że Fabric Boosted osiągnął 30 000 pobrań w serwisie Modrinth!",
-    "content": "## 30 000 pobrań!\n\nZ wielką radością ogłaszamy, że Fabric Boosted osiągnął kamień milowy w postaci 30 000 pobrań na Modrinth! To osiągnięcie odzwierciedla niesamowite wsparcie i entuzjazm naszej społeczności. Chcielibyśmy serdecznie podziękować każdemu z Was za bycie częścią tej przygody.\n\n## Spojrzenie w przyszłość\n\nJesteśmy podekscytowani możliwością dalszego udoskonalania Fabric Boosted i dostarczania kolejnych aktualizacji w przyszłości. Bądźcie czujni, nadchodzi więcej ciekawej zawartości!"
+    "summary": "Z radością ogłaszamy, że Fabric Boosted osiągnął 30 000 pobrań w serwisie Modrinth!"
   },
   {
     "id": "3",
@@ -29,8 +27,7 @@
     "date": "30 Mar 2026",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/3.0.0-alpha1.webp",
-    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.0.0-Alpha1, który obsługuje wersję 26.1",
-    "content": "## Wydanie Fabric Boosted 3.0.0-Alpha1\n\nZ radością ogłaszamy wydanie [Fabric Boosted 3.0.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.0.0-Alpha1), która obsługuje Minecraft 26.1\n\n## Informacje o Aktualizacji\n\nPamiętaj, że jest to wydanie Alpha, co oznacza, że niektóre mody mogą być niekompletne lub niestabilne.\nZalecamy wykonanie kopii zapasowej światów przed aktualizacją. Aktualizacji możesz dokonać za pośrednictwem Aplikacji Modrinth, wybierając instancję Fabric Boosted i klikając 'Aktualizuj paczkę'."
+    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.0.0-Alpha1, który obsługuje wersję 26.1"
   },
   {
     "id": "4",
@@ -40,8 +37,7 @@
     "date": "18 Cze 2026",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/3.3.0-alpha1.webp",
-    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.3.0-Alpha1, który obsługuje wersję 26.2",
-    "content": "## Wydanie Fabric Boosted 3.3.0-Alpha1\n\nZ radością ogłaszamy wydanie [Fabric Boosted 3.3.0-Alpha1](https://modrinth.com/modpack/fabric-boosted/version/3.3.0-Alpha1), która obsługuje Minecraft 26.2\n\n## Informacje o Aktualizacji\n\nPamiętaj, że jest to wydanie Alpha, co oznacza, że niektóre mody mogą być niekompletne lub niestabilne.\nZalecamy wykonanie kopii zapasowej światów przed aktualizacją. Aktualizacji możesz dokonać za pośrednictwem Aplikacji Modrinth, wybierając instancję Fabric Boosted i klikając 'Aktualizuj paczkę'."
+    "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.3.0-Alpha1, który obsługuje wersję 26.2"
   },
   {
     "id": "5",
@@ -51,7 +47,6 @@
     "date": "24 Sie 2026",
     "category": "Announcements",
     "coverImage": "/smc/assets/content/posts/benchmark.webp",
-    "summary": "Internal regression-test article for the unified markdown renderer and composable carousels.",
-    "content": "## :WrenchIcon: What this page tests\n\nThis entry exists to verify the **unified markdown pipeline**, since the same renderer now powers wiki docs and blog articles. It also carries an external link test: [Fabric Boosted on Modrinth](https://modrinth.com/modpack/fabric-boosted).\n\nLine one after a hard break.\nLine two should sit directly below it.\n\n## :CpuIcon: Table check\n\n| Feature | Status |\n|---------|--------|\n| Unified renderer | works |\n| Hard breaks | works |\n| Composable carousel | works |\n\n## :ImageIcon: Inline image with caption\n\nAn image placed mid-article:\n\n![Benchmark banner used as a test image](/smc/assets/content/posts/benchmark.webp)\n\n## :RocketIcon: Carousel block number one\n\nThe carousel below lives inside the article flow:\n\n:carouselStart:\n![30k downloads banner](/smc/assets/content/posts/30k.webp)\n![Benchmark banner](/smc/assets/content/posts/benchmark.webp)\n![Alpha1 cover](/smc/assets/content/posts/2.7.0-alpha1.webp)\n:carouselEnd:\n\nText continues after the carousel to prove spacing survives.\n\n## :SparkleIcon: Carousel block number two\n\nA second carousel further down proves the blocks are composable:\n\n:carouselStart:\n![3.3.0 alpha cover](/smc/assets/content/posts/3.3.0-alpha1.webp)\n![3.0.0 alpha cover](/smc/assets/content/posts/3.0.0-alpha1.webp)\n:carouselEnd:"
+    "summary": "Internal regression-test article for the unified markdown renderer and composable carousels."
   }
 ]

@@ -18,6 +18,39 @@ export function contentPath(kind: Kind, lang: Lang): string {
   return path.join(CONTENT_DIR, lang, `${kind}.json`);
 }
 
+export function mdDir(kind: Kind, lang: Lang): string {
+  return path.join(CONTENT_DIR, lang, kind);
+}
+
+export function mdPath(kind: Kind, lang: Lang, slug: string): string {
+  return path.join(mdDir(kind, lang), `${slug}.md`);
+}
+
+export async function readMd(filePath: string): Promise<string | null> {
+  try {
+    return await fs.promises.readFile(filePath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+export async function writeMdAtomic(filePath: string, content: string): Promise<void> {
+  const dir = path.dirname(filePath);
+  await fs.promises.mkdir(dir, { recursive: true });
+  const normalized = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const tmp = filePath + ".tmp";
+  await fs.promises.writeFile(tmp, normalized, "utf8");
+  await fs.promises.rename(tmp, filePath);
+}
+
+export async function deleteMd(filePath: string): Promise<void> {
+  try {
+    await fs.promises.unlink(filePath);
+  } catch {
+    // ignore if file doesn't exist
+  }
+}
+
 export async function readJson(filePath: string): Promise<unknown> {
   const text = await fs.promises.readFile(filePath, "utf8");
   return JSON.parse(text);

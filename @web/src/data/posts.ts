@@ -4,6 +4,22 @@ import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import enPosts from "../content/en/posts.json";
 import plPosts from "../content/pl/posts.json";
 
+const enRaw = import.meta.glob<string>("../content/en/posts/*.md", { query: "?raw", import: "default", eager: true });
+const plRaw = import.meta.glob<string>("../content/pl/posts/*.md", { query: "?raw", import: "default", eager: true });
+
+function buildMap(entries: Record<string, string>): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const [key, content] of Object.entries(entries)) {
+    const slug = key.split("/").pop()?.replace(/\.md$/, "") ?? "";
+    if (slug) map[slug] = content;
+  }
+  return map;
+}
+
+const enBodies = buildMap(enRaw);
+const plBodies = buildMap(plRaw);
+const bodies: Record<"en" | "pl", Record<string, string>> = { en: enBodies, pl: plBodies };
+
 const parseDate = (dateStr: string): number => {
   let processedDate = dateStr;
   PL_MONTHS.forEach((pl, i) => {
@@ -45,3 +61,7 @@ export const getPostAvailability = (slug: string): { en: BlogPost | null; pl: Bl
   en: getPostBySlug(slug, "en") ?? null,
   pl: getPostBySlug(slug, "pl") ?? null,
 });
+
+export const getPostBody = (slug: string, lang: "en" | "pl"): string | null => {
+  return bodies[lang][slug] ?? null;
+};

@@ -3,12 +3,18 @@ import {
   writeJsonAtomic,
   CONTENT_DIR,
   contentPath,
+  mdDir,
+  mdPath,
+  readMd,
+  writeMdAtomic,
+  deleteMd,
   assetExists,
   KINDS,
   LANGS,
   type Kind,
   type Lang,
 } from "./util.ts";
+import fs from "fs";
 import { isKnownIcon } from "@smc/shared/icon-catalog";
 import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import { SLUG_PATTERN } from "@smc/shared/slug";
@@ -383,15 +389,55 @@ function checkAsset(
   }
 }
 
-export function loadContent(kind: Kind, lang: Lang): Promise<unknown> {
-  return readJson(contentPath(kind, lang));
+export async function loadContent(kind: Kind, lang: Lang): Promise<unknown> {
+  const data = await readJson(contentPath(kind, lang));
+  if (!Array.isArray(data)) return data;
+  const hydrated = await Promise.all(
+    data.map(async (entry) => {
+      const slug = (entry as Record<string, unknown>)?.slug;
+      if (typeof slug !== "string") return entry;
+      const body = await readMd(mdPath(kind, lang, slug));
+      return { ...entry, content: body ?? "" };
+    })
+  );
+  return hydrated;
 }
 
 export async function saveContent(kind: Kind, lang: Lang, data: unknown): Promise<{ issues: Issue[] }> {
   const issues = await validateContent(kind, lang, data);
   const hasErrors = issues.some((i) => i.severity === "error");
-  if (!hasErrors) {
-    await writeJsonAtomic(contentPath(kind, lang), data);
+  if (!hasErrors && Array.isArray(data)) {
+    // Write md files for each entry
+    const incomingSlugs = new Set<string>();
+    for (const entry of data) {
+      const slug = (entry as Record<string, unknown>)?.slug;
+      if (typeof slug !== "string" || !slug.trim()) continue;
+      incomingSlugs.add(slug);
+      const content = (entry as Record<string, unknown>)?.content;
+      if (typeof content === "string") {
+        await writeMdAtomic(mdPath(kind, lang, slug), content);
+      }
+    }
+    // Delete md files for removed entries
+    const dir = mdDir(kind, lang);
+    try {
+      const files = await fs.promises.readdir(dir);
+      for (const file of files) {
+        if (!file.endsWith(".md")) continue;
+        const fileSlug = file.slice(0, -3);
+        if (!incomingSlugs.has(fileSlug)) {
+          await deleteMd(mdPath(kind, lang, fileSlug));
+        }
+      }
+    } catch {
+      // dir may not exist yet
+    }
+    // Write metadata JSON (without content fields)
+    const meta = data.map((entry) => {
+      const { content: _content, ...rest } = entry as Record<string, unknown>;
+      return rest;
+    });
+    await writeJsonAtomic(contentPath(kind, lang), meta);
   }
   return { issues };
 }

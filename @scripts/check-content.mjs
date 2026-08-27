@@ -2,7 +2,7 @@
 // (@smc/cms/server/store) over @web/src/content, so bad data fails the build
 // instead of crashing the deployed SPA (an unknown author id throws at module init).
 import path from "node:path";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -30,18 +30,49 @@ const fail = (label, issues) => {
   }
 };
 
+const contentDir = path.join(root, "@web", "src", "content");
+
 for (const kind of KINDS) {
   for (const lang of LANGS) {
     const label = `${lang}/${kind}`;
-    let data;
+    let meta;
     try {
-      data = JSON.parse(readFileSync(path.join(root, "@web", "src", "content", lang, `${kind}.json`), "utf8"));
+      meta = JSON.parse(readFileSync(path.join(contentDir, lang, `${kind}.json`), "utf8"));
     } catch (err) {
       console.error(`error   ${label}: cannot parse JSON - ${err.message}`);
       errors += 1;
       continue;
     }
-    fail(label, await validateContent(kind, lang, data));
+    if (!Array.isArray(meta)) {
+      console.error(`error   ${label}: JSON root must be an array`);
+      errors += 1;
+      continue;
+    }
+    // Hydrate entries with content from md files
+    const mdDir = path.join(contentDir, lang, kind);
+    const mdFiles = new Set(
+      readdirSync(mdDir, { recursive: false })
+        .filter((f) => f.endsWith(".md"))
+        .map((f) => f.slice(0, -3))
+    );
+    const hydrated = meta.map((entry) => {
+      const slug = entry?.slug;
+      if (typeof slug !== "string") return entry;
+      if (!mdFiles.has(slug)) {
+        console.error(`error   ${label}/${slug}: missing content file ${kind}/${slug}.md`);
+        errors += 1;
+        return { ...entry, content: "" };
+      }
+      mdFiles.delete(slug);
+      const body = readFileSync(path.join(mdDir, `${slug}.md`), "utf8");
+      return { ...entry, content: body };
+    });
+    // Check for orphaned md files
+    for (const orphan of mdFiles) {
+      console.warn(`warn    ${label}: orphaned content file ${kind}/${orphan}.md (no matching entry)`);
+      warnings += 1;
+    }
+    fail(label, await validateContent(kind, lang, hydrated));
   }
 }
 
@@ -89,13 +120,25 @@ try {
 // Every :XxxIcon: placeholder in content must exist in the generated web icon
 // map (@web/src/components/icon-map.generated.ts), otherwise the site renders
 // nothing for it. The CMS keeps the map in sync automatically; this gate
-// catches hand-edited JSON / fresh clones.
+// catches hand-edited content / fresh clones.
 const MARKER_PATTERN = /:([A-Z][A-Za-z]+Icon):/g;
 const usedIcons = new Set();
+const contentRoot = path.join(root, "@web", "src", "content");
 for (const kind of KINDS) {
   for (const lang of LANGS) {
+    const dir = path.join(contentRoot, lang, kind);
     try {
-      const text = readFileSync(path.join(root, "@web", "src", "content", lang, `${kind}.json`), "utf8");
+      const mdFiles = readdirSync(dir, { recursive: false }).filter((f) => f.endsWith(".md"));
+      for (const file of mdFiles) {
+        const text = readFileSync(path.join(dir, file), "utf8");
+        for (const m of text.matchAll(MARKER_PATTERN)) usedIcons.add(m[1]);
+      }
+    } catch {
+      // dir may not exist
+    }
+    // Also scan JSON (some markers may remain in titles/descriptions)
+    try {
+      const text = readFileSync(path.join(contentRoot, lang, `${kind}.json`), "utf8");
       for (const m of text.matchAll(MARKER_PATTERN)) usedIcons.add(m[1]);
     } catch {
       // JSON parse errors are already reported above

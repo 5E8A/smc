@@ -1,33 +1,25 @@
+import type { Author } from "./data/authors";
+
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
-  author: {
-    name: string;
-    avatar: string;
-    bio: string;
-  };
+  author: Author;
   date: string;
   category: string;
   coverImage: string;
   summary: string;
-  content: string;
 }
 
 export interface WikiDoc {
   id: string;
   slug: string;
   title: string;
-  author: {
-    name: string;
-    avatar: string;
-    bio: string;
-  };
+  author: Author;
   date: string;
   category: string;
   coverImage: string;
   summary: string;
-  content: string;
 }
 
 export type BlogPostRaw = Omit<BlogPost, "author"> & { author: string };
