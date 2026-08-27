@@ -13,12 +13,13 @@ import {
   listImages,
   renameDir,
   renameImage,
+  replaceImage,
   runLqip,
   saveUpload,
   serveAsset,
   uploadLimitFor,
-} from "./images.ts";
-import { clampMaxWidth, clampQuality } from "./images.ts";
+} from "./media.ts";
+import { clampMaxWidth, clampQuality } from "./media.ts";
 import { buildZip, convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvertedZip } from "./convert.ts";
 import { loadModList, saveModList, runSyncMods } from "./mods.ts";
 import { runIconsSync } from "./icons.ts";
@@ -82,6 +83,8 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const name = url.searchParams.get("name") ?? "";
         const quality = Number(url.searchParams.get("quality") ?? NaN);
         const maxWidth = Number(url.searchParams.get("maxWidth") ?? NaN);
+        const formatParam = url.searchParams.get("format");
+        const format = formatParam === "webm" || formatParam === "webp" ? (formatParam as "webm" | "webp") : undefined;
         const streamProgress = url.searchParams.get("progress") === "1";
         if (!name) return void sendJson(res, 400, { error: "name is required" });
         const limit = uploadLimitFor(path.extname(name).toLowerCase());
@@ -96,6 +99,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
           const encodeOpts = {
             quality: Number.isFinite(quality) ? quality : undefined,
             maxWidth: Number.isFinite(maxWidth) ? maxWidth : undefined,
+            ...(format ? { format } : {}),
           };
           if (streamProgress) {
             res.writeHead(200, {
@@ -198,6 +202,65 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         }
         return void sendJson(res, 200, { ok: true });
       } catch (err) {
+        return void sendJson(res, 400, { error: (err as Error).message });
+      }
+    }
+
+    case "/image/replace": {
+      if (method !== "PUT") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      const p = url.searchParams.get("path") ?? "";
+      const name = url.searchParams.get("name") ?? "";
+      const quality = Number(url.searchParams.get("quality") ?? NaN);
+      const maxWidth = Number(url.searchParams.get("maxWidth") ?? NaN);
+      const formatParam = url.searchParams.get("format");
+      const format = formatParam === "webm" || formatParam === "webp" ? (formatParam as "webm" | "webp") : undefined;
+      const streamProgress = url.searchParams.get("progress") === "1";
+      if (!name) return void sendJson(res, 400, { error: "name is required" });
+      const limit = uploadLimitFor(path.extname(name).toLowerCase());
+      const declaredLength = Number(req.headers["content-length"] ?? 0);
+      if (Number.isFinite(declaredLength) && declaredLength > limit) {
+        return void sendJson(res, 413, {
+          error: `${name} is ${formatMb(declaredLength)} - the upload limit is ${formatMb(limit)}`,
+        });
+      }
+      try {
+        const body = await readRawBody(req, limit);
+        const encodeOpts = {
+          quality: Number.isFinite(quality) ? quality : undefined,
+          maxWidth: Number.isFinite(maxWidth) ? maxWidth : undefined,
+          ...(format ? { format } : {}),
+        };
+        if (streamProgress) {
+          res.writeHead(200, {
+            "Content-Type": "application/x-ndjson",
+            "Cache-Control": "no-store",
+          });
+          const send = (line: unknown): void => {
+            res.write(JSON.stringify(line) + "\n");
+          };
+          try {
+            const result = await replaceImage(p, name, body, {
+              ...encodeOpts,
+              onProgress: (event) => send({ file: name, ...event }),
+            });
+            send({ result });
+          } catch (err) {
+            send({ error: (err as Error).message });
+          }
+          res.end();
+          return;
+        }
+        const result = await replaceImage(p, name, body, encodeOpts);
+        return void sendJson(res, 200, result);
+      } catch (err) {
+        if (err instanceof BodyTooLargeError) {
+          return void sendJson(res, 413, {
+            error: `${name} is over the upload limit of ${formatMb(err.limit)}`,
+          });
+        }
         return void sendJson(res, 400, { error: (err as Error).message });
       }
     }

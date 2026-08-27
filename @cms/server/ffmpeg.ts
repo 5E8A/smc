@@ -20,7 +20,7 @@ const runsFfmpeg = (bin: string): Promise<boolean> =>
 
 export const isVideoExt = (ext: string): boolean => [".mp4", ".webm", ".mov", ".mkv", ".m4v"].includes(ext);
 
-export const FFMPEG_ANIMATED_IMAGE_EXTS = [".apng"];
+export const FFMPEG_ANIMATED_IMAGE_EXTS = [".apng", ".gif"];
 
 export const needsFfmpeg = (ext: string): boolean => isVideoExt(ext) || FFMPEG_ANIMATED_IMAGE_EXTS.includes(ext);
 
@@ -71,7 +71,7 @@ const probeVideo = (bin: string, input: string): Promise<ProbeInfo> =>
 
 const runFfmpeg = (bin: string, args: string[]): Promise<void> =>
   new Promise((resolve, reject) => {
-    execFile(bin, ["-hide_banner", "-loglevel", "error", "-y", ...args], { windowsHide: true, timeout: 120_000 }, (err, _stdout, stderr) => {
+    execFile(bin, ["-hide_banner", "-loglevel", "error", "-y", ...args], { windowsHide: true, timeout: 300_000 }, (err, _stdout, stderr) => {
       if (err) reject(new Error(`ffmpeg failed: ${stderr.toString().trim() || err.message}`));
       else resolve();
     });
@@ -113,8 +113,8 @@ const runFfmpegWithProgress = (
     let block: Record<string, string> = {};
     const timer = setTimeout(() => {
       child.kill();
-      reject(new Error("ffmpeg timed out after 180s"));
-    }, 180_000);
+      reject(new Error("ffmpeg timed out after 300s"));
+    }, 300_000);
 
     const flushBlock = (): void => {
       const outTime = parseOutTime(block["out_time"] ?? block["out_time_us"] ?? block["out_time_ms"]);
@@ -154,9 +154,11 @@ const runFfmpegWithProgress = (
   });
 
 export interface AnimatedConversion {
-  webp: Buffer;
+  media: Buffer;
   staticFrame: Buffer;
   frames: number;
+  durationSec: number | null;
+  sizeBytes: number;
 }
 
 async function withTempDir<T>(fn: (dir: string) => Promise<T>): Promise<T> {
@@ -168,9 +170,9 @@ async function withTempDir<T>(fn: (dir: string) => Promise<T>): Promise<T> {
   }
 }
 
-export async function convertVideoToWebp(
+export async function convertAnimatedToWebm(
   body: Buffer,
-  opts: { quality: number; maxWidth: number; fps?: number; onProgress?: (p: VideoProgress) => void }
+  opts: { quality: number; maxWidth: number; fps: number; onProgress?: (p: VideoProgress) => void }
 ): Promise<AnimatedConversion> {
   const bin = await resolveFfmpeg();
   if (!bin) throw new Error("ffmpeg not found - install it or run npm run cms:ffmpeg");
@@ -178,7 +180,7 @@ export async function convertVideoToWebp(
 
   return withTempDir(async (dir) => {
     const input = path.join(dir, "input.bin");
-    const out = path.join(dir, "out.webp");
+    const out = path.join(dir, "out.webm");
     const frame = path.join(dir, "frame.png");
     await fs.promises.writeFile(input, body);
 
@@ -190,9 +192,7 @@ export async function convertVideoToWebp(
       );
     }
 
-    const filters: string[] = [];
-    if (opts.fps) filters.push(`fps=${opts.fps}`);
-    filters.push(`scale='min(iw,${opts.maxWidth})':-2:flags=lanczos`);
+    const filters = [`fps=${opts.fps}`, `scale='min(iw,${opts.maxWidth})':-2:flags=lanczos`];
     await runFfmpegWithProgress(
       bin,
       [
@@ -201,14 +201,19 @@ export async function convertVideoToWebp(
         "-vf",
         filters.join(","),
         "-c:v",
-        "libwebp",
-        "-lossless",
+        "libvpx-vp9",
+        "-crf",
+        "36",
+        "-b:v",
         "0",
-        "-q:v",
-        String(opts.quality),
-        "-loop",
-        "0",
+        "-row-mt",
+        "1",
+        "-deadline",
+        "good",
+        "-cpu-used",
+        "4",
         "-an",
+        "-y",
         out,
       ],
       ({ outTimeSec, speed }) => {
@@ -222,12 +227,11 @@ export async function convertVideoToWebp(
     report({ stage: "static-frame" });
     await runFfmpeg(bin, ["-i", input, "-frames:v", "1", "-update", "1", frame]);
 
-    const webp = await fs.promises.readFile(out);
+    const media = await fs.promises.readFile(out);
     const staticFrame = await sharpNormalizeFrame(frame, opts.maxWidth, opts.quality);
-    const outputFps = opts.fps ?? probe.fps;
     const frames =
-      probe.duration !== null && outputFps !== null ? Math.max(1, Math.round(probe.duration * outputFps)) : 0;
-    return { webp, staticFrame, frames };
+      probe.duration !== null ? Math.max(1, Math.round(probe.duration * opts.fps)) : 0;
+    return { media, staticFrame, frames, durationSec: probe.duration, sizeBytes: media.length };
   });
 }
 

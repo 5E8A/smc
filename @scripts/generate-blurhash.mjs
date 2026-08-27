@@ -22,7 +22,7 @@ const walk = (dir) =>
   fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) return SKIP_DIRS.has(e.name) && dir === assetsDir ? [] : walk(full);
-    if (!/\.(png|jpe?g|webp)$/i.test(e.name)) return [];
+    if (!/\.(png|jpe?g|webp|webm)$/i.test(e.name)) return [];
     if (isVariant(e.name)) return [];
     return [full];
   });
@@ -47,10 +47,29 @@ async function encodeFile(file) {
 
 const hashes = {};
 const animatedKeys = [];
+const videoKeys = [];
 let transparentSkipped = 0;
 for (const file of walk(assetsDir)) {
   const key = "assets/" + path.relative(assetsDir, file).replace(/\\/g, "/");
+  const isWebm = /\.webm$/i.test(file);
   try {
+    if (isWebm) {
+      videoKeys.push(key);
+      const staticSibling = file.replace(/\.webm$/i, ".static.webp");
+      if (fs.existsSync(staticSibling)) {
+        const result = await encodeFile(staticSibling);
+        if (result) {
+          hashes[key] = result.hash;
+          console.log(`hash ${key} (${result.width}x${result.height}): ${result.hash} (from poster)`);
+        } else {
+          transparentSkipped++;
+          console.log(`skip ${key}: transparent`);
+        }
+      } else {
+        console.warn(`warn ${key}: video missing ${path.basename(staticSibling)} static poster`);
+      }
+      continue;
+    }
     const meta = await sharp(file).metadata();
     if ((meta.pages ?? 1) > 1) {
       animatedKeys.push(key);
@@ -78,7 +97,11 @@ console.log(
 );
 
 animatedKeys.sort();
-fs.writeFileSync(mediaOutFile, JSON.stringify({ animated: animatedKeys }, ["animated"], 2) + "\n");
+videoKeys.sort();
+fs.writeFileSync(
+  mediaOutFile,
+  JSON.stringify({ animated: animatedKeys, videos: videoKeys }, ["animated", "videos"], 2) + "\n"
+);
 console.log(
-  `wrote ${animatedKeys.length} animated asset${animatedKeys.length === 1 ? "" : "s"} to ${path.relative(root, mediaOutFile)}`
+  `wrote ${animatedKeys.length} animated + ${videoKeys.length} video asset${animatedKeys.length + videoKeys.length === 1 ? "" : "s"} to ${path.relative(root, mediaOutFile)}`
 );

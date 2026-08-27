@@ -1,8 +1,8 @@
 import path from "path";
 import sharp from "sharp";
 import yazl from "yazl";
-import { clampMaxWidth, clampQuality, formatMb, MAX_ANIMATION_FRAMES, uploadLimitFor } from "./images.ts";
-import { convertVideoToWebp, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
+import { clampMaxWidth, clampQuality, formatMb, MAX_ANIMATION_FRAMES, uploadLimitFor } from "./media.ts";
+import { convertAnimatedToWebm, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
 
 const STATIC_IMAGE_EXTS = [".png", ".jpg", ".jpeg"];
 const ANIMATED_IMAGE_EXTS = [".webp", ".gif"];
@@ -68,7 +68,7 @@ const sanitizeRelPath = (raw: string): string | null => {
   return parts.length > 0 ? parts.join("/") : null;
 };
 
-const toWebpName = (rel: string): string => rel.replace(/\.[^.]+$/, "") + ".webp";
+const toMediaName = (rel: string, ext: ".webp" | ".webm"): string => rel.replace(/\.[^.]+$/, "") + ext;
 
 const toStaticName = (rel: string): string => rel.replace(/\.[^.]+$/, "") + ".static.webp";
 
@@ -92,6 +92,7 @@ export type OnConvertProgress = (event: ConvertProgressEvent) => void;
 interface ConvertedFile {
   webp: Buffer;
   staticFrame: Buffer | null;
+  mediaExt: ".webp" | ".webm";
 }
 
 async function convertRaster(
@@ -124,7 +125,7 @@ async function convertRaster(
     if (opts.resize) framePipeline = framePipeline.resize({ width: opts.maxWidth, withoutEnlargement: true });
     staticFrame = await framePipeline.webp({ quality: opts.quality }).toBuffer();
   }
-  return { webp, staticFrame };
+  return { webp, staticFrame, mediaExt: ".webp" };
 }
 
 async function convertOne(
@@ -135,19 +136,19 @@ async function convertOne(
 ): Promise<ConvertedFile> {
   if (needsFfmpeg(ext)) {
     if (!(await resolveFfmpeg())) {
-      throw new Error("ffmpeg is required for video/apng conversion - run npm run cms:ffmpeg or install ffmpeg");
+      throw new Error("ffmpeg is required for video/animation conversion - run npm run cms:ffmpeg or install ffmpeg");
     }
-    const result = await convertVideoToWebp(f.data, {
+    const result = await convertAnimatedToWebm(f.data, {
       quality: opts.quality,
       maxWidth: opts.maxWidth,
-      ...(ext === ".apng" ? {} : { fps: VIDEO_FPS }),
+      fps: VIDEO_FPS,
       onProgress: (p) => {
         if (p.stage === "transcode") report({ stage: "transcode", pct: p.pct, speed: p.speed });
         else if (p.stage === "static-frame") report({ stage: "static-frame" });
         else report({ stage: "decoding" });
       },
     });
-    return { webp: result.webp, staticFrame: result.staticFrame };
+    return { webp: result.media, staticFrame: result.staticFrame, mediaExt: ".webm" };
   }
   return convertRaster(f, ext, opts, report);
 }
@@ -192,7 +193,7 @@ export async function convertBatch(
         { quality, maxWidth, resize: opts.resize },
         report ? (stage) => report({ ...envelope(), ...stage }) : (): void => {}
       );
-      converted.push({ relPath: toWebpName(rel), data: result.webp });
+      converted.push({ relPath: toMediaName(rel, result.mediaExt), data: result.webp });
       if (result.staticFrame) {
         converted.push({ relPath: toStaticName(rel), data: result.staticFrame });
       }

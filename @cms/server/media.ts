@@ -10,11 +10,12 @@ import {
   KINDS,
   LANGS,
   contentPath,
+  mdDir,
   mimeFor,
   writeJsonAtomic,
 } from "./util.ts";
 import { slugify } from "@smc/shared/slug";
-import { convertVideoToWebp, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
+import { convertAnimatedToWebm, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
 
 sharp.cache(false);
 
@@ -45,6 +46,7 @@ export interface ImageInfo {
   width: number;
   height: number;
   animated: boolean;
+  format?: "webm";
 }
 
 export const CONTENT_PUBLIC_PREFIX = "/smc/assets/content/";
@@ -134,7 +136,7 @@ export function listImages(): ImageInfo[] {
       const base = path.basename(f);
       const ext = path.extname(f).toLowerCase();
       return (
-        ext === ".webp" &&
+        (ext === ".webp" || ext === ".webm") &&
         !base.includes(".placeholder.") &&
         !base.includes(".mobile.") &&
         !base.includes(".static.")
@@ -143,7 +145,26 @@ export function listImages(): ImageInfo[] {
     .sort((a, b) => a.localeCompare(b))
     .map((f) => {
       const relDir = path.relative(CONTENT_ASSETS_DIR, path.dirname(f)).replace(/\\/g, "/");
-      const { width, height, animated } = readWebpDimensions(f);
+      const ext = path.extname(f).toLowerCase();
+      const staticAbs = f.replace(/\.[^.]+$/, ".static.webp");
+      const hasStatic = staticAbs !== f && fs.existsSync(staticAbs);
+      const isWebm = ext === ".webm";
+      let width = 1;
+      let height = 1;
+      let animated = false;
+      if (isWebm) {
+        animated = true;
+        if (hasStatic) {
+          const dims = readWebpDimensions(staticAbs);
+          width = dims.width;
+          height = dims.height;
+        }
+      } else {
+        const dims = readWebpDimensions(f);
+        width = dims.width;
+        height = dims.height;
+        animated = dims.animated;
+      }
       const info: ImageInfo = {
         path: toPublicPath(f),
         url: `/api/asset?path=${encodeURIComponent(toPublicPath(f))}`,
@@ -152,12 +173,10 @@ export function listImages(): ImageInfo[] {
         width,
         height,
         animated,
+        ...(isWebm ? { format: "webm" as const } : {}),
       };
-      if (animated) {
-        const staticAbs = f.replace(/\.webp$/i, ".static.webp");
-        if (staticAbs !== f && fs.existsSync(staticAbs)) {
-          info.staticUrl = `/api/asset?path=${encodeURIComponent(toPublicPath(staticAbs))}`;
-        }
+      if (animated && hasStatic) {
+        info.staticUrl = `/api/asset?path=${encodeURIComponent(toPublicPath(staticAbs))}`;
       }
       return info;
     });
@@ -208,6 +227,12 @@ export function serveAsset(publicPath: string, res: import("http").ServerRespons
 export interface EncodeOptions {
   quality: number;
   maxWidth: number;
+  /**
+   * Requested output format override for animated sources. Only gif / animated-webp
+   * inputs can honor "webp" (sharp preserves their frames); video + apng are always
+   * transcoded to "webm". Omit to use the smart default per source type.
+   */
+  format?: "webm" | "webp";
 }
 
 export type UploadProgressEvent =
@@ -228,7 +253,16 @@ export interface UploadResult {
   animated: boolean;
   frames?: number;
   staticPath?: string;
+  /** Output format for animated sources: "webm" (VP9 video) or "webp" (animated webp). Omitted for still images. */
+  format?: "webm" | "webp";
+  /** ~MB per second of source video; set for video/apng uploads. */
+  mbPerSec?: number;
+  /** true when video output exceeds the ~0.8MB/s size target. */
+  oversized?: boolean;
 }
+
+/** Animated-webp size target, in megabytes per second of source content. */
+export const MB_PER_SEC_TARGET = 0.8;
 
 export const clampQuality = (v: number): number => Math.min(Math.max(Math.round(v), 1), 100);
 export const clampMaxWidth = (v: number): number => Math.min(Math.max(Math.round(v), 64), 4096);
@@ -253,6 +287,9 @@ interface EncodedUpload {
   frames: number;
   width: number;
   height: number;
+  mediaExt: ".webp" | ".webm";
+  mbPerSec?: number;
+  oversized?: boolean;
 }
 
 async function encodeRaster(
@@ -290,7 +327,14 @@ async function encodeRaster(
       .webp({ quality: opts.quality })
       .toBuffer();
   }
-  return { webp, staticFrame, frames: animated ? frames : 1, width: outMeta.width ?? 1, height: outMeta.height ?? 1 };
+  return {
+    webp,
+    staticFrame,
+    frames: animated ? frames : 1,
+    width: outMeta.width ?? 1,
+    height: outMeta.height ?? 1,
+    mediaExt: ".webp",
+  };
 }
 
 async function encodeVideo(
@@ -300,21 +344,28 @@ async function encodeVideo(
 ): Promise<EncodedUpload> {
   if (!needsFfmpeg(ext)) throw new Error(`Unsupported animated type "${ext}"`);
   if (!(await resolveFfmpeg())) {
-    throw new Error("ffmpeg is required for video/apng uploads - run npm run cms:ffmpeg or install ffmpeg");
+    throw new Error("ffmpeg is required for video/animation uploads - run npm run cms:ffmpeg or install ffmpeg");
   }
-  const result = await convertVideoToWebp(body, {
+  const result = await convertAnimatedToWebm(body, {
     quality: opts.quality,
     maxWidth: opts.maxWidth,
-    ...(ext === ".apng" ? {} : { fps: VIDEO_FPS }),
+    fps: VIDEO_FPS,
     ...(opts.onProgress ? { onProgress: opts.onProgress } : {}),
   });
-  const meta = await sharp(result.webp).metadata();
+  const meta = await sharp(result.staticFrame).metadata();
+  const mbPerSec =
+    result.durationSec !== null && result.durationSec > 0
+      ? result.sizeBytes / (1024 * 1024) / result.durationSec
+      : undefined;
   return {
-    webp: result.webp,
+    webp: result.media,
     staticFrame: result.staticFrame,
     frames: result.frames,
     width: meta.width ?? 1,
     height: meta.height ?? 1,
+    mediaExt: ".webm" as const,
+    ...(mbPerSec !== undefined ? { mbPerSec } : {}),
+    oversized: mbPerSec !== undefined && mbPerSec > MB_PER_SEC_TARGET,
   };
 }
 
@@ -346,17 +397,23 @@ export async function saveUpload(
     maxWidth: clampMaxWidth(opts?.maxWidth ?? 1600),
     ...(opts?.onProgress ? { onProgress: opts.onProgress } : {}),
   };
-  const encoded = await (useFfmpeg ? encodeVideo(body, ext, encodeOpts) : encodeRaster(body, ext, encodeOpts));
+
+  const webpCapableSource = ext === ".gif" || ext === ".webp";
+  const wantsWebp =
+    useFfmpeg && webpCapableSource && opts?.format !== "webm" && (opts?.format === "webp" || !opts?.format);
+  const encoded = await (wantsWebp || !useFfmpeg
+    ? encodeRaster(body, ext, encodeOpts)
+    : encodeVideo(body, ext, encodeOpts));
 
   const parts = safeSegments(dir);
   if (parts === null) throw new Error("Invalid target folder");
   const dirAbs = absOf(parts);
   fs.mkdirSync(dirAbs, { recursive: true });
 
-  let fileName = `${base}.webp`;
+  let fileName = `${base}${encoded.mediaExt}`;
   let n = 2;
   while (fs.existsSync(path.join(dirAbs, fileName))) {
-    fileName = `${base}-${n}.webp`;
+    fileName = `${base}-${n}${encoded.mediaExt}`;
     n += 1;
   }
 
@@ -366,7 +423,7 @@ export async function saveUpload(
 
   let staticPath: string | undefined;
   if (encoded.staticFrame) {
-    const staticName = fileName.replace(/\.webp$/, ".static.webp");
+    const staticName = fileName.replace(/\.[^.]+$/, ".static.webp");
     await fs.promises.writeFile(path.join(dirAbs, staticName), encoded.staticFrame);
     staticPath = CONTENT_PUBLIC_PREFIX + [...parts, staticName].join("/");
   }
@@ -377,8 +434,15 @@ export async function saveUpload(
     width: encoded.width,
     height: encoded.height,
     animated: encoded.frames > 1 || !!encoded.staticFrame,
+    ...(encoded.mediaExt === ".webm"
+      ? { format: "webm" as const }
+      : encoded.staticFrame
+        ? { format: "webp" as const }
+        : {}),
     ...(encoded.frames > 1 ? { frames: encoded.frames } : {}),
     ...(staticPath ? { staticPath } : {}),
+    ...(encoded.mbPerSec !== undefined ? { mbPerSec: encoded.mbPerSec } : {}),
+    ...(encoded.oversized ? { oversized: true } : {}),
   };
 }
 
@@ -429,6 +493,26 @@ export function findRefs(publicPaths: string[]): Record<string, string[]> {
       }
     }
   }
+  // Scan md files for image references
+  for (const lang of LANGS) {
+    for (const kind of KINDS) {
+      const dir = mdDir(kind, lang);
+      try {
+        const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
+        for (const file of files) {
+          const filePath = path.join(dir, file);
+          const content = fs.readFileSync(filePath, "utf8");
+          for (const t of targets) {
+            if (content.includes(`](${t})`)) {
+              (usages[t] ??= []).push(`${lang}/${kind}/${file}`);
+            }
+          }
+        }
+      } catch {
+        // dir may not exist
+      }
+    }
+  }
   return usages;
 }
 
@@ -460,6 +544,29 @@ async function rewriteRefsInContent(apply: (value: string) => StringRewrite): Pr
     };
     const next = visit(data);
     if (changed) await writeJsonAtomic(src.file, next);
+  }
+  // Rewrite md files
+  for (const lang of LANGS) {
+    for (const kind of KINDS) {
+      const dir = mdDir(kind, lang);
+      try {
+        const files = await fs.promises.readdir(dir);
+        for (const file of files) {
+          if (!file.endsWith(".md")) continue;
+          const filePath = path.join(dir, file);
+          const content = await fs.promises.readFile(filePath, "utf8");
+          const result = apply(content);
+          if (result) {
+            replaced += result.hits;
+            const tmp = filePath + ".tmp";
+            await fs.promises.writeFile(tmp, result.next, "utf8");
+            await fs.promises.rename(tmp, filePath);
+          }
+        }
+      } catch {
+        // dir may not exist
+      }
+    }
   }
   return replaced;
 }
@@ -536,20 +643,21 @@ export async function renameImage(publicPath: string, newName: string): Promise<
   if (parts === null || parts.length === 0) throw new Error("Invalid image path");
   const abs = absOf(parts);
   if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) throw new Error("File does not exist");
-  if (path.extname(abs).toLowerCase() !== ".webp") throw new Error("Only .webp library images can be renamed");
+  const ext = path.extname(abs).toLowerCase();
+  if (ext !== ".webp" && ext !== ".webm") throw new Error("Only library images (.webp/.webm) can be renamed");
   const base = slugify(newName)
     .toLowerCase()
-    .replace(/\.webp$/i, "")
+    .replace(/\.[^.]+$/i, "")
     .replace(/^-+|-+$/g, "");
   if (!base) throw new Error("Name contains no usable characters");
-  const fileName = `${base}.webp`;
+  const fileName = `${base}${ext}`;
   const dirParts = parts.slice(0, -1);
   const targetAbs = path.join(absOf(dirParts), fileName);
   if (fs.existsSync(targetAbs)) throw new Error("A file with that name already exists in that folder");
   await fsRetry(() => fs.renameSync(abs, targetAbs));
-  const staticAbs = abs.replace(/\.webp$/, ".static.webp");
+  const staticAbs = abs.replace(/\.[^.]+$/, ".static.webp");
   if (staticAbs !== abs && fs.existsSync(staticAbs)) {
-    await fsRetry(() => fs.renameSync(staticAbs, targetAbs.replace(/\.webp$/, ".static.webp")));
+    await fsRetry(() => fs.renameSync(staticAbs, targetAbs.replace(/\.[^.]+$/, ".static.webp")));
   }
   const newPath = CONTENT_PUBLIC_PREFIX + [...dirParts, fileName].join("/");
   return rewriteRefsInContent((value) => {
@@ -558,6 +666,88 @@ export async function renameImage(publicPath: string, newName: string): Promise<
     const hits = value.split(marker).length - 1;
     return hits > 0 ? { next: value.split(marker).join(`](${newPath})`), hits } : null;
   });
+}
+
+export async function replaceImage(
+  publicPath: string,
+  rawName: string,
+  body: Buffer,
+  opts?: Partial<EncodeOptions> & { onProgress?: OnUploadProgress }
+): Promise<UploadResult> {
+  if (!publicPath.startsWith(CONTENT_PUBLIC_PREFIX)) {
+    throw new Error("Path must point inside public/assets/content");
+  }
+  const parts = safeSegments(publicPath.slice(CONTENT_PUBLIC_PREFIX.length));
+  if (parts === null || parts.length === 0) throw new Error("Invalid image path");
+  const abs = absOf(parts);
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) throw new Error("File does not exist");
+
+  const ext = path.extname(rawName).toLowerCase();
+  const useFfmpeg = needsFfmpeg(ext);
+  if (!UPLOAD_EXTS.has(ext) && !useFfmpeg) {
+    throw new Error(`Unsupported file type "${ext}" - use png, jpg, webp, gif, apng, mp4 or webm`);
+  }
+  if (body.length === 0) throw new Error("Empty upload");
+  const limit = uploadLimitFor(ext);
+  if (body.length > limit) {
+    throw new Error(
+      `File is ${formatMb(body.length)} - the limit for ${needsFfmpeg(ext) ? "video/animation" : "image"} uploads is ${formatMb(limit)}`
+    );
+  }
+
+  const encodeOpts = {
+    quality: clampQuality(opts?.quality ?? 80),
+    maxWidth: clampMaxWidth(opts?.maxWidth ?? 1600),
+    ...(opts?.onProgress ? { onProgress: opts.onProgress } : {}),
+  };
+  const webpCapableSource = ext === ".gif" || ext === ".webp";
+  const wantsWebp =
+    useFfmpeg && webpCapableSource && opts?.format !== "webm" && (opts?.format === "webp" || !opts?.format);
+  const encoded = await (wantsWebp || !useFfmpeg
+    ? encodeRaster(body, ext, encodeOpts)
+    : encodeVideo(body, ext, encodeOpts));
+
+  const targetExt = encoded.mediaExt;
+  const finalAbs = targetExt === path.extname(abs).toLowerCase() ? abs : abs.replace(/\.[^.]+$/, targetExt);
+
+  opts?.onProgress?.({ stage: "writing" });
+  await fs.promises.writeFile(finalAbs, encoded.webp);
+  if (finalAbs !== abs) {
+    await fsRetry(() => fs.unlinkSync(abs));
+  }
+
+  const staticAbs = finalAbs.replace(/\.[^.]+$/, ".static.webp");
+  if (encoded.staticFrame) {
+    await fs.promises.writeFile(staticAbs, encoded.staticFrame);
+  } else if (staticAbs !== finalAbs && fs.existsSync(staticAbs)) {
+    await fsRetry(() => fs.unlinkSync(staticAbs));
+  }
+
+  const savedAs = "public/assets/content/" + [...parts.slice(0, -1), path.basename(finalAbs)].join("/");
+  const newPublicPath = CONTENT_PUBLIC_PREFIX + [...parts.slice(0, -1), path.basename(finalAbs)].join("/");
+
+  return {
+    savedAs,
+    publicPath: newPublicPath,
+    width: encoded.width,
+    height: encoded.height,
+    animated: encoded.frames > 1 || !!encoded.staticFrame,
+    ...(encoded.mediaExt === ".webm"
+      ? { format: "webm" as const }
+      : encoded.staticFrame
+        ? { format: "webp" as const }
+        : {}),
+    ...(encoded.frames > 1 ? { frames: encoded.frames } : {}),
+    ...(encoded.staticFrame
+      ? {
+          staticPath:
+            CONTENT_PUBLIC_PREFIX +
+            [...parts.slice(0, -1), path.basename(finalAbs).replace(/\.[^.]+$/, ".static.webp")].join("/"),
+        }
+      : {}),
+    ...(encoded.mbPerSec !== undefined ? { mbPerSec: encoded.mbPerSec } : {}),
+    ...(encoded.oversized ? { oversized: true } : {}),
+  };
 }
 
 let running = false;
