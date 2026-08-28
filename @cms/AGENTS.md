@@ -34,4 +34,4 @@ Details for `npm run cms` (runs at `127.0.0.1:4000`; edits `@web` content in pla
 
 ## ffmpeg
 
-- `npm run cms:ffmpeg` verifies an ffmpeg for CMS video uploads (`SMC_FFMPEG_PATH` env → `.cache/ffmpeg/` → PATH → optional `ffmpeg-static` download); copies the ffmpeg-static binary into `.cache/ffmpeg/` and prints PATH instructions when nothing system-wide exists.
+- `npm run cms:ffmpeg` verifies an ffmpeg for CMS video uploads (`FFMPEG_PATH` env → `.cache/ffmpeg/` → PATH → optional `ffmpeg-static` download); copies the ffmpeg-static binary into `.cache/ffmpeg/` and prints PATH instructions when nothing system-wide exists.

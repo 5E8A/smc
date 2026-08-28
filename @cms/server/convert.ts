@@ -2,7 +2,7 @@ import path from "path";
 import sharp from "sharp";
 import yazl from "yazl";
 import { clampMaxWidth, clampQuality, formatMb, MAX_ANIMATION_FRAMES, uploadLimitFor } from "./media.ts";
-import { convertAnimatedToWebm, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
+import { convertAnimatedToWebm, needsFfmpeg, resolveFfmpeg, VIDEO_FPS, FfmpegMissingError } from "./ffmpeg.ts";
 
 const STATIC_IMAGE_EXTS = [".png", ".jpg", ".jpeg"];
 const ANIMATED_IMAGE_EXTS = [".webp", ".gif"];
@@ -135,9 +135,7 @@ async function convertOne(
   report: (stage: ConvertProgressStage) => void
 ): Promise<ConvertedFile> {
   if (needsFfmpeg(ext)) {
-    if (!(await resolveFfmpeg())) {
-      throw new Error("ffmpeg is required for video/animation conversion - run npm run cms:ffmpeg or install ffmpeg");
-    }
+    if (!(await resolveFfmpeg())) throw new FfmpegMissingError();
     const result = await convertAnimatedToWebm(f.data, {
       quality: opts.quality,
       maxWidth: opts.maxWidth,

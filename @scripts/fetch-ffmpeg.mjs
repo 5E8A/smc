@@ -24,8 +24,8 @@ const cachedPath = () => {
   return fs.existsSync(full) ? full : null;
 };
 
-if (process.env.SMC_FFMPEG_PATH && (await works(process.env.SMC_FFMPEG_PATH))) {
-  console.log(`ffmpeg available via SMC_FFMPEG_PATH: ${process.env.SMC_FFMPEG_PATH}`);
+if (process.env.FFMPEG_PATH && (await works(process.env.FFMPEG_PATH))) {
+  console.log(`ffmpeg available via FFMPEG_PATH: ${process.env.FFMPEG_PATH}`);
   process.exit(0);
 }
 

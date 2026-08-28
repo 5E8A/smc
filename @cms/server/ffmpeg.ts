@@ -11,6 +11,24 @@ const FFMPEG_BIN = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
 export const VIDEO_FPS = 24;
 export const MAX_VIDEO_SECONDS = 60;
 
+export const FFMPEG_GUIDE = [
+  "ffmpeg is missing - video/animated uploads need it. Fix (pick one):",
+  '1. Run "npm run cms:ffmpeg" - downloads a portable ffmpeg into .cache/ffmpeg/ and verifies it.',
+  "2. Or install ffmpeg system-wide (e.g. winget install Gyan.FFmpeg / brew install ffmpeg) and keep it on your PATH.",
+  "3. Or set the FFMPEG_PATH env var to the full path of an existing ffmpeg binary.",
+  'The running CMS server does not pick up new installs - restart it ("npm run cms") afterwards.',
+].join("\n");
+
+export class FfmpegMissingError extends Error {
+  constructor() {
+    super(FFMPEG_GUIDE);
+    this.name = "FfmpegMissingError";
+  }
+}
+
+const isMissingBinary = (err: unknown): boolean =>
+  err instanceof Error && (err as NodeJS.ErrnoException).code === "ENOENT";
+
 let resolved: string | null | undefined;
 
 const runsFfmpeg = (bin: string): Promise<boolean> =>
@@ -25,9 +43,14 @@ export const FFMPEG_ANIMATED_IMAGE_EXTS = [".apng", ".gif"];
 export const needsFfmpeg = (ext: string): boolean => isVideoExt(ext) || FFMPEG_ANIMATED_IMAGE_EXTS.includes(ext);
 
 export async function resolveFfmpeg(): Promise<string | null> {
-  if (resolved !== undefined) return resolved;
+  if (resolved !== undefined) {
+    if (resolved === null || !path.isAbsolute(resolved)) return resolved;
+    // absolute paths can vanish mid-session (.cache cleanup, AV quarantine) - revalidate cheaply
+    if (fs.existsSync(resolved)) return resolved;
+    resolved = undefined;
+  }
   const candidates: string[] = [];
-  if (process.env.SMC_FFMPEG_PATH) candidates.push(process.env.SMC_FFMPEG_PATH);
+  if (process.env.FFMPEG_PATH) candidates.push(process.env.FFMPEG_PATH);
   candidates.push(path.join(FFMPEG_CACHE_DIR, FFMPEG_BIN));
   candidates.push("ffmpeg");
   try {
@@ -71,16 +94,24 @@ const probeVideo = (bin: string, input: string): Promise<ProbeInfo> =>
 
 const runFfmpeg = (bin: string, args: string[]): Promise<void> =>
   new Promise((resolve, reject) => {
-    execFile(bin, ["-hide_banner", "-loglevel", "error", "-y", ...args], { windowsHide: true, timeout: 300_000 }, (err, _stdout, stderr) => {
-      if (err) reject(new Error(`ffmpeg failed: ${stderr.toString().trim() || err.message}`));
-      else resolve();
-    });
+    execFile(
+      bin,
+      ["-hide_banner", "-loglevel", "error", "-y", ...args],
+      { windowsHide: true, timeout: 300_000 },
+      (err, _stdout, stderr) => {
+        if (!err) return resolve();
+        if (isMissingBinary(err)) {
+          resolved = undefined;
+          reject(new FfmpegMissingError());
+        } else {
+          reject(new Error(`ffmpeg failed: ${stderr.toString().trim() || err.message}`));
+        }
+      }
+    );
   });
 
 export type VideoProgress =
-  | { stage: "probe" }
-  | { stage: "transcode"; pct: number | null; speed: string | null }
-  | { stage: "static-frame" };
+  { stage: "probe" } | { stage: "transcode"; pct: number | null; speed: string | null } | { stage: "static-frame" };
 
 interface ProgressBlock {
   outTimeSec: number | null;
@@ -95,11 +126,7 @@ const parseOutTime = (value: string | undefined): number | null => {
   return Number.isFinite(num) ? num / 1_000_000 : null;
 };
 
-const runFfmpegWithProgress = (
-  bin: string,
-  args: string[],
-  onBlock: (block: ProgressBlock) => void
-): Promise<void> =>
+const runFfmpegWithProgress = (bin: string, args: string[], onBlock: (block: ProgressBlock) => void): Promise<void> =>
   new Promise((resolve, reject) => {
     const child = spawn(
       bin,
@@ -144,7 +171,12 @@ const runFfmpegWithProgress = (
     });
     child.on("error", (err) => {
       clearTimeout(timer);
-      reject(new Error(`ffmpeg failed to start: ${err.message}`));
+      if (isMissingBinary(err)) {
+        resolved = undefined;
+        reject(new FfmpegMissingError());
+      } else {
+        reject(new Error(`ffmpeg failed to start: ${err.message}`));
+      }
     });
     child.on("close", (code) => {
       clearTimeout(timer);
@@ -175,7 +207,7 @@ export async function convertAnimatedToWebm(
   opts: { quality: number; maxWidth: number; fps: number; onProgress?: (p: VideoProgress) => void }
 ): Promise<AnimatedConversion> {
   const bin = await resolveFfmpeg();
-  if (!bin) throw new Error("ffmpeg not found - install it or run npm run cms:ffmpeg");
+  if (!bin) throw new FfmpegMissingError();
   const report = opts.onProgress ?? ((): void => {});
 
   return withTempDir(async (dir) => {
@@ -229,15 +261,11 @@ export async function convertAnimatedToWebm(
 
     const media = await fs.promises.readFile(out);
     const staticFrame = await sharpNormalizeFrame(frame, opts.maxWidth, opts.quality);
-    const frames =
-      probe.duration !== null ? Math.max(1, Math.round(probe.duration * opts.fps)) : 0;
+    const frames = probe.duration !== null ? Math.max(1, Math.round(probe.duration * opts.fps)) : 0;
     return { media, staticFrame, frames, durationSec: probe.duration, sizeBytes: media.length };
   });
 }
 
 async function sharpNormalizeFrame(frameFile: string, maxWidth: number, quality: number): Promise<Buffer> {
-  return sharp(frameFile)
-    .resize({ width: maxWidth, withoutEnlargement: true })
-    .webp({ quality })
-    .toBuffer();
+  return sharp(frameFile).resize({ width: maxWidth, withoutEnlargement: true }).webp({ quality }).toBuffer();
 }

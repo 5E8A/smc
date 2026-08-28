@@ -202,7 +202,7 @@ const UploadJobBanner = ({ job, onDismiss }: { job: UploadJob; onDismiss: () => 
   if (job.status === "error") {
     return (
       <Banner variant="error" title={`${job.name} failed`} dismissable onDismiss={onDismiss}>
-        {job.error}
+        <span className="whitespace-pre-line">{job.error}</span>
       </Banner>
     );
   }

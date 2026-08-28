@@ -22,7 +22,7 @@ const TROUBLESHOOTING: Array<{ problem: string; fix: string }> = [
   },
   {
     problem: "Image/video uploads fail",
-    fix: 'ffmpeg missing — run "npm run cms:ffmpeg" and follow the printed PATH instructions.',
+    fix: 'ffmpeg missing — run "npm run cms:ffmpeg" (or install it system-wide), then restart "npm run cms".',
   },
   {
     problem: "Save rejected with an issues list",
@@ -109,7 +109,7 @@ const BugReportScreen = ({ error, componentStack, kind, onReset, onDismiss }: Bu
     error,
     componentStack,
     serverLine,
-    kind === "render" ? "render error (caught by boundary)" : "uncaught error / unhandled rejection",
+    kind === "render" ? "render error (caught by boundary)" : "uncaught error / unhandled rejection"
   );
 
   const copy = () => {
@@ -197,7 +197,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     this.setState((s) =>
-      s.renderError ? { renderError: { error, componentStack: info.componentStack ?? null } } : null,
+      s.renderError ? { renderError: { error, componentStack: info.componentStack ?? null } } : null
     );
   }
 

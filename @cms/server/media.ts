@@ -16,7 +16,7 @@ import {
   writeJsonAtomic,
 } from "./util.ts";
 import { slugify } from "@smc/shared/slug";
-import { convertAnimatedToWebm, needsFfmpeg, resolveFfmpeg, VIDEO_FPS } from "./ffmpeg.ts";
+import { convertAnimatedToWebm, needsFfmpeg, resolveFfmpeg, VIDEO_FPS, FfmpegMissingError } from "./ffmpeg.ts";
 
 sharp.cache(false);
 
@@ -355,9 +355,7 @@ async function encodeVideo(
   opts: EncodeOptions & { onProgress?: OnUploadProgress }
 ): Promise<EncodedUpload> {
   if (!needsFfmpeg(ext)) throw new Error(`Unsupported animated type "${ext}"`);
-  if (!(await resolveFfmpeg())) {
-    throw new Error("ffmpeg is required for video/animation uploads - run npm run cms:ffmpeg or install ffmpeg");
-  }
+  if (!(await resolveFfmpeg())) throw new FfmpegMissingError();
   const result = await convertAnimatedToWebm(body, {
     quality: opts.quality,
     maxWidth: opts.maxWidth,
