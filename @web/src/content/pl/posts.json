@@ -44,7 +44,7 @@
     "slug": "cms-markdown-test",
     "title": "CMS Markdown Test",
     "author": "a-tui4m8pck",
-    "date": "2026-08-24",
+    "date": "2026-08-28",
     "category": "Announcements",
     "coverImage": "/smc/assets/content/banners/wrench.webp",
     "summary": "Internal regression-test article for the unified markdown renderer and composable carousels."
