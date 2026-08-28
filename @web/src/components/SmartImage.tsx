@@ -50,7 +50,6 @@ const SmartImage = ({
       : `absolute inset-0 size-full ${fit === "contain" ? "object-contain" : "object-cover"}`;
 
   const imgProps = {
-    alt,
     width,
     height,
     loading: (lazy ? "lazy" : "eager") as "lazy" | "eager",
@@ -79,11 +78,17 @@ const SmartImage = ({
       <BlurhashCanvas hash={hash ?? ""} className="absolute inset-0 size-full" />
       {gated ? (
         <>
-          <img {...imgProps} src={gate.playing ? src : staticVariantSrc(src)} draggable={false} className={layout} />
+          <img
+            alt={alt}
+            {...imgProps}
+            src={gate.playing ? src : staticVariantSrc(src)}
+            draggable={false}
+            className={layout}
+          />
           <PlaybackToggleButton playing={gate.playing} onToggle={gate.toggle} className="absolute right-2 bottom-2" />
         </>
       ) : (
-        <img {...imgProps} src={src} className={layout} />
+        <img alt={alt} {...imgProps} src={src} className={layout} />
       )}
     </div>
   );
