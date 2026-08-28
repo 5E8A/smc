@@ -1,4 +1,4 @@
-import Markdown, { type Components } from "react-markdown";
+import Markdown, { type Components, type ExtraProps } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import rehypeRaw from "rehype-raw";
@@ -13,6 +13,7 @@ import {
 } from "@smc/shared/markdown";
 import { assetUrl } from "../api";
 import { isVideoSrc, videoPosterSrc } from "../lib/videoAsset";
+import { remarkLineAttrs } from "../lib/remarkLineAttrs";
 import Carousel from "./Carousel";
 import { ICON_COMPONENTS } from "./icon-map.generated";
 
@@ -22,9 +23,17 @@ const Icon = ({ name, className }: { name?: string; className?: string }) => {
   return <Comp className={className ?? "icon-inline text-green-400"} />;
 };
 
-type MarkdownComponents = Components & {
+type MarkdownComponents = Omit<Components, "img"> & {
   icon: React.ComponentType<{ name?: string; className?: string; node?: unknown }>;
   carousel: React.ComponentType<{ images?: string; className?: string; node?: unknown }>;
+  img: React.ComponentType<{
+    src?: string;
+    alt?: string;
+    title?: string;
+    className?: string;
+    "data-md-line"?: string;
+    node?: ExtraProps["node"];
+  }>;
 };
 
 const components: MarkdownComponents = {
@@ -159,11 +168,11 @@ const components: MarkdownComponents = {
     </td>
   ),
   hr: ({ node, ...props }) => <hr className="my-5 border-white/5" {...props} />,
-  img: ({ src, alt, title, node, ...props }) => {
+  img: ({ src, alt, title, node, "data-md-line": mdLine, ...props }) => {
     const raw = typeof src === "string" ? src : "";
     const resolve = (p: string): string => (p.startsWith("/smc/assets/") ? assetUrl(p) : p);
     return (
-      <figure className="my-4 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
+      <figure data-md-line={mdLine} className="my-4 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
         {isVideoSrc(raw) ? (
           <video
             src={resolve(raw)}
@@ -191,7 +200,7 @@ const components: MarkdownComponents = {
 
 export const MarkdownPreview = ({ content }: { content: string }) => (
   <Markdown
-    remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkUnwrapBlocks]}
+    remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkUnwrapBlocks, remarkLineAttrs]}
     rehypePlugins={[rehypeSlug, rehypeRaw]}
     components={components}
   >

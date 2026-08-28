@@ -5,8 +5,10 @@ export interface CarouselImage {
 
 const escapeAttr = (value: string): string => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
 
+export const CAROUSEL_RE = /:carouselStart:\s*\n([\s\S]*?)\n?\s*:carouselEnd:/gi;
+
 export const processCarousel = (content: string) =>
-  content.replace(/:carouselStart:\s*\n([\s\S]*?)\n?\s*:carouselEnd:/gi, (_, inner: string) => {
+  content.replace(CAROUSEL_RE, (_, inner: string) => {
     const images: CarouselImage[] = [...inner.matchAll(/!\[([^\]]*)\]\(([^)\s]+)\)/g)].map((m) => ({
       src: m[2],
       alt: m[1],

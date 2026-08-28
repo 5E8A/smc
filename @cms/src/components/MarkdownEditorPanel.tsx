@@ -4,6 +4,7 @@ import { useImagePicker } from "./useImagePicker";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { IconPicker } from "./IconPicker";
 import { useIconsSync } from "../lib/useIconsSync";
+import { caretViewportY, toPreviewLine } from "../lib/caretAnchor";
 import { Button, TextArea } from "./fields";
 
 interface MarkdownEditorPanelProps {
@@ -15,26 +16,98 @@ interface MarkdownEditorPanelProps {
 
 const CAROUSEL_IMAGE_LINE = /^!\[[^\]]*\]\([^)\s]+\)$/;
 
+const CARET_SYNC_DELAY = 150;
+const CARET_GUARD_MS = 250;
+const CARET_VISIBLE_MARGIN = 48;
+
 export const MarkdownEditorPanel = ({ id, value, onChange, actions }: MarkdownEditorPanelProps) => {
   const [iconPickerOpen, setIconPickerOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const syncIcons = useIconsSync();
 
-  // Proportional scroll sync, editor -> preview only: the caret's pane stays the source of truth.
+  const lastCaretAt = useRef(0);
+  const caretFrame = useRef(0);
+  const caretTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // Proportional scroll sync for scroll gestures, editor -> preview only. Skipped briefly
+  // after caret activity so caret auto-reveal scrolls can't fight the caret-anchored write.
   const syncPreviewScroll = useCallback(() => {
     const ta = textareaRef.current;
     const pv = previewRef.current;
     if (!ta || !pv) return;
+    if (performance.now() - lastCaretAt.current < CARET_GUARD_MS) return;
     const taMax = ta.scrollHeight - ta.clientHeight;
     const pvMax = pv.scrollHeight - pv.clientHeight;
     if (taMax <= 0 || pvMax <= 0) return;
     pv.scrollTop = (ta.scrollTop / taMax) * pvMax;
   }, []);
 
+  // Caret-anchored sync. "pin" (typing/inserts) always parks the preview block containing
+  // the caret at the caret's own viewport height; the debounced path (arrow keys/clicks)
+  // leaves the preview alone while that block stays comfortably visible. Falls back to 1/3
+  // placement when the caret can't be measured, and a line-fraction guess when no block
+  // is mapped.
+  const syncPreviewToCaret = useCallback((pin: boolean) => {
+    const ta = textareaRef.current;
+    const pv = previewRef.current;
+    if (!ta || !pv || document.activeElement !== ta) return;
+    const pvMax = pv.scrollHeight - pv.clientHeight;
+    if (pvMax <= 0) return;
+    lastCaretAt.current = performance.now();
+    const caretIndex = ta.selectionStart ?? 0;
+    const content = ta.value;
+    const caretLine = toPreviewLine(content, caretIndex);
+    let anchor: HTMLElement | null = null;
+    for (const el of pv.querySelectorAll<HTMLElement>("[data-md-line]")) {
+      if (Number(el.dataset.mdLine ?? 0) > caretLine + 1) break;
+      anchor = el;
+    }
+    if (!anchor) {
+      const lines = Math.max(1, content.split("\n").length - 1);
+      pv.scrollTop = Math.min(pvMax, Math.max(0, (caretLine / lines) * pvMax));
+      return;
+    }
+    const pvRect = pv.getBoundingClientRect();
+    const anchorTop = anchor.getBoundingClientRect().top - pvRect.top + pv.scrollTop;
+    const anchorBottom = anchorTop + anchor.offsetHeight;
+    const relTop = anchorTop - pv.scrollTop;
+    const relBottom = anchorBottom - pv.scrollTop;
+    const visible =
+      (relTop >= -CARET_VISIBLE_MARGIN && relBottom <= pv.clientHeight + CARET_VISIBLE_MARGIN) ||
+      (relTop <= 0 && relBottom >= pv.clientHeight);
+    if (!pin && visible) return;
+    const caretY = caretViewportY(ta, content, caretIndex);
+    pv.scrollTop = Math.min(pvMax, Math.max(0, caretY === null ? anchorTop - pv.clientHeight / 3 : anchorTop - caretY));
+  }, []);
+
+  // Typing/inserts sync immediately in pin mode; caret moves without content changes
+  // debounce into an if-needed pass so continuous arrowing stays calm.
+  const queueCaretSync = useCallback(
+    (pin = false) => {
+      clearTimeout(caretTimer.current);
+      cancelAnimationFrame(caretFrame.current);
+      lastCaretAt.current = performance.now();
+      const run = () => {
+        caretFrame.current = requestAnimationFrame(() => syncPreviewToCaret(pin));
+      };
+      if (pin) run();
+      else caretTimer.current = setTimeout(run, CARET_SYNC_DELAY);
+    },
+    [syncPreviewToCaret]
+  );
+
   useEffect(() => {
-    syncPreviewScroll();
-  }, [value, syncPreviewScroll]);
+    queueCaretSync(true);
+  }, [value, queueCaretSync]);
+
+  useEffect(
+    () => () => {
+      clearTimeout(caretTimer.current);
+      cancelAnimationFrame(caretFrame.current);
+    },
+    []
+  );
 
   const insert = (snippet: string) => {
     const el = textareaRef.current;
@@ -47,6 +120,9 @@ export const MarkdownEditorPanel = ({ id, value, onChange, actions }: MarkdownEd
     onChange(value.slice(0, start) + snippet + value.slice(end));
     requestAnimationFrame(() => {
       el.focus();
+      // Arm + schedule before setting the caret: its reveal-scroll fires in the scroll steps
+      // of the next rendering update, before rAF callbacks run.
+      queueCaretSync(true);
       el.selectionStart = el.selectionEnd = start + snippet.length;
     });
   };
@@ -74,10 +150,15 @@ export const MarkdownEditorPanel = ({ id, value, onChange, actions }: MarkdownEd
     insert(`:carouselStart:\n${lines}\n:carouselEnd:`);
   };
 
-  const handleTab = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key !== "Tab") return;
-    e.preventDefault();
-    insert("  ");
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      insert("  ");
+      return;
+    }
+    // Arm the guard before the browser's default action moves the caret: the reveal-scroll
+    // event fires before `select`, so queue-time arming alone would miss it.
+    lastCaretAt.current = performance.now();
   };
 
   return (
@@ -138,8 +219,9 @@ export const MarkdownEditorPanel = ({ id, value, onChange, actions }: MarkdownEd
           value={value}
           spellCheck={false}
           borderless
-          onKeyDown={handleTab}
+          onKeyDown={handleKeyDown}
           onScroll={syncPreviewScroll}
+          onSelect={() => queueCaretSync()}
           onChange={(e) => onChange(e.target.value)}
           className="min-h-[24rem] pl-6 pr-4 pb-4 pt-1.5 font-mono text-xs leading-5"
         />
