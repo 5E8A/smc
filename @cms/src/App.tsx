@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  CaretLeftIcon,
-  CaretRightIcon,
   CircleNotchIcon,
   FloppyDiskIcon,
   MonitorIcon,
@@ -19,7 +17,7 @@ import {
   type Lang,
   type WikiDoc,
 } from "./types";
-import { isoToDisplay, todayIso } from "./lib/dates";
+import { todayIso } from "./lib/dates";
 import { ListPanel } from "./components/ListPanel";
 import { EntryList } from "./components/EntryList";
 import { PostEditor } from "./components/PostEditor";
@@ -211,7 +209,7 @@ export const App = () => {
       }
       const clone = structuredClone(entry);
       clone.id = nextIdFor(target, kind, otherLang);
-      if (kind === "posts") (clone as BlogPost).date = isoToDisplay(todayIso(), otherLang) ?? todayIso();
+      if (kind === "posts") (clone as BlogPost).date = todayIso();
       else (clone as WikiDoc).date = todayIso();
       const next = [...target, clone];
       setTabs((prev) => ({
@@ -305,6 +303,23 @@ export const App = () => {
     }
   }, [saving, tab, authors, authorsSnapshot, tabs, key, lang, syncIcons]);
 
+  const saveActions = (dirty: boolean) => (
+    <>
+      {dirty && <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">unsaved</span>}
+      {justSaved && <span className="text-xs font-semibold text-green-400">Saved ✓</span>}
+      <Button
+        variant="primary"
+        className="px-2.5 py-1 text-xs"
+        onClick={() => void save()}
+        disabled={!dirty || saving}
+      >
+        {saving ? <CircleNotchIcon size={13} className="animate-spin" /> : <FloppyDiskIcon size={13} />}
+        Save
+        <kbd className="ml-1 rounded bg-black/30 px-1 text-[10px] opacity-80">Ctrl+S</kbd>
+      </Button>
+    </>
+  );
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
@@ -332,7 +347,7 @@ export const App = () => {
         slug: "",
         title: "",
         author: "",
-        date: isoToDisplay(todayIso(), lang) ?? todayIso(),
+        date: todayIso(),
         category: "",
         coverImage: "",
         summary: "",
@@ -617,17 +632,6 @@ export const App = () => {
                 )}
               </div>
             </aside>
-            <button
-              type="button"
-              onClick={() => setSidebarCollapsed((v) => !v)}
-              title={sidebarCollapsed ? "Show sidebar (Ctrl+B)" : "Hide sidebar (Ctrl+B)"}
-              aria-label={sidebarCollapsed ? "Show sidebar" : "Hide sidebar"}
-              className={`absolute bottom-0 z-20 flex h-8 w-5 items-center justify-center rounded-t-md border border-b-0 border-zinc-700 bg-zinc-900 text-zinc-500 shadow-lg transition-all duration-200 hover:text-zinc-200 ${
-                sidebarCollapsed ? "left-0" : "left-[278px]"
-              }`}
-            >
-              {sidebarCollapsed ? <CaretRightIcon size={12} /> : <CaretLeftIcon size={12} />}
-            </button>
           </>
         )}
 
@@ -642,35 +646,6 @@ export const App = () => {
 
           {paneReady && (
             <>
-              <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-zinc-800 bg-zinc-950/95 px-6 py-3 backdrop-blur">
-                <h2 className="mr-auto truncate text-sm font-bold capitalize text-white">
-                  {tab === "assets"
-                    ? "Assets"
-                    : tab === "mods"
-                      ? "Mods board"
-                      : tab === "authors"
-                        ? "Authors registry"
-                        : tab === "converter"
-                          ? "Converter"
-                          : selected
-                            ? selected.title || "(untitled)"
-                            : tab}
-                  {viewDirty && (
-                    <span className="ml-2 align-middle text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                      unsaved
-                    </span>
-                  )}
-                </h2>
-                {justSaved && <span className="text-xs font-semibold text-green-400">Saved ✓</span>}
-                {contentTab && (
-                  <Button variant="primary" onClick={() => void save()} disabled={!viewDirty || saving}>
-                    {saving ? <CircleNotchIcon size={15} className="animate-spin" /> : <FloppyDiskIcon size={15} />}
-                    Save
-                    <kbd className="ml-1 rounded bg-black/30 px-1 text-[10px] opacity-80">Ctrl+S</kbd>
-                  </Button>
-                )}
-              </div>
-
               {activeIssues && activeIssues.length > 0 && (
                 <div
                   className={`mx-6 mt-4 rounded-md border p-3 text-xs ${
@@ -717,7 +692,7 @@ export const App = () => {
                 </div>
               )}
 
-              <div className="p-6 pb-16">
+              <div className={contentTab ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"}>
                 {(tab === "posts" || tab === "wiki") && (
                   <>
                     {!selected && (
@@ -735,10 +710,22 @@ export const App = () => {
                       </div>
                     )}
                     {selected && isBlogPost(selected) && tab === "posts" && (
-                      <PostEditor post={selected} lang={lang} categories={categories} onChange={updateSelected} />
+                      <PostEditor
+                        post={selected}
+                        lang={lang}
+                        categories={categories}
+                        onChange={updateSelected}
+                        actions={saveActions(viewDirty)}
+                      />
                     )}
                     {selected && !isBlogPost(selected) && tab === "wiki" && (
-                      <WikiEditor doc={selected} lang={lang} categories={categories} onChange={updateSelected} />
+                      <WikiEditor
+                        doc={selected}
+                        lang={lang}
+                        categories={categories}
+                        onChange={updateSelected}
+                        actions={saveActions(viewDirty)}
+                      />
                     )}
                     {selectedHasErrors && (
                       <p className="mt-3 text-xs text-red-400">
@@ -757,6 +744,7 @@ export const App = () => {
                           list ? list.map((a, i) => (i === selectedAuthorIndex ? next : a)) : list
                         );
                       }}
+                      actions={saveActions(authorsDirty)}
                     />
                     {authorsError && (
                       <div className="mt-4 rounded-md border border-red-900/60 bg-red-950/40 p-3 text-xs text-red-300">

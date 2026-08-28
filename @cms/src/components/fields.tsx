@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 
 const inputCls =
-  "w-full rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-100 outline-none transition-colors placeholder:text-zinc-600 focus:border-green-500";
+  "w-full resize-none rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-100 outline-none transition-colors placeholder:text-zinc-600 focus:border-green-500";
+
+const bareCls = "w-full resize-none bg-zinc-900 text-sm text-zinc-100 outline-none";
 
 export const Field = ({
   label,
@@ -30,10 +32,12 @@ export const TextInput = (props: React.InputHTMLAttributes<HTMLInputElement>) =>
 
 export const TextArea = ({
   ref,
+  borderless,
   ...props
-}: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { ref?: React.Ref<HTMLTextAreaElement> }) => (
-  <textarea ref={ref} {...props} className={`${inputCls} resize-y ${props.className ?? ""}`} />
-);
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  ref?: React.Ref<HTMLTextAreaElement>;
+  borderless?: boolean;
+}) => <textarea ref={ref} {...props} className={`${borderless ? bareCls : inputCls} ${props.className ?? ""}`} />;
 
 export const ComboInput = ({
   id,
@@ -54,12 +58,13 @@ export const Button = ({
   variant = "default",
   className = "",
   ...props
-}: { variant?: "default" | "primary" | "danger" | "ghost" } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+}: { variant?: "default" | "primary" | "danger" | "ghost" | "warn" } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const variants: Record<string, string> = {
     default: "border border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700",
     primary: "bg-green-600 text-white hover:bg-green-500",
     danger: "border border-red-800/60 bg-red-950/40 text-red-300 hover:bg-red-900/50",
     ghost: "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200",
+    warn: "border border-amber-500/60 bg-amber-950/40 text-amber-300 hover:bg-amber-900/50",
   };
   return (
     <button

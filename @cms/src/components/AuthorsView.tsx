@@ -1,14 +1,17 @@
+import { ImageIcon } from "@phosphor-icons/react";
 import { useImagePicker } from "./useImagePicker";
+import type { ReactNode } from "react";
 import type { Author, AuthorSocials, SocialLink } from "../types";
 import { AssetThumb } from "./ImageLibrary";
-import { Button, Field, TextArea, TextInput } from "./fields";
+import { Field, TextArea, TextInput } from "./fields";
 
 interface AuthorFormProps {
   author: Author | null;
   onChange: (next: Author) => void;
+  actions?: ReactNode;
 }
 
-export const AuthorForm = ({ author, onChange }: AuthorFormProps) => {
+export const AuthorForm = ({ author, onChange, actions }: AuthorFormProps) => {
   if (!author) {
     return (
       <p className="text-sm text-zinc-500">
@@ -17,11 +20,19 @@ export const AuthorForm = ({ author, onChange }: AuthorFormProps) => {
       </p>
     );
   }
-  return <AuthorEditor key={author.id} author={author} onChange={onChange} />;
+  return <AuthorEditor key={author.id} author={author} onChange={onChange} actions={actions} />;
 };
 
-function AuthorEditor({ author, onChange }: { author: Author; onChange: (next: Author) => void }) {
-  const { open, picker } = useImagePicker((path) => onChange({ ...author, avatar: path }));
+function AuthorEditor({
+  author,
+  onChange,
+  actions,
+}: {
+  author: Author;
+  onChange: (next: Author) => void;
+  actions?: ReactNode;
+}) {
+  const { open, picker } = useImagePicker({ onPick: (path) => onChange({ ...author, avatar: path }) });
 
   const loc = (field: "name" | "bio", l: "en" | "pl", v: string) =>
     onChange({ ...author, [field]: { ...author[field], [l]: v } });
@@ -50,21 +61,26 @@ function AuthorEditor({ author, onChange }: { author: Author; onChange: (next: A
         <code className="rounded border border-zinc-800 bg-black/40 px-2 py-0.5 font-mono text-xs text-green-300">
           {author.id || "(generated on save)"}
         </code>
+        {actions && <div className="ml-auto flex items-center gap-2">{actions}</div>}
       </div>
 
       <Field label="Avatar" variant="block">
-        <div className="flex items-start gap-2">
-          <AssetThumb path={author.avatar} />
-          <div className="flex-1 space-y-2">
+        <div className="flex items-stretch gap-2">
+          <AssetThumb path={author.avatar} onPick={() => open("avatar")} autoHeight />
+          <div className="relative min-w-0 flex-1">
             <TextInput
               value={author.avatar}
               onChange={(e) => onChange({ ...author, avatar: e.target.value })}
-              className="font-mono text-xs"
               placeholder="/smc/assets/avatars/…"
+              className="h-full pr-28"
             />
-            <Button variant="ghost" onClick={() => open("avatar")}>
-              Pick image
-            </Button>
+            <button
+              type="button"
+              onClick={() => open("avatar")}
+              className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1.5 rounded-md bg-zinc-800 px-2.5 py-2 text-xs text-zinc-300 hover:bg-zinc-700"
+            >
+              <ImageIcon size={14} /> Pick image
+            </button>
           </div>
         </div>
       </Field>

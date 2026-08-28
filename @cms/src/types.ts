@@ -71,6 +71,12 @@ export interface ImageInfo {
   height: number;
   animated: boolean;
   format?: "webm";
+  /** File size in bytes (absent in stale cached payloads). */
+  size?: number;
+  /** Absolute disk path of the file on this machine (absent in stale cached payloads). */
+  diskPath?: string;
+  /** Size in bytes of the `.static.webp` poster. */
+  staticSize?: number;
 }
 
 export interface ImagesPayload {

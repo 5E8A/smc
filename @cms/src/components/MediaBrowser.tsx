@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import {
   ArrowUUpLeftIcon,
   CaretRightIcon,
+  CheckIcon,
   CircleNotchIcon,
   ClockIcon,
   CopyIcon,
@@ -237,11 +238,74 @@ interface MediaTileProps {
   showDir: boolean;
   onSelect?: (path: string) => void;
   onOpenMenu: (e: React.MouseEvent) => void;
+  selected?: boolean;
+  previewOnRightClick?: boolean;
 }
 
 const PREVIEW_GAP = 12;
-const PREVIEW_MAX_WIDTH = 480;
+/** Total floating box budget (media + info panel). */
+const PREVIEW_TOTAL_MAX_WIDTH = 800;
+const PREVIEW_PANEL_WIDTH = 220;
 const PREVIEW_MAX_HEIGHT_RATIO = 0.75;
+
+const PreviewInfoPanel = ({ img }: { img: ImageInfo }) => {
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
+
+  const copyDiskPath = () => {
+    if (!img.diskPath) return;
+    void navigator.clipboard.writeText(img.diskPath).then(() => {
+      setCopied(true);
+      window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
+  return (
+    <div className="flex w-[220px] shrink-0 flex-col gap-2.5 overflow-y-auto border-l border-zinc-800 bg-zinc-950 p-2.5 text-left">
+      {img.diskPath && (
+        <div>
+          <div className="mb-1 text-[9px] font-bold tracking-wider text-zinc-500 uppercase">Disk path</div>
+          <div className="flex items-start gap-1.5">
+            <code className="min-w-0 flex-1 font-mono text-[10px] leading-snug break-all text-zinc-300 select-all">
+              {img.diskPath}
+            </code>
+            <button
+              type="button"
+              onClick={copyDiskPath}
+              title="Copy full path"
+              className="shrink-0 rounded p-0.5 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
+            >
+              {copied ? (
+                <CheckIcon size={13} weight="bold" className="text-green-400" />
+              ) : (
+                <CopyIcon size={13} />
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+      {typeof img.size === "number" && (
+        <div>
+          <div className="mb-1 text-[9px] font-bold tracking-wider text-zinc-500 uppercase">Size</div>
+          <div className="text-[11px] text-zinc-300">
+            {formatBytes(img.size)}
+            {typeof img.staticSize === "number" && (
+              <span className="text-zinc-500"> · poster {formatBytes(img.staticSize)}</span>
+            )}
+          </div>
+        </div>
+      )}
+      <div>
+        <div className="mb-1 text-[9px] font-bold tracking-wider text-zinc-500 uppercase">Dimensions</div>
+        <div className="text-[11px] text-zinc-300">
+          {img.width} × {img.height} px
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface ImagePreviewOverlayProps {
   img: ImageInfo;
@@ -252,7 +316,11 @@ interface ImagePreviewOverlayProps {
 
 const ImagePreviewOverlay = ({ img, tileRect, onHover, onLeave }: ImagePreviewOverlayProps) => {
   const dims = useMemo(() => {
-    const maxW = Math.min(img.width, PREVIEW_MAX_WIDTH);
+    const maxW = Math.min(
+      img.width,
+      PREVIEW_TOTAL_MAX_WIDTH - PREVIEW_PANEL_WIDTH,
+      Math.max(window.innerWidth - 32 - PREVIEW_PANEL_WIDTH, 120),
+    );
     const maxH = Math.min(img.height, window.innerHeight * PREVIEW_MAX_HEIGHT_RATIO);
     const ratio = img.width / img.height;
     let w = maxW;
@@ -264,48 +332,87 @@ const ImagePreviewOverlay = ({ img, tileRect, onHover, onLeave }: ImagePreviewOv
     return { width: Math.round(w), height: Math.round(h) };
   }, [img.width, img.height]);
 
+  const boxW = dims.width + PREVIEW_PANEL_WIDTH;
+
   const viewW = window.innerWidth;
   let left = tileRect.left;
-  if (left + dims.width > viewW - 16) left = viewW - dims.width - 16;
+  if (left + boxW > viewW - 16) left = viewW - boxW - 16;
   if (left < 16) left = 16;
 
-  let top = tileRect.top - PREVIEW_GAP - dims.height;
-  if (top < 8) top = tileRect.bottom + PREVIEW_GAP;
+  // Unstyled wrapper spans card + gap and touches the tile edge, so the pointer never leaves
+  // a hover surface while crossing the gap between tile and card.
+  const above = tileRect.top - PREVIEW_GAP - dims.height >= 8;
 
   return createPortal(
     <div
-      className="pointer-events-auto overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950 shadow-2xl"
-      style={{ position: "fixed", zIndex: 50, left, top, width: dims.width, height: dims.height }}
+      className="pointer-events-auto"
+      style={{
+        position: "fixed",
+        zIndex: 50,
+        left,
+        top: above ? tileRect.top - PREVIEW_GAP - dims.height : tileRect.bottom,
+        width: boxW,
+        height: dims.height + PREVIEW_GAP,
+        paddingBottom: above ? PREVIEW_GAP : 0,
+        paddingTop: above ? 0 : PREVIEW_GAP,
+      }}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
-      {img.format === "webm" ? (
-        <video
-          key={img.url}
-          src={img.url}
-          poster={img.staticUrl}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="h-full w-full object-contain"
-        />
-      ) : (
-        <img src={img.url} alt={img.name} className="h-full w-full object-contain" draggable={false} />
-      )}
-      {img.animated && (
-        <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase">
-          <PlayIcon size={9} weight="bold" /> anim
-        </span>
-      )}
+      <div
+        className="flex overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950 shadow-2xl"
+        style={{ width: boxW, height: dims.height }}
+      >
+        <div className="relative min-w-0" style={{ width: dims.width, height: dims.height }}>
+          {img.format === "webm" ? (
+            <video
+              key={img.url}
+              src={img.url}
+              poster={img.staticUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-contain"
+            />
+          ) : (
+            <img src={img.url} alt={img.name} className="h-full w-full object-contain" draggable={false} />
+          )}
+          {img.animated && (
+            <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase">
+              <PlayIcon size={9} weight="bold" /> anim
+            </span>
+          )}
+        </div>
+        <PreviewInfoPanel img={img} />
+      </div>
     </div>,
     document.body
   );
 };
 
-const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOpenMenu }: MediaTileProps) => {
+const MediaTile = ({
+  img,
+  rowHeight,
+  stretch,
+  gridWidth,
+  showDir,
+  onSelect,
+  onOpenMenu,
+  selected,
+  previewOnRightClick,
+}: MediaTileProps) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [tileRect, setTileRect] = useState<DOMRect | null>(null);
+  // Grace window that keeps the preview alive while the pointer crosses the gap between tile and card.
+  const hideTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(hideTimer.current), []);
+
+  const cancelHide = () => window.clearTimeout(hideTimer.current);
+  const scheduleHide = () => {
+    window.clearTimeout(hideTimer.current);
+    hideTimer.current = window.setTimeout(() => setPreviewVisible(false), 120);
+  };
 
   const src = img.staticUrl ?? img.url;
 
@@ -313,6 +420,11 @@ const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOp
     <>
       <div className="relative overflow-hidden bg-zinc-950" style={{ height: rowHeight }}>
         <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+        {selected && (
+          <span className="absolute top-1.5 left-1.5 flex items-center rounded bg-green-600 px-0.5 py-0.5 text-white">
+            <CheckIcon size={10} weight="bold" />
+          </span>
+        )}
         {img.animated && (
           <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold tracking-wider text-green-300 uppercase">
             <PlayIcon size={9} weight="bold" /> anim
@@ -326,25 +438,39 @@ const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOp
       </div>
     </>
   );
-  const cls = `relative min-w-0 overflow-hidden rounded-lg border border-zinc-800 ${
-    onSelect ? "transition-colors hover:border-green-500" : ""
-  }`;
+  const cls = `relative min-w-0 overflow-hidden rounded-lg border ${
+    selected ? "border-green-500" : "border-zinc-800"
+  } ${onSelect ? "transition-colors hover:border-green-500" : ""}`;
   const style = stretch
     ? { width: Math.min(aspectRatioOf(img) * rowHeight, gridWidth) }
     : { flexGrow: aspectRatioOf(img), flexBasis: 0 };
 
   const handleTileEnter = (e: React.MouseEvent) => {
+    if (previewOnRightClick) return;
+    cancelHide();
     setTileRect(e.currentTarget.getBoundingClientRect());
     setPreviewVisible(true);
   };
-  const handleLeave = () => setPreviewVisible(false);
+  const handleLeave = scheduleHide;
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (previewOnRightClick) {
+      e.preventDefault();
+      e.stopPropagation();
+      cancelHide();
+      setTileRect(e.currentTarget.getBoundingClientRect());
+      setPreviewVisible(true);
+      return;
+    }
+    onOpenMenu(e);
+  };
 
   const preview =
     previewVisible && tileRect ? (
       <ImagePreviewOverlay
         img={img}
         tileRect={tileRect}
-        onHover={() => setPreviewVisible(true)}
+        onHover={cancelHide}
         onLeave={handleLeave}
       />
     ) : null;
@@ -363,7 +489,7 @@ const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOp
           }}
           onMouseEnter={handleTileEnter}
           onMouseLeave={handleLeave}
-          onContextMenu={onOpenMenu}
+          onContextMenu={handleContextMenu}
         >
           {inner}
         </button>
@@ -379,7 +505,7 @@ const MediaTile = ({ img, rowHeight, stretch, gridWidth, showDir, onSelect, onOp
         className={cls}
         onMouseEnter={handleTileEnter}
         onMouseLeave={handleLeave}
-        onContextMenu={onOpenMenu}
+        onContextMenu={handleContextMenu}
       >
         {inner}
       </div>
@@ -392,9 +518,19 @@ export interface MediaBrowserProps {
   manageFolders?: boolean;
   onSelect?: (path: string) => void;
   fullPageDrop?: boolean;
+  /** Paths rendered with a persistent selected style (picker staging). */
+  selectedPaths?: ReadonlySet<string>;
+  /** Picker mode: hover preview opens on right-click instead of the context menu. */
+  previewOnRightClick?: boolean;
 }
 
-export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = false }: MediaBrowserProps) => {
+export const MediaBrowser = ({
+  manageFolders = false,
+  onSelect,
+  fullPageDrop = false,
+  selectedPaths,
+  previewOnRightClick = false,
+}: MediaBrowserProps) => {
   const lib = useMediaLibrary();
   const { images, dirs } = lib;
 
@@ -859,6 +995,8 @@ export const MediaBrowser = ({ manageFolders = false, onSelect, fullPageDrop = f
         gridWidth={gridWidth}
         showDir={selectedDir === "all"}
         onSelect={onSelect}
+        selected={selectedPaths?.has(img.path)}
+        previewOnRightClick={previewOnRightClick}
         onOpenMenu={openMenu}
       />
     );

@@ -48,6 +48,12 @@ export interface ImageInfo {
   height: number;
   animated: boolean;
   format?: "webm";
+  /** File size in bytes. */
+  size: number;
+  /** Absolute path of the file on this machine (local CMS only). */
+  diskPath: string;
+  /** Size in bytes of the `.static.webp` poster (animated assets with a poster). */
+  staticSize?: number;
 }
 
 export const CONTENT_PUBLIC_PREFIX = "/smc/assets/content/";
@@ -148,7 +154,9 @@ export function listImages(): ImageInfo[] {
       const relDir = path.relative(CONTENT_ASSETS_DIR, path.dirname(f)).replace(/\\/g, "/");
       const ext = path.extname(f).toLowerCase();
       const staticAbs = f.replace(/\.[^.]+$/, ".static.webp");
-      const hasStatic = staticAbs !== f && fs.existsSync(staticAbs);
+      const staticStat = staticAbs !== f && fs.existsSync(staticAbs) ? fs.statSync(staticAbs) : null;
+      const hasStatic = !!staticStat;
+      const stat = fs.statSync(f);
       const isWebm = ext === ".webm";
       let width = 1;
       let height = 1;
@@ -174,10 +182,13 @@ export function listImages(): ImageInfo[] {
         width,
         height,
         animated,
+        size: stat.size,
+        diskPath: f,
         ...(isWebm ? { format: "webm" as const } : {}),
       };
-      if (animated && hasStatic) {
+      if (animated && staticStat) {
         info.staticUrl = `/api/asset?path=${encodeURIComponent(toPublicPath(staticAbs))}`;
+        info.staticSize = staticStat.size;
       }
       return info;
     });
