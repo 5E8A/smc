@@ -1,6 +1,5 @@
 import { BlogPost, BlogPostRaw } from "../types";
 import { resolveAuthor } from "./authors";
-import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import enPosts from "../content/en/posts.json";
 import plPosts from "../content/pl/posts.json";
 
@@ -20,25 +19,8 @@ const enBodies = buildMap(enRaw);
 const plBodies = buildMap(plRaw);
 const bodies: Record<"en" | "pl", Record<string, string>> = { en: enBodies, pl: plBodies };
 
-const parseDate = (dateStr: string): number => {
-  let processedDate = dateStr;
-  PL_MONTHS.forEach((pl, i) => {
-    if (dateStr.includes(pl)) {
-      processedDate = processedDate.replace(pl, EN_MONTHS[i]!);
-    }
-  });
-
-  return new Date(processedDate).getTime();
-};
-
-const sortPosts = (a: BlogPost, b: BlogPost): number => {
-  const dateA = parseDate(a.date);
-  const dateB = parseDate(b.date);
-  if (!isNaN(dateA) && !isNaN(dateB)) {
-    return dateB - dateA;
-  }
-  return parseInt(b.id) - parseInt(a.id);
-};
+const sortPosts = (a: BlogPost, b: BlogPost): number =>
+  b.date.localeCompare(a.date) || parseInt(b.id) - parseInt(a.id);
 
 const withAuthor = (post: BlogPostRaw, lang: "en" | "pl"): BlogPost => ({
   ...post,

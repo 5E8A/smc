@@ -4,6 +4,7 @@ import { BlogPost } from "../types";
 import BackButton from "./BackButton";
 import AuthorCard from "./AuthorCard";
 import { CalendarIcon, BookIcon } from "@phosphor-icons/react";
+import { formatDate } from "@smc/shared/months";
 import { useLanguage } from "../context/useLanguage";
 import ContentMarkdown from "./ContentMarkdown";
 import LanguageMissingCard from "./LanguageMissingCard";
@@ -65,7 +66,7 @@ const ArticleView = ({ body }: ArticleViewProps) => {
               <p className="mb-4 max-w-3xl text-base text-mc-text">{post.summary}</p>
               <div className="flex items-center justify-between text-sm text-mc-text-muted">
                 <span className="flex items-center gap-1">
-                  <CalendarIcon className="size-4" /> {post.date}
+                  <CalendarIcon className="size-4" /> {formatDate(post.date, language) ?? post.date}
                 </span>
                 <span className="flex items-center gap-1 text-green-400">
                   <BookIcon className="size-4" /> {post.category}

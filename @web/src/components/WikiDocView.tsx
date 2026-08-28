@@ -4,6 +4,7 @@ import { WikiDoc } from "../types";
 import BackButton from "./BackButton";
 import AuthorCard from "./AuthorCard";
 import { CalendarIcon, BookIcon, ListIcon } from "@phosphor-icons/react";
+import { formatDate } from "@smc/shared/months";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
 import ContentMarkdown from "./ContentMarkdown";
@@ -83,7 +84,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
                 <p className="mb-4 max-w-3xl text-base text-mc-text">{doc.summary}</p>
                 <div className="flex items-center justify-between text-sm text-mc-text-muted">
                   <span className="flex items-center gap-1">
-                    <CalendarIcon className="size-4" /> {doc.date}
+                    <CalendarIcon className="size-4" /> {formatDate(doc.date, language) ?? doc.date}
                   </span>
                   <span className="flex items-center gap-1 text-green-400">
                     <BookIcon className="size-4" /> {doc.category}

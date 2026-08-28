@@ -4,7 +4,7 @@
     "slug": "fabric-boosted-1-21-11-released",
     "title": "Fabric Boosted 1.21.11 Wydany!",
     "author": "5e8a",
-    "date": "16 Gru 2025",
+    "date": "2025-12-16",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/2.7.0-alpha1.webp",
     "summary": "Z radością ogłaszamy wydanie Fabric Boosted 2.7.0-Alpha1, który obsługuje wersję 1.21.11"
@@ -14,7 +14,7 @@
     "slug": "30k-downloads-milestone",
     "title": "Kamień milowy: 30 000 pobrań!",
     "author": "5e8a",
-    "date": "11 Sty 2026",
+    "date": "2026-01-11",
     "category": "Ogłoszenia",
     "coverImage": "/smc/assets/content/posts/30k.webp",
     "summary": "Z radością ogłaszamy, że Fabric Boosted osiągnął 30 000 pobrań w serwisie Modrinth!"
@@ -24,7 +24,7 @@
     "slug": "fabric-boosted-26-1-released",
     "title": "Fabric Boosted 26.1 Wydany!",
     "author": "5e8a",
-    "date": "30 Mar 2026",
+    "date": "2026-03-30",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/3.0.0-alpha1.webp",
     "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.0.0-Alpha1, który obsługuje wersję 26.1"
@@ -34,7 +34,7 @@
     "slug": "fabric-boosted-26-2-released",
     "title": "Fabric Boosted 26.2 Wydany!",
     "author": "5e8a",
-    "date": "18 Cze 2026",
+    "date": "2026-06-18",
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/3.3.0-alpha1.webp",
     "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.3.0-Alpha1, który obsługuje wersję 26.2"
@@ -44,9 +44,9 @@
     "slug": "cms-markdown-test",
     "title": "CMS Markdown Test",
     "author": "a-tui4m8pck",
-    "date": "24 Sie 2026",
+    "date": "2026-08-24",
     "category": "Announcements",
-    "coverImage": "/smc/assets/content/posts/benchmark.webp",
+    "coverImage": "/smc/assets/content/banners/wrench.webp",
     "summary": "Internal regression-test article for the unified markdown renderer and composable carousels."
   }
 ]

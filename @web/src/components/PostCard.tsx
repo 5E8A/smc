@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CalendarIcon, ArrowRightIcon, BookIcon } from "@phosphor-icons/react";
+import { formatDate } from "@smc/shared/months";
 import { BlogPost } from "../types";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
@@ -34,7 +35,7 @@ const PostCard = ({ post }: PostCardProps) => {
         <div className="mb-3 flex items-center gap-2 text-xs">
           <div className="mb-3 flex items-center space-x-2 bg-black/30 p-2 rounded border border-white/10">
             <CalendarIcon className="size-[1em] mr-2" />
-            {post.date}
+            {formatDate(post.date, language) ?? post.date}
           </div>
 
           <div className="mb-3 flex items-center space-x-2 bg-black/30 p-2 rounded border border-white/10">

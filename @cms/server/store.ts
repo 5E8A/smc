@@ -16,7 +16,6 @@ import {
 } from "./util.ts";
 import fs from "fs";
 import { isKnownIcon } from "@smc/shared/icon-catalog";
-import { EN_MONTHS, PL_MONTHS } from "@smc/shared/months";
 import { SLUG_PATTERN } from "@smc/shared/slug";
 import path from "path";
 
@@ -335,17 +334,6 @@ const isValidIsoDate = (s: string): boolean => {
   return d.getUTCFullYear() === Number(m[1]) && d.getUTCMonth() === Number(m[2]) - 1 && d.getUTCDate() === Number(m[3]);
 };
 
-const monthsFor = (lang: Lang): string[] => (lang === "pl" ? PL_MONTHS : EN_MONTHS);
-
-const isValidPostDate = (s: string, lang: Lang): boolean => {
-  const m = /^(\d{1,2}) ([A-Za-z]+) (\d{4})$/.exec(s);
-  if (!m) return false;
-  const monthIndex = monthsFor(lang).findIndex((mo) => mo.toLowerCase() === m[2].toLowerCase());
-  if (monthIndex < 0) return false;
-  const day = Number(m[1]);
-  return day >= 1 && day <= 31 && Number(m[3]) >= 1900;
-};
-
 const asString = (v: unknown): v is string => typeof v === "string";
 const asArray = (v: unknown): v is unknown[] => Array.isArray(v);
 
@@ -449,7 +437,7 @@ export async function validateContent(kind: Kind, lang: Lang, data: unknown): Pr
     issues.push({ entry: -1, field: "$", message: "Root must be an array", severity: "error" });
     return issues;
   }
-  if (kind === "posts") validatePosts(data, lang, knownAuthorIds, issues);
+  if (kind === "posts") validatePosts(data, knownAuthorIds, issues);
   else validateWiki(data, lang, knownAuthorIds, issues);
 
   const otherLang: Lang = lang === "en" ? "pl" : "en";
@@ -478,7 +466,7 @@ export async function validateContent(kind: Kind, lang: Lang, data: unknown): Pr
   return issues;
 }
 
-function validatePosts(data: unknown[], lang: Lang, knownAuthorIds: Set<string>, issues: Issue[]): void {
+function validatePosts(data: unknown[], knownAuthorIds: Set<string>, issues: Issue[]): void {
   const slugs = new Map<string, number>();
   const ids = new Map<string, number>();
 
@@ -524,11 +512,11 @@ function validatePosts(data: unknown[], lang: Lang, knownAuthorIds: Set<string>,
       }
     }
 
-    if (!asString(entry.date) || !isValidPostDate(entry.date, lang)) {
+    if (!asString(entry.date) || !isValidIsoDate(entry.date)) {
       issues.push({
         entry: i,
         field: "date",
-        message: `Date must match the site's ${lang === "pl" ? "Polish" : "English"} format, e.g. ${lang === "pl" ? "16 Gru 2025" : "16 Dec 2025"}`,
+        message: "Date must be ISO format, e.g. 2025-12-16",
         severity: "error",
       });
     }
