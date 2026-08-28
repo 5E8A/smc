@@ -1,4 +1,4 @@
-name: Deploy static content to Pages
+name: Build & Deploy to GitHub Pages
 
 on:
   push:
@@ -31,8 +31,12 @@ jobs:
         run: |
           mkdir -p node_modules/@smc
           ln -s ../../@cms node_modules/@smc/cms
-      - name: Build project
-        run: npm run build
+      - name: Lint @web
+        run: npm run lint -w @smc/web
+      - name: Check content
+        run: npm run check-content -w @smc/web
+      - name: Build
+        run: npm exec -w @smc/web -- vite build
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Upload artifact
