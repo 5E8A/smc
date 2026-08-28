@@ -640,7 +640,7 @@ export async function deleteImage(publicPath: string): Promise<DeletionResult> {
   const usages = findRefs([publicPath]);
   if (Object.keys(usages).length > 0) return { blocked: true, usages };
   await fsRetry(() => fs.unlinkSync(abs));
-  const staticAbs = abs.replace(/\.webp$/, ".static.webp");
+  const staticAbs = abs.replace(/\.[^.]+$/, ".static.webp");
   if (staticAbs !== abs && fs.existsSync(staticAbs)) await fsRetry(() => fs.unlinkSync(staticAbs));
   return { blocked: false };
 }
