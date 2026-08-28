@@ -265,7 +265,7 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
         ref={stageRef}
         data-video-wrapper
         className={`relative max-w-full overflow-hidden rounded-lg ${ratio ? "" : "min-h-40 min-w-40"} ${
-          video ? "" : zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+          video ? "cursor-pointer" : zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
         }`}
         style={{
           transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`,
