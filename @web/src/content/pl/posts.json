@@ -38,15 +38,5 @@
     "category": "Aktualizacje",
     "coverImage": "/smc/assets/content/posts/3.3.0-alpha1.webp",
     "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.3.0-Alpha1, który obsługuje wersję 26.2"
-  },
-  {
-    "id": "5",
-    "slug": "cms-markdown-test",
-    "title": "CMS Markdown Test",
-    "author": "a-tui4m8pck",
-    "date": "2026-08-28",
-    "category": "Announcements",
-    "coverImage": "/smc/assets/content/banners/wrench.webp",
-    "summary": "Internal regression-test article for the unified markdown renderer and composable carousels."
   }
 ]
