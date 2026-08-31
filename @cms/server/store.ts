@@ -18,18 +18,9 @@ import fs from "fs";
 import { isKnownIcon } from "@smc/shared/icon-catalog";
 import { SLUG_PATTERN } from "@smc/shared/slug";
 import path from "path";
+import type { Author } from "@smc/shared/content";
 
-export interface LocalizedText {
-  en: string;
-  pl: string;
-}
-
-export interface Author {
-  id: string;
-  avatar: string;
-  name: LocalizedText;
-  bio: LocalizedText;
-}
+export type { LocalizedText, Author } from "@smc/shared/content";
 
 const AUTHORS_PATH = path.join(CONTENT_DIR, "authors.json");
 

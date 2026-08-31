@@ -1,16 +1,7 @@
 import authorsJson from "../content/authors.json";
+import type { LocalizedText, AuthorSocials } from "@smc/shared/content";
 
-export interface SocialLink {
-  url: string;
-  label?: string;
-}
-
-export interface AuthorSocials {
-  twitter?: SocialLink;
-  youtube?: SocialLink;
-  github?: SocialLink;
-  discord?: SocialLink;
-}
+export type { SocialLink, AuthorSocials } from "@smc/shared/content";
 
 export interface Author {
   name: string;
@@ -22,8 +13,8 @@ export interface Author {
 interface AuthorRecord {
   id: string;
   avatar: string;
-  name: { en: string; pl: string };
-  bio: { en: string; pl: string };
+  name: LocalizedText;
+  bio: LocalizedText;
   socials?: AuthorSocials;
 }
 

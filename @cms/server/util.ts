@@ -1,18 +1,13 @@
 import path from "path";
 import fs from "fs";
+import { LANGS, KINDS, type Lang, type Kind, isLang, isKind } from "@smc/shared/content";
+
+export { LANGS, KINDS, type Lang, type Kind, isLang, isKind };
 
 export const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..");
 export const CONTENT_DIR = path.join(REPO_ROOT, "@web", "src", "content");
 export const PUBLIC_ASSETS_DIR = path.join(REPO_ROOT, "@web", "public", "assets");
 export const CONTENT_ASSETS_DIR = path.join(PUBLIC_ASSETS_DIR, "content");
-
-export const KINDS = ["posts", "wiki"] as const;
-export type Kind = (typeof KINDS)[number];
-export const LANGS = ["en", "pl"] as const;
-export type Lang = (typeof LANGS)[number];
-
-export const isKind = (v: string | null): v is Kind => KINDS.includes(v as Kind);
-export const isLang = (v: string | null): v is Lang => LANGS.includes(v as Lang);
 
 export function contentPath(kind: Kind, lang: Lang): string {
   return path.join(CONTENT_DIR, lang, `${kind}.json`);

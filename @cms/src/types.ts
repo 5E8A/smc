@@ -1,30 +1,4 @@
-export type Lang = "en" | "pl";
-export type Kind = "posts" | "wiki";
-
-export interface LocalizedText {
-  en: string;
-  pl: string;
-}
-
-export interface SocialLink {
-  url: string;
-  label?: string;
-}
-
-export interface AuthorSocials {
-  twitter?: SocialLink;
-  youtube?: SocialLink;
-  github?: SocialLink;
-  discord?: SocialLink;
-}
-
-export interface Author {
-  id: string;
-  avatar: string;
-  name: LocalizedText;
-  bio: LocalizedText;
-  socials?: AuthorSocials;
-}
+export type { Lang, Kind, LocalizedText, SocialLink, AuthorSocials, Author } from "@smc/shared/content";
 
 export interface BlogPost {
   id: string;
