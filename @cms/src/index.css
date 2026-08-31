@@ -28,6 +28,18 @@ html {
   background-color: var(--color-zinc-500);
 }
 
+.category-header {
+  font-weight: 700;
+  color: white;
+}
+
+.category-sub-header {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 1rem;
+}
+
 body {
   background-color: var(--color-zinc-950);
   color: var(--color-zinc-200);

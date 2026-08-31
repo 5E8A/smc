@@ -15,27 +15,34 @@ Fabric Boosted ships with a curated set of 22 Quality of Life mods that smooth o
 
 | Mod | What it does |
 |-----|--------------|
+| **HUD & Overlays** |
 | [Appleskin](https://modrinth.com/mod/appleskin) | Food, hunger and saturation values |
-| [Auth Me](https://modrinth.com/mod/auth-me) | In-game account authentication |
-| [Bobby](https://modrinth.com/mod/bobby) | Render distance beyond the server's limit |
-| [Chat Heads](https://modrinth.com/mod/chat-heads) | Player heads in chat messages |
 | [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated) | Armor durability on the HUD |
-| [Don't Clear Chat History](https://modrinth.com/mod/dcch) | Chat history survives relogs |
-| [Essential](https://modrinth.com/mod/essential) | Friends, world hosting, skins & screenshots |
-| [Fast Quit](https://modrinth.com/mod/fastquit) | Instant world saving in the background |
-| [Gamma Utils](https://modrinth.com/mod/gamma-utils) | Fullbright toggle |
 | [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf) | Damage indicator on the HUD |
-| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Skips the loading terrain screen |
 | [Lighty](https://modrinth.com/mod/lighty) | Light level overlay |
-| [No Chat Reports](https://modrinth.com/mod/no-chat-reports) | Makes chat unreportable |
-| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) | Keep playing after a crash |
-| [More Chat History](https://modrinth.com/mod/morechathistory) | Longer chat scrollback |
 | [Ping View](https://modrinth.com/mod/ping-view) | Player ping in the tab list |
-| [Remove Reloading Screen](https://modrinth.com/mod/rrls) | Resource packs load in the background |
+| **Items & Inventory** |
 | [Just Enough Items](https://modrinth.com/mod/jei) | Item list and recipe viewer |
 | [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip) | Container contents in the tooltip |
-| [Smooth Skies](https://modrinth.com/mod/smooth-skies) | Smooth skybox colors |
+| **Chat & Social** |
+| [Chat Heads](https://modrinth.com/mod/chat-heads) | Player heads in chat messages |
+| [Don't Clear Chat History](https://modrinth.com/mod/dcch) | Chat history survives relogs |
+| [More Chat History](https://modrinth.com/mod/morechathistory) | Longer chat scrollback |
+| [No Chat Reports](https://modrinth.com/mod/no-chat-reports) | Makes chat unreportable |
 | [Talk Balloons](https://modrinth.com/mod/talk-balloons) | Chat bubbles above players |
+| **Visuals & Rendering** |
+| [Bobby](https://modrinth.com/mod/bobby) | Render distance beyond the server's limit |
+| [Gamma Utils](https://modrinth.com/mod/gamma-utils) | Fullbright toggle |
+| [Smooth Skies](https://modrinth.com/mod/smooth-skies) | Smooth skybox colors |
+| **Loading & Stability** |
+| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Skips the loading terrain screen |
+| [Fast Quit](https://modrinth.com/mod/fastquit) | Instant world saving in the background |
+| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) | Keep playing after a crash |
+| [Remove Reloading Screen](https://modrinth.com/mod/rrls) | Resource packs load in the background |
+| **Account & Online** |
+| [Auth Me](https://modrinth.com/mod/auth-me) | In-game account authentication |
+| [Essential](https://modrinth.com/mod/essential) | Friends, world hosting, skins & screenshots |
+| **Map & Navigation** |
 | [VoxelMap](https://modrinth.com/mod/voxelmap-updated) | Minimap, world map and waypoints |
 
 ### :GaugeIcon: HUD & Overlays

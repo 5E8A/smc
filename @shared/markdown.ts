@@ -35,6 +35,8 @@ interface MdastNode {
   type: string;
   children?: MdastNode[];
   value?: string;
+  data?: { hProperties?: Record<string, string | number> };
+  align?: (string | null)[];
 }
 
 export function remarkNoH1() {
@@ -77,5 +79,43 @@ export function remarkUnwrapBlocks() {
       node.children = next;
     };
     transform(tree);
+  };
+}
+
+export function remarkTableCategoryHeader() {
+  return (tree: MdastNode) => {
+    if (!tree.children) return;
+    for (const node of tree.children) {
+      if (node.type !== "table" || !node.children) continue;
+      const cols = node.align?.length ?? 2;
+      for (const row of node.children) {
+        if (row.type !== "tableRow" || !row.children?.length) continue;
+        const cell = row.children[0];
+        if (!cell || cell.type !== "tableCell" || !cell.children?.length) continue;
+        const first = cell.children[0];
+        if (first?.type !== "strong" || !first.children?.length) continue;
+        const text = first.children[0];
+        if (text?.type !== "text" || !text.value) continue;
+
+        row.children = [
+          {
+            type: "tableCell",
+            children: [{ type: "text", value: text.value }],
+            data: { hProperties: { colSpan: cols, className: "category-header" } },
+          },
+        ];
+
+        if (node.children[0] === row) {
+          const nextRow = node.children[1];
+          if (nextRow?.type === "tableRow" && nextRow.children) {
+            for (const c of nextRow.children) {
+              if (c.type === "tableCell") {
+                c.data = { hProperties: { className: "category-sub-header" } };
+              }
+            }
+          }
+        }
+      }
+    }
   };
 }

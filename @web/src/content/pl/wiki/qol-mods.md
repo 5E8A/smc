@@ -13,29 +13,36 @@ Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, któr
 
 ### :ClipboardTextIcon: Ściągawka
 
-| Mod | Do czego służy |
+| **HUD i nakładki** |
 |-----|----------------|
+| Mod | Do czego służy |
 | [Appleskin](https://modrinth.com/mod/appleskin) | Wartości jedzenia, głodu i nasycenia |
-| [Auth Me](https://modrinth.com/mod/auth-me) | Uwierzytelnianie konta w grze |
-| [Bobby](https://modrinth.com/mod/bobby) | Dystans renderowania większy niż limit serwera |
-| [Chat Heads](https://modrinth.com/mod/chat-heads) | Głowy graczy w wiadomościach na czacie |
 | [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated) | Wytrzymałość zbroi na HUDzie |
-| [Don't Clear Chat History](https://modrinth.com/mod/dcch) | Historia czatu przetrwa ponowne logowanie |
-| [Essential](https://modrinth.com/mod/essential) | Znajomi, hostowanie światów, skiny i zrzuty ekranu |
-| [Fast Quit](https://modrinth.com/mod/fastquit) | Natychmiastowy zapis świata w tle |
-| [Gamma Utils](https://modrinth.com/mod/gamma-utils) | Przełącznik pełnej jasności |
 | [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf) | Wskaźnik obrażeń na HUDzie |
-| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Pomija ekran ładowania terenu |
 | [Lighty](https://modrinth.com/mod/lighty) | Nakładka poziomu oświetlenia |
-| [No Chat Reports](https://modrinth.com/mod/no-chat-reports) | Sprawia, że czat nie może być zgłaszany |
-| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) | Dalsza gra po crashu |
-| [More Chat History](https://modrinth.com/mod/morechathistory) | Dłuższa historia czatu |
 | [Ping View](https://modrinth.com/mod/ping-view) | Ping graczy na liście tab |
-| [Remove Reloading Screen](https://modrinth.com/mod/rrls) | Paczki zasobów ładują się w tle |
+| **Przedmioty i ekwipunek** |
 | [Just Enough Items](https://modrinth.com/mod/jei) | Lista przedmiotów i podgląd receptur |
 | [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip) | Zawartość kontenerów w podpowiedzi |
-| [Smooth Skies](https://modrinth.com/mod/smooth-skies) | Gładkie kolory nieba |
+| **Czat i kontakty towarzyskie** |
+| [Chat Heads](https://modrinth.com/mod/chat-heads) | Głowy graczy w wiadomościach na czacie |
+| [Don't Clear Chat History](https://modrinth.com/mod/dcch) | Historia czatu przetrwa ponowne logowanie |
+| [More Chat History](https://modrinth.com/mod/morechathistory) | Dłuższa historia czatu |
+| [No Chat Reports](https://modrinth.com/mod/no-chat-reports) | Sprawia, że czat nie może być zgłaszany |
 | [Talk Balloons](https://modrinth.com/mod/talk-balloons) | Dymki czatu nad graczami |
+| **Grafika i renderowanie** |
+| [Bobby](https://modrinth.com/mod/bobby) | Dystans renderowania większy niż limit serwera |
+| [Gamma Utils](https://modrinth.com/mod/gamma-utils) | Przełącznik pełnej jasności |
+| [Smooth Skies](https://modrinth.com/mod/smooth-skies) | Gładkie kolory nieba |
+| **Ładowanie i stabilność** |
+| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Pomija ekran ładowania terenu |
+| [Fast Quit](https://modrinth.com/mod/fastquit) | Natychmiastowy zapis świata w tle |
+| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) | Dalsza gra po crashu |
+| [Remove Reloading Screen](https://modrinth.com/mod/rrls) | Paczki zasobów ładują się w tle |
+| **Konto i gra online** |
+| [Auth Me](https://modrinth.com/mod/auth-me) | Uwierzytelnianie konta w grze |
+| [Essential](https://modrinth.com/mod/essential) | Znajomi, hostowanie światów, skiny i zrzuty ekranu |
+| **Mapa i nawigacja** |
 | [VoxelMap](https://modrinth.com/mod/voxelmap-updated) | Minimapa, mapa świata i waypointy |
 
 ### :GaugeIcon: HUD i nakładki

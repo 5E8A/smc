@@ -9,6 +9,7 @@ import {
   processCarousel,
   processIcons,
   remarkNoH1,
+  remarkTableCategoryHeader,
   remarkUnwrapBlocks,
 } from "@smc/shared/markdown";
 import Icon from "./IconMap";
@@ -155,13 +156,13 @@ const components: MarkdownComponents = {
       {children}
     </thead>
   ),
-  th: ({ children, node, ...props }) => (
-    <th className="px-4 py-3 text-left font-bold text-white" {...props}>
+  th: ({ children, node, className: thClassName, ...props }) => (
+    <th className={`px-4 py-3 text-left font-bold text-white${thClassName ? ` ${thClassName}` : ""}`} {...props}>
       {children}
     </th>
   ),
-  td: ({ children, node, ...props }) => (
-    <td className="border-b border-white/5 px-4 py-2.5 text-gray-300" {...props}>
+  td: ({ children, node, className: tdClassName, ...props }) => (
+    <td className={`border-r border-b border-white/5 px-4 py-2.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`} {...props}>
       {children}
     </td>
   ),
@@ -176,7 +177,7 @@ const components: MarkdownComponents = {
 
 const ContentMarkdown = ({ content }: ContentMarkdownProps) => (
   <Markdown
-    remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkUnwrapBlocks]}
+    remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks]}
     rehypePlugins={[rehypeSlug, rehypeRaw]}
     components={components}
   >
