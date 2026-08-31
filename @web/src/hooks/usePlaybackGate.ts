@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useMediaFlag = (query: string): boolean => {
+export const useMediaFlag = (query: string): boolean => {
   const [matches, setMatches] = useState(() => typeof window !== "undefined" && window.matchMedia(query).matches);
   useEffect(() => {
     const mq = window.matchMedia(query);

@@ -3,6 +3,7 @@ import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosp
 import SmartImage from "@/components/SmartImage";
 import Lightbox from "@/components/Lightbox";
 import { useLanguage } from "@/context/useLanguage";
+import { useMediaFlag } from "@/hooks/usePlaybackGate";
 
 interface CarouselProps {
   images: string[];
@@ -16,6 +17,7 @@ const Carousel = ({ images }: CarouselProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [initialTime, setInitialTime] = useState(0);
   const videoElRef = useRef<HTMLVideoElement | null>(null);
+  const canHover = useMediaFlag("(hover: hover)");
 
   const openLightbox = useCallback(() => {
     const el = videoElRef.current;
@@ -43,7 +45,7 @@ const Carousel = ({ images }: CarouselProps) => {
 
   if (!images || images.length === 0) {
     return (
-      <div className="flex h-64 w-full items-center justify-center rounded-lg border border-white/5 bg-mc-surface text-gray-500">
+      <div className="flex h-64 w-full items-center justify-center rounded-lg border border-white/5 bg-mc-surface text-mc-text-muted">
         <div className="text-center">
           <ImageIcon className="mx-auto mb-2 size-12 opacity-30" />
           <p className="font-sans text-sm">No images available</p>
@@ -94,7 +96,7 @@ const Carousel = ({ images }: CarouselProps) => {
           type="button"
           onClick={openLightbox}
           aria-label={t.lightbox.open}
-          className={`absolute top-3 right-3 z-30 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+          className={`absolute top-3 right-3 z-30 rounded-full bg-black/50 p-2 text-white ${canHover ? "opacity-0 group-hover:opacity-100" : "opacity-100"} backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         >
           <CornersOutIcon size={20} />
         </button>
@@ -103,7 +105,7 @@ const Carousel = ({ images }: CarouselProps) => {
       <button
         type="button"
         aria-label={t.lightbox.prev}
-        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white ${canHover ? "opacity-0 group-hover:opacity-100" : "opacity-100"} backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={prevSlide}
       >
         <CaretLeftIcon size={24} />
@@ -112,7 +114,7 @@ const Carousel = ({ images }: CarouselProps) => {
       <button
         type="button"
         aria-label={t.lightbox.next}
-        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white ${canHover ? "opacity-0 group-hover:opacity-100" : "opacity-100"} backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={nextSlide}
       >
         <CaretRightIcon size={24} />

@@ -18,6 +18,7 @@ const formatTime = (s: number): string => {
 
 export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
   const { t } = useLanguage();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -71,6 +72,18 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, [videoRef]);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (visible) {
+      el.removeAttribute("inert");
+      el.removeAttribute("aria-hidden");
+    } else {
+      el.setAttribute("inert", "");
+      el.setAttribute("aria-hidden", "true");
+    }
+  }, [visible]);
+
   const togglePlay = useCallback(() => {
     const el = videoRef.current;
     if (!el) return;
@@ -107,6 +120,7 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
 
   return (
     <div
+      ref={containerRef}
       className={`absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-8 pb-2 px-3 transition-opacity duration-300 ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}

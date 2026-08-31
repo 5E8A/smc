@@ -61,6 +61,7 @@ const SmartImage = ({
     return (
       <VideoSmartImage
         src={src}
+        alt={alt}
         layout={layout}
         className={className}
         wrapperStyle={wrapperStyle}
@@ -96,6 +97,7 @@ const SmartImage = ({
 
 interface VideoSmartImageProps {
   src: string;
+  alt: string;
   layout: string;
   className: string;
   wrapperStyle: CSSProperties;
@@ -108,6 +110,7 @@ interface VideoSmartImageProps {
 
 const VideoSmartImage = ({
   src,
+  alt,
   layout,
   className,
   wrapperStyle,
@@ -184,6 +187,7 @@ const VideoSmartImage = ({
         <>
           <video
             {...videoProps}
+            aria-label={alt}
             autoPlay={gate.playing}
             ref={(el) => {
               (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
@@ -207,6 +211,7 @@ const VideoSmartImage = ({
             onVideoRef?.(el);
           }}
           {...videoProps}
+          aria-label={alt}
           autoPlay
         />
       )}

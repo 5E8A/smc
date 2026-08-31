@@ -270,6 +270,7 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
               ref={videoRef}
               src={src}
               poster={posterSrc(src)}
+              aria-label={alt}
               muted
               loop
               playsInline

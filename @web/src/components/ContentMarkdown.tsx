@@ -94,7 +94,7 @@ const components: MarkdownComponents = {
     </em>
   ),
   del: ({ children, node, ...props }) => (
-    <del className="text-white/40 line-through" {...props}>
+    <del className="text-white/50 line-through" {...props}>
       {children}
     </del>
   ),
