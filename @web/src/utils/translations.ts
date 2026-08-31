@@ -12,10 +12,19 @@ export const translations = {
     common: {
       back: "Back",
       language: "Language",
+      skip_to_content: "Skip to content",
     },
     meta: {
       title: "SMC - Seba Modding Community",
       description: "Official blog for the Fabric Boosted modpack by 5E8A. News, updates, and optimization guides.",
+      titles: {
+        home: "SMC - Seba Modding Community",
+        archive: "Archive | SMC",
+        wiki: "Documentation | SMC",
+        about: "About | SMC",
+        credits: "Credits & Legal | SMC",
+        modrinth: "Modrinth | SMC",
+      },
     },
     hero: {
       tag_prefix: "Version",
@@ -43,6 +52,8 @@ export const translations = {
       optifine: "OptiFine Features",
       qol: "Quality of Life",
       utility: "Utility",
+      pause_autoplay: "Pause rotation",
+      resume_autoplay: "Resume rotation",
     },
     latest: {
       title: "LATEST LOGS",
@@ -138,7 +149,11 @@ export const translations = {
     },
     media: {
       play: "Play animation",
+      pause: "Pause",
       stop: "Stop animation",
+      seek: "Seek",
+      enter_fullscreen: "Enter fullscreen",
+      exit_fullscreen: "Exit fullscreen",
     },
   },
   pl: {
@@ -152,11 +167,20 @@ export const translations = {
     common: {
       back: "Wstecz",
       language: "Język",
+      skip_to_content: "Przejdź do treści",
     },
     meta: {
       title: "SMC - Seba Modding Community",
       description:
         "Oficjalny blog paczki modów Fabric Boosted od 5E8A. Aktualności, poradniki i przewodniki optymalizacyjne.",
+      titles: {
+        home: "SMC - Seba Modding Community",
+        archive: "Archiwum | SMC",
+        wiki: "Dokumentacja | SMC",
+        about: "O Projekcie | SMC",
+        credits: "Credits i Prawa | SMC",
+        modrinth: "Modrinth | SMC",
+      },
     },
     hero: {
       tag_prefix: "Wersja",
@@ -185,6 +209,8 @@ export const translations = {
       optifine: "Funkcje OptiFine",
       qol: "Jakość Życia",
       utility: "Narzędzia",
+      pause_autoplay: "Wstrzymaj rotację",
+      resume_autoplay: "Wznów rotację",
     },
     latest: {
       title: "OSTATNIE LOGI",
@@ -280,7 +306,11 @@ export const translations = {
     },
     media: {
       play: "Odtwórz animację",
+      pause: "Pauza",
       stop: "Zatrzymaj animację",
+      seek: "Przewiń",
+      enter_fullscreen: "Tryb pełnoekranowy",
+      exit_fullscreen: "Wyjdź z pełnego ekranu",
     },
   },
 };
