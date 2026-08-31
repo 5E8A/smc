@@ -6,7 +6,7 @@
        @cms/server/{util,store}.ts, @web/src/types.ts (structurally different in @web)
 [x] 7. SPRITE_COLS=9 - duped in @web/src/components/ModIcon.tsx:8
        and @scripts/sync-mods.mjs:19
-[ ] 9. Export author-JSON structural validation from @cms/server/store -
+[x] 9. Export author-JSON structural validation from @cms/server/store -
        check-content.mjs still inlines its own copy (lines 79-117)
 
 ## CMS audit findings still open (25.08 audits)

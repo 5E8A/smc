@@ -76,44 +76,19 @@ for (const kind of KINDS) {
   }
 }
 
+let authors;
 try {
-  const authors = JSON.parse(readFileSync(path.join(root, "@web", "src", "content", "authors.json"), "utf8"));
-  if (!Array.isArray(authors)) throw new Error("authors.json root must be an array");
-  const seen = new Map();
-  authors.forEach((a, i) => {
-    const id = a?.id;
-    if (typeof id !== "string" || !id.trim()) {
-      console.error(`error   authors [${i}]: missing or empty id`);
-      errors += 1;
-      return;
-    }
-    if (seen.has(id)) {
-      console.error(`error   authors [${i}]: duplicate id "${id}" (also on entry ${seen.get(id)})`);
-      errors += 1;
-      return;
-    }
-    seen.set(id, i);
-    for (const field of ["name", "bio"]) {
-      const loc = a?.[field];
-      for (const lang of LANGS) {
-        if (typeof loc?.[lang] !== "string") {
-          console.error(`error   authors [${i}] (${id}): ${field}.${lang} must be a string`);
-          errors += 1;
-        }
-      }
-    }
-    if (typeof a?.avatar !== "string") {
-      console.error(`error   authors [${i}] (${id}): avatar must be a string`);
-      errors += 1;
-    }
-  });
+  authors = JSON.parse(readFileSync(path.join(root, "@web", "src", "content", "authors.json"), "utf8"));
 } catch (err) {
-  if (err instanceof SyntaxError || err.message.includes("root")) {
+  if (err instanceof SyntaxError) {
     console.error(`error   authors: ${err.message}`);
     errors += 1;
   } else {
     throw err;
   }
+}
+if (authors !== undefined) {
+  fail("authors", store.validateAuthorJson(authors));
 }
 
 // --- icon map gate -----------------------------------------------------------

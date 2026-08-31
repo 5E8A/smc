@@ -86,6 +86,34 @@ function validateAuthorFields(index: number, a: Record<string, unknown>, issues:
   }
 }
 
+export function validateAuthorJson(data: unknown): Issue[] {
+  if (!asArray(data)) {
+    return [{ entry: -1, field: "$", message: "Root must be an array", severity: "error" }];
+  }
+  const issues: Issue[] = [];
+  const ids = new Map<string, number>();
+  data.forEach((a, i) => {
+    const record = (typeof a === "object" && a !== null ? a : {}) as Record<string, unknown>;
+    if (!asString(record.id) || !(record.id as string).trim()) {
+      issues.push({ entry: i, field: "id", message: "missing or empty id", severity: "error" });
+      return;
+    }
+    const prev = ids.get(record.id as string);
+    if (prev !== undefined) {
+      issues.push({
+        entry: i,
+        field: "id",
+        message: `Duplicate author id "${record.id}" (also on entry ${prev})`,
+        severity: "error",
+      });
+    } else {
+      ids.set(record.id as string, i);
+    }
+    validateAuthorFields(i, record, issues);
+  });
+  return issues;
+}
+
 export function loadAuthors(): Promise<unknown> {
   return readJson(AUTHORS_PATH);
 }
