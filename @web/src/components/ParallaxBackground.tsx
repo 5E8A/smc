@@ -1,6 +1,7 @@
 import { type CSSProperties } from "react";
 import { useEffect, useRef } from "react";
 import hashes from "@/data/blurhash.json";
+import { usePrefersReducedMotion } from "@/hooks/usePlaybackGate";
 import { BlurhashCanvas } from "./BlurhashCanvas";
 
 const hashIndex = hashes as Record<string, string>;
@@ -15,11 +16,16 @@ const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
 const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProps) => {
   const ref = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (screenshotMode) {
+      el.style.height = `${document.documentElement.scrollHeight}px`;
+      return;
+    }
+    if (reduced) {
       el.style.height = `${document.documentElement.scrollHeight}px`;
       return;
     }
@@ -39,7 +45,7 @@ const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProp
       window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [factor]);
+  }, [factor, reduced]);
 
   const style: CSSProperties = { height: "100vh" };
 

@@ -1,6 +1,7 @@
 // src/components/LoadingVersionText.tsx (Modified)
 
 import { useEffect, useState } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePlaybackGate";
 
 interface LoadingVersionTextProps {
   // The format to mimic, e.g., "0.0.0" or "v1.2.3"
@@ -13,6 +14,7 @@ interface LoadingVersionTextProps {
  */
 export const LoadingVersionText = ({ format }: LoadingVersionTextProps) => {
   const [glitchText, setGlitchText] = useState(format);
+  const reduced = usePrefersReducedMotion();
   const placeholderChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"; // Shortened for efficiency
 
   const generateGlitchText = (targetFormat: string): string => {
@@ -31,12 +33,13 @@ export const LoadingVersionText = ({ format }: LoadingVersionTextProps) => {
   };
 
   useEffect(() => {
+    if (reduced) return;
     const intervalId = setInterval(() => {
       setGlitchText(generateGlitchText(format));
     }, 100);
 
     return () => clearInterval(intervalId);
-  }, [format]);
+  }, [format, reduced]);
 
   // Notice: No 'font-mc' or other styling is applied here.
   return <>{glitchText}</>;
