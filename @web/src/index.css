@@ -436,7 +436,7 @@ video::-webkit-media-controls {
 }
 
 /* Custom fullscreen presentation for [data-video-wrapper] targets: the promoted
-   wrapper fills the viewport, but its children keep their inline layout — so we
+   wrapper fills the viewport, but its children keep their inline layout - so we
    center the video, strip every size cap, and hide the LQIP behind letterboxing. */
 [data-video-wrapper]:fullscreen {
   display: flex;

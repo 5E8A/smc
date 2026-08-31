@@ -200,7 +200,7 @@ export const MarkdownEditorPanel = ({ id, value, onChange, actions }: MarkdownEd
             const main = e.currentTarget.closest("main");
             main?.scrollTo({ top: main.scrollHeight });
           }}
-          title="Snap to editor — scroll to the bottom"
+          title="Snap to editor - scroll to the bottom"
         >
           <ArrowDownIcon size={13} /> Editor
         </Button>

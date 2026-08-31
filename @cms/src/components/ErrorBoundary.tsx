@@ -6,27 +6,27 @@ import { Button } from "./fields";
 const TROUBLESHOOTING: Array<{ problem: string; fix: string }> = [
   {
     problem: "Server shows UNREACHABLE above",
-    fix: 'The CMS process crashed or isn\'t running — restart it with "npm run cms" and check the terminal for the crash log.',
+    fix: 'The CMS process crashed or isn\'t running - restart it with "npm run cms" and check the terminal for the crash log.',
   },
   {
     problem: '"Failed to fetch" on every action',
-    fix: 'Server is down, or it was restarted while this page stayed open — restart "npm run cms", then reload the page.',
+    fix: 'Server is down, or it was restarted while this page stayed open - restart "npm run cms", then reload the page.',
   },
   {
     problem: "Broke right after source files were edited",
-    fix: "Dev-server HMR hiccup — a plain browser reload usually fixes it.",
+    fix: "Dev-server HMR hiccup - a plain browser reload usually fixes it.",
   },
   {
     problem: "Port 4000 already in use on startup",
-    fix: "Another CMS instance is still running — close it or kill the process listening on port 4000.",
+    fix: "Another CMS instance is still running - close it or kill the process listening on port 4000.",
   },
   {
     problem: "Image/video uploads fail",
-    fix: 'ffmpeg missing — run "npm run cms:ffmpeg" (or install it system-wide), then restart "npm run cms".',
+    fix: 'ffmpeg missing - run "npm run cms:ffmpeg" (or install it system-wide), then restart "npm run cms".',
   },
   {
     problem: "Save rejected with an issues list",
-    fix: "That is validation, not a bug — fix the listed fields shown in the banner.",
+    fix: "That is validation, not a bug - fix the listed fields shown in the banner.",
   },
 ];
 
@@ -64,7 +64,7 @@ const describeError = (error: unknown): string[] => {
 
 const buildReport = (error: unknown, componentStack: string | null, serverLine: string, kind: string): string => {
   const lines = [
-    `CMS Bug Report — ${new Date().toISOString()}`,
+    `CMS Bug Report - ${new Date().toISOString()}`,
     `Kind: ${kind}`,
     `URL: ${window.location.href}`,
     `Viewport: ${window.innerWidth}x${window.innerHeight}`,
@@ -98,7 +98,7 @@ const BugReportScreen = ({ error, componentStack, kind, onReset, onDismiss }: Bu
         if (alive) setServerLine(`Server: reachable (HTTP ${r.status})`);
       })
       .catch(() => {
-        if (alive) setServerLine("Server: UNREACHABLE — the CMS process has likely crashed or isn't running");
+        if (alive) setServerLine("Server: UNREACHABLE - the CMS process has likely crashed or isn't running");
       });
     return () => {
       alive = false;
@@ -136,7 +136,7 @@ const BugReportScreen = ({ error, componentStack, kind, onReset, onDismiss }: Bu
             {TROUBLESHOOTING.map((t) => (
               <li key={t.problem} className="text-xs leading-snug">
                 <span className="font-semibold text-zinc-200">{t.problem}</span>
-                <span className="text-zinc-500"> — {t.fix}</span>
+                <span className="text-zinc-500"> - {t.fix}</span>
               </li>
             ))}
           </ul>
@@ -157,12 +157,12 @@ const BugReportScreen = ({ error, componentStack, kind, onReset, onDismiss }: Bu
             {copied ? "Copied" : "Copy report"}
           </Button>
           {kind === "render" ? (
-            <Button variant="danger" onClick={onReset} title="Remounts the editor — unsaved changes are lost">
+            <Button variant="danger" onClick={onReset} title="Remounts the editor - unsaved changes are lost">
               <ArrowClockwiseIcon size={15} /> Try again
             </Button>
           ) : (
             <Button onClick={onDismiss} title="Keeps the editor and any unsaved changes open">
-              <XIcon size={15} /> Dismiss — back to editor
+              <XIcon size={15} /> Dismiss - back to editor
             </Button>
           )}
           <Button variant="ghost" onClick={() => window.location.reload()} title="Reloads the page">
