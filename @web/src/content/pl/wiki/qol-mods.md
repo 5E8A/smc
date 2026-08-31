@@ -13,9 +13,9 @@ Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, któr
 
 ### :ClipboardTextIcon: Ściągawka
 
-| **HUD i nakładki** |
-|-----|----------------|
 | Mod | Do czego służy |
+|-----|----------------|
+| **HUD i nakładki** |
 | [Appleskin](https://modrinth.com/mod/appleskin) | Wartości jedzenia, głodu i nasycenia |
 | [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated) | Wytrzymałość zbroi na HUDzie |
 | [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf) | Wskaźnik obrażeń na HUDzie |
