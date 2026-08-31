@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { ArrowsInSimpleIcon, ArrowsOutSimpleIcon, PauseIcon, PlayIcon } from "@phosphor-icons/react";
+import { useLanguage } from "@/context/useLanguage";
 
 interface MediaControlsProps {
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -16,6 +17,7 @@ const formatTime = (s: number): string => {
 };
 
 export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
+  const { t } = useLanguage();
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -119,6 +121,8 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
         step={0.01}
         value={currentTime}
         onChange={onSeek}
+        aria-label={t.media.seek}
+        aria-valuetext={`${formatTime(currentTime)} / ${formatTime(duration)}`}
         className="w-full h-1.5 mb-2 cursor-pointer appearance-none rounded-full bg-white/20 accent-white [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white"
         style={{
           background: `linear-gradient(to right, #fff ${pct}%, rgba(255,255,255,0.2) ${pct}%)`,
@@ -130,6 +134,7 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
         <button
           type="button"
           onClick={togglePlay}
+          aria-label={playing ? t.media.pause : t.media.play}
           className="rounded-full bg-black/50 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           {playing ? <PauseIcon size={14} weight="fill" /> : <PlayIcon size={14} weight="fill" />}
@@ -171,7 +176,7 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
           <button
             type="button"
             onClick={toggleFullscreen}
-            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            aria-label={isFullscreen ? t.media.exit_fullscreen : t.media.enter_fullscreen}
             className="rounded-full bg-black/50 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             {isFullscreen ? <ArrowsInSimpleIcon size={14} /> : <ArrowsOutSimpleIcon size={14} />}

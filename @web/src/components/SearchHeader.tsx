@@ -20,7 +20,8 @@ const SearchHeader = ({ title, subtitle, searchPlaceholder, searchTerm, onSearch
             <MagnifyingGlassIcon className="size-5 text-mc-text-muted" />
           </div>
           <input
-            type="text"
+            type="search"
+            aria-label={searchPlaceholder}
             className="block w-full rounded-lg border border-white/10 bg-black/40 py-3 pr-3 pl-10 leading-5 text-white placeholder-mc-text-muted transition-colors focus:border-mc-green focus:ring-1 focus:ring-mc-green focus:outline-none sm:text-sm"
             placeholder={searchPlaceholder}
             value={searchTerm}

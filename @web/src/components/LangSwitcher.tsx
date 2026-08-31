@@ -26,7 +26,7 @@ const LangSwitcher = ({ language, setLanguage, t, className }: LangSwitcherProps
     >
       <Select.Trigger
         aria-label={t.common.language}
-        className="flex cursor-pointer items-center gap-1.5 rounded-lg p-3 text-mc-text backdrop-blur-xl transition-colors hover:text-white focus:outline-none"
+        className="flex cursor-pointer items-center gap-1.5 rounded-lg p-3 text-mc-text backdrop-blur-xl transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       >
         <Select.Value>
           {(value: "en" | "pl") => {

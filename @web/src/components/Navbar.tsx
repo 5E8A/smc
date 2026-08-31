@@ -95,7 +95,7 @@ const Navbar = () => {
             <button
               onClick={toggleMenu}
               type="button"
-              className="inline-flex items-center justify-center rounded-md p-2 text-mc-text-muted hover:bg-white/10 hover:text-white focus:outline-none"
+              className="inline-flex items-center justify-center rounded-md p-2 text-mc-text-muted hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? <XIcon className="block size-6" /> : <ListIcon className="block size-6" />}
