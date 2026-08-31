@@ -14,6 +14,7 @@ export const Route = createFileRoute("/$lang")({
     const meta = translations[lang].meta;
     return {
       meta: [{ title: meta.title }, { name: "description", content: meta.description }],
+      scripts: [{ tag: "script" as const, children: `document.documentElement.lang="${lang}"` }],
     };
   },
 });
