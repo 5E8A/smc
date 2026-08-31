@@ -106,6 +106,8 @@ const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave }: ChestSlotProps) 
       style={{ left, top, width: g.slotSize, height: g.slotSize }}
       onMouseEnter={() => onHover(mod, index)}
       onMouseLeave={onLeave}
+      onFocus={() => onHover(mod, index)}
+      onBlur={onLeave}
     >
       <ModIcon sprite={sprite} spriteIndex={index} size={g.modIconSize} className="rounded-none" />
       <div className="pointer-events-none absolute inset-0 border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100"></div>
@@ -201,10 +203,14 @@ const ModChest = () => {
   const renderTab = (col: number) => (
     <button
       key={chests[col].key}
+      role="tab"
+      aria-selected={col === activeCat}
       onClick={() => {
         setActiveCat(col);
         setUserControlled(true);
       }}
+      onFocus={() => setTooltip({ kind: "tab", col })}
+      onBlur={() => setTooltip(null)}
       className="absolute cursor-pointer"
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
       aria-label={t.mods[chests[col].key as keyof typeof t.mods]}
@@ -214,13 +220,6 @@ const ModChest = () => {
         id={CATEGORY_ICONS[col]}
         className="absolute"
         style={{ left: g.tabIconX, top: g.tabIconY, width: 16 * g.scale, height: 16 * g.scale }}
-      />
-      {/* Vanilla tab hover area: inner 21x27 rect of the 26x32 tab */}
-      <span
-        className="absolute"
-        style={{ left: 3 * g.scale, top: 3 * g.scale, width: 21 * g.scale, height: 27 * g.scale }}
-        onMouseEnter={() => setTooltip({ kind: "tab", col })}
-        onMouseLeave={() => setTooltip(null)}
       />
     </button>
   );
@@ -241,9 +240,10 @@ const ModChest = () => {
         setTooltip(null);
       }}
     >
-      {/* Unselected tabs - behind the chest (vanilla paint order) */}
-      <div className="absolute inset-x-0 z-0" style={{ top: g.tabTop }}>
+      {/* Tabs - behind the chest (vanilla paint order) */}
+      <div role="tablist" aria-label={t.mods.title} className="absolute inset-x-0 z-0" style={{ top: g.tabTop }}>
         {chests.map((_, col) => col !== activeCat && renderTab(col))}
+        {renderTab(activeCat)}
       </div>
 
       {/* Chests - all mounted, only active one visible */}
@@ -251,6 +251,7 @@ const ModChest = () => {
         {chests.map((chest, i) => (
           <div
             key={chest.key}
+            role="tabpanel"
             className="absolute inset-0"
             style={{ visibility: i === activeCat ? "visible" : "hidden" }}
           >
@@ -274,11 +275,6 @@ const ModChest = () => {
       >
         {userControlled ? <PlayIcon size={16} /> : <PauseIcon size={16} />}
       </button>
-
-      {/* Selected tab - over the chest */}
-      <div className="absolute inset-x-0 z-20" style={{ top: g.tabTop }}>
-        {renderTab(activeCat)}
-      </div>
 
       {/* Cursor-following tooltip (vanilla positioner, scaled with chest) */}
       {tooltip && (
