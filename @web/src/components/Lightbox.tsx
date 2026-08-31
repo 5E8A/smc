@@ -21,7 +21,6 @@ interface LightboxProps {
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 4;
-const CLICK_ZOOM = 2;
 const WHEEL_SPEED = 0.0025;
 const SWIPE_THRESHOLD = 50;
 const MOVE_EPSILON = 6;
@@ -144,6 +143,8 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
     if (!video) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === " " || event.code === "Space") {
+        const target = event.target;
+        if (target instanceof Element && target.closest("button, a, input, select, textarea, [role='button']")) return;
         event.preventDefault();
         const el = videoRef.current;
         if (!el) return;
@@ -225,16 +226,6 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
         if (el.paused) void el.play();
         else el.pause();
       }
-      return;
-    }
-
-    pointerOrigin(event.clientX, event.clientY);
-    setSmooth(true);
-    if (zoomRef.current > MIN_ZOOM) {
-      setZoom(MIN_ZOOM);
-      setOffset({ x: 0, y: 0 });
-    } else {
-      setZoom(CLICK_ZOOM);
     }
   };
 
@@ -264,8 +255,8 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
       <div
         ref={stageRef}
         data-video-wrapper
-        className={`relative max-w-full overflow-hidden rounded-lg ${ratio ? "" : "min-h-40 min-w-40"} ${
-          video ? "cursor-pointer" : zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+        className={`relative max-w-full overflow-hidden rounded-none md:rounded-lg ${ratio ? "" : "min-h-40 min-w-40"} ${
+          video ? "cursor-pointer" : "cursor-default"
         }`}
         style={{
           transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`,
@@ -432,7 +423,7 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
               type="button"
               onClick={() => go(-1)}
               aria-label={t.lightbox.prev}
-              className={`absolute top-1/2 left-4 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black ${focusRing}`}
+              className={`absolute top-1/2 left-4 z-10 hidden -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black md:flex ${focusRing}`}
             >
               <CaretLeftIcon size={26} />
             </button>
@@ -440,7 +431,7 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
               type="button"
               onClick={() => go(1)}
               aria-label={t.lightbox.next}
-              className={`absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black ${focusRing}`}
+              className={`absolute top-1/2 right-4 z-10 hidden -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black md:flex ${focusRing}`}
             >
               <CaretRightIcon size={26} />
             </button>

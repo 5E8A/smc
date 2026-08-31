@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
+import { usePrefersReducedMotion } from "../hooks/usePlaybackGate";
 import { modCategories } from "../data/mods";
 import type { ModData } from "../data/mods";
 import ModIcon from "./ModIcon";
@@ -158,6 +160,8 @@ const ModChest = () => {
   const g = geometry(scale);
   const [activeCat, setActiveCat] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [userControlled, setUserControlled] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   const [tooltip, setTooltip] = useState<TooltipState>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -174,10 +178,10 @@ const ModChest = () => {
   ];
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || userControlled || reducedMotion) return;
     const id = setInterval(() => setActiveCat((c) => (c + 1) % chests.length), AUTOPLAY_MS);
     return () => clearInterval(id);
-  }, [paused, activeCat, chests.length]);
+  }, [paused, userControlled, reducedMotion, chests.length]);
 
   // Vanilla HoveredTooltipPositioner: (x+12, y-12), flip/clamp at screen edges
   useLayoutEffect(() => {
@@ -197,7 +201,10 @@ const ModChest = () => {
   const renderTab = (col: number) => (
     <button
       key={chests[col].key}
-      onClick={() => setActiveCat(col)}
+      onClick={() => {
+        setActiveCat(col);
+        setUserControlled(true);
+      }}
       className="absolute cursor-pointer"
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
       aria-label={t.mods[chests[col].key as keyof typeof t.mods]}
@@ -228,6 +235,11 @@ const ModChest = () => {
         setTooltip(null);
       }}
       onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => {
+        setPaused(false);
+        setTooltip(null);
+      }}
     >
       {/* Unselected tabs - behind the chest (vanilla paint order) */}
       <div className="absolute inset-x-0 z-0" style={{ top: g.tabTop }}>
@@ -252,6 +264,16 @@ const ModChest = () => {
           </div>
         ))}
       </div>
+
+      {/* Play/pause toggle */}
+      <button
+        type="button"
+        onClick={() => setUserControlled((prev) => !prev)}
+        aria-label={userControlled ? t.mods.resume_autoplay : t.mods.pause_autoplay}
+        className="absolute -right-10 top-1/2 -translate-y-1/2 rounded-full bg-mc-surface/60 p-1.5 text-mc-text backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:-right-14"
+      >
+        {userControlled ? <PlayIcon size={16} /> : <PauseIcon size={16} />}
+      </button>
 
       {/* Selected tab - over the chest */}
       <div className="absolute inset-x-0 z-20" style={{ top: g.tabTop }}>
