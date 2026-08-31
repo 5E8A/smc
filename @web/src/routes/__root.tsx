@@ -22,18 +22,6 @@ export const Route = createRootRoute({
         href: "/smc/assets/fonts/modern-age-latin.woff2",
         crossOrigin: "",
       },
-      {
-        rel: "preload",
-        as: "image",
-        href: "/smc/assets/static/Artboard_3.webp",
-        fetchPriority: "high",
-      },
-      {
-        rel: "preload",
-        as: "image",
-        href: "/smc/assets/static/background.webp",
-        fetchPriority: "high",
-      },
       { rel: "preconnect", href: "https://api.modrinth.com" },
       { rel: "preconnect", href: "https://discord.com" },
     ],

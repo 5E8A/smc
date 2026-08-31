@@ -8,6 +8,20 @@ export const Route = createFileRoute("/$lang/")({
     const lang = params.lang as Language;
     return {
       meta: [{ title: translations[lang].meta.titles.home }],
+      links: [
+        {
+          rel: "preload",
+          as: "image",
+          href: "/smc/assets/static/Artboard_3.webp",
+          fetchPriority: "high",
+        },
+        {
+          rel: "preload",
+          as: "image",
+          href: "/smc/assets/static/background.webp",
+          fetchPriority: "high",
+        },
+      ],
     };
   },
 });
