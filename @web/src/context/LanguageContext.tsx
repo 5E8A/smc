@@ -10,10 +10,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const meta = translations[language].meta;
     document.documentElement.lang = language;
-    document.title = meta.title;
-    document.querySelector('meta[name="description"]')?.setAttribute("content", meta.description);
   }, [language]);
 
   const setLanguage = (newLang: Language) => {
