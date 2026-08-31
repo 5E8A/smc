@@ -1,4 +1,4 @@
-import type { Author, ImagesPayload, Issue, Kind, Lang, ModListColumn, RefUsages } from "./types";
+import type { Author, ImageInfo, ImagesPayload, Issue, Kind, Lang, ModListColumn, RefUsages } from "./types";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -292,6 +292,31 @@ export const getRefs = (paths: string[]): Promise<RefUsages> => {
   if (paths.length === 0) return Promise.resolve({});
   return request<{ usages: RefUsages }>(`/api/refs?paths=${encodeURIComponent(paths.join(","))}`).then((r) => r.usages);
 };
+
+export interface EmptyDirInfo {
+  path: string;
+  currentlyEmpty: boolean;
+  fileCount: number;
+}
+
+export interface PruneCandidates {
+  unused: ImageInfo[];
+  emptyDirs: EmptyDirInfo[];
+}
+
+export interface PruneResult {
+  deleted: string[];
+  errors: Array<{ path: string; error: string }>;
+}
+
+export const getPruneCandidates = (): Promise<PruneCandidates> => request<PruneCandidates>("/api/prune");
+
+export const pruneMedia = (paths: string[]): Promise<PruneResult> =>
+  request<PruneResult>("/api/prune", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ paths }),
+  });
 
 export interface ConvertOptions {
   quality?: number;

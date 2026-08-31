@@ -27,6 +27,7 @@ import { formatUploadStage } from "../lib/stageLabels";
 import { useMediaLibrary, type UploadJob } from "./useMediaLibrary";
 import { Banner } from "./Banner";
 import { Button } from "./fields";
+import { PruneMediaDialog } from "./PruneMediaDialog";
 
 const VALID_UPLOAD_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".apng", ".mp4", ".m4v", ".webm", ".mov", ".mkv"];
 const VIDEO_EXTS = new Set([".mp4", ".m4v", ".webm", ".mov", ".mkv"]);
@@ -569,9 +570,11 @@ export const MediaBrowser = ({
 
   const [replaceTarget, setReplaceTarget] = useState<ImageInfo | null>(null);
 
+  const [pruneOpen, setPruneOpen] = useState(false);
+
   const [menu, setMenu] = useState<{ x: number; y: number; img: ImageInfo } | null>(null);
 
-  const anyModalOpen = !!pending || !!imgDelete || !!dirDelete || !!folderPrompt || !!filePrompt || !!replaceTarget;
+  const anyModalOpen = !!pending || !!imgDelete || !!dirDelete || !!folderPrompt || !!filePrompt || !!replaceTarget || pruneOpen;
 
   const tree = useMemo(() => buildDirTree(dirs), [dirs]);
 
@@ -1096,6 +1099,12 @@ export const MediaBrowser = ({
             >
               <HashIcon size={14} />
               {lib.lqipRunning ? "Generating…" : "Regenerate blurhash"}
+            </Button>
+          )}
+          {manageFolders && (
+            <Button variant="default" className="px-2.5 py-1.5 text-xs" onClick={() => setPruneOpen(true)}>
+              <TrashIcon size={14} />
+              Prune
             </Button>
           )}
         </div>
@@ -1642,6 +1651,16 @@ export const MediaBrowser = ({
             </div>
           </form>
         </ModalShell>
+      )}
+
+      {pruneOpen && (
+        <PruneMediaDialog
+          onClose={() => setPruneOpen(false)}
+          onDone={() => {
+            void lib.refresh();
+            lib.setLqipStale(true);
+          }}
+        />
       )}
     </div>
   );

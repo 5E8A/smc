@@ -513,7 +513,7 @@ export function findRefs(publicPaths: string[]): Record<string, string[]> {
           const filePath = path.join(dir, file);
           const content = fs.readFileSync(filePath, "utf8");
           for (const t of targets) {
-            if (content.includes(`](${t})`)) {
+            if (content.includes(`](${t})`) || content.includes(`](${t} `)) {
               (usages[t] ??= []).push(`${lang}/${kind}/${file}`);
             }
           }
@@ -807,4 +807,92 @@ export function runLqip(res: import("http").ServerResponse): void {
     if (!child.killed) child.kill();
     running = false;
   });
+}
+
+function collectReferencedPaths(): Set<string> {
+  const referenced = new Set<string>();
+  for (const src of REF_SOURCES) {
+    let data: unknown;
+    try {
+      data = JSON.parse(fs.readFileSync(src.file, "utf8"));
+    } catch {
+      continue;
+    }
+    const strings: StringHit[] = [];
+    collectStrings(data, "", strings);
+    for (const { value } of strings) {
+      if (value.startsWith(CONTENT_PUBLIC_PREFIX)) {
+        referenced.add(value);
+      }
+    }
+  }
+  for (const lang of LANGS) {
+    for (const kind of KINDS) {
+      const dir = mdDir(kind, lang);
+      try {
+        const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
+        for (const file of files) {
+          const content = fs.readFileSync(path.join(dir, file), "utf8");
+          const re = /\]\(([^)\s]+)/g;
+          let m: RegExpExecArray | null;
+          while ((m = re.exec(content)) !== null) {
+            const p = m[1];
+            if (p.startsWith(CONTENT_PUBLIC_PREFIX)) referenced.add(p);
+          }
+        }
+      } catch {
+        // dir may not exist
+      }
+    }
+  }
+  return referenced;
+}
+
+export interface EmptyDirInfo {
+  path: string;
+  currentlyEmpty: boolean;
+  fileCount: number;
+}
+
+export function findUnusedMedia(): ImageInfo[] {
+  const referenced = collectReferencedPaths();
+  return listImages().filter((img) => !referenced.has(img.path));
+}
+
+export function computeEmptyDirs(unusedPaths: Set<string>): EmptyDirInfo[] {
+  const result: EmptyDirInfo[] = [];
+  const unusedStems = new Set<string>();
+  for (const u of unusedPaths) {
+    unusedStems.add(path.basename(u).replace(/\.[^.]+$/, ""));
+  }
+  const visit = (dir: string): void => {
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      if (!e.isDirectory()) continue;
+      const full = path.join(dir, e.name);
+      const rel = path.relative(CONTENT_ASSETS_DIR, full).replace(/\\/g, "/");
+      const files = walk(full);
+      if (files.length === 0) {
+        result.push({ path: rel, currentlyEmpty: true, fileCount: 0 });
+      } else {
+        const allUnused = files.every((f) => {
+          if (unusedPaths.has(toPublicPath(f))) return true;
+          const base = path.basename(f);
+          if (base.includes(".static.")) return unusedStems.has(base.replace(/\.static\.[^.]+$/, ""));
+          return false;
+        });
+        if (allUnused) {
+          result.push({ path: rel, currentlyEmpty: false, fileCount: files.length });
+        }
+      }
+      visit(full);
+    }
+  };
+  visit(CONTENT_ASSETS_DIR);
+  return result.sort((a, b) => a.path.localeCompare(b.path));
 }

@@ -4,10 +4,12 @@ import path from "path";
 import { attachHttpGuards, BodyTooLargeError, installProcessGuards, isKind, isLang, isResponseClosed, readRawBody, sendJson } from "./util.ts";
 import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } from "./store.ts";
 import {
+  computeEmptyDirs,
   createDir,
   deleteDir,
   deleteImage,
   findRefs,
+  findUnusedMedia,
   formatMb,
   listDirs,
   listImages,
@@ -273,6 +275,62 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       }
       const paths = (url.searchParams.get("paths") ?? "").split(",").filter((s) => s.length > 0);
       return void sendJson(res, 200, { usages: findRefs(paths) });
+    }
+
+    case "/prune": {
+      if (method === "GET") {
+        const unused = findUnusedMedia();
+        const unusedPaths = new Set(unused.map((u) => u.path));
+        const emptyDirs = computeEmptyDirs(unusedPaths);
+        return void sendJson(res, 200, { unused, emptyDirs });
+      }
+
+      if (method === "POST") {
+        let parsed: { paths?: unknown };
+        try {
+          const body = await readRawBody(req, MAX_JSON_BODY);
+          parsed = JSON.parse(body.toString("utf8"));
+        } catch (err) {
+          return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
+        }
+        const paths = Array.isArray(parsed.paths)
+          ? parsed.paths.filter((p): p is string => typeof p === "string" && p.length > 0)
+          : [];
+        if (paths.length === 0) return void sendJson(res, 400, { error: "paths array is required" });
+        const deleted: string[] = [];
+        const errors: Array<{ path: string; error: string }> = [];
+        for (const p of paths) {
+          try {
+            if (p.endsWith("/")) {
+              const rel = p.replace(/\/$/, "");
+              const result = await deleteDir(rel);
+              if (result.blocked) {
+                errors.push({ path: p, error: "still referenced by content" });
+              } else {
+                deleted.push(p);
+              }
+            } else {
+              const result = await deleteImage(p);
+              if (result.blocked) {
+                errors.push({ path: p, error: "still referenced by content" });
+              } else {
+                deleted.push(p);
+              }
+            }
+          } catch (err) {
+            const msg = (err as Error).message;
+            if (msg.includes("does not exist")) {
+              deleted.push(p);
+            } else {
+              errors.push({ path: p, error: msg });
+            }
+          }
+        }
+        return void sendJson(res, 200, { deleted, errors });
+      }
+
+      res.writeHead(405);
+      return void res.end();
     }
 
     case "/authors": {

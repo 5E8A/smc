@@ -6,7 +6,7 @@ Details for `npm run cms` (runs at `127.0.0.1:4000`; edits `@web` content in pla
 
 - Metadata: `@web/src/content/{en,pl}/{posts,wiki}.json`, plus `authors.json`, via API middleware.
 - Article bodies: `@web/src/content/{en,pl}/{posts,wiki}/<slug>.md`.
-- Uploads convert on the fly into `@web/public/assets/content/<bucket>/` and flag blurhash as stale — the operator then triggers **Regenerate blurhash** from the media toolbar (streams into the runner console).
+- Uploads convert on the fly into `@web/public/assets/content/<bucket>/` and flag blurhash as stale - the operator then triggers **Regenerate blurhash** from the media toolbar (streams into the runner console).
 
 ## Upload conversion
 
@@ -27,6 +27,13 @@ Details for `npm run cms` (runs at `127.0.0.1:4000`; edits `@web` content in pla
 
 - Searchable Insert-icon picker over the full Phosphor set (fuzzy name/tag/category search via `@smc/shared/icon-search`).
 - Saving and icon picking auto-run `sync-icons` server-side (SSE into the runner console, source "icons").
+
+### Markdown image syntax
+
+- Standard: `![alt](/smc/assets/content/path.webp)`
+- With caption: `![alt](/smc/assets/content/path.webp "Caption text")` - renders `<figcaption>` below the image via `ContentMarkdown`.
+- Icons: `:NameIcon:` - inline Phosphor icon.
+- Carousel: `:carouselStart:` ... `:carouselEnd:` block wrapping multiple images.
 
 ## Mods board
 
