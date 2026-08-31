@@ -45,7 +45,7 @@ const ArchiveView = () => {
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
           ) : (
-            <div className="col-span-full py-20 text-center text-mc-text-muted">No results found.</div>
+            <div role="status" aria-live="polite" className="col-span-full py-20 text-center text-mc-text-muted">{t.archive.no_results}</div>
           )}
         </div>
       </div>

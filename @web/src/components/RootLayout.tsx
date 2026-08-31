@@ -1,10 +1,16 @@
-import { Outlet } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "@tanstack/react-router";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useLanguage } from "../context/useLanguage";
 
 const RootLayout = () => {
   const { t } = useLanguage();
+  const location = useLocation();
+
+  useEffect(() => {
+    document.getElementById("main-content")?.focus();
+  }, [location.pathname]);
   return (
     <div className="flex min-h-screen flex-col bg-transparent font-sans text-mc-text">
       <a

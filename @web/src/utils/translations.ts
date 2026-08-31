@@ -13,6 +13,8 @@ export const translations = {
       back: "Back",
       language: "Language",
       skip_to_content: "Skip to content",
+      open_menu: "Open menu",
+      close_menu: "Close menu",
     },
     meta: {
       title: "SMC - Seba Modding Community",
@@ -65,12 +67,14 @@ export const translations = {
       title: "ARCHIVE",
       subtitle: "Browse all past updates, guides, and community news.",
       search_placeholder: "Search articles...",
+      no_results: "No results found.",
     },
     wiki: {
       title: "DOCUMENTATION",
       subtitle: "Official guides, modpack details, and installation instructions.",
       search_placeholder: "Search documentation...",
       read_doc: "Read Guide",
+      no_results: "No results found.",
     },
     about_page: {
       title: "About The Project",
@@ -168,6 +172,8 @@ export const translations = {
       back: "Wstecz",
       language: "Język",
       skip_to_content: "Przejdź do treści",
+      open_menu: "Otwórz menu",
+      close_menu: "Zamknij menu",
     },
     meta: {
       title: "SMC - Seba Modding Community",
@@ -222,12 +228,14 @@ export const translations = {
       title: "ARCHIWUM",
       subtitle: "Przeglądaj wszystkie poprzednie aktualizacje, poradniki i wieści.",
       search_placeholder: "Szukaj artykułów...",
+      no_results: "Nie znaleziono wyników.",
     },
     wiki: {
       title: "DOKUMENTACJA",
       subtitle: "Oficjalne poradniki, szczegóły paczki i instrukcje instalacji.",
       search_placeholder: "Szukaj w dokumentacji...",
       read_doc: "Czytaj Poradnik",
+      no_results: "Nie znaleziono wyników.",
     },
     about_page: {
       title: "O Projekcie",
