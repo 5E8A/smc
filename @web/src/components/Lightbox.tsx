@@ -128,7 +128,6 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
     const frame = frameRef.current;
     if (!frame) return;
     const onWheel = (event: WheelEvent) => {
-      event.preventDefault();
       pointerOrigin(event.clientX, event.clientY);
       setSmooth(false);
       const next = clamp(zoomRef.current * Math.exp(-event.deltaY * WHEEL_SPEED), MIN_ZOOM, MAX_ZOOM);
@@ -250,7 +249,7 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
       onMouseEnter={video ? resetHideTimer : undefined}
       onMouseLeave={video ? hideControls : undefined}
       {...(video ? {} : gate.hoverProps)}
-      className="flex size-full min-h-0 touch-none select-none items-center justify-center"
+      className="flex size-full min-h-0 select-none items-center justify-center"
     >
       <div
         ref={stageRef}
