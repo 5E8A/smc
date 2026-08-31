@@ -10,7 +10,7 @@
        check-content.mjs still inlines its own copy (lines 79-117)
 
 ## CMS audit findings still open (25.08 audits)
-[ ] 11. Remaining items: immortal loadError (no setLoadError(null) path);
+[x] 11. Remaining items: immortal loadError (no setLoadError(null) path);
         dirty marker only on authors tab strip (no amber on posts/wiki tabs);
         ModsBoard fetchProjects unhandled rejection (@cms/src/components/ModsBoard.tsx:154);
         silent inline AuthorPicker load failure (.catch(() => {}));

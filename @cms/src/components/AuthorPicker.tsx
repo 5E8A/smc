@@ -94,12 +94,13 @@ interface AuthorPickerProps {
 export const AuthorPicker = ({ value, lang, onChange }: AuthorPickerProps) => {
   const [openState, setOpenState] = useState(false);
   const [authors, setAuthors] = useState<Author[] | null>(getCachedAuthors());
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!getCachedAuthors()) {
       loadAuthorsList()
         .then(setAuthors)
-        .catch(() => {});
+        .catch((e) => setError(String(e)));
     }
   }, []);
 
@@ -118,7 +119,9 @@ export const AuthorPicker = ({ value, lang, onChange }: AuthorPickerProps) => {
           </>
         ) : (
           <div className="min-w-0 flex-1">
-            {value ? (
+            {error ? (
+              <p className="truncate text-sm text-red-400">{error}</p>
+            ) : value ? (
               <p className="truncate text-sm font-medium text-red-400">Unknown author: {value}</p>
             ) : (
               <p className="text-sm text-zinc-500">(no author selected)</p>

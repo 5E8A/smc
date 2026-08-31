@@ -108,6 +108,16 @@ export const App = () => {
   const inflight = useRef<Set<string>>(new Set());
   const syncIcons = useIconsSync();
 
+  const switchTab = useCallback((t: Tab) => {
+    setTab(t);
+    setLoadError(null);
+  }, []);
+
+  const switchLang = useCallback((l: Lang) => {
+    setLang(l);
+    setLoadError(null);
+  }, []);
+
   const [authors, setAuthors] = useState<Author[] | null>(null);
   const [authorsSnapshot, setAuthorsSnapshot] = useState("");
   const [selectedAuthorIndex, setSelectedAuthorIndex] = useState<number | null>(null);
@@ -177,9 +187,21 @@ export const App = () => {
     Object.values(tabs).some((t) => t && t.snapshot !== JSON.stringify(t.entries)) ||
     (authors !== null && authorsSnapshot !== JSON.stringify(authors));
 
+  const dirtyTabs = useMemo(() => {
+    const set = new Set<string>();
+    for (const [k, t] of Object.entries(tabs)) {
+      if (t && t.snapshot !== JSON.stringify(t.entries)) set.add(k.split(":")[1]);
+    }
+    if (authorsDirty) set.add("authors");
+    return set;
+  }, [tabs, authorsDirty]);
+
   useEffect(() => {
     if (!anyDirty) return;
-    const handler = (e: BeforeUnloadEvent) => e.preventDefault();
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [anyDirty]);
@@ -504,11 +526,11 @@ export const App = () => {
             <button
               key={t}
               type="button"
-              onClick={() => setTab(t)}
+              onClick={() => switchTab(t)}
               className={`rounded-md px-3 py-1.5 text-xs font-bold capitalize transition-colors ${
                 tab === t
                   ? "bg-green-600 text-white"
-                  : t === "authors" && authorsDirty
+                  : dirtyTabs.has(t)
                     ? "text-amber-400 hover:bg-zinc-900"
                     : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
               }`}
@@ -547,7 +569,7 @@ export const App = () => {
                           <button
                             key={l}
                             type="button"
-                            onClick={() => setLang(l)}
+                            onClick={() => switchLang(l)}
                             className={`flex-1 rounded-md py-1 text-xs font-bold tracking-wider uppercase transition-colors ${
                               lang === l ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-zinc-200"
                             }`}
