@@ -16,7 +16,7 @@ const blurhashScript = path.join(root, "@scripts", "generate-blurhash.mjs");
 const MODRINTH_API = "https://api.modrinth.com/v2";
 const USER_AGENT = "SMCSite/sync-mods (https://github.com/5E8A/smc)";
 
-const SPRITE_COLS = 9;
+import { SPRITE_COLS } from "@smc/shared/sprite";
 const TILE_FULL = 128;
 const TILE_PLACEHOLDER = 8;
 const DOWNLOAD_CONCURRENCY = 8;

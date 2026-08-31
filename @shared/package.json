@@ -10,7 +10,8 @@
     "./icon-search": "./icon-search.ts",
     "./markdown": "./markdown.ts",
     "./months": "./months.ts",
-    "./slug": "./slug.ts"
+    "./slug": "./slug.ts",
+    "./sprite": "./sprite.ts"
   },
   "scripts": {
     "lint": "oxlint . --type-aware --type-check"

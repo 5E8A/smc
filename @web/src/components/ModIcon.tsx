@@ -5,7 +5,7 @@ interface ModIconProps {
   className?: string;
 }
 
-const SPRITE_COLS = 9;
+import { SPRITE_COLS } from "@smc/shared/sprite";
 
 const spritePlaceholderFor = (src: string): string => src.replace(/\.webp$/i, ".placeholder.webp");
 
