@@ -66,21 +66,24 @@ const AboutView = () => {
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Stats Row */}
-        <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <div className="rounded-xl border border-white/5 bg-mc-surface/50 p-6 text-center">
+        <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="group relative overflow-hidden rounded-xl border border-white/5 bg-mc-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg hover:shadow-black/30">
+            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-500 to-emerald-400" />
             <div className="mb-2 font-mc text-4xl font-bold text-mc-green-text">
               {downloads !== null ? downloads : "Loading..."}
             </div>
             <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_downloads}</div>
           </div>
-          <div className="rounded-xl border border-white/5 bg-mc-surface/50 p-6 text-center">
+          <div className="group relative overflow-hidden rounded-xl border border-white/5 bg-mc-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg hover:shadow-black/30">
+            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-white/60 to-white/40" />
             <div className="mb-2 font-mc text-4xl font-bold text-white">
               {activeMembers !== null ? activeMembers : "Loading..."}
             </div>
             <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_users}</div>
           </div>
-          <div className="rounded-xl border border-white/5 bg-mc-surface/50 p-6 text-center">
-            <div className="mb-2 font-mc text-4xl font-bold text-mc-green">
+          <div className="group relative overflow-hidden rounded-xl border border-white/5 bg-mc-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg hover:shadow-black/30">
+            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-[#90d5ff] to-[#6bb8e8]" />
+            <div className="mb-2 font-mc text-4xl font-bold text-mc-accent">
               {latestVersion !== null ? latestVersion : "Loading..."}
             </div>
             <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_version}</div>
@@ -90,24 +93,26 @@ const AboutView = () => {
         {/* Content Grid */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Mission */}
-          <div className="rounded-xl border border-white/10 bg-mc-surface p-8">
-            <div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-emerald-500/10">
+          <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 transition-all duration-300 hover:border-white/20">
+            <div className="absolute -top-16 -right-16 size-48 rounded-full bg-emerald-500/5 blur-3xl transition-all duration-500 group-hover:bg-emerald-500/10 group-hover:blur-2xl" />
+            <div className="relative z-10 mb-6 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 ring-1 ring-emerald-500/20">
               <CpuIcon className="size-6 text-emerald-400" />
             </div>
-            <h2 className="mb-4 text-2xl font-bold text-white">{t.about_page.mission_title}</h2>
-            <p className="leading-relaxed text-mc-text">{t.about_page.mission_text}</p>
+            <h2 className="relative z-10 mb-4 text-2xl font-bold text-white">{t.about_page.mission_title}</h2>
+            <p className="relative z-10 leading-relaxed text-mc-text">{t.about_page.mission_text}</p>
           </div>
 
           {/* Creator */}
-          <div className="rounded-xl border border-white/10 bg-mc-surface p-8">
-            <div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-indigo-500/10">
+          <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 transition-all duration-300 hover:border-white/20">
+            <div className="absolute -top-16 -right-16 size-48 rounded-full bg-indigo-500/5 blur-3xl transition-all duration-500 group-hover:bg-indigo-500/10 group-hover:blur-2xl" />
+            <div className="relative z-10 mb-6 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/15 to-indigo-500/5 ring-1 ring-indigo-500/20">
               <CodeIcon className="size-6 text-indigo-400" />
             </div>
-            <h2 className="mb-4 text-2xl font-bold text-white">{t.about_page.creator_title}</h2>
-            <p className="mb-6 leading-relaxed text-mc-text">{t.about_page.creator_text}</p>
+            <h2 className="relative z-10 mb-4 text-2xl font-bold text-white">{t.about_page.creator_title}</h2>
+            <p className="relative z-10 mb-6 leading-relaxed text-mc-text">{t.about_page.creator_text}</p>
 
-            <div className="flex items-center space-x-4 border-t border-white/5 pt-6">
-              <div className="flex size-10 items-center justify-center rounded bg-mc-surface-light font-mc text-xl text-white">
+            <div className="relative z-10 flex items-center space-x-4 border-t border-white/5 pt-6">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-mc-surface-light font-mc text-xl text-white shadow-inner">
                 S
               </div>
               <div>
