@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  CircleNotchIcon,
-  FloppyDiskIcon,
-  MonitorIcon,
-  TrashIcon,
-  WarningCircleIcon,
-} from "@phosphor-icons/react";
+import { CircleNotchIcon, FloppyDiskIcon, MonitorIcon, TrashIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -31,6 +25,10 @@ import { PreviewWindow } from "./components/PreviewWindow";
 import { RunConsole } from "./components/RunConsole";
 import { invalidateAuthorCache } from "./lib/authorCache";
 import { useIconsSync } from "./lib/useIconsSync";
+import { usePing } from "./lib/usePing";
+import { useDevServerProbe } from "./lib/useDevServerProbe";
+import { ServerIndicator } from "./components/ServerIndicator";
+import { OfflineBanner } from "./components/OfflineBanner";
 import { Button } from "./components/fields";
 
 type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy";
@@ -99,6 +97,8 @@ const BOOT = bootState();
 export const App = () => {
   const [tab, setTab] = useState<Tab>(BOOT.tab);
   const [lang, setLang] = useState<Lang>(BOOT.lang);
+  const ping = usePing();
+  const webProbe = useDevServerProbe();
   const [tabs, setTabs] = useState<TabMap>({});
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -329,12 +329,7 @@ export const App = () => {
     <>
       {dirty && <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">unsaved</span>}
       {justSaved && <span className="text-xs font-semibold text-green-400">Saved ✓</span>}
-      <Button
-        variant="primary"
-        className="px-2.5 py-1 text-xs"
-        onClick={() => void save()}
-        disabled={!dirty || saving}
-      >
+      <Button variant="primary" className="px-2.5 py-1 text-xs" onClick={() => void save()} disabled={!dirty || saving}>
         {saving ? <CircleNotchIcon size={13} className="animate-spin" /> : <FloppyDiskIcon size={13} />}
         Save
         <kbd className="ml-1 rounded bg-black/30 px-1 text-[10px] opacity-80">Ctrl+S</kbd>
@@ -539,7 +534,7 @@ export const App = () => {
             </button>
           ))}
         </nav>
-        <span className="ml-auto text-[11px] text-zinc-600">127.0.0.1 only · edits write straight to src/content</span>
+        <ServerIndicator ping={ping} probe={webProbe} />
         <button
           type="button"
           title={previewOpen ? "Close live preview" : "Open live preview (dev server on :3000)"}
@@ -658,6 +653,7 @@ export const App = () => {
         )}
 
         <main className="min-w-0 flex-1 overflow-y-auto scrollbar-gutter-stable">
+          {ping.status === "offline" && <OfflineBanner onRetry={ping.retry} />}
           {!paneReady && !loading && !loadError && <div className="p-6 text-sm text-zinc-500">Select an item.</div>}
           {loading && (
             <div className="flex items-center gap-2 p-6 text-sm text-zinc-400">

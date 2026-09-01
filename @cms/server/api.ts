@@ -37,6 +37,7 @@ import { buildZip, convertBatch, MAX_CONVERT_BODY, parseMultipart, streamConvert
 import { loadModList, saveModList, runSyncMods } from "./mods.ts";
 import { runIconsSync } from "./icons.ts";
 import { readGitStatus, streamGitDeploy, streamGitPull } from "./git.ts";
+import { servePing } from "./ping.ts";
 
 const MAX_JSON_BODY = 5 * 1024 * 1024;
 
@@ -80,11 +81,20 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const lang = url.searchParams.get("lang");
 
   switch (url.pathname) {
+    case "/ping": {
+      if (method !== "GET" && method !== "HEAD") {
+        res.writeHead(405);
+        return void res.end();
+      }
+      servePing(res, method === "HEAD");
+      return;
+    }
+
     case "/content": {
       if (!isKind(kind)) return void sendJson(res, 400, { error: "kind must be posts or wiki" });
       if (!isLang(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
 
-      if (method === "GET") {
+      if (method === "GET" || method === "HEAD") {
         const data = await loadContent(kind, lang);
         return void sendJson(res, 200, { data });
       }
