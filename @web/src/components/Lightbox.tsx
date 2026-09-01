@@ -285,7 +285,7 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
                 if (v.videoWidth > 0 && v.videoHeight > 0) setRatio(v.videoWidth / v.videoHeight);
                 if (initialTime && initialTime > 0) v.currentTime = initialTime;
               }}
-              className={`relative block object-contain max-h-[90svh] supports-[height:100dvh]:max-h-[90dvh] ${
+              className={`relative block object-contain max-h-[80svh] supports-[height:100dvh]:max-h-[80dvh] ${
                 ratio ? "" : "invisible"
               }`}
             />
@@ -302,7 +302,7 @@ const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) => {
               fetchPriority="high"
               draggable={false}
               onLoad={(event) => updateRatio(event.currentTarget)}
-              className={`relative block object-contain max-h-[90svh] supports-[height:100dvh]:max-h-[90dvh] ${
+              className={`relative block object-contain max-h-[80svh] supports-[height:100dvh]:max-h-[80dvh] ${
                 ratio ? "" : "invisible"
               }`}
             />
