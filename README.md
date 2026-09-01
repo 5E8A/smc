@@ -42,7 +42,7 @@ npm workspaces with a single hoisted `node_modules`:
 
 1.  **Content Management**: The blog posts and wiki documentation are stored locally as JSON files (`@web/src/content/{lang}/{posts,wiki}.json`, plus `authors.json`) and read by client-side utilities (`@web/src/data/posts.ts`, `@web/src/data/wiki.ts`). This acts as a flat-file CMS, edited via the `@cms` app.
 2.  **External API Integration**: Dynamic data like total downloads, latest version, and active Discord members are fetched from the Modrinth API and Discord API using a lightweight native `fetch` wrapper in `@web/src/services/api.ts`. The Modrinth Project ID for "Fabric Boosted" is `dOLVvHgi`.
-3.  **Internationalization (i18n)**: The site supports multiple languages ("en" and "pl") managed via a React Context (`@web/src/context/LanguageContext.tsx`) and translations defined in `@web/src/utils/translations.ts`. The preferred language is persisted using `localStorage`.
+3.  **Internationalization (i18n)**: The site supports multiple languages ("en" and "pl") managed via a React Context (`@web/src/context/LanguageContext.tsx`) and translations defined in `@web/src/utils/translations.ts`. The preferred language is derived from the URL parameter (e.g., `/en/...`, `/pl/...`).
 4.  **Content Rendering**: Text content supports rich text features, specifically converting Markdown-style links (`[text](url)`) into styled HTML anchor tags using the `parseRichText` utility.
 
 ---
