@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CircleNotchIcon, FloppyDiskIcon, MonitorIcon, TrashIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import { CircleNotchIcon, FloppyDiskIcon, MonitorIcon, TrashIcon } from "@phosphor-icons/react";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -29,6 +29,7 @@ import { usePing } from "./lib/usePing";
 import { useDevServerProbe } from "./lib/useDevServerProbe";
 import { ServerIndicator } from "./components/ServerIndicator";
 import { OfflineBanner } from "./components/OfflineBanner";
+import { Banner } from "./components/Banner";
 import { Button } from "./components/fields";
 
 type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy";
@@ -665,16 +666,15 @@ export const App = () => {
           {paneReady && (
             <>
               {activeIssues && activeIssues.length > 0 && (
-                <div
-                  className={`mx-6 mt-4 rounded-md border p-3 text-xs ${
+                <Banner
+                  variant={
                     activeIssues.some((i) => i.severity === "error")
-                      ? "border-red-900/60 bg-red-950/40 text-red-300"
-                      : "border-amber-900/60 bg-amber-950/30 text-amber-300"
-                  }`}
-                >
-                  <div className="mb-1.5 flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 font-bold">
-                      <WarningCircleIcon size={14} />
+                      ? "error"
+                      : "warn"
+                  }
+                  className="mx-6 mt-4"
+                  title={
+                    <>
                       Validation{" "}
                       {activeIssues.some((i) => i.severity === "error")
                         ? saveIssues
@@ -682,24 +682,22 @@ export const App = () => {
                           : "errors"
                         : "warnings"}
                       <span
-                        className={`rounded px-1.5 py-0.5 text-[9px] uppercase tracking-wider ${
+                        className={`ml-1.5 rounded px-1.5 py-0.5 text-[9px] uppercase tracking-wider ${
                           saveIssues ? "bg-zinc-800 text-zinc-400" : "bg-green-950 text-green-400"
                         }`}
                       >
                         {saveIssues ? "on save" : "live check"}
                       </span>
-                    </span>
-                    {!saveIssues && <span className="opacity-60">auto-dismisses when fixed · enforced on save</span>}
-                    {saveIssues && (
-                      <button
-                        type="button"
-                        onClick={() => setSaveIssues(null)}
-                        className="opacity-60 hover:opacity-100"
-                      >
-                        dismiss
-                      </button>
-                    )}
-                  </div>
+                    </>
+                  }
+                  dismissable={!!saveIssues}
+                  onDismiss={() => setSaveIssues(null)}
+                  actions={
+                    !saveIssues ? (
+                      <span className="text-[10px] opacity-60">auto-dismisses when fixed · enforced on save</span>
+                    ) : undefined
+                  }
+                >
                   <ul className="max-h-44 space-y-1 overflow-y-auto">
                     {activeIssues.map((issue, i) => (
                       <li key={i} className="font-mono">
@@ -707,7 +705,7 @@ export const App = () => {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Banner>
               )}
 
               <div className={contentTab ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"}>
@@ -717,15 +715,18 @@ export const App = () => {
                       <p className="text-sm text-zinc-500">Select an entry on the left, or create a new one.</p>
                     )}
                     {selected && counterpartMissing && (
-                      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-900/60 bg-amber-950/30 p-3 text-xs text-amber-300">
-                        <span>
-                          No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry
-                          is invisible in {otherLang.toUpperCase()}.
-                        </span>
-                        <Button onClick={() => void createTranslation(selected)}>
-                          Create {otherLang.toUpperCase()} translation
-                        </Button>
-                      </div>
+                      <Banner
+                        variant="warn"
+                        className="mb-4 mx-6"
+                        actions={
+                          <Button onClick={() => void createTranslation(selected)}>
+                            Create {otherLang.toUpperCase()} translation
+                          </Button>
+                        }
+                      >
+                        No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry
+                        is invisible in {otherLang.toUpperCase()}.
+                      </Banner>
                     )}
                     {selected && isBlogPost(selected) && tab === "posts" && (
                       <PostEditor
@@ -765,18 +766,9 @@ export const App = () => {
                       actions={saveActions(authorsDirty)}
                     />
                     {authorsError && (
-                      <div className="mt-4 rounded-md border border-red-900/60 bg-red-950/40 p-3 text-xs text-red-300">
-                        <div className="flex items-center justify-between gap-3">
-                          <span>{authorsError}</span>
-                          <button
-                            type="button"
-                            onClick={() => setAuthorsError(null)}
-                            className="shrink-0 opacity-60 hover:opacity-100"
-                          >
-                            dismiss
-                          </button>
-                        </div>
-                      </div>
+                      <Banner variant="error" className="mt-4" dismissable onDismiss={() => setAuthorsError(null)}>
+                        {authorsError}
+                      </Banner>
                     )}
                   </>
                 )}

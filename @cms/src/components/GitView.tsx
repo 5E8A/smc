@@ -4,11 +4,11 @@ import {
   CircleNotchIcon,
   GitBranchIcon,
   RocketLaunchIcon,
-  XIcon,
 } from "@phosphor-icons/react";
 import { getGitStatus, type GitStatus } from "../api";
 import { useRunConsole, defaultMapDone } from "../lib/runConsole";
 import { Button } from "./fields";
+import { Banner } from "./Banner";
 
 const statusLabel: Record<string, string> = {
   "??": "untracked",
@@ -161,17 +161,9 @@ export function GitView() {
       </div>
 
       {error && (
-        <div className="flex items-start justify-between gap-3 rounded-md border border-red-900/60 bg-red-950/40 p-3 text-xs text-red-300">
+        <Banner variant="error" dismissable onDismiss={() => setError(null)}>
           <span className="font-mono break-all">{error}</span>
-          <button
-            type="button"
-            title="Dismiss"
-            onClick={() => setError(null)}
-            className="shrink-0 rounded p-0.5 text-red-400 hover:text-red-200"
-          >
-            <XIcon size={12} />
-          </button>
-        </div>
+        </Banner>
       )}
       {notice && !error && <span className="text-xs font-semibold text-green-400">{notice}</span>}
 

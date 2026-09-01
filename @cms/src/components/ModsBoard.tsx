@@ -13,6 +13,7 @@ import { getModList, putModList } from "../api";
 import type { Issue, ModListColumn } from "../types";
 import { useRunConsole } from "../lib/runConsole";
 import { Button } from "./fields";
+import { Banner } from "./Banner";
 
 interface ModrinthProject {
   id: string;
@@ -294,33 +295,19 @@ export function ModsBoard() {
       </div>
 
       {error && (
-        <div className="flex items-start justify-between gap-3 rounded-md border border-red-900/60 bg-red-950/40 p-3 text-xs text-red-300">
+        <Banner variant="error" dismissable onDismiss={() => setError(null)}>
           <span className="font-mono break-all">{error}</span>
-          <button
-            type="button"
-            title="Dismiss"
-            onClick={() => setError(null)}
-            className="shrink-0 rounded p-0.5 text-red-400 hover:text-red-200"
-          >
-            <XIcon size={12} />
-          </button>
-        </div>
+        </Banner>
       )}
 
       {issues && issues.length > 0 && (
-        <div
-          className={`rounded-md border p-3 text-xs ${
-            issues.some((i) => i.severity === "error")
-              ? "border-red-900/60 bg-red-950/40 text-red-300"
-              : "border-amber-900/60 bg-amber-950/30 text-amber-300"
-          }`}
-        >
+        <Banner variant={issues.some((i) => i.severity === "error") ? "error" : "warn"}>
           {issues.map((issue, i) => (
             <div key={i} className="font-mono">
               [{issue.entry >= 0 ? issue.entry : "-"}] {issue.field}: {issue.message}
             </div>
           ))}
-        </div>
+        </Banner>
       )}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">

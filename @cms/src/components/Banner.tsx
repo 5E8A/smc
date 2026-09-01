@@ -32,7 +32,7 @@ const styles: Record<BannerVariant, { box: string; text: string; dismiss: string
 
 export interface BannerProps {
   variant?: BannerVariant;
-  title?: string;
+  title?: ReactNode;
   busy?: boolean;
   dismissable?: boolean;
   onDismiss?: () => void;

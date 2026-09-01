@@ -349,7 +349,7 @@ function validateMarkdownStructure(index: number, content: string, issues: Issue
     issues.push({
       entry: index,
       field: "content",
-      message: `Raw HTML tags are passed through unstyled/unsafe by the renderer: ${[...rawTags].join(", ")}`,
+      message: `Raw HTML tags are not allowed in content: ${[...rawTags].join(", ")}`,
       severity: "error",
     });
   }
