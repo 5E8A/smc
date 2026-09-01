@@ -75,6 +75,8 @@ export const translations = {
       search_placeholder: "Search documentation...",
       read_doc: "Read Guide",
       no_results: "No results found.",
+      toc_contents: "Contents",
+      toc_hide: "Hide",
     },
     about_page: {
       title: "About The Project",
@@ -236,6 +238,8 @@ export const translations = {
       search_placeholder: "Szukaj w dokumentacji...",
       read_doc: "Czytaj Poradnik",
       no_results: "Nie znaleziono wyników.",
+      toc_contents: "Spis treści",
+      toc_hide: "Ukryj",
     },
     about_page: {
       title: "O Projekcie",

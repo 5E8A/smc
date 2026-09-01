@@ -20,7 +20,7 @@ interface WikiDocViewProps {
 
 const WikiDocView = ({ body }: WikiDocViewProps) => {
   const { slug } = useParams({ strict: false });
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const doc: WikiDoc | undefined = slug ? getWikiDocBySlug(slug, language) : undefined;
   const content = body ?? null;
   const [tocOpen, setTocOpen] = useState(false);
@@ -51,7 +51,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/80 backdrop-blur-sm transition-colors hover:text-white"
           >
             <ListIcon className="size-4" />
-            {tocOpen ? "Hide" : "Contents"}
+            {tocOpen ? t.wiki.toc_hide : t.wiki.toc_contents}
           </button>
         </div>
 
