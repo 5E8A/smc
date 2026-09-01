@@ -3,6 +3,8 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import rehypeSlug from "rehype-slug";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import { smcSanitizeSchema } from "@smc/shared/rehype-sanitize-schema";
 import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import {
   parseCarouselImages,
@@ -178,7 +180,7 @@ const components: MarkdownComponents = {
 const ContentMarkdown = ({ content }: ContentMarkdownProps) => (
   <Markdown
     remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks]}
-    rehypePlugins={[rehypeSlug, rehypeRaw]}
+    rehypePlugins={[rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]]}
     components={components}
   >
     {processIcons(processCarousel(content))}

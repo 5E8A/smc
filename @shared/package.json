@@ -10,6 +10,7 @@
     "./icon-search": "./icon-search.ts",
     "./markdown": "./markdown.ts",
     "./months": "./months.ts",
+    "./rehype-sanitize-schema": "./rehype-sanitize-schema.ts",
     "./slug": "./slug.ts",
     "./sprite": "./sprite.ts"
   },

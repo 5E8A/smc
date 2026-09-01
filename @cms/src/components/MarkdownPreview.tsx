@@ -2,6 +2,8 @@ import Markdown, { type Components, type ExtraProps } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import { smcSanitizeSchema } from "@smc/shared/rehype-sanitize-schema";
 import rehypeSlug from "rehype-slug";
 import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import {
@@ -202,7 +204,7 @@ const components: MarkdownComponents = {
 export const MarkdownPreview = ({ content }: { content: string }) => (
   <Markdown
     remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks, remarkLineAttrs]}
-    rehypePlugins={[rehypeSlug, rehypeRaw]}
+    rehypePlugins={[rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]]}
     components={components}
   >
     {processIcons(processCarousel(content))}

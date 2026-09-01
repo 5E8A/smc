@@ -350,7 +350,7 @@ function validateMarkdownStructure(index: number, content: string, issues: Issue
       entry: index,
       field: "content",
       message: `Raw HTML tags are passed through unstyled/unsafe by the renderer: ${[...rawTags].join(", ")}`,
-      severity: "warning",
+      severity: "error",
     });
   }
 }
