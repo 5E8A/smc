@@ -45,8 +45,8 @@ const acquireLock = () => {
       alive = err.code === "EPERM";
     }
     if (alive) {
-      console.error(`blurhash generation already running (pid ${pid}) - aborting to avoid corrupting outputs.`);
-      console.error(`If this is stale, delete ${lockFile} and retry.`);
+      console.error(`✗ blurhash generation already running (pid ${pid}) - aborting to avoid corrupting outputs.`);
+      console.error(`✗ If this is stale, delete ${lockFile} and retry.`);
       process.exit(1);
     }
   }
