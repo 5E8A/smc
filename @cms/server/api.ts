@@ -1,7 +1,18 @@
 import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "http";
 import path from "path";
-import { attachHttpGuards, BodyTooLargeError, installProcessGuards, isKind, isLang, isResponseClosed, readRawBody, sendJson } from "./util.ts";
+import {
+  attachHttpGuards,
+  BodyTooLargeError,
+  CONTENT_DIR,
+  cleanupOrphanTmp,
+  installProcessGuards,
+  isKind,
+  isLang,
+  isResponseClosed,
+  readRawBody,
+  sendJson,
+} from "./util.ts";
 import { loadAuthors, loadContent, saveAuthors, saveContent, validateContent } from "./store.ts";
 import {
   computeEmptyDirs,
@@ -30,6 +41,24 @@ import { readGitStatus, streamGitDeploy, streamGitPull } from "./git.ts";
 const MAX_JSON_BODY = 5 * 1024 * 1024;
 
 export const CMS_PORT = 4000;
+
+/** Cleans orphaned `*.tmp` files left behind by an interrupted atomic write. */
+async function cleanupOrphanTmpFiles(): Promise<void> {
+  let removed = 0;
+  try {
+    for (const lang of ["en", "pl"]) {
+      removed += await cleanupOrphanTmp(path.join(CONTENT_DIR, lang));
+      for (const kind of ["posts", "wiki"]) {
+        removed += await cleanupOrphanTmp(path.join(CONTENT_DIR, lang, kind));
+      }
+    }
+  } catch {
+    return;
+  }
+  if (removed > 0) {
+    console.log(`[cms-server] cleaned ${removed} orphan .tmp file(s)`);
+  }
+}
 
 const ALLOWED_HOSTS = new Set([`127.0.0.1:${CMS_PORT}`, `localhost:${CMS_PORT}`]);
 const ALLOWED_ORIGINS = new Set([`http://127.0.0.1:${CMS_PORT}`, `http://localhost:${CMS_PORT}`]);
@@ -590,10 +619,12 @@ export function cmsApi(): Plugin {
     name: "cms-api",
     configureServer(server: MiddlewareStack) {
       installProcessGuards();
+      void cleanupOrphanTmpFiles();
       mountApi(server);
     },
     configurePreviewServer(server: MiddlewareStack) {
       installProcessGuards();
+      void cleanupOrphanTmpFiles();
       mountApi(server);
     },
   };

@@ -9,6 +9,7 @@ import {
   writeMdAtomic,
   deleteMd,
   assetExists,
+  createKeyedMutex,
   KINDS,
   LANGS,
   type Kind,
@@ -23,6 +24,10 @@ import type { Author } from "@smc/shared/content";
 export type { LocalizedText, Author } from "@smc/shared/content";
 
 const AUTHORS_PATH = path.join(CONTENT_DIR, "authors.json");
+
+// Serializes multi-file writes (md + JSON) per key so concurrent saves to the
+// same dataset never interleave (last-write-wins, FIFO order).
+const mutex = createKeyedMutex();
 
 export interface Issue {
   entry: number;
@@ -165,6 +170,10 @@ export interface AuthorsSaveResult {
 }
 
 export async function saveAuthors(data: unknown): Promise<AuthorsSaveResult> {
+  return mutex("authors", () => saveAuthorsUnlocked(data));
+}
+
+async function saveAuthorsUnlocked(data: unknown): Promise<AuthorsSaveResult> {
   if (!asArray(data)) {
     return { issues: [{ entry: -1, field: "$", message: "Root must be an array", severity: "error" }] };
   }
@@ -411,6 +420,10 @@ export async function loadContent(kind: Kind, lang: Lang): Promise<unknown> {
 }
 
 export async function saveContent(kind: Kind, lang: Lang, data: unknown): Promise<{ issues: Issue[] }> {
+  return mutex(`${kind}:${lang}`, () => saveContentUnlocked(kind, lang, data));
+}
+
+async function saveContentUnlocked(kind: Kind, lang: Lang, data: unknown): Promise<{ issues: Issue[] }> {
   const issues = await validateContent(kind, lang, data);
   const hasErrors = issues.some((i) => i.severity === "error");
   if (!hasErrors && Array.isArray(data)) {

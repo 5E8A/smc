@@ -34,7 +34,13 @@ export async function writeMdAtomic(filePath: string, content: string): Promise<
   await fs.promises.mkdir(dir, { recursive: true });
   const normalized = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
   const tmp = filePath + ".tmp";
-  await fs.promises.writeFile(tmp, normalized, "utf8");
+  const fd = await fs.promises.open(tmp, "w");
+  try {
+    await fd.writeFile(normalized, "utf8");
+    await fd.sync();
+  } finally {
+    await fd.close();
+  }
   await fs.promises.rename(tmp, filePath);
 }
 
@@ -54,8 +60,39 @@ export async function readJson(filePath: string): Promise<unknown> {
 export async function writeJsonAtomic(filePath: string, data: unknown): Promise<void> {
   const json = JSON.stringify(data, null, 2) + "\n";
   const tmp = filePath + ".tmp";
-  await fs.promises.writeFile(tmp, json, "utf8");
+  const fd = await fs.promises.open(tmp, "w");
+  try {
+    await fd.writeFile(json, "utf8");
+    await fd.sync();
+  } finally {
+    await fd.close();
+  }
   await fs.promises.rename(tmp, filePath);
+}
+
+const TMP_SUFFIX = ".tmp"; /**
+ * Removes leftover `*.tmp` files (from an interrupted atomic write) inside the
+ * given directory tree. Best-effort: never throws.
+ */
+export async function cleanupOrphanTmp(dir: string): Promise<number> {
+  let removed = 0;
+  let entries: string[];
+  try {
+    entries = await fs.promises.readdir(dir);
+  } catch {
+    return 0;
+  }
+  for (const entry of entries) {
+    if (entry.endsWith(TMP_SUFFIX)) {
+      try {
+        await fs.promises.unlink(path.join(dir, entry));
+        removed++;
+      } catch {
+        // ignore
+      }
+    }
+  }
+  return removed;
 }
 
 const ASSET_PREFIX = "/smc/assets/";
@@ -181,5 +218,28 @@ export function attachHttpGuards(req: import("http").IncomingMessage, res: impor
   res.on("error", (err) => logGuarded("response stream error", err));
 }
 
-export const isResponseClosed = (res: import("http").ServerResponse): boolean =>
-  res.destroyed || res.writableEnded;
+export const isResponseClosed = (res: import("http").ServerResponse): boolean => res.destroyed || res.writableEnded;
+
+/**
+ * A promise-chain keyed mutex. Serializes async critical sections per key so
+ * concurrent callers never interleave (last-write-wins, in FIFO order).
+ */
+export function createKeyedMutex(): <T>(key: string, fn: () => Promise<T>) => Promise<T> {
+  const tails = new Map<string, Promise<unknown>>();
+  return async <T>(key: string, fn: () => Promise<T>): Promise<T> => {
+    const prev = tails.get(key) ?? Promise.resolve();
+    let release!: () => void;
+    const tail = new Promise<void>((resolve) => (release = resolve));
+    tails.set(
+      key,
+      prev.then(() => tail)
+    );
+    await prev;
+    try {
+      return await fn();
+    } finally {
+      release();
+      if (tails.get(key) === tail) tails.delete(key);
+    }
+  };
+}
