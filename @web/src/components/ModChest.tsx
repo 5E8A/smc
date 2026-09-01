@@ -240,10 +240,14 @@ const ModChest = () => {
         setTooltip(null);
       }}
     >
-      {/* Tabs - behind the chest (vanilla paint order) */}
-      <div role="tablist" aria-label={t.mods.title} className="absolute inset-x-0 z-0" style={{ top: g.tabTop }}>
-        {chests.map((_, col) => col !== activeCat && renderTab(col))}
-        {renderTab(activeCat)}
+      {/* Tabs - split z-index: unselected behind chest, selected above */}
+      <div role="tablist" aria-label={t.mods.title} className="absolute inset-x-0" style={{ top: g.tabTop }}>
+        <div className="absolute inset-x-0 z-0">
+          {chests.map((_, col) => col !== activeCat && renderTab(col))}
+        </div>
+        <div className="absolute inset-x-0 z-20">
+          {renderTab(activeCat)}
+        </div>
       </div>
 
       {/* Chests - all mounted, only active one visible */}
