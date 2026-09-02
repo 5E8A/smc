@@ -229,7 +229,7 @@ const HomeView = () => {
           </div>
 
           <div className="mt-6 text-center md:mt-12 md:hidden">
-            <McButton as="link" variant="secondary" to="/$lang/archive" params={langParams} className="inline-block rounded px-8 py-3">
+            <McButton as="link" variant="secondary" to="/$lang/archive" params={langParams} preload="intent" className="inline-block rounded px-8 py-3">
               {t.latest.view_archive}
             </McButton>
           </div>

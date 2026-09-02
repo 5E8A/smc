@@ -25,6 +25,7 @@ const ErrorFallback = () => {
         <Link
           to="/$lang"
           params={{ lang: language }}
+          preload="intent"
           className="inline-flex items-center gap-2 rounded border border-white/15 px-6 py-3 text-zinc-300 transition-colors hover:text-white"
         >
           <HouseIcon size={16} />

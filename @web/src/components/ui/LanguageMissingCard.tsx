@@ -30,6 +30,7 @@ const LanguageMissingCard = ({ kind, slug, availableLang, title }: LanguageMissi
             as="link"
             to="/$lang/post/$slug"
             params={{ lang: availableLang, slug }}
+            preload="intent"
             className="inline-flex items-center gap-2 rounded px-6 py-3"
           >
             {u.read_in}
@@ -40,6 +41,7 @@ const LanguageMissingCard = ({ kind, slug, availableLang, title }: LanguageMissi
             as="link"
             to="/$lang/wiki/$slug"
             params={{ lang: availableLang, slug }}
+            preload="intent"
             className="inline-flex items-center gap-2 rounded px-6 py-3"
           >
             {u.read_in}
@@ -49,6 +51,7 @@ const LanguageMissingCard = ({ kind, slug, availableLang, title }: LanguageMissi
         <Link
           to={kind === "post" ? "/$lang/archive" : "/$lang/wiki"}
           params={{ lang: language }}
+          preload="intent"
           className="rounded border border-white/15 px-6 py-3 text-mc-text transition-colors hover:text-white"
         >
           {u.back_to_archive}
