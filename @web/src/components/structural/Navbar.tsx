@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ListIcon, XIcon, DownloadIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import McButton from "@/components/mc/McButton";
@@ -11,6 +11,7 @@ const Navbar = () => {
   const { language, setLanguage, t } = useLanguage();
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
 
   const langParams = { lang: language };
 
@@ -116,7 +117,7 @@ const Navbar = () => {
               to="/$lang"
               params={langParams}
               preload="intent"
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
               className="block rounded-md p-3 text-lg font-medium text-white hover:bg-white/5"
             >
               {t.nav.home}
@@ -125,7 +126,7 @@ const Navbar = () => {
               to="/$lang/archive"
               params={langParams}
               preload="intent"
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
               className="block rounded-md p-3 text-lg font-medium text-white hover:bg-white/5"
             >
               {t.nav.archive}
@@ -134,7 +135,7 @@ const Navbar = () => {
               to="/$lang/wiki"
               params={langParams}
               preload="intent"
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
               className="block rounded-md p-3 text-lg font-medium text-white hover:bg-white/5"
             >
               {t.nav.wiki}
@@ -143,7 +144,7 @@ const Navbar = () => {
               to="/$lang/about"
               params={langParams}
               preload="intent"
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
               className="block rounded-md p-3 text-lg font-medium text-white hover:bg-white/5"
             >
               {t.nav.about}
