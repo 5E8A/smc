@@ -10,8 +10,8 @@ export const CAROUSEL_RE = /:carouselStart:\s*\n([\s\S]*?)\n?\s*:carouselEnd:/gi
 export const processCarousel = (content: string) =>
   content.replace(CAROUSEL_RE, (_, inner: string) => {
     const images: CarouselImage[] = [...inner.matchAll(/!\[([^\]]*)\]\(([^)\s]+)\)/g)].map((m) => ({
-      src: m[2],
-      alt: m[1],
+      src: m[2] ?? "",
+      alt: m[1] ?? "",
     }));
     return `<carousel images="${escapeAttr(JSON.stringify(images))}"></carousel>`;
   });
@@ -55,18 +55,19 @@ export function remarkUnwrapBlocks() {
       const next: MdastNode[] = [];
       for (let i = 0; i < node.children.length; i++) {
         const child = node.children[i];
+        if (!child) continue;
         if (child.type === "paragraph") {
           const parts: MdastNode[] = [];
           for (const sub of child.children ?? []) {
             if (sub.type === "text" && !sub.value?.trim()) continue;
             parts.push(sub);
           }
-          const isSoloImage = parts.length === 1 && parts[0].type === "image";
+          const isSoloImage = parts.length === 1 && parts[0]?.type === "image";
           const joined = parts.map((p) => (p.type === "html" ? (p.value ?? "") : "")).join("");
           const isSoloCarousel =
             parts.length > 0 && parts.every((p) => p.type === "html") && /^<carousel[\s>]/i.test(joined.trim());
           if (isSoloImage) {
-            next.push(parts[0]);
+            next.push(parts[0]!);
             continue;
           }
           if (isSoloCarousel) {
