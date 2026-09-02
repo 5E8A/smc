@@ -1,11 +1,12 @@
 import { Select } from "@base-ui/react/select";
 import { CaretDownIcon } from "@phosphor-icons/react";
+import { translations } from "@/utils/translations";
 import { GbFlag, PlFlag } from "./Flags";
 
 type LangSwitcherProps = {
   language: "en" | "pl";
   setLanguage: (lang: "en" | "pl") => void;
-  t: { common: { language: string }; [key: string]: unknown };
+  t: (typeof translations)["en"];
   className?: string;
 };
 
@@ -42,19 +43,19 @@ const LangSwitcher = ({ language, setLanguage, t, className }: LangSwitcherProps
         <Select.Positioner sideOffset={4} align="center" className="z-50">
           <Select.Popup className="min-w-35 overflow-hidden rounded-lg border border-white/10 bg-black/60 py-1 shadow-2xl backdrop-blur-xl">
             <Select.List className="flex flex-col">
-              {(Object.entries(items) as Array<["en" | "pl", string]>).map(([value, label]) => (
-                <Select.Item
-                  key={value}
-                  value={value}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-mc-text transition-colors outline-none select-none hover:bg-white/10 hover:text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white"
-                >
-                  {(() => {
-                    const Flag = flags[value];
-                    return <Flag className="h-auto w-5 rounded-[2px]" />;
-                  })()}
-                  <Select.ItemText>{label}</Select.ItemText>
-                </Select.Item>
-              ))}
+              {(Object.entries(items) as Array<["en" | "pl", string]>).map(([value, label]) => {
+                const Flag = flags[value];
+                return (
+                  <Select.Item
+                    key={value}
+                    value={value}
+                    className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-mc-text transition-colors outline-none select-none hover:bg-white/10 hover:text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white"
+                  >
+                    <Flag className="h-auto w-5 rounded-[2px]" />
+                    <Select.ItemText>{label}</Select.ItemText>
+                  </Select.Item>
+                );
+              })}
             </Select.List>
           </Select.Popup>
         </Select.Positioner>
