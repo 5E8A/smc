@@ -9,7 +9,7 @@ const RootLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    document.getElementById("main-content")?.focus();
+    document.getElementById("main-content")?.focus({ preventScroll: true });
   }, [location.pathname]);
   return (
     <div className="flex min-h-screen flex-col bg-transparent font-sans text-mc-text">
