@@ -3,12 +3,11 @@ import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosp
 import SmartImage from "@/components/media/SmartImage";
 import Lightbox from "@/components/media/Lightbox";
 import { useLanguage } from "@/context/useLanguage";
+import { focusRing } from "@/utils/focusRing";
 
 interface CarouselProps {
   images: string[];
 }
-
-const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 const Carousel = ({ images }: CarouselProps) => {
   const { t } = useLanguage();
