@@ -108,8 +108,11 @@
   --color-mc-border: #3f3f46; /* Stone Bricks border */
   --color-mc-accent: #90d5ff; /* Diamond Blue */
   --color-mc-green: #3c8527; /* Launcher Green */
-  --color-mc-green-hover: #2a641c;
+  --color-mc-green-light: #4a9e33; /* Green hover */
+  --color-mc-green-dark: #2a641c; /* Green active */
   --color-mc-green-text: #4ade80; /* green-400 for text on dark */
+  --color-mc-stone-light: #52525b; /* Stone hover */
+  --color-mc-stone-dark: #2c2c2e; /* Stone active */
   --color-mc-text: #e4e4e7; /* Zinc 200 */
   --color-mc-text-muted: #b4b4bc; /* Zinc 400+ */
 
@@ -226,56 +229,15 @@
 }
 
 @layer components {
-  /* Modern Minecraft Button (Launcher Style) */
-  .btn-mc-green {
-    background-color: #3c8527;
-    border: 2px solid #1e1e1e; /* Dark border */
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.2),
-      0 4px 0 #1e1e1e;
-    color: white;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  /* Button press animation (hover lift + active press) */
+  .btn-press {
     transition: all 0.1s ease;
   }
-
-  .btn-mc-green:hover {
-    background-color: #4a9e33;
-    color: #09090b;
+  .btn-press:hover {
     transform: translateY(-2px);
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.2),
-      0 6px 0 #1e1e1e;
   }
-
-  .btn-mc-green:active {
+  .btn-press:active {
     transform: translateY(2px);
-    box-shadow:
-      inset 0 2px 0 rgba(0, 0, 0, 0.2),
-      0 2px 0 #1e1e1e;
-  }
-
-  /* Secondary Button (Stone Style) */
-  .btn-mc-stone {
-    background-color: #3f3f46;
-    border: 2px solid #18181b;
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.1),
-      0 4px 0 #18181b;
-    color: #e4e4e7;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    transition: all 0.1s ease;
-  }
-
-  .btn-mc-stone:hover {
-    background-color: #52525b;
-    transform: translateY(-2px);
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.1),
-      0 6px 0 #18181b;
   }
 
   /* Modern Card Panel */

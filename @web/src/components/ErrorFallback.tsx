@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowCounterClockwiseIcon, HouseIcon } from "@phosphor-icons/react";
+import McButton from "./McButton";
 import { translations } from "../utils/translations";
 
 // Must work without the language context (this replaces the whole tree on
@@ -17,14 +18,10 @@ const ErrorFallback = () => {
       <p className="mb-2 max-w-md text-lg font-bold text-white">{text.title}</p>
       <p className="mb-8 max-w-md text-sm text-zinc-400">{text.description}</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={() => window.location.reload()}
-          className="btn-mc-green inline-flex items-center gap-2 rounded px-6 py-3"
-        >
+        <McButton onClick={() => window.location.reload()} className="inline-flex items-center gap-2 rounded px-6 py-3">
           <ArrowCounterClockwiseIcon size={16} weight="bold" />
           {text.reload}
-        </button>
+        </McButton>
         <Link
           to="/$lang"
           params={{ lang: language }}

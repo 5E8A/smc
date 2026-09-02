@@ -1,6 +1,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { Route } from "../routes/$lang/modrinth";
 import { ArrowSquareOutIcon, CircleNotchIcon, DownloadIcon } from "@phosphor-icons/react";
+import McButton from "./McButton";
 import { useLanguage } from "../context/useLanguage";
 
 const VALID_TYPES = ["modpack", "mod", "server"] as const;
@@ -61,16 +62,18 @@ const OpenAppView = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <a
+          <McButton
+            as="a"
+            variant={valid ? "primary" : undefined}
             href={webUrl ?? "#"}
             aria-disabled={!valid}
             className={`inline-flex items-center gap-2 rounded px-6 py-3 font-medium transition-opacity ${
-              valid ? "btn-mc-green" : "pointer-events-none cursor-default bg-mc-surface text-mc-text-muted opacity-50"
+              valid ? "" : "pointer-events-none cursor-default bg-mc-surface text-mc-text-muted opacity-50"
             }`}
           >
             <ArrowSquareOutIcon className="size-4" />
             {t.open_app.fallback_link}
-          </a>
+          </McButton>
         </div>
       </div>
     </div>

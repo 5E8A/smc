@@ -4,7 +4,7 @@ import { BlogPost } from "../types";
 import PostCard from "./PostCard";
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
-import { Link } from "@tanstack/react-router";
+import McButton from "./McButton";
 import { getLatestVersionData } from "@/services/api";
 import { LoadingVersionText } from "@/components/LoadingVersionText";
 import { VersionData } from "@/types";
@@ -108,25 +108,28 @@ const HomeView = () => {
             </p>
 
             <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
-              <a
+              <McButton
+                as="a"
                 href="#latest"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById("latest")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="btn-mc-green flex items-center justify-center rounded px-8 py-3 text-center"
+                className="flex items-center justify-center rounded px-8 py-3 text-center"
               >
                 <span>{t.hero.read_updates}</span>
                 <CaretRightIcon className="ml-2 size-5" />
-              </a>
-              <Link
+              </McButton>
+              <McButton
+                as="link"
+                variant="secondary"
                 to="/$lang/wiki"
                 params={langParams}
                 preload="intent"
-                className="btn-mc-stone rounded px-8 py-3 text-center"
+                className="rounded px-8 py-3 text-center"
               >
                 <span>{t.hero.wiki}</span>
-              </Link>
+              </McButton>
             </div>
           </div>
         </section>
@@ -207,14 +210,16 @@ const HomeView = () => {
               <h2 className="mb-2 font-mc text-4xl text-white">{t.latest.title}</h2>
               <p className="text-mc-text">{t.latest.subtitle}</p>
             </div>
-            <Link
+            <McButton
+              as="link"
+              variant="secondary"
               to="/$lang/archive"
               params={langParams}
               preload="intent"
-              className="btn-mc-stone mt-4 hidden items-center rounded px-6 py-2 md:mt-0 md:flex"
+              className="mt-4 hidden items-center rounded px-6 py-2 md:mt-0 md:flex"
             >
               {t.latest.view_archive}
-            </Link>
+            </McButton>
           </div>
 
           <div className="grid min-h-75 grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -224,9 +229,9 @@ const HomeView = () => {
           </div>
 
           <div className="mt-6 text-center md:mt-12 md:hidden">
-            <Link to="/$lang/archive" params={langParams} className="btn-mc-stone inline-block rounded px-8 py-3">
+            <McButton as="link" variant="secondary" to="/$lang/archive" params={langParams} className="inline-block rounded px-8 py-3">
               {t.latest.view_archive}
-            </Link>
+            </McButton>
           </div>
         </div>
       </section>

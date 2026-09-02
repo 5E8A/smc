@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ListIcon, XIcon, DownloadIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
+import McButton from "./McButton";
 import { useLanguage } from "../context/useLanguage";
 import SmartImage from "./SmartImage";
 import LangSwitcher from "./LangSwitcher";
@@ -65,18 +66,19 @@ const Navbar = () => {
             </div>
 
             {/* Modern Action Button */}
-            <Link
+            <McButton
+              as="link"
               to="/$lang/modrinth"
               params={langParams}
               search={{ type: "modpack", slug: "fabric-boosted" }}
               preload="intent"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-mc-green flex items-center space-x-2 rounded px-6 py-2"
+              className="flex items-center space-x-2 rounded px-6 py-2"
             >
               <DownloadIcon className="size-4" />
               <span>{t.nav.download}</span>
-            </Link>
+            </McButton>
 
             <Link
               to="/$lang"
@@ -146,17 +148,18 @@ const Navbar = () => {
             >
               {t.nav.about}
             </Link>
-            <Link
+            <McButton
+              as="link"
               to="/$lang/modrinth"
               params={langParams}
               search={{ type: "modpack", slug: "fabric-boosted" }}
               preload="intent"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-mc-green mt-4 block w-full rounded p-3 text-center"
+              className="mt-4 block w-full rounded p-3 text-center"
             >
               {t.nav.download}
-            </Link>
+            </McButton>
             <div className="mt-4 px-3">
               <div className="flex items-center text-mc-text-muted">
                 <LangSwitcher language={language} setLanguage={setLanguage} t={t} />

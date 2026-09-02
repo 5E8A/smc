@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 import { useLanguage } from "../context/useLanguage";
+import McButton from "./McButton";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
@@ -27,23 +28,25 @@ const LanguageMissingCard = ({ kind, slug, availableLang, title }: LanguageMissi
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         {kind === "post" ? (
-          <Link
+          <McButton
+            as="link"
             to="/$lang/post/$slug"
             params={{ lang: availableLang, slug }}
-            className="btn-mc-green inline-flex items-center gap-2 rounded px-6 py-3"
+            className="inline-flex items-center gap-2 rounded px-6 py-3"
           >
             {u.read_in}
             <ArrowRightIcon size={16} weight="bold" />
-          </Link>
+          </McButton>
         ) : (
-          <Link
+          <McButton
+            as="link"
             to="/$lang/wiki/$slug"
             params={{ lang: availableLang, slug }}
-            className="btn-mc-green inline-flex items-center gap-2 rounded px-6 py-3"
+            className="inline-flex items-center gap-2 rounded px-6 py-3"
           >
             {u.read_in}
             <ArrowRightIcon size={16} weight="bold" />
-          </Link>
+          </McButton>
         )}
         <Link
           to={kind === "post" ? "/$lang/archive" : "/$lang/wiki"}
