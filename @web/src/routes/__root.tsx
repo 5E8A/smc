@@ -20,7 +20,7 @@ export const Route = createRootRoute({
         as: "font",
         type: "font/woff2",
         href: "/smc/assets/fonts/modern-age-latin.woff2",
-        crossOrigin: "",
+        crossOrigin: "anonymous",
       },
       { rel: "preconnect", href: "https://api.modrinth.com" },
       { rel: "preconnect", href: "https://discord.com" },
