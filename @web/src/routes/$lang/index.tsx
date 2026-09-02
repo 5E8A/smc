@@ -7,7 +7,11 @@ export const Route = createFileRoute("/$lang/")({
   head: ({ params }) => {
     const lang = params.lang as Language;
     return {
-      meta: [{ title: translations[lang].meta.titles.home }],
+      meta: [
+        { title: translations[lang].meta.titles.home },
+        { property: "og:title", content: translations[lang].meta.titles.home },
+        { name: "twitter:title", content: translations[lang].meta.titles.home },
+      ],
       links: [
         {
           rel: "preload",

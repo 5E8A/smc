@@ -9,7 +9,11 @@ export const Route = createFileRoute("/$lang/modrinth")({
   head: ({ params }) => {
     const lang = params.lang as Language;
     return {
-      meta: [{ title: translations[lang].meta.titles.modrinth }],
+      meta: [
+        { title: translations[lang].meta.titles.modrinth },
+        { property: "og:title", content: translations[lang].meta.titles.modrinth },
+        { name: "twitter:title", content: translations[lang].meta.titles.modrinth },
+      ],
     };
   },
 });
