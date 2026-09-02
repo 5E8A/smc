@@ -17,6 +17,7 @@ import {
 import { assetUrl } from "../api";
 import { isVideoSrc, videoPosterSrc } from "../lib/videoAsset";
 import { remarkLineAttrs } from "../lib/remarkLineAttrs";
+import type { PluggableList } from "unified";
 import Carousel from "./Carousel";
 import { ICON_COMPONENTS } from "./icon-map.generated";
 
@@ -201,12 +202,11 @@ const components: MarkdownComponents = {
   },
 };
 
+const remarkPlugins: PluggableList = [remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks, remarkLineAttrs];
+const rehypePlugins: PluggableList = [rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]];
+
 export const MarkdownPreview = ({ content }: { content: string }) => (
-  <Markdown
-    remarkPlugins={[remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks, remarkLineAttrs]}
-    rehypePlugins={[rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]]}
-    components={components}
-  >
+  <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={components}>
     {processIcons(processCarousel(content))}
   </Markdown>
 );
