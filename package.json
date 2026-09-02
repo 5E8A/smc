@@ -11,7 +11,6 @@
   "scripts": {
     "web:install": "npm install -w @smc/web",
     "cms:install": "npm install -w @smc/cms",
-    "web:ci": "npm ci -w @smc/web && npm run -w @smc/web build",
     "web:dev": "npm -w @smc/web run dev",
     "web:build": "npm -w @smc/web run build",
     "web:start": "npm -w @smc/web run start",
@@ -37,9 +36,6 @@
     "check-content": "npm -w @smc/web run check-content",
     "sync-mods": "npm -w @smc/web run sync-mods",
     "sync-icons": "node @scripts/sync-icons.mjs",
-    "studio": "node @scripts/studio/studio.mjs",
-    "studio:record": "node @scripts/studio/studio.mjs record",
-    "studio:render": "node @scripts/studio/studio.mjs render",
     "lint": "npm run lint --workspaces && oxlint @scripts/ --type-aware --type-check",
     "lint:fix": "npm run lint:fix --workspaces && oxlint --fix @scripts/ --type-aware",
     "format": "prettier --write .",
