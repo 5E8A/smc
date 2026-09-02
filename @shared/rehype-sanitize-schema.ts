@@ -15,8 +15,8 @@ export const smcSanitizeSchema: Options = {
   tagNames: [...(defaultSchema.tagNames ?? []), "icon", "carousel"],
   attributes: {
     ...defaultSchema.attributes,
-    td: ["className", "colSpan"],
-    th: ["className", "colSpan"],
+    td: ["className"],
+    th: ["className"],
     icon: ["name"],
     carousel: ["images"],
     img: [...(defaultSchema.attributes?.img ?? []), "data-md-line"],
