@@ -1,17 +1,21 @@
+import { useMemo } from "react";
 import { useLanguage } from "@/context/useLanguage";
 import { parseRichText } from "@/utils/richText";
 
 const CreditsView = () => {
   const { t } = useLanguage();
 
-  const sections = [
-    { title: t.credits.disclaimer_title, text: t.credits.disclaimer_text },
-    { title: t.credits.assets_title, text: t.credits.assets_text },
-    { title: t.credits.wallpaper_title, text: t.credits.wallpaper_text },
-    { title: t.credits.fonts_title, text: t.credits.fonts_text },
-    { title: t.credits.operator_title, text: t.credits.operator_text },
-    { title: t.credits.affiliate_title, text: t.credits.affiliate_text },
-  ];
+  const sections = useMemo(
+    () => [
+      { title: t.credits.disclaimer_title, text: t.credits.disclaimer_text },
+      { title: t.credits.assets_title, text: t.credits.assets_text },
+      { title: t.credits.wallpaper_title, text: t.credits.wallpaper_text },
+      { title: t.credits.fonts_title, text: t.credits.fonts_text },
+      { title: t.credits.operator_title, text: t.credits.operator_text },
+      { title: t.credits.affiliate_title, text: t.credits.affiliate_text },
+    ],
+    [t],
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
