@@ -1,15 +1,15 @@
 import { useParams } from "@tanstack/react-router";
-import { getWikiDocAvailability, getWikiDocBySlug } from "../data/wiki";
-import { WikiDoc } from "../types";
-import BackButton from "./BackButton";
-import AuthorCard from "./AuthorCard";
+import { getWikiDocAvailability, getWikiDocBySlug } from "@/data/wiki";
+import { WikiDoc } from "@/types";
+import BackButton from "@/components/BackButton";
+import AuthorCard from "@/components/AuthorCard";
 import { CalendarIcon, BookIcon, ListIcon } from "@phosphor-icons/react";
 import { formatDate } from "@smc/shared/months";
-import { useLanguage } from "../context/useLanguage";
-import SmartImage from "./SmartImage";
-import ContentMarkdown from "./ContentMarkdown";
-import LanguageMissingCard from "./LanguageMissingCard";
-import WikiTOC from "./WikiTOC";
+import { useLanguage } from "@/context/useLanguage";
+import SmartImage from "@/components/SmartImage";
+import ContentMarkdown from "@/components/ContentMarkdown";
+import LanguageMissingCard from "@/components/LanguageMissingCard";
+import WikiTOC from "@/components/WikiTOC";
 import { useState } from "react";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";

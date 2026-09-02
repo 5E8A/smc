@@ -1,14 +1,14 @@
 import { useParams } from "@tanstack/react-router";
-import { getPostAvailability, getPostBySlug } from "../data/posts";
-import { BlogPost } from "../types";
-import BackButton from "./BackButton";
-import AuthorCard from "./AuthorCard";
+import { getPostAvailability, getPostBySlug } from "@/data/posts";
+import { BlogPost } from "@/types";
+import BackButton from "@/components/BackButton";
+import AuthorCard from "@/components/AuthorCard";
 import { CalendarIcon, BookIcon } from "@phosphor-icons/react";
 import { formatDate } from "@smc/shared/months";
-import { useLanguage } from "../context/useLanguage";
-import ContentMarkdown from "./ContentMarkdown";
-import LanguageMissingCard from "./LanguageMissingCard";
-import SmartImage from "./SmartImage";
+import { useLanguage } from "@/context/useLanguage";
+import ContentMarkdown from "@/components/ContentMarkdown";
+import LanguageMissingCard from "@/components/LanguageMissingCard";
+import SmartImage from "@/components/SmartImage";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 

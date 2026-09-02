@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { getWikiDocs } from "../data/wiki";
-import { WikiDoc } from "../types";
-import { useLanguage } from "../context/useLanguage";
+import { getWikiDocs } from "@/data/wiki";
+import { WikiDoc } from "@/types";
+import { useLanguage } from "@/context/useLanguage";
 import { BookIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import SmartImage from "./SmartImage";
-import SearchHeader from "./SearchHeader";
+import SmartImage from "@/components/SmartImage";
+import SearchHeader from "@/components/SearchHeader";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 

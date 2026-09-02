@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLanguage } from "../context/useLanguage";
+import { useLanguage } from "@/context/useLanguage";
 import { CodeIcon, CpuIcon } from "@phosphor-icons/react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
 

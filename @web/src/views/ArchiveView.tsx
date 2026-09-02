@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { getPosts } from "../data/posts";
-import { BlogPost } from "../types";
-import PostCard from "./PostCard";
-import { useLanguage } from "../context/useLanguage";
-import SearchHeader from "./SearchHeader";
+import { getPosts } from "@/data/posts";
+import { BlogPost } from "@/types";
+import PostCard from "@/components/PostCard";
+import { useLanguage } from "@/context/useLanguage";
+import SearchHeader from "@/components/SearchHeader";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 

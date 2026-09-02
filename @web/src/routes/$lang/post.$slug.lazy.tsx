@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import ArticleView from "../../components/ArticleView";
+import ArticleView from "@/views/ArticleView";
 
 export const Route = createLazyFileRoute("/$lang/post/$slug")({
   component: function LangPostSlugComponent() {

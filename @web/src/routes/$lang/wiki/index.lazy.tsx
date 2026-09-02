@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import WikiView from "../../../components/WikiView";
+import WikiView from "@/views/WikiView";
 
 export const Route = createLazyFileRoute("/$lang/wiki/")({
   component: WikiView,

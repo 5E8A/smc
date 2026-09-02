@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import WikiDocView from "../../components/WikiDocView";
+import WikiDocView from "@/views/WikiDocView";
 
 export const Route = createLazyFileRoute("/$lang/wiki/$slug")({
   component: function LangWikiSlugComponent() {

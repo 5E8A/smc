@@ -1,5 +1,5 @@
-import { useLanguage } from "../context/useLanguage";
-import { parseRichText } from "../utils/richText";
+import { useLanguage } from "@/context/useLanguage";
+import { parseRichText } from "@/utils/richText";
 
 const CreditsView = () => {
   const { t } = useLanguage();
