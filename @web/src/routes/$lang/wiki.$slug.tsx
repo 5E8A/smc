@@ -24,7 +24,7 @@ export const Route = createFileRoute("/$lang/wiki/$slug")({
       coverImage: string | undefined;
     };
     const pageTitle = title ? `${title}${suffix}` : undefined;
-    const imageUrl = coverImage ? `https://5e8a.github.io/smc${coverImage}` : undefined;
+    const imageUrl = coverImage ? `https://5e8a.github.io${coverImage}` : undefined;
     return {
       meta: [
         { title: pageTitle },
