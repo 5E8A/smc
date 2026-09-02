@@ -39,6 +39,15 @@ interface MdastNode {
   align?: (string | null)[];
 }
 
+interface HastElement {
+  type: "element";
+  tagName: string;
+  properties: Record<string, unknown>;
+  children: HastNode[];
+}
+
+type HastNode = HastElement | { type: string; value?: string };
+
 export function remarkNoH1() {
   return (tree: { children: Array<{ type: string; depth?: number }> }) => {
     for (const node of tree.children) {
@@ -116,6 +125,37 @@ export function remarkTableCategoryHeader() {
             }
           }
         }
+      }
+    }
+  };
+}
+
+function selectAll(tag: string, tree: HastNode): HastElement[] {
+  const results: HastElement[] = [];
+  const walk = (node: HastNode) => {
+    if (node.type === "element") {
+      const el = node as HastElement;
+      if (el.tagName === tag) results.push(el);
+      for (const child of el.children) walk(child);
+    } else if ("children" in node) {
+      for (const child of (node as { children: HastNode[] }).children) walk(child);
+    }
+  };
+  walk(tree);
+  return results;
+}
+
+export function rehypeRemoveEmptyColSpanCells() {
+  return (tree: HastNode) => {
+    for (const tr of selectAll("tr", tree)) {
+      const cells = tr.children.filter((n): n is HastElement => n.type === "element");
+      const hasColSpan = cells.some((c) => typeof c.properties.colSpan === "number" && c.properties.colSpan > 1);
+      if (hasColSpan) {
+        tr.children = tr.children.filter((n) => {
+          if (n.type !== "element") return true;
+          const el = n as HastElement;
+          return el.tagName !== "td" || el.children.length > 0 || Object.keys(el.properties).length > 0;
+        });
       }
     }
   };

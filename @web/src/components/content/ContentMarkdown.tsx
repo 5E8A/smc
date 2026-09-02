@@ -11,6 +11,7 @@ import {
   parseCarouselImages,
   processCarousel,
   processIcons,
+  rehypeRemoveEmptyColSpanCells,
   remarkNoH1,
   remarkTableCategoryHeader,
   remarkUnwrapBlocks,
@@ -179,7 +180,7 @@ const components: MarkdownComponents = {
 };
 
 const remarkPlugins: PluggableList = [remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks];
-const rehypePlugins: PluggableList = [rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]];
+const rehypePlugins: PluggableList = [rehypeSlug, rehypeRaw, rehypeRemoveEmptyColSpanCells, [rehypeSanitize, smcSanitizeSchema]];
 
 const ContentMarkdown = ({ content }: ContentMarkdownProps) => (
   <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={components}>
