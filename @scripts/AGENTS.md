@@ -28,12 +28,4 @@ Phosphor icon pipeline:
 - The CMS runs it automatically after every entry save and icon insert (streams into the runner console, source "icons"); use manually after hand-editing content JSON or `.md` files or bumping `@phosphor-icons/*` (bump core + react together).
 - Cross-checks every name against the installed react package's exports. Exit 1 on unknown placeholders in content.
 
-## screenshot (`npm run screenshot`)
 
-Playwright cross-browser screenshot suite (`@scripts/screenshot/`):
-
-- Full-page + fold captures per route × viewport × browser; output in `screenshots/` (gitignored).
-- Flags: `--browsers=`, `--viewports=`, `--only=`, `--no-fold`, `--menu-open` (extra `-menu` variant with the mobile hamburger open on viewports <768px), `--lang=pl`, `--prod`, `--reuse`, `--skip-existing`, `--list`, `--out=`, `--concurrency=`.
-- Spawns its own server on port 3100 with `VITE_SCREENSHOT=true`; `--reuse` verifies an existing server on 3000 really is in screenshot mode before reusing.
-- Dynamic routes (posts/wiki) auto-discovered from `@web/src/content/`.
-- `npm run screenshot:install` installs Playwright browsers (chromium, firefox, webkit).

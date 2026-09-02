@@ -12,8 +12,6 @@ interface ParallaxBackgroundProps {
   factor?: number;
 }
 
-const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
-
 const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
@@ -21,10 +19,6 @@ const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProp
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (screenshotMode) {
-      el.style.height = `${document.documentElement.scrollHeight}px`;
-      return;
-    }
     if (reduced) {
       el.style.height = `${document.documentElement.scrollHeight}px`;
       return;
@@ -53,7 +47,7 @@ const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProp
     <div
       ref={ref}
       aria-hidden
-      className={`-z-10 opacity-45 ${screenshotMode ? "absolute" : "fixed"} inset-0 will-change-transform`}
+      className="-z-10 fixed opacity-45 inset-0 will-change-transform"
       style={style}
     >
       <BlurhashCanvas hash={bgHash} className="absolute inset-0 size-full" />

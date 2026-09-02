@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/useLanguage";
 import { CodeIcon, CpuIcon } from "@phosphor-icons/react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
-
-const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 
 const AboutView = () => {
   const { t } = useLanguage();
@@ -11,11 +9,6 @@ const AboutView = () => {
   const [downloads, setDownloads] = useState<string | null>(null);
   const [activeMembers, setActiveMembers] = useState<number | null>(null);
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (screenshotMode && bgRef.current) bgRef.current.style.height = `${document.documentElement.scrollHeight}px`;
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,9 +41,8 @@ const AboutView = () => {
   return (
     <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
       <div
-        ref={bgRef}
         aria-hidden
-        className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-warped-wart-block opacity-45`}
+        className="-z-10 fixed mc-bg-tiled inset-0 bg-warped-wart-block opacity-45"
       />
       {/* Header */}
       <div className="mx-auto mb-12 w-full max-w-7xl px-4 sm:px-6 lg:px-8">

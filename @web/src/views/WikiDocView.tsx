@@ -12,8 +12,6 @@ import LanguageMissingCard from "@/components/ui/LanguageMissingCard";
 import WikiTOC from "@/components/content/WikiTOC";
 import { useState } from "react";
 
-const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
-
 interface WikiDocViewProps {
   body?: string | null;
 }
@@ -38,7 +36,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
     <div className="min-h-screen bg-transparent pb-20">
       <div
         aria-hidden
-        className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-deepslate opacity-45`}
+        className="-z-10 fixed mc-bg-tiled inset-0 bg-deepslate opacity-45"
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">

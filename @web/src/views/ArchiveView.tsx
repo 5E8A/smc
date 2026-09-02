@@ -1,21 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { getPosts } from "@/data/posts";
 import { BlogPost } from "@/types";
 import PostCard from "@/components/ui/PostCard";
 import { useLanguage } from "@/context/useLanguage";
 import SearchHeader from "@/components/ui/SearchHeader";
 
-const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
-
 const ArchiveView = () => {
   const { t, language } = useLanguage();
   const allPosts: BlogPost[] = getPosts(language);
   const [searchTerm, setSearchTerm] = useState("");
-  const bgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (screenshotMode && bgRef.current) bgRef.current.style.height = `${document.documentElement.scrollHeight}px`;
-  }, []);
 
   const filteredPosts = allPosts.filter(
     (post) =>
@@ -27,9 +20,8 @@ const ArchiveView = () => {
   return (
     <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
       <div
-        ref={bgRef}
         aria-hidden
-        className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-dark-prismarine opacity-45`}
+        className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45"
       />
       <SearchHeader
         title={t.archive.title}

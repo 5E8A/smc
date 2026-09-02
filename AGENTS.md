@@ -11,7 +11,7 @@ Single hoisted `node_modules` + root `package-lock.json`. Deployed to GitHub Pag
 - `@web/` - the site (`src/`, `public/`, `vite.config.ts`, `tsconfig.json`, package `@smc/web`; no own `package-lock` - root lockfile only).
 - `@cms/` - standalone CMS sub-app (package `@smc/cms`), edits `@web/src/content/…` and `@web/public/assets/…` via API middleware; exports `@smc/cms/server/store` + `@smc/cms/server/util` (used by `@scripts/check-content.mjs`). CMS details: `@cms/AGENTS.md` - read it when working on the CMS.
 - `@shared/` - package `@smc/shared` (hue/icons/months/slug helpers, `.ts` sources exported directly).
-- `@scripts/` - repo-root tooling (`check-content`, `generate-blurhash`, `sync-mods`, `sync-icons`, `screenshot/`). Node >= 22.7 (native TS stripping for `@smc/cms` imports). Pipeline details: `@scripts/AGENTS.md` - read it when working on those scripts.
+- `@scripts/` - repo-root tooling (`check-content`, `generate-blurhash`, `sync-mods`, `sync-icons`). Node >= 22.7 (native TS stripping for `@smc/cms` imports). Pipeline details: `@scripts/AGENTS.md` - read it when working on those scripts.
 - Root `package.json` (`@smc`, private) is a delegator: `npm run dev`, `web:*`, `cms:*` wrappers; real per-workspace scripts live in each package. Workspace selectors use package names (`npm -w @smc/web …`).
 
 ## Commands
@@ -23,7 +23,7 @@ Single hoisted `node_modules` + root `package-lock.json`. Deployed to GitHub Pag
 - `npm run lint` / `lint:fix` - oxlint over all workspaces + `@scripts/`, type-aware; also enforces the Conventions below.
 - `npm run generate-lqip` / `sync-mods` / `sync-icons` - content/asset pipelines (details: `@scripts/AGENTS.md`).
 - `npm run analyze` - bundle size visualizer (writes `@web/dist/stats.html`).
-- `npm run screenshot` - Playwright cross-browser screenshot suite (details: `@scripts/AGENTS.md`).
+
 - `npm run format` / `format:check` - Prettier over the whole repo (root config).
 
 ## Committing

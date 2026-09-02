@@ -10,8 +10,6 @@ import ContentMarkdown from "@/components/content/ContentMarkdown";
 import LanguageMissingCard from "@/components/ui/LanguageMissingCard";
 import SmartImage from "@/components/media/SmartImage";
 
-const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
-
 interface ArticleViewProps {
   body?: string | null;
 }
@@ -35,7 +33,7 @@ const ArticleView = ({ body }: ArticleViewProps) => {
     <div className="min-h-screen bg-transparent pb-20">
       <div
         aria-hidden
-        className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-dark-prismarine opacity-45`}
+        className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45"
       />
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 pt-8 sm:px-6 lg:px-8">

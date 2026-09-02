@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { getWikiDocs } from "@/data/wiki";
 import { WikiDoc } from "@/types";
 import { useLanguage } from "@/context/useLanguage";
@@ -7,17 +7,10 @@ import { Link } from "@tanstack/react-router";
 import SmartImage from "@/components/media/SmartImage";
 import SearchHeader from "@/components/ui/SearchHeader";
 
-const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
-
 const WikiView = () => {
   const { t, language } = useLanguage();
   const docs: WikiDoc[] = getWikiDocs(language);
   const [searchTerm, setSearchTerm] = useState("");
-  const bgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (screenshotMode && bgRef.current) bgRef.current.style.height = `${document.documentElement.scrollHeight}px`;
-  }, []);
 
   const filteredDocs = docs.filter(
     (doc) =>
@@ -29,9 +22,8 @@ const WikiView = () => {
   return (
     <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
       <div
-        ref={bgRef}
         aria-hidden
-        className={`-z-10 ${screenshotMode ? "absolute" : "fixed"} mc-bg-tiled inset-0 bg-deepslate opacity-45`}
+        className="-z-10 fixed mc-bg-tiled inset-0 bg-deepslate opacity-45"
       />
       <SearchHeader
         title={t.wiki.title}

@@ -5,13 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "dev:screenshot": "set VITE_SCREENSHOT=true&& vite dev",
     "build": "npm run lint && npm run check-content && vite build",
-    "build:screenshot": "set VITE_SCREENSHOT=true&& npm run lint && npm run check-content && vite build",
     "start": "node .output/server/index.mjs",
     "preview": "vite preview",
-    "screenshot": "node ../@scripts/screenshot/run.mjs",
-    "screenshot:install": "playwright install chromium firefox webkit",
     "analyze": "vite build --mode analyze",
     "generate-lqip": "node ../@scripts/generate-blurhash.mjs",
     "check-content": "node ../@scripts/check-content.mjs",
