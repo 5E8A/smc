@@ -21,7 +21,7 @@ function renderTextWithIcons(text: string): React.ReactNode[] {
     if (match.index! > lastIndex) {
       parts.push(text.slice(lastIndex, match.index!));
     }
-    parts.push(<Icon key={match.index} name={match[1]} />);
+    parts.push(<Icon key={match.index} name={match[1]!} />);
     lastIndex = match.index! + match[0].length;
   }
   if (lastIndex < text.length) {
@@ -42,8 +42,8 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
     for (const line of lines) {
       const match = line.match(/^(#{1,6})\s+(.+)/);
       if (match) {
-        const level = match[1].length;
-        const text = match[2].replace(/[*_~`]/g, "");
+        const level = match[1]!.length;
+        const text = match[2]!.replace(/[*_~`]/g, "");
         items.push({ id: slugify(text.replace(ICON_RE, "")), text, level });
       }
     }
@@ -60,7 +60,7 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
 
       if (atBottom && headings.length > 0) {
-        setActiveId(headings[headings.length - 1].id);
+        setActiveId(headings[headings.length - 1]!.id);
         return;
       }
 

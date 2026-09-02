@@ -173,10 +173,10 @@ const ModChest = () => {
   useSpritePreload();
 
   const chests = [
-    { key: "performance", mods: modCategories[0].mods },
-    { key: "optifine", mods: modCategories[1].mods },
-    { key: "qol", mods: modCategories[2].mods },
-    { key: "utility", mods: modCategories[3].mods },
+    { key: "performance", mods: modCategories[0]!.mods },
+    { key: "optifine", mods: modCategories[1]!.mods },
+    { key: "qol", mods: modCategories[2]!.mods },
+    { key: "utility", mods: modCategories[3]!.mods },
   ];
 
   useEffect(() => {
@@ -202,7 +202,7 @@ const ModChest = () => {
 
   const renderTab = (col: number) => (
     <button
-      key={chests[col].key}
+      key={chests[col]!.key}
       role="tab"
       aria-selected={col === activeCat}
       onClick={() => {
@@ -213,11 +213,11 @@ const ModChest = () => {
       onBlur={() => setTooltip(null)}
       className="absolute cursor-pointer"
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
-      aria-label={t.mods[chests[col].key as keyof typeof t.mods]}
+      aria-label={t.mods[chests[col]!.key as keyof typeof t.mods]}
     >
       <TabSprite selected={col === activeCat} column={col} className="absolute inset-0 size-full" />
       <ItemIcon
-        id={CATEGORY_ICONS[col]}
+        id={CATEGORY_ICONS[col]!}
         className="absolute"
         style={{ left: g.tabIconX, top: g.tabIconY, width: 16 * g.scale, height: 16 * g.scale }}
       />
@@ -263,7 +263,7 @@ const ModChest = () => {
               title={t.mods[chest.key as keyof typeof t.mods]}
               mods={chest.mods}
               g={g}
-              sprite={SPRITE_URLS[i]}
+              sprite={SPRITE_URLS[i]!}
               onHover={(mod) => setTooltip(mod ? { kind: "slot", mod } : null)}
             />
           </div>
@@ -292,7 +292,7 @@ const ModChest = () => {
           }}
           scale={g.scale}
           width={tooltip.kind === "slot" ? 96 * g.scale : undefined}
-          title={tooltip.kind === "slot" ? tooltip.mod.title : t.mods[chests[tooltip.col].key as keyof typeof t.mods]}
+          title={tooltip.kind === "slot" ? tooltip.mod.title : t.mods[chests[tooltip.col]!.key as keyof typeof t.mods]}
           description={tooltip.kind === "slot" ? tooltip.mod.description : undefined}
         />
       )}

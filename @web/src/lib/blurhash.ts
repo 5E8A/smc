@@ -27,7 +27,7 @@ const digitCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 const decode83 = (str: string): number => {
   let value = 0;
   for (let i = 0; i < str.length; i++) {
-    value = value * 83 + digitCharacters.indexOf(str[i]);
+    value = value * 83 + digitCharacters.indexOf(str[i]!);
   }
   return value;
 };
@@ -66,14 +66,14 @@ const decodeAC = (value: number, maximumValue: number): [number, number, number]
 export const decode = (blurhash: string, width: number, height: number): Uint8ClampedArray => {
   if (!blurhash || blurhash.length < 6) throw new Error("blurhash must be at least 6 characters");
 
-  const sizeFlag = decode83(blurhash[0]);
+  const sizeFlag = decode83(blurhash[0]!);
   const numY = Math.floor(sizeFlag / 9) + 1;
   const numX = (sizeFlag % 9) + 1;
   if (blurhash.length !== 4 + 2 * numX * numY) {
     throw new Error(`blurhash length mismatch: got ${blurhash.length}, expected ${4 + 2 * numX * numY}`);
   }
 
-  const maximumValue = (decode83(blurhash[1]) + 1) / 166;
+  const maximumValue = (decode83(blurhash[1]!) + 1) / 166;
   const colors: Array<[number, number, number]> = new Array(numX * numY);
 
   for (let i = 0; i < colors.length; i++) {
@@ -96,7 +96,7 @@ export const decode = (blurhash: string, width: number, height: number): Uint8Cl
         const basisY = Math.cos((Math.PI * y * j) / height);
         for (let i = 0; i < numX; i++) {
           const basis = Math.cos((Math.PI * x * i) / width) * basisY;
-          const color = colors[i + j * numX];
+          const color = colors[i + j * numX]!;
           r += color[0] * basis;
           g += color[1] * basis;
           b += color[2] * basis;

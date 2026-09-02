@@ -73,7 +73,7 @@ const Carousel = ({ images }: CarouselProps) => {
       {/* Main Image Container */}
       <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
         <SmartImage
-          src={images[currentIndex]}
+          src={images[currentIndex]!}
           alt={`Slide ${currentIndex + 1}`}
           className="size-full"
           priority="low"

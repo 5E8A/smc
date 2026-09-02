@@ -368,12 +368,12 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
         if (!focusables || focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
+        if (first && event.shiftKey && document.activeElement === first) {
           event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
+          last?.focus();
+        } else if (last && !event.shiftKey && document.activeElement === last) {
           event.preventDefault();
-          first.focus();
+          first?.focus();
         }
       }
     };
@@ -387,7 +387,7 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
 
   useEffect(() => {
     [-1, 1].forEach((delta) => {
-      new Image().src = images[(index + delta + images.length) % images.length];
+      new Image().src = images[(index + delta + images.length) % images.length]!;
     });
   }, [images, index]);
 
@@ -440,7 +440,7 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
 
         <Stage
           key={index}
-          src={images[index]}
+          src={images[index]!}
           alt={`Slide ${index + 1}`}
           initialTime={index === openingIndex ? initialTime : 0}
           onClose={onClose}

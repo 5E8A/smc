@@ -45,7 +45,7 @@ const request = async <T>(
       return (await response.json()) as T;
     } catch (error) {
       lastError = error;
-      if (attempt < MAX_RETRIES) await sleep(RETRY_DELAYS_MS[attempt]);
+      if (attempt < MAX_RETRIES) await sleep(RETRY_DELAYS_MS[attempt]!);
     } finally {
       clearTimeout(timeoutId);
     }
@@ -120,7 +120,7 @@ export const getLatestVersionData = (id: string): Promise<VersionData | null> =>
             MODRINTH_BASE_URL,
             `/version/${projectData.versions[projectData.versions.length - 1]}`
           );
-          return { version_number: version.version_number, game_version: version.game_versions[0] };
+          return { version_number: version.version_number, game_version: version.game_versions[0]! };
         }
         return null;
       },

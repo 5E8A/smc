@@ -30,5 +30,7 @@ export const getAuthorById = (id: string): AuthorRecord => {
 
 export const resolveAuthor = (id: string, lang: "en" | "pl"): Author => {
   const author = getAuthorById(id);
-  return { name: author.name[lang], avatar: author.avatar, bio: author.bio[lang], socials: author.socials };
+  const result: Author = { name: author.name[lang], avatar: author.avatar, bio: author.bio[lang] };
+  if (author.socials) result.socials = author.socials;
+  return result;
 };
