@@ -13,7 +13,7 @@ export const Route = createFileRoute("/$lang")({
     const lang = params.lang as Language;
     const meta = translations[lang].meta;
     const baseUrl = "https://5e8a.github.io/smc";
-    const imageUrl = `${baseUrl}/assets/static/smc2.png`;
+    const imageUrl = `${baseUrl}/assets/static/og-default${lang === "pl" ? "-pl" : ""}.png`;
     const pageUrl = `${baseUrl}/${lang}`;
     return {
       meta: [
