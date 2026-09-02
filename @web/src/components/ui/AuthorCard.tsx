@@ -1,4 +1,4 @@
-import type { Author } from "../data/authors";
+import type { Author } from "@/data/authors";
 import { XLogoIcon, YoutubeLogoIcon, GithubLogoIcon, DiscordLogoIcon } from "@phosphor-icons/react";
 import type { ComponentType } from "react";
 

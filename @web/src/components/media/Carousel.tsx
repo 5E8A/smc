@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosphor-icons/react";
-import SmartImage from "@/components/SmartImage";
-import Lightbox from "@/components/Lightbox";
+import SmartImage from "@/components/media/SmartImage";
+import Lightbox from "@/components/media/Lightbox";
 import { useLanguage } from "@/context/useLanguage";
 
 interface CarouselProps {

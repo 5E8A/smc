@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
-import { useLanguage } from "../context/useLanguage";
-import { usePrefersReducedMotion } from "../hooks/usePlaybackGate";
-import { modCategories } from "../data/mods";
-import type { ModData } from "../data/mods";
+import { useLanguage } from "@/context/useLanguage";
+import { usePrefersReducedMotion } from "@/hooks/usePlaybackGate";
+import { modCategories } from "@/data/mods";
+import type { ModData } from "@/data/mods";
 import ModIcon from "./ModIcon";
 import ChestFrame from "./ChestFrame";
 import TabSprite from "./TabSprite";

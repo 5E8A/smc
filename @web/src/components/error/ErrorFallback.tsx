@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowCounterClockwiseIcon, HouseIcon } from "@phosphor-icons/react";
-import McButton from "./McButton";
-import { translations } from "../utils/translations";
+import McButton from "@/components/mc/McButton";
+import { translations } from "@/utils/translations";
 
 // Must work without the language context (this replaces the whole tree on
 // error), so the language is read straight from the URL, like the router's

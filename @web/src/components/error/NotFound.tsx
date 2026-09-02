@@ -1,5 +1,5 @@
-import { useLanguage } from "../context/useLanguage";
-import McButton from "./McButton";
+import { useLanguage } from "@/context/useLanguage";
+import McButton from "@/components/mc/McButton";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 

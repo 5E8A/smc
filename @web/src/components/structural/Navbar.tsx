@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { ListIcon, XIcon, DownloadIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import McButton from "./McButton";
-import { useLanguage } from "../context/useLanguage";
-import SmartImage from "./SmartImage";
-import LangSwitcher from "./LangSwitcher";
+import McButton from "@/components/mc/McButton";
+import { useLanguage } from "@/context/useLanguage";
+import SmartImage from "@/components/media/SmartImage";
+import LangSwitcher from "@/components/ui/LangSwitcher";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,17 +1,17 @@
 import { startTransition, useEffect, useState } from "react";
 import { getRecentPosts } from "@/data/posts";
 import { BlogPost } from "@/types";
-import PostCard from "@/components/PostCard";
+import PostCard from "@/components/ui/PostCard";
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { useLanguage } from "@/context/useLanguage";
-import McButton from "@/components/McButton";
+import McButton from "@/components/mc/McButton";
 import { getLatestVersionData } from "@/services/api";
-import { LoadingVersionText } from "@/components/LoadingVersionText";
+import { LoadingVersionText } from "@/components/mc/LoadingVersionText";
 import { VersionData } from "@/types";
-import SmartImage from "@/components/SmartImage";
-import VersionBadge from "@/components/VersionBadge";
-import ParallaxBackground from "@/components/ParallaxBackground";
-import ModChest from "@/components/ModChest";
+import SmartImage from "@/components/media/SmartImage";
+import VersionBadge from "@/components/mc/VersionBadge";
+import ParallaxBackground from "@/components/media/ParallaxBackground";
+import ModChest from "@/components/mc/ModChest";
 
 const HomeView = () => {
   const { t, language } = useLanguage();

@@ -1,4 +1,4 @@
-import { ICON_COMPONENTS } from "./icon-map.generated";
+import { ICON_COMPONENTS } from "@/components/icon-map.generated";
 
 const Icon = ({ name, className }: { name: string; className?: string }) => {
   const Comp = ICON_COMPONENTS[name];

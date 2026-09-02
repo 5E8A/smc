@@ -14,9 +14,9 @@ import {
   remarkTableCategoryHeader,
   remarkUnwrapBlocks,
 } from "@smc/shared/markdown";
-import Icon from "./IconMap";
-import Carousel from "./Carousel";
-import SmartImage from "./SmartImage";
+import Icon from "@/components/content/IconMap";
+import Carousel from "@/components/media/Carousel";
+import SmartImage from "@/components/media/SmartImage";
 
 type MarkdownComponents = Components & {
   icon: React.ComponentType<{ name?: string; className?: string; node?: unknown }>;

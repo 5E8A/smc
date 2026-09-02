@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useLanguage } from "../context/useLanguage";
+import { useLanguage } from "@/context/useLanguage";
 
 interface VersionBadgeProps {
   version: ReactNode;

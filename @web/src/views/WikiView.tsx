@@ -4,8 +4,8 @@ import { WikiDoc } from "@/types";
 import { useLanguage } from "@/context/useLanguage";
 import { BookIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import SmartImage from "@/components/SmartImage";
-import SearchHeader from "@/components/SearchHeader";
+import SmartImage from "@/components/media/SmartImage";
+import SearchHeader from "@/components/ui/SearchHeader";
 
 const screenshotMode = import.meta.env.VITE_SCREENSHOT === "true";
 

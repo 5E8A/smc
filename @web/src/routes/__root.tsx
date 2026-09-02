@@ -1,8 +1,8 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import RootLayout from "../components/RootLayout";
-import NotFound from "../components/NotFound";
-import ErrorFallback from "../components/ErrorFallback";
+import RootLayout from "@/components/structural/RootLayout";
+import NotFound from "@/components/error/NotFound";
+import ErrorFallback from "@/components/error/ErrorFallback";
 import { LanguageProvider } from "../context/LanguageContext";
 import "../index.css";
 

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "@tanstack/react-router";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useLanguage } from "../context/useLanguage";
+import { useLanguage } from "@/context/useLanguage";
 
 const RootLayout = () => {
   const { t } = useLanguage();

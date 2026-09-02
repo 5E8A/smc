@@ -1,4 +1,4 @@
-import { useLanguage } from "../context/useLanguage";
+import { useLanguage } from "@/context/useLanguage";
 import { Link } from "@tanstack/react-router";
 import { GithubLogoIcon, DiscordLogoIcon } from "@phosphor-icons/react";
 

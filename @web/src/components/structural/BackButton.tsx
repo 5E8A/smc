@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { LinkProps, useNavigate, useRouter } from "@tanstack/react-router";
-import { useLanguage } from "../context/useLanguage";
+import { useLanguage } from "@/context/useLanguage";
 
 interface BackButtonProps {
   fallbackTo: LinkProps["to"];

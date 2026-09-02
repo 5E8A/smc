@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { CalendarIcon, ArrowRightIcon, BookIcon } from "@phosphor-icons/react";
 import { formatDate } from "@smc/shared/months";
-import { BlogPost } from "../types";
-import { useLanguage } from "../context/useLanguage";
-import SmartImage from "./SmartImage";
+import { BlogPost } from "@/types";
+import { useLanguage } from "@/context/useLanguage";
+import SmartImage from "@/components/media/SmartImage";
 
 interface PostCardProps {
   post: BlogPost;

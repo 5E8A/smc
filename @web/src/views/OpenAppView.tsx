@@ -1,7 +1,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { Route } from "@/routes/$lang/modrinth";
 import { ArrowSquareOutIcon, CircleNotchIcon, DownloadIcon } from "@phosphor-icons/react";
-import McButton from "@/components/McButton";
+import McButton from "@/components/mc/McButton";
 import { useLanguage } from "@/context/useLanguage";
 
 const VALID_TYPES = ["modpack", "mod", "server"] as const;
