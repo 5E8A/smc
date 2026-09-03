@@ -12,6 +12,7 @@ import { defaultSchema, type Options } from "rehype-sanitize";
  */
 export const smcSanitizeSchema: Options = {
   ...defaultSchema,
+  clobberPrefix: "",
   tagNames: [...(defaultSchema.tagNames ?? []), "icon", "carousel"],
   attributes: {
     ...defaultSchema.attributes,
