@@ -20,6 +20,10 @@ export interface Geometry {
   titleTop: number;
   modIconSize: number;
   titleFontSize: number;
+  playBtnTop: number;
+  playBtnRight: number;
+  playBtnSize: number;
+  playIconSize: number;
 }
 
 export const geometry = (s: number): Geometry => ({
@@ -40,6 +44,10 @@ export const geometry = (s: number): Geometry => ({
   titleTop: 4 * s,
   modIconSize: Math.round(13 * s),
   titleFontSize: Math.round(12 * s),
+  playBtnTop: 5 * s,
+  playBtnRight: 7 * s,
+  playBtnSize: 11 * s,
+  playIconSize: 8 * s,
 });
 
 export type TooltipState = { kind: "slot"; mod: ModData } | { kind: "tab"; col: number } | null;

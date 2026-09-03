@@ -145,14 +145,20 @@ const ModChest = () => {
         ))}
       </div>
 
-      {/* Play/pause toggle */}
+      {/* Play/pause toggle - on the chest, far right, inline with the category name */}
       <button
         type="button"
         onClick={() => setUserControlled((prev) => !prev)}
         aria-label={userControlled ? t.mods.resume_autoplay : t.mods.pause_autoplay}
-        className="absolute -right-10 top-1/2 -translate-y-1/2 rounded-full bg-mc-surface/60 p-1.5 text-mc-text backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:-right-14"
+        className="absolute flex cursor-pointer items-center justify-center text-[#404040] transition-[color] duration-150 hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        style={{
+          top: g.playBtnTop,
+          right: g.playBtnRight,
+          width: g.playBtnSize,
+          height: g.playBtnSize,
+        }}
       >
-        {userControlled ? <PlayIcon size={16} /> : <PauseIcon size={16} />}
+        {userControlled ? <PlayIcon size={g.playIconSize} weight="fill" /> : <PauseIcon size={g.playIconSize} weight="fill" />}
       </button>
 
       {/* Cursor-following tooltip (vanilla positioner, scaled with chest) */}
