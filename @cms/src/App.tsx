@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CircleNotchIcon, FloppyDiskIcon, MonitorIcon, TrashIcon } from "@phosphor-icons/react";
+import { CircleNotchIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -21,7 +21,7 @@ import { AssetsView } from "./components/AssetsView";
 import { ConverterView } from "./components/ConverterView";
 import { ModsBoard } from "./components/ModsBoard";
 import { GitView } from "./components/GitView";
-import { PreviewWindow } from "./components/PreviewWindow";
+import { PreviewTab } from "./components/PreviewTab";
 import { RunConsole } from "./components/RunConsole";
 import { invalidateAuthorCache } from "./lib/authorCache";
 import { useIconsSync } from "./lib/useIconsSync";
@@ -32,8 +32,8 @@ import { OfflineBanner } from "./components/OfflineBanner";
 import { Banner } from "./components/Banner";
 import { Button } from "./components/fields";
 
-type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy";
-const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter", "deploy"];
+type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy" | "preview";
+const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter", "deploy", "preview"];
 
 interface TabState {
   entries: Entry[];
@@ -123,7 +123,6 @@ export const App = () => {
   const [authorsSnapshot, setAuthorsSnapshot] = useState("");
   const [selectedAuthorIndex, setSelectedAuthorIndex] = useState<number | null>(null);
   const [authorsError, setAuthorsError] = useState<string | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const contentTab = tab === "posts" || tab === "wiki";
@@ -496,7 +495,7 @@ export const App = () => {
 
   const viewDirty = tab === "authors" ? authorsDirty : dirty;
   const paneReady =
-    tab === "assets" || tab === "converter" || tab === "mods" || tab === "deploy"
+    tab === "assets" || tab === "converter" || tab === "mods" || tab === "deploy" || tab === "preview"
       ? true
       : tab === "authors"
         ? !!authors
@@ -536,16 +535,6 @@ export const App = () => {
           ))}
         </nav>
         <ServerIndicator ping={ping} probe={webProbe} />
-        <button
-          type="button"
-          title={previewOpen ? "Close live preview" : "Open live preview (dev server on :3000)"}
-          onClick={() => setPreviewOpen((v) => !v)}
-          className={`rounded-md px-2 py-1.5 transition-colors ${
-            previewOpen ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-          }`}
-        >
-          <MonitorIcon size={15} />
-        </button>
       </header>
 
       <div className="relative flex min-h-0 flex-1">
@@ -708,7 +697,11 @@ export const App = () => {
                 </Banner>
               )}
 
-              <div className={contentTab ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"}>
+              <div
+                className={
+                  contentTab || tab === "preview" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"
+                }
+              >
                 {(tab === "posts" || tab === "wiki") && (
                   <>
                     {!selected && (
@@ -784,6 +777,10 @@ export const App = () => {
                 <div hidden={tab !== "deploy"}>
                   <GitView />
                 </div>
+
+                {tab === "preview" && (
+                  <PreviewTab entryPath={entryPreviewPath} online={webProbe.online} onRetry={webProbe.retry} />
+                )}
               </div>
             </>
           )}
@@ -791,8 +788,6 @@ export const App = () => {
       </div>
 
       <RunConsole />
-
-      {previewOpen && <PreviewWindow entryPath={entryPreviewPath} onClose={() => setPreviewOpen(false)} />}
     </div>
   );
 };

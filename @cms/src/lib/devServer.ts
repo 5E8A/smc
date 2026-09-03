@@ -1,0 +1,2 @@
+export const ORIGIN = "http://127.0.0.1:3000";
+export const HOME_URL = `${ORIGIN}/smc/`;

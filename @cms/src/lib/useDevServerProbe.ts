@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HOME_URL } from "./devServer";
 
-const PROBE_URL = "http://127.0.0.1:3000/smc/en";
+const PROBE_URL = HOME_URL.slice(0, -1);
 const PROBE_MS = 1000;
 const ABORT_MS = 3000;
 const EMA_ALPHA = 0.3;
