@@ -52,6 +52,18 @@ export const geometry = (s: number): Geometry => ({
 
 export type TooltipState = { kind: "slot"; mod: ModData } | { kind: "tab"; col: number } | null;
 
+export const positionSlotTooltip = (anchor: DOMRect, tip: { width: number; height: number }) => {
+  let left = anchor.right + 12;
+  let top = anchor.top + anchor.height / 2 - 12;
+  if (left + tip.width > window.innerWidth) {
+    left = Math.max(left - 24 - tip.width, 4);
+  }
+  if (top + tip.height + 3 > window.innerHeight) {
+    top = window.innerHeight - tip.height - 3;
+  }
+  return { left, top };
+};
+
 export const CATEGORY_ICONS: ItemIconId[] = ["blaze_powder", "spyglass", "golden_apple", "experience_bottle"];
 
 export const SPRITE_URLS = modCategories.map((cat) => `/smc/assets/mod-sprites/${cat.key}.webp`);

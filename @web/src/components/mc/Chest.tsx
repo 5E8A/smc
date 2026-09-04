@@ -11,12 +11,14 @@ interface ChestProps {
   sprite: string;
   onHover: (mod: ModData | null, el?: HTMLElement) => void;
   asLink?: boolean;
-  onActivate?: () => void;
+  activeSlotIdx?: number | null;
+  onSlotTap?: (idx: number) => void;
+  tooltipScale?: number;
+  actionLabel?: string;
 }
 
-const Chest = ({ title, mods, g, sprite, onHover, asLink = true, onActivate }: ChestProps) => {
+const Chest = ({ title, mods, g, sprite, onHover, asLink = true, activeSlotIdx = null, onSlotTap, tooltipScale = 2, actionLabel }: ChestProps) => {
   const handleSlotHover = useCallback((mod: ModData, index: number, el: HTMLElement) => onHover(mod, el), [onHover]);
-  const handleSlotLeave = useCallback(() => onHover(null), [onHover]);
 
   const slots: (ModData | null)[] = Array.from({ length: 27 }, (_, i) => mods[i] ?? null);
 
@@ -42,9 +44,11 @@ const Chest = ({ title, mods, g, sprite, onHover, asLink = true, onActivate }: C
           g={g}
           sprite={sprite}
           onHover={handleSlotHover}
-          onLeave={handleSlotLeave}
           asLink={asLink}
-          onActivate={onActivate}
+          active={activeSlotIdx === i}
+          onTap={onSlotTap ? () => onSlotTap(i) : undefined}
+          tooltipScale={tooltipScale}
+          actionLabel={actionLabel}
         />
       ))}
     </div>

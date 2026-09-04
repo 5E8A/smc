@@ -22,7 +22,7 @@ const McTooltip = ({ title, description, action, scale = 2, width, className = "
   return (
     <div
       ref={ref}
-      className={`mc-tooltip ${action ? "pointer-events-auto" : "pointer-events-none"} ${className}`}
+      className={`mc-tooltip text-left ${action ? "pointer-events-auto" : "pointer-events-none"} ${className}`}
       style={{
         ...style,
         fontSize: 5.5 * scale,

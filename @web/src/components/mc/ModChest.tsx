@@ -73,8 +73,8 @@ const ModChest = () => {
   const [tooltip, setTooltip] = useState<TooltipState>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [tooltipPos, setTooltipPos] = useState({ left: 0, top: 0 });
+  const [activeSlot, setActiveSlot] = useState<{ col: number; idx: number } | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const pendingActionFocus = useRef(false);
 
   useSpritePreload();
 
@@ -84,39 +84,28 @@ const ModChest = () => {
     setMouse({ x: rect.right, y: rect.top + rect.height / 2 });
   }, []);
 
-  const handleSlotHover = useCallback(
-    (mod: ModData | null, el?: HTMLElement) => {
-      if (mod && coarse && el) anchorFromElement(el);
-      setTooltip(mod ? { kind: "slot", mod } : null);
-    },
-    [coarse, anchorFromElement]
-  );
+  const handleSlotHover = useCallback((mod: ModData | null) => {
+    setTooltip(mod ? { kind: "slot", mod } : null);
+  }, []);
 
   useEffect(() => {
-    if (!coarse || !tooltip) {
-      pendingActionFocus.current = false;
-      return;
-    }
-    // Keyboard/tap activation moves focus straight to the tooltip's Modrinth button,
-    // so keyboard users reach the link without tabbing through every slot.
-    if (pendingActionFocus.current) {
-      pendingActionFocus.current = false;
-      tooltipRef.current?.querySelector<HTMLElement>("a, button")?.focus();
-    }
-  }, [coarse, tooltip]);
-
-  useEffect(() => {
-    if (!coarse || !tooltip) return;
+    if (!coarse) return;
     const onPointerDown = (e: PointerEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setTooltip(null);
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setTooltip(null);
+        setActiveSlot(null);
+      }
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [coarse, tooltip, wrapperRef]);
+  }, [coarse, wrapperRef]);
 
   useEffect(() => {
     if (paused || userControlled || reducedMotion) return;
-    const id = setInterval(() => setActiveCat((c) => (c + 1) % CHESTS.length), AUTOPLAY_MS);
+    const id = setInterval(() => {
+      setActiveCat((c) => (c + 1) % CHESTS.length);
+      setActiveSlot(null);
+    }, AUTOPLAY_MS);
     return () => clearInterval(id);
   }, [paused, userControlled, reducedMotion]);
 
@@ -152,6 +141,7 @@ const ModChest = () => {
       onClick={() => {
         setActiveCat(col);
         setUserControlled(true);
+        setActiveSlot(null);
       }}
       onFocus={(e) => {
         if (e.currentTarget.matches(":focus-visible")) showTabTooltip(e.currentTarget, col);
@@ -183,7 +173,7 @@ const ModChest = () => {
         onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
         onFocusCapture={() => setPaused(true)}
         onBlurCapture={(e) => {
-          // Keep the tooltip (and its Modrinth link) mounted while focus moves into it.
+          // Keep the shared tooltip (and its Modrinth link) mounted while focus moves into it.
           const next = e.relatedTarget as HTMLElement | null;
           if (next && tooltipRef.current?.contains(next)) return;
           setPaused(false);
@@ -214,7 +204,14 @@ const ModChest = () => {
                 sprite={SPRITE_URLS[i]!}
                 onHover={handleSlotHover}
                 asLink={!coarse}
-                onActivate={coarse ? () => (pendingActionFocus.current = true) : undefined}
+                activeSlotIdx={activeSlot?.col === i ? activeSlot.idx : null}
+                onSlotTap={
+                  coarse
+                    ? (idx) => setActiveSlot((prev) => (prev?.col === i && prev.idx === idx ? null : { col: i, idx }))
+                    : undefined
+                }
+                tooltipScale={g.scale}
+                actionLabel={t.mods.open_mod}
               />
             </div>
           ))}
@@ -256,11 +253,6 @@ const ModChest = () => {
               tooltip.kind === "slot" ? tooltip.mod.title : t.mods[CHESTS[tooltip.col]!.key as keyof typeof t.mods]
             }
             description={tooltip.kind === "slot" ? tooltip.mod.description : undefined}
-            action={
-              coarse && tooltip.kind === "slot"
-                ? { label: t.mods.open_mod, href: `https://modrinth.com/mod/${tooltip.mod.slug}` }
-                : undefined
-            }
           />
         )}
       </div>
