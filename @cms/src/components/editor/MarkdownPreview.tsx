@@ -167,7 +167,10 @@ const components: MarkdownComponents = {
     </th>
   ),
   td: ({ children, node, className: tdClassName, ...props }) => (
-    <td className={`border-r border-b border-white/5 px-2.5 py-1.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`} {...props}>
+    <td
+      className={`border-r border-b border-white/5 px-2.5 py-1.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`}
+      {...props}
+    >
       {children}
     </td>
   ),
@@ -202,9 +205,15 @@ const components: MarkdownComponents = {
   },
 };
 
-const remarkPlugins: PluggableList = [remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks, remarkLineAttrs];
+const remarkPlugins: PluggableList = [
+  remarkGfm,
+  remarkBreaks,
+  remarkNoH1,
+  remarkTableCategoryHeader,
+  remarkUnwrapBlocks,
+  remarkLineAttrs,
+];
 const rehypePlugins: PluggableList = [rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]];
-
 export const MarkdownPreview = ({ content }: { content: string }) => (
   <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={components}>
     {processIcons(processCarousel(content))}
