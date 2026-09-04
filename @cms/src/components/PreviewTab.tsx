@@ -3,9 +3,13 @@ import { ArrowClockwiseIcon, HouseIcon, PlayIcon } from "@phosphor-icons/react";
 import { DEVICE_GROUPS, CUSTOM_PRESET, type DevicePreset } from "../lib/presets";
 import { ORIGIN, HOME_URL } from "../lib/devServer";
 import { PreviewStage } from "./devices/PreviewStage";
-import { Button, TextInput } from "./fields";
+import { Button } from "./fields";
+import { MultiSelect, type MultiSelectOption } from "./MultiSelect";
 
-const GROUP_OPTIONS = ["All", ...DEVICE_GROUPS.map((g) => g.label), "Custom"] as const;
+const GROUP_OPTIONS: MultiSelectOption[] = [
+  ...DEVICE_GROUPS.map((g) => ({ value: g.label, label: g.label })),
+  { value: "Custom", label: "Custom" },
+];
 
 interface PreviewTabProps {
   entryPath: string | null;
@@ -17,20 +21,21 @@ export const PreviewTab = ({ entryPath, online, onRetry }: PreviewTabProps) => {
   const defaultUrl = entryPath ? `${ORIGIN}${entryPath}` : HOME_URL;
   const [url, setUrl] = useState(defaultUrl);
   const [applied, setApplied] = useState(defaultUrl);
-  const [group, setGroup] = useState<(typeof GROUP_OPTIONS)[number]>("All");
+  const [selected, setSelected] = useState<string[]>(() => GROUP_OPTIONS.map((o) => o.value));
   const [customApplied, setCustomApplied] = useState({ w: CUSTOM_PRESET.w, h: CUSTOM_PRESET.h });
   const [loadedCount, setLoadedCount] = useState(0);
 
   const presets = useMemo(() => {
+    const allSelected = selected.length === GROUP_OPTIONS.length;
     const list: DevicePreset[] = [];
     for (const g of DEVICE_GROUPS) {
-      if (group === "All" || group === g.label) list.push(...g.presets);
+      if (allSelected || selected.includes(g.label)) list.push(...g.presets);
     }
-    if (group === "All" || group === "Custom") {
+    if (allSelected || selected.includes("Custom")) {
       list.push({ ...CUSTOM_PRESET, w: customApplied.w, h: customApplied.h });
     }
     return list;
-  }, [group, customApplied]);
+  }, [selected, customApplied]);
 
   const normalize = (raw: string): string | null => {
     const trimmed = raw.trim();
@@ -64,52 +69,48 @@ export const PreviewTab = ({ entryPath, online, onRetry }: PreviewTabProps) => {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex shrink-0 items-center justify-between gap-1 border-b border-zinc-800 px-4 py-2">
-        <div className="flex w-28 items-center text-[11px] whitespace-nowrap text-zinc-500">
+        <div className="flex w-36 items-center text-[11px] whitespace-nowrap text-zinc-500">
           {loadedCount}/{presets.length} loaded
         </div>
-        <div className="mx-auto flex w-full min-w-0 flex-1 items-center justify-center gap-1">
-          <TextInput
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") go();
-            }}
-            placeholder="127.0.0.1:3000/smc/…"
-            aria-label="Preview URL"
-            className="w-full max-w-sm"
-          />
-          <Button className="px-1.5" title="Load" onClick={go}>
-            <PlayIcon size={13} />
-          </Button>
-          <Button
-            variant="ghost"
-            className="px-1.5"
-            title="Home"
-            onClick={() => {
-              setUrl(defaultUrl);
-              setApplied(defaultUrl);
-            }}
-          >
-            <HouseIcon size={13} />
-          </Button>
-          <Button variant="ghost" className="px-1.5" title="Reload all" onClick={reloadAll}>
-            <ArrowClockwiseIcon size={13} />
-          </Button>
+        <div className="mx-auto flex w-full min-w-0 flex-1 items-center justify-center">
+          <div className="flex w-full max-w-lg items-center rounded-md border border-zinc-700 bg-zinc-900">
+            <Button variant="ghost" className="rounded-r-none border-none px-1.5 py-1.5" title="Reload all" onClick={reloadAll}>
+              <ArrowClockwiseIcon size={13} />
+            </Button>
+            <Button
+              variant="ghost"
+              className="rounded-none border-none px-1.5 py-1.5"
+              title="Home"
+              onClick={() => {
+                setUrl(defaultUrl);
+                setApplied(defaultUrl);
+              }}
+            >
+              <HouseIcon size={13} />
+            </Button>
+            <input
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") go();
+              }}
+              placeholder="127.0.0.1:3000/smc/…"
+              aria-label="Preview URL"
+              className="flex-1 bg-transparent px-1 py-1.5 text-sm text-zinc-100 outline-none placeholder:text-zinc-600"
+            />
+            <Button variant="ghost" className="rounded-l-none border-none px-1.5 py-1.5" title="Load" onClick={go}>
+              <PlayIcon size={13} />
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1">
-          {GROUP_OPTIONS.map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setGroup(g)}
-              className={`rounded-md px-2 py-1 text-[11px] font-semibold transition-colors ${
-                group === g ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
-              }`}
-            >
-              {g}
-            </button>
-          ))}
+        <div className="flex w-36 shrink-0 items-center justify-center">
+          <MultiSelect
+            options={GROUP_OPTIONS}
+            value={selected}
+            onChange={setSelected}
+            placeholder="All"
+          />
         </div>
       </div>
 
