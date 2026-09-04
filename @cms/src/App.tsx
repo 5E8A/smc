@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CircleNotchIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
+import { CircleNotchIcon, EyeIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -52,6 +52,7 @@ interface BootState {
   tab: Tab;
   lang: Lang;
   entryHint: string | null;
+  path: string | null;
 }
 
 const bootState = (): BootState => {
@@ -62,7 +63,13 @@ const bootState = (): BootState => {
     tab: TABS.includes(rawTab as Tab) ? (rawTab as Tab) : "posts",
     lang: LANGS_URL.includes(rawLang as Lang) ? (rawLang as Lang) : "en",
     entryHint: p.get("entry"),
+    path: p.get("path"),
   };
+};
+
+const previewPathFor = (tab: Tab, entry: Entry | null, lang: Lang): string | null => {
+  if (!entry?.slug || (tab !== "posts" && tab !== "wiki")) return null;
+  return `/smc/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(entry.slug)}`;
 };
 
 const numericPart = (id: string): number => {
@@ -108,11 +115,7 @@ export const App = () => {
   const [justSaved, setJustSaved] = useState(false);
   const inflight = useRef<Set<string>>(new Set());
   const syncIcons = useIconsSync();
-
-  const switchTab = useCallback((t: Tab) => {
-    setTab(t);
-    setLoadError(null);
-  }, []);
+  const [previewPath, setPreviewPath] = useState<string | null>(BOOT.path);
 
   const switchLang = useCallback((l: Lang) => {
     setLang(l);
@@ -131,6 +134,20 @@ export const App = () => {
   const state = tabs[key];
   const selected = state?.entries.find((e) => e.id === state.selectedId) ?? null;
 
+  const switchTab = useCallback(
+    (t: Tab) => {
+      if (t === "preview") {
+        const next = previewPathFor(tab, selected, lang);
+        if (next) setPreviewPath(next);
+      }
+      setTab(t);
+      setLoadError(null);
+    },
+    [tab, selected, lang]
+  );
+
+  const openPreview = useCallback(() => switchTab("preview"), [switchTab]);
+
   useEffect(() => {
     const p = new URLSearchParams();
     p.set("tab", tab);
@@ -138,9 +155,10 @@ export const App = () => {
       p.set("lang", lang);
       if (state?.selectedId) p.set("entry", state.selectedId);
     }
+    if (tab === "preview" && previewPath) p.set("path", previewPath);
     const qs = p.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
-  }, [tab, lang, contentTab, state?.selectedId]);
+  }, [tab, lang, contentTab, state?.selectedId, previewPath]);
 
   useEffect(() => {
     if (!contentTab) return;
@@ -325,8 +343,14 @@ export const App = () => {
     }
   }, [saving, tab, authors, authorsSnapshot, tabs, key, lang, syncIcons]);
 
-  const saveActions = (dirty: boolean) => (
+  const saveActions = (dirty: boolean, onPreview?: () => void) => (
     <>
+      {onPreview && (
+        <Button variant="ghost" className="px-2.5 py-1 text-xs" title="Open in preview tab" onClick={onPreview}>
+          <EyeIcon size={13} />
+          Preview
+        </Button>
+      )}
       {dirty && <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">unsaved</span>}
       {justSaved && <span className="text-xs font-semibold text-green-400">Saved ✓</span>}
       <Button variant="primary" className="px-2.5 py-1 text-xs" onClick={() => void save()} disabled={!dirty || saving}>
@@ -505,11 +529,6 @@ export const App = () => {
     !!selected &&
     !!saveIssues?.some((i) => i.severity === "error" && i.entry >= 0 && state?.entries[i.entry] === selected);
 
-  const entryPreviewPath = useMemo(() => {
-    if (!contentTab || !selected || !selected.slug) return null;
-    return `/smc/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(selected.slug)}`;
-  }, [contentTab, selected, tab, lang]);
-
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center gap-4 border-b border-zinc-800 bg-zinc-950 px-5 py-2.5">
@@ -656,11 +675,7 @@ export const App = () => {
             <>
               {activeIssues && activeIssues.length > 0 && (
                 <Banner
-                  variant={
-                    activeIssues.some((i) => i.severity === "error")
-                      ? "error"
-                      : "warn"
-                  }
+                  variant={activeIssues.some((i) => i.severity === "error") ? "error" : "warn"}
                   className="mx-6 mt-4"
                   title={
                     <>
@@ -697,11 +712,7 @@ export const App = () => {
                 </Banner>
               )}
 
-              <div
-                className={
-                  contentTab || tab === "preview" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"
-                }
-              >
+              <div className={contentTab || tab === "preview" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"}>
                 {(tab === "posts" || tab === "wiki") && (
                   <>
                     {!selected && (
@@ -717,8 +728,8 @@ export const App = () => {
                           </Button>
                         }
                       >
-                        No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry
-                        is invisible in {otherLang.toUpperCase()}.
+                        No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry is
+                        invisible in {otherLang.toUpperCase()}.
                       </Banner>
                     )}
                     {selected && isBlogPost(selected) && tab === "posts" && (
@@ -727,7 +738,7 @@ export const App = () => {
                         lang={lang}
                         categories={categories}
                         onChange={updateSelected}
-                        actions={saveActions(viewDirty)}
+                        actions={saveActions(viewDirty, openPreview)}
                       />
                     )}
                     {selected && !isBlogPost(selected) && tab === "wiki" && (
@@ -736,7 +747,7 @@ export const App = () => {
                         lang={lang}
                         categories={categories}
                         onChange={updateSelected}
-                        actions={saveActions(viewDirty)}
+                        actions={saveActions(viewDirty, openPreview)}
                       />
                     )}
                     {selectedHasErrors && (
@@ -779,7 +790,7 @@ export const App = () => {
                 </div>
 
                 {tab === "preview" && (
-                  <PreviewTab entryPath={entryPreviewPath} online={webProbe.online} onRetry={webProbe.retry} />
+                  <PreviewTab entryPath={previewPath} online={webProbe.online} onRetry={webProbe.retry} />
                 )}
               </div>
             </>
