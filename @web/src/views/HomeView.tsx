@@ -156,7 +156,7 @@ const HomeView = () => {
               <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/20" />
 
               {/* Ad Badge */}
-              <div className="absolute top-0 right-0 p-2">
+              <div className="absolute top-0 right-0 flex">
                 <span className="rounded-bl border-b border-l border-white/5 bg-black/60 px-2 py-0.5 text-[8px] tracking-widest text-white/60 uppercase backdrop-blur-md md:text-[10px]">
                   PARTNERSHIP
                 </span>
