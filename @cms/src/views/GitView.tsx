@@ -7,8 +7,8 @@ import {
 } from "@phosphor-icons/react";
 import { getGitStatus, type GitStatus } from "../api";
 import { useRunConsole, defaultMapDone } from "../lib/runConsole";
-import { Button } from "./fields";
-import { Banner } from "./Banner";
+import { Button } from "../components/ui/fields";
+import { Banner } from "../components/ui/Banner";
 
 const statusLabel: Record<string, string> = {
   "??": "untracked",

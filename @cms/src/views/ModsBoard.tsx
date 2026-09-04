@@ -12,8 +12,8 @@ import {
 import { getModList, putModList } from "../api";
 import type { Issue, ModListColumn } from "../types";
 import { useRunConsole } from "../lib/runConsole";
-import { Button } from "./fields";
-import { Banner } from "./Banner";
+import { Button } from "../components/ui/fields";
+import { Banner } from "../components/ui/Banner";
 
 interface ModrinthProject {
   id: string;

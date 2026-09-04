@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { useRunConsole } from "./runConsole";
+import { useRunConsole } from "../lib/runConsole";
 
 /**
  * Runs the server-side icon-map sync (`POST /api/icons/sync`) and streams its

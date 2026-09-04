@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
-import { assetUrl } from "../api";
-import { isVideoSrc, videoPosterSrc } from "../lib/videoAsset";
+import { assetUrl } from "../../api";
+import { isVideoSrc, videoPosterSrc } from "../../lib/videoAsset";
 
 const resolveSrc = (src: string) => (src.startsWith("/smc/assets/") ? assetUrl(src) : src);
 

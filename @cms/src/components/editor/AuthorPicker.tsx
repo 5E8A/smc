@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
-import type { Author, Lang } from "../types";
-import { loadAuthorsList, getCachedAuthors } from "../lib/authorCache";
-import { AssetThumb } from "./ImageLibrary";
-import { Button } from "./fields";
+import type { Author, Lang } from "../../types";
+import { loadAuthorsList, getCachedAuthors } from "../../lib/authorCache";
+import { AssetThumb } from "../media/ImageLibrary";
+import { Button } from "../ui/fields";
 
 interface PickerProps {
   lang: Lang;

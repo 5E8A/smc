@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { HOME_URL } from "./devServer";
+import { HOME_URL } from "../lib/devServer";
 
 const PROBE_URL = HOME_URL.slice(0, -1);
 const PROBE_MS = 1000;

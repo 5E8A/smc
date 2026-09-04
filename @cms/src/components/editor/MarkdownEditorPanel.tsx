@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowDownIcon, ImageIcon, ImagesIcon, SparkleIcon } from "@phosphor-icons/react";
-import { useImagePicker } from "./useImagePicker";
+import { useImagePicker } from "../media/useImagePicker";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { IconPicker } from "./IconPicker";
-import { useIconsSync } from "../lib/useIconsSync";
-import { caretViewportY, toPreviewLine } from "../lib/caretAnchor";
-import { Button, TextArea } from "./fields";
+import { useIconsSync } from "../../hooks/useIconsSync";
+import { caretViewportY, toPreviewLine } from "../../lib/caretAnchor";
+import { Button, TextArea } from "../ui/fields";
 
 interface MarkdownEditorPanelProps {
   id: string;

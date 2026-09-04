@@ -1,6 +1,6 @@
 import { CopyIcon, TrashIcon } from "@phosphor-icons/react";
-import type { Entry } from "../types";
-import { ListPanel } from "./ListPanel";
+import type { Entry } from "../../types";
+import { ListPanel } from "../ui/ListPanel";
 
 interface EntryListProps {
   entries: Entry[];

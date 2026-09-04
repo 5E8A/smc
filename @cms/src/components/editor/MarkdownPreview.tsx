@@ -14,11 +14,11 @@ import {
   remarkTableCategoryHeader,
   remarkUnwrapBlocks,
 } from "@smc/shared/markdown";
-import { assetUrl } from "../api";
-import { isVideoSrc, videoPosterSrc } from "../lib/videoAsset";
-import { remarkLineAttrs } from "../lib/remarkLineAttrs";
+import { assetUrl } from "../../api";
+import { isVideoSrc, videoPosterSrc } from "../../lib/videoAsset";
+import { remarkLineAttrs } from "../../lib/remarkLineAttrs";
 import type { PluggableList } from "unified";
-import Carousel from "./Carousel";
+import Carousel from "../media/Carousel";
 import { ICON_COMPONENTS } from "./icon-map.generated";
 
 const Icon = ({ name, className }: { name?: string; className?: string }) => {

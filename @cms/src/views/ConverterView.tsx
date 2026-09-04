@@ -10,7 +10,7 @@ import {
 import { convertImages, downloadBlob } from "../api";
 import type { ConvertStageEvent } from "../api";
 import { formatConvertStage } from "../lib/stageLabels";
-import { Button } from "./fields";
+import { Button } from "../components/ui/fields";
 
 interface StagedFile {
   file: File;

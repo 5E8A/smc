@@ -2,9 +2,9 @@ import { useCallback, useMemo, useState } from "react";
 import { ArrowClockwiseIcon, HouseIcon, PlayIcon } from "@phosphor-icons/react";
 import { DEVICE_GROUPS, CUSTOM_PRESET, type DevicePreset } from "../lib/presets";
 import { ORIGIN, HOME_URL } from "../lib/devServer";
-import { PreviewStage } from "./devices/PreviewStage";
-import { Button } from "./fields";
-import { MultiSelect, type MultiSelectOption } from "./MultiSelect";
+import { PreviewStage } from "../components/preview/PreviewStage";
+import { Button } from "../components/ui/fields";
+import { MultiSelect, type MultiSelectOption } from "../components/ui/MultiSelect";
 
 const GROUP_OPTIONS: MultiSelectOption[] = [
   ...DEVICE_GROUPS.map((g) => ({ value: g.label, label: g.label })),

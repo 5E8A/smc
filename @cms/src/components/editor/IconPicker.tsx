@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
 import { ICON_CATALOG } from "@smc/shared/icon-catalog";
 import { searchIcons } from "@smc/shared/icon-search";
 import { ICON_COMPONENTS } from "./icon-map.generated";
-import { Button } from "./fields";
+import { Button } from "../ui/fields";
 
 const MAX_RESULTS = 48;
 const recents: string[] = [];

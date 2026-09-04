@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
-import { runSsePost } from "./sse";
+import { runSsePost } from "../lib/sse";
 import {
   RunConsoleContext,
   defaultMapDone,
@@ -7,7 +7,7 @@ import {
   type RunConsoleValue,
   type RunStatus,
   type RunTaskOptions,
-} from "./runConsole";
+} from "../lib/runConsole";
 
 const SOURCE_BATCH = 40;
 

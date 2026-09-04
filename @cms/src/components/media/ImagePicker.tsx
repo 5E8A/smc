@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { XIcon } from "@phosphor-icons/react";
 import { MediaBrowser } from "./MediaBrowser";
 import { useMediaLibrary } from "./useMediaLibrary";
-import { Button, TextInput } from "./fields";
+import { Button, TextInput } from "../ui/fields";
 
 export interface PickedMedia {
   path: string;

@@ -1,5 +1,5 @@
-import type { UseDevServerProbeResult } from "../lib/useDevServerProbe";
-import type { PingStatus, UsePingResult } from "../lib/usePing";
+import type { UseDevServerProbeResult } from "../../hooks/useDevServerProbe";
+import type { PingStatus, UsePingResult } from "../../hooks/usePing";
 
 interface ServerIndicatorProps {
   ping: UsePingResult;

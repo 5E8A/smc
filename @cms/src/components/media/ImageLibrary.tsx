@@ -1,6 +1,6 @@
 import { ImageIcon } from "@phosphor-icons/react";
-import { assetUrl } from "../api";
-import type { ImageInfo } from "../types";
+import { assetUrl } from "../../api";
+import type { ImageInfo } from "../../types";
 
 export function AssetThumb({
   path,

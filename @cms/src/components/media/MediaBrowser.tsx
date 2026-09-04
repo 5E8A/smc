@@ -20,13 +20,13 @@ import {
   WarningCircleIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { createDir, deleteDir, deleteImage, getRefs, renameDir, renameImage, replaceImage, ApiError } from "../api";
-import type { ImageInfo, RefUsages } from "../types";
-import { buildDirTree, dirLabel, type DirNode } from "../lib/mediaTree";
-import { formatUploadStage } from "../lib/stageLabels";
+import { createDir, deleteDir, deleteImage, getRefs, renameDir, renameImage, replaceImage, ApiError } from "../../api";
+import type { ImageInfo, RefUsages } from "../../types";
+import { buildDirTree, dirLabel, type DirNode } from "../../lib/mediaTree";
+import { formatUploadStage } from "../../lib/stageLabels";
 import { useMediaLibrary, type UploadJob } from "./useMediaLibrary";
-import { Banner } from "./Banner";
-import { Button } from "./fields";
+import { Banner } from "../ui/Banner";
+import { Button } from "../ui/fields";
 import { PruneMediaDialog } from "./PruneMediaDialog";
 
 const VALID_UPLOAD_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".apng", ".mp4", ".m4v", ".webm", ".mov", ".mkv"];

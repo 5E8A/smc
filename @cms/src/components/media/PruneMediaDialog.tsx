@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { CaretRightIcon, CircleNotchIcon, FolderIcon, TrashIcon, XIcon } from "@phosphor-icons/react";
-import { getPruneCandidates, pruneMedia, ApiError, type PruneCandidates, type PruneResult } from "../api";
-import { Button } from "./fields";
-import { Banner } from "./Banner";
+import { getPruneCandidates, pruneMedia, ApiError, type PruneCandidates, type PruneResult } from "../../api";
+import { Button } from "../ui/fields";
+import { Banner } from "../ui/Banner";
 
 const formatBytes = (bytes: number): string => {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;

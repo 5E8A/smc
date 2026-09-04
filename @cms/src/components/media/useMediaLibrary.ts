@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { uploadImage } from "../api";
-import type { EncodeOptions } from "../api";
-import type { ImagesPayload } from "../types";
-import { loadMedia, invalidateMediaCache, type ImageNotice } from "../lib/mediaCache";
-import { useRunConsole } from "../lib/runConsole";
+import { uploadImage } from "../../api";
+import type { EncodeOptions } from "../../api";
+import type { ImagesPayload } from "../../types";
+import { loadMedia, invalidateMediaCache, type ImageNotice } from "../../lib/mediaCache";
+import { useRunConsole } from "../../lib/runConsole";
 
 export interface UploadJob {
   id: number;

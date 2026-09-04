@@ -1,9 +1,9 @@
 import { ImageIcon } from "@phosphor-icons/react";
-import { useImagePicker } from "./useImagePicker";
+import { useImagePicker } from "../components/media/useImagePicker";
 import type { ReactNode } from "react";
 import type { Author, AuthorSocials, SocialLink } from "../types";
-import { AssetThumb } from "./ImageLibrary";
-import { Field, TextArea, TextInput } from "./fields";
+import { AssetThumb } from "../components/media/ImageLibrary";
+import { Field, TextArea, TextInput } from "../components/ui/fields";
 
 interface AuthorFormProps {
   author: Author | null;

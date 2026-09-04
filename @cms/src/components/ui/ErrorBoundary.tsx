@@ -1,6 +1,6 @@
 import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from "react";
 import { ArrowClockwiseIcon, CheckIcon, CopyIcon, WarningCircleIcon, XIcon } from "@phosphor-icons/react";
-import { ApiError } from "../api";
+import { ApiError } from "../../api";
 import { Button } from "./fields";
 
 const TROUBLESHOOTING: Array<{ problem: string; fix: string }> = [

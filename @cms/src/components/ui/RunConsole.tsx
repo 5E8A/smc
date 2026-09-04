@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { CaretDownIcon, CaretUpIcon, CircleNotchIcon, TrashIcon, TerminalIcon } from "@phosphor-icons/react";
-import { useRunConsole } from "../lib/runConsole";
+import { useRunConsole } from "../../lib/runConsole";
 
 const TERMINAL_STYLE = "text-[11px] leading-relaxed whitespace-pre-wrap break-words font-mono";
 

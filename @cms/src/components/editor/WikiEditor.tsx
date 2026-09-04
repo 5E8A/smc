@@ -1,27 +1,27 @@
 import { useState, type ReactNode } from "react";
 import { ImageIcon } from "@phosphor-icons/react";
-import type { BlogPost, Lang } from "../types";
+import type { Lang, WikiDoc } from "../../types";
 import { slugify } from "@smc/shared/slug";
-import { AssetThumb } from "./ImageLibrary";
-import { useImagePicker } from "./useImagePicker";
+import { AssetThumb } from "../media/ImageLibrary";
+import { useImagePicker } from "../media/useImagePicker";
 import { AuthorPicker } from "./AuthorPicker";
 import { MarkdownEditorPanel } from "./MarkdownEditorPanel";
-import { ComboInput, Field, TextArea, TextInput } from "./fields";
+import { ComboInput, Field, TextArea, TextInput } from "../ui/fields";
 
-interface PostEditorProps {
-  post: BlogPost;
+interface WikiEditorProps {
+  doc: WikiDoc;
   lang: Lang;
   categories: string[];
-  onChange: (next: BlogPost) => void;
+  onChange: (next: WikiDoc) => void;
   actions?: ReactNode;
 }
 
-export const PostEditor = ({ post, lang, categories, onChange, actions }: PostEditorProps) => {
+export const WikiEditor = ({ doc, lang, categories, onChange, actions }: WikiEditorProps) => {
   // Slug auto-fills from the title until the user edits it by hand (or it was already hand-set).
-  const [slugTouched, setSlugTouched] = useState(post.slug !== slugify(post.title));
+  const [slugTouched, setSlugTouched] = useState(doc.slug !== slugify(doc.title));
   const { open, picker } = useImagePicker({
-    onPick: (path, target) => {
-      if (target === "cover") onChange({ ...post, coverImage: path });
+    onPick: (path) => {
+      onChange({ ...doc, coverImage: path });
     },
   });
 
@@ -33,41 +33,43 @@ export const PostEditor = ({ post, lang, categories, onChange, actions }: PostEd
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Title">
             <TextInput
-              value={post.title}
+              value={doc.title}
               onChange={(e) => {
                 const title = e.target.value;
                 onChange({
-                  ...post,
+                  ...doc,
                   title,
-                  slug: slugTouched ? post.slug : slugify(title),
+                  slug: slugTouched ? doc.slug : slugify(title),
                 });
               }}
             />
           </Field>
           <Field label="Slug">
             <TextInput
-              value={post.slug}
+              value={doc.slug}
               onChange={(e) => {
                 setSlugTouched(true);
-                onChange({ ...post, slug: e.target.value });
+                onChange({ ...doc, slug: e.target.value });
               }}
               className="font-mono"
             />
           </Field>
+        </div>
 
+        <div className="grid gap-4 md:grid-cols-2">
           <Field label="Category">
             <ComboInput
-              id="post-category"
+              id={`wiki-category-${lang}`}
               options={categories}
-              value={post.category}
-              onChange={(e) => onChange({ ...post, category: e.target.value })}
+              value={doc.category}
+              onChange={(e) => onChange({ ...doc, category: e.target.value })}
             />
           </Field>
           <Field label="Date">
             <input
               type="date"
-              value={post.date}
-              onChange={(e) => onChange({ ...post, date: e.target.value })}
+              value={doc.date}
+              onChange={(e) => onChange({ ...doc, date: e.target.value })}
               className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-100 outline-none focus:border-green-500 [color-scheme:dark]"
             />
           </Field>
@@ -76,12 +78,12 @@ export const PostEditor = ({ post, lang, categories, onChange, actions }: PostEd
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Cover image" variant="block">
             <div className="flex items-center gap-2">
-              <AssetThumb path={post.coverImage} onPick={() => open("cover")} />
+              <AssetThumb path={doc.coverImage} onPick={() => open("cover")} />
               <div className="relative flex-1">
                 <TextInput
-                  value={post.coverImage}
-                  onChange={(e) => onChange({ ...post, coverImage: e.target.value })}
-                  placeholder="/smc/assets/posts/…"
+                  value={doc.coverImage}
+                  onChange={(e) => onChange({ ...doc, coverImage: e.target.value })}
+                  placeholder="/smc/assets/banners/…"
                   className="h-[74px] pr-20"
                 />
                 <button
@@ -96,19 +98,19 @@ export const PostEditor = ({ post, lang, categories, onChange, actions }: PostEd
           </Field>
 
           <Field label="Summary">
-            <TextArea rows={3} value={post.summary} onChange={(e) => onChange({ ...post, summary: e.target.value })} />
+            <TextArea rows={3} value={doc.summary} onChange={(e) => onChange({ ...doc, summary: e.target.value })} />
           </Field>
         </div>
 
         <Field label="Author" variant="block">
-          <AuthorPicker value={post.author} lang={lang} onChange={(author) => onChange({ ...post, author })} />
+          <AuthorPicker value={doc.author} lang={lang} onChange={(author) => onChange({ ...doc, author })} />
         </Field>
       </div>
 
       <MarkdownEditorPanel
-        id="post-content"
-        value={post.content}
-        onChange={(content) => onChange({ ...post, content })}
+        id="wiki-content"
+        value={doc.content}
+        onChange={(content) => onChange({ ...doc, content })}
         actions={actions}
       />
     </div>
