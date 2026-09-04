@@ -1,19 +1,19 @@
 ## :GearIcon: Changed Vanilla settings
 
-| Setting | Value |
-|---------|-------|
-| R | Toggle Perspective |
-| Sprint Mode | Toggle |
-| FOV | 88 |
-| FOV Effects | Off |
-| Auto Jump | Off |
-| Distortion Effects | Off |
-| Darkness Pulsing | Off |
-| Damage Tilt | 30% |
-| Monochrome Logo | On |
-| Menu Background Blur | Off |
-| Chat Text Size | 60% |
-| Chat Width | 215px |
+| Setting              | Value              |
+| -------------------- | ------------------ |
+| R                    | Toggle Perspective |
+| Sprint Mode          | Toggle             |
+| FOV                  | 88                 |
+| FOV Effects          | Off                |
+| Auto Jump            | Off                |
+| Distortion Effects   | Off                |
+| Darkness Pulsing     | Off                |
+| Damage Tilt          | 30%                |
+| Monochrome Logo      | On                 |
+| Menu Background Blur | Off                |
+| Chat Text Size       | 60%                |
+| Chat Width           | 215px              |
 
 ## :KeyboardIcon: Useful Mods Keybinds
 

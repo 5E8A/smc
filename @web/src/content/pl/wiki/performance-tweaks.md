@@ -4,8 +4,8 @@ Jeśli masz wystarczającą ilość pamięci RAM w systemie, zalecamy przydziele
 
 Aby to zrobić w Modrinth App, otwórz instancję Fabric Boosted, przejdź do Settings > Java and memory, wybierz Custom memory allocation i ustaw żądaną ilość RAM.
 
-| RAM | MB |
-|-----|----|
+| RAM | MB      |
+| --- | ------- |
 | 2GB | 2048 MB |
 | 4GB | 4096 MB |
 | 6GB | 6144 MB |

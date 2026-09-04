@@ -14,7 +14,7 @@ const CreditsView = () => {
       { title: t.credits.operator_title, text: t.credits.operator_text },
       { title: t.credits.affiliate_title, text: t.credits.affiliate_text },
     ],
-    [t],
+    [t]
   );
 
   return (

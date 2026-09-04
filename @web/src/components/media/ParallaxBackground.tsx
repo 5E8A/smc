@@ -44,12 +44,7 @@ const ParallaxBackground = ({ className, factor = 0.15 }: ParallaxBackgroundProp
   const style: CSSProperties = { height: "100vh" };
 
   return (
-    <div
-      ref={ref}
-      aria-hidden
-      className="-z-10 fixed opacity-45 inset-0 will-change-transform"
-      style={style}
-    >
+    <div ref={ref} aria-hidden className="-z-10 fixed opacity-45 inset-0 will-change-transform" style={style}>
       <BlurhashCanvas hash={bgHash} className="absolute inset-0 size-full" />
       <div className={`parallax-bg absolute inset-0 ${className}`} />
     </div>

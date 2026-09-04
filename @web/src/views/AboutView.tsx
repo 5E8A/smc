@@ -40,10 +40,7 @@ const AboutView = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
-      <div
-        aria-hidden
-        className="-z-10 fixed mc-bg-tiled inset-0 bg-warped-wart-block opacity-45"
-      />
+      <div aria-hidden className="-z-10 fixed mc-bg-tiled inset-0 bg-warped-wart-block opacity-45" />
       {/* Header */}
       <div className="mx-auto mb-12 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 shadow-xl">

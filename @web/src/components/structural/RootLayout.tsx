@@ -20,7 +20,7 @@ const RootLayout = () => {
         {t.common.skip_to_content}
       </a>
       <Navbar />
-        <main id="main-content" tabIndex={-1} className="flex flex-grow flex-col focus:outline-none">
+      <main id="main-content" tabIndex={-1} className="flex flex-grow flex-col focus:outline-none">
         <Outlet />
       </main>
       <Footer />

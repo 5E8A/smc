@@ -4,8 +4,8 @@ If you have enough system RAM, we recommend allocating between 4GB to 6GB of RAM
 
 To do this in Modrinth App, open your Fabric Boosted instance, go to Settings > Java and memory, select Custom memory allocation, and set desired amount of RAM.
 
-| RAM | MB |
-|-----|----|
+| RAM | MB      |
+| --- | ------- |
 | 2GB | 2048 MB |
 | 4GB | 4096 MB |
 | 6GB | 6144 MB |
