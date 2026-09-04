@@ -10,16 +10,31 @@ import Chest from "./Chest";
 import { CHESTS, CATEGORY_ICONS, SPRITE_URLS, geometry } from "./chest-utils";
 import type { TooltipState } from "./chest-utils";
 
+const BASE_CHEST_WIDTH = 176;
+
 const useChestScale = () => {
   const [scale, setScale] = useState(2);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   useLayoutEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
-    const apply = () => setScale(mq.matches ? 4 : 2);
+    const wrapper = wrapperRef.current;
+    let base = 2;
+    const apply = () => {
+      base = mq.matches ? 4 : 2;
+      const available = wrapper?.clientWidth ?? 0;
+      const next = available > 0 ? Math.min(base, Math.floor((available / BASE_CHEST_WIDTH) * 8) / 8) : base;
+      setScale(next > 0 ? next : base);
+    };
     apply();
     mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
+    const obs = new ResizeObserver(apply);
+    if (wrapper) obs.observe(wrapper);
+    return () => {
+      mq.removeEventListener("change", apply);
+      obs.disconnect();
+    };
   }, []);
-  return scale;
+  return { scale, wrapperRef };
 };
 
 const useSpritePreload = () => {
@@ -35,7 +50,7 @@ const AUTOPLAY_MS = 7000;
 
 const ModChest = () => {
   const { t } = useLanguage();
-  const scale = useChestScale();
+  const { scale, wrapperRef } = useChestScale();
   const g = useMemo(() => geometry(scale), [scale]);
   const [activeCat, setActiveCat] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -49,10 +64,7 @@ const ModChest = () => {
 
   useSpritePreload();
 
-  const handleSlotHover = useCallback(
-    (mod: ModData | null) => setTooltip(mod ? { kind: "slot", mod } : null),
-    [],
-  );
+  const handleSlotHover = useCallback((mod: ModData | null) => setTooltip(mod ? { kind: "slot", mod } : null), []);
 
   useEffect(() => {
     if (paused || userControlled || reducedMotion) return;
@@ -79,13 +91,17 @@ const ModChest = () => {
     <button
       key={CHESTS[col]!.key}
       role="tab"
+      id={`mod-tab-${col}`}
       aria-selected={col === activeCat}
+      aria-controls={`mod-panel-${col}`}
       onClick={() => {
         setActiveCat(col);
         setUserControlled(true);
       }}
       onFocus={() => setTooltip({ kind: "tab", col })}
       onBlur={() => setTooltip(null)}
+      onMouseEnter={() => setTooltip({ kind: "tab", col })}
+      onMouseLeave={() => setTooltip(null)}
       className="absolute cursor-pointer"
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
       aria-label={t.mods[CHESTS[col]!.key as keyof typeof t.mods]}
@@ -100,83 +116,89 @@ const ModChest = () => {
   );
 
   return (
-    <div
-      className="relative mt-16 md:mt-28"
-      style={{ width: g.chestWidth }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => {
-        setPaused(false);
-        setTooltip(null);
-      }}
-      onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => {
-        setPaused(false);
-        setTooltip(null);
-      }}
-    >
-      {/* Tabs - split z-index: unselected behind chest, selected above */}
-      <div role="tablist" aria-label={t.mods.title} className="absolute inset-x-0" style={{ top: g.tabTop }}>
-        <div className="absolute inset-x-0 z-0">
-          {CHESTS.map((_, col) => col !== activeCat && renderTab(col))}
-        </div>
-        <div className="absolute inset-x-0 z-20">
-          {renderTab(activeCat)}
-        </div>
-      </div>
-
-      {/* Chests - all mounted, only active one visible */}
-      <div className="relative" style={{ width: g.chestWidth, height: g.chestHeight }}>
-        {CHESTS.map((chest, i) => (
-          <div
-            key={chest.key}
-            role="tabpanel"
-            className="absolute inset-0"
-            style={{ visibility: i === activeCat ? "visible" : "hidden" }}
-          >
-            <Chest
-              title={t.mods[chest.key as keyof typeof t.mods]}
-              mods={chest.mods}
-              g={g}
-              sprite={SPRITE_URLS[i]!}
-              onHover={handleSlotHover}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Play/pause toggle - on the chest, far right, inline with the category name */}
-      <button
-        type="button"
-        onClick={() => setUserControlled((prev) => !prev)}
-        aria-label={userControlled ? t.mods.resume_autoplay : t.mods.pause_autoplay}
-        className="absolute flex cursor-pointer items-center justify-center text-[#404040] transition-[color] duration-150 hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        style={{
-          top: g.playBtnTop,
-          right: g.playBtnRight,
-          width: g.playBtnSize,
-          height: g.playBtnSize,
+    <div ref={wrapperRef} className="relative mt-16 w-full md:mt-28">
+      <div
+        className="relative"
+        style={{ width: g.chestWidth }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => {
+          setPaused(false);
+          setTooltip(null);
+        }}
+        onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => {
+          setPaused(false);
+          setTooltip(null);
         }}
       >
-        {userControlled ? <PlayIcon size={g.playIconSize} weight="fill" /> : <PauseIcon size={g.playIconSize} weight="fill" />}
-      </button>
+        {/* Tabs - split z-index: unselected behind chest, selected above */}
+        <div role="tablist" aria-label={t.mods.title} className="absolute inset-x-0" style={{ top: g.tabTop }}>
+          <div className="absolute inset-x-0 z-0">{CHESTS.map((_, col) => col !== activeCat && renderTab(col))}</div>
+          <div className="absolute inset-x-0 z-20">{renderTab(activeCat)}</div>
+        </div>
 
-      {/* Cursor-following tooltip (vanilla positioner, scaled with chest) */}
-      {tooltip && (
-        <McTooltip
-          ref={tooltipRef}
-          className="fixed z-100"
+        {/* Chests - all mounted, only active one visible */}
+        <div className="relative" style={{ width: g.chestWidth, height: g.chestHeight }}>
+          {CHESTS.map((chest, i) => (
+            <div
+              key={chest.key}
+              role="tabpanel"
+              id={`mod-panel-${i}`}
+              aria-labelledby={`mod-tab-${i}`}
+              className="absolute inset-0"
+              style={{ visibility: i === activeCat ? "visible" : "hidden" }}
+            >
+              <Chest
+                title={t.mods[chest.key as keyof typeof t.mods]}
+                mods={chest.mods}
+                g={g}
+                sprite={SPRITE_URLS[i]!}
+                onHover={handleSlotHover}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Play/pause toggle - on the chest, far right, inline with the category name */}
+        <button
+          type="button"
+          onClick={() => setUserControlled((prev) => !prev)}
+          aria-label={userControlled ? t.mods.resume_autoplay : t.mods.pause_autoplay}
+          className="absolute flex cursor-pointer items-center justify-center text-[#404040] transition-[color] duration-150 hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           style={{
-            left: tooltipPos.left,
-            top: tooltipPos.top,
-            whiteSpace: tooltip.kind === "tab" ? "nowrap" : undefined,
+            top: g.playBtnTop,
+            right: g.playBtnRight,
+            width: g.playBtnSize,
+            height: g.playBtnSize,
           }}
-          scale={g.scale}
-          width={tooltip.kind === "slot" ? 96 * g.scale : undefined}
-          title={tooltip.kind === "slot" ? tooltip.mod.title : t.mods[CHESTS[tooltip.col]!.key as keyof typeof t.mods]}
-          description={tooltip.kind === "slot" ? tooltip.mod.description : undefined}
-        />
-      )}
+        >
+          {userControlled ? (
+            <PlayIcon size={g.playIconSize} weight="fill" />
+          ) : (
+            <PauseIcon size={g.playIconSize} weight="fill" />
+          )}
+        </button>
+
+        {/* Cursor-following tooltip (vanilla positioner, scaled with chest) */}
+        {tooltip && (
+          <McTooltip
+            ref={tooltipRef}
+            className="fixed z-100"
+            style={{
+              left: tooltipPos.left,
+              top: tooltipPos.top,
+              whiteSpace: tooltip.kind === "tab" ? "nowrap" : undefined,
+            }}
+            scale={g.scale}
+            width={tooltip.kind === "slot" ? 96 * g.scale : undefined}
+            title={
+              tooltip.kind === "slot" ? tooltip.mod.title : t.mods[CHESTS[tooltip.col]!.key as keyof typeof t.mods]
+            }
+            description={tooltip.kind === "slot" ? tooltip.mod.description : undefined}
+          />
+        )}
+      </div>
     </div>
   );
 };

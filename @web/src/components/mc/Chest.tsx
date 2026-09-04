@@ -22,8 +22,13 @@ const Chest = ({ title, mods, g, sprite, onHover }: ChestProps) => {
     <div className="relative" style={{ width: g.chestWidth, height: g.chestHeight }}>
       <ChestFrame className="absolute inset-0 size-full select-none" />
       <h3
-        className="pointer-events-none absolute font-mc leading-none whitespace-nowrap text-[#404040]"
-        style={{ left: g.titleLeft, top: g.titleTop, fontSize: g.titleFontSize }}
+        className="pointer-events-none absolute font-mc leading-none whitespace-nowrap overflow-hidden text-[#404040]"
+        style={{
+          left: g.titleLeft,
+          top: g.titleTop,
+          fontSize: g.titleFontSize,
+          maxWidth: g.chestWidth - g.titleLeft - g.playBtnRight - g.playBtnSize,
+        }}
       >
         {title}
       </h3>
