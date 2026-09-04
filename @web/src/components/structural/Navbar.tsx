@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ListIcon, XIcon, DownloadIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import McButton from "@/components/mc/McButton";
@@ -6,17 +6,60 @@ import { useLanguage } from "@/context/useLanguage";
 import SmartImage from "@/components/media/SmartImage";
 import LangSwitcher from "@/components/ui/LangSwitcher";
 
+const HIDE_AFTER = 96;
+const HIDE_RANGE = 96;
+/* Nav hides on scroll only on phones/tablets; desktops keep the sticky bar. */
+const COMPACT_MQ = "(max-width: 1023px), (max-height: 499px)";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const navRef = useRef<HTMLElement | null>(null);
   const { language, setLanguage, t } = useLanguage();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
+  useEffect(() => {
+    const compactMq = window.matchMedia(COMPACT_MQ);
+    const onMqChange = () => setOffset(0);
+    compactMq.addEventListener("change", onMqChange);
+    let lastY = window.scrollY;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (compactMq.matches && y > lastY) {
+          const progress = Math.min(1, Math.max(0, (y - HIDE_AFTER) / HIDE_RANGE));
+          setOffset(progress * (navRef.current?.offsetHeight ?? 80));
+        } else if (y < lastY || !compactMq.matches) {
+          setOffset(0);
+        }
+        lastY = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      compactMq.removeEventListener("change", onMqChange);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const barHidden = Math.round(offset) > 0 && !isOpen;
+
   const langParams = { lang: language };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 backdrop-blur-md">
+    <nav
+      ref={navRef}
+      className="sticky top-0 z-50 border-b border-white/10 backdrop-blur-md"
+      style={{
+        transform: `translateY(${barHidden ? `${-offset}px` : "0"})`,
+        transition: barHidden ? "transform 150ms ease-out" : "none",
+      }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-(--nav-height) items-center justify-between">
           {/* Logo */}
@@ -30,7 +73,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop ListIcon */}
-          <div className="hidden items-center md:flex">
+          <div className="hidden items-center desktop-nav:flex">
             <div className="mr-6 flex items-center space-x-1 rounded-lg border border-white/5 bg-mc-surface/50 p-1">
               <Link
                 to="/$lang"
@@ -94,7 +137,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 flex desktop-nav:hidden">
             <button
               onClick={toggleMenu}
               type="button"
@@ -111,7 +154,7 @@ const Navbar = () => {
 
       {/* Mobile ListIcon */}
       {isOpen && (
-        <div id="mobile-menu" className="border-b border-white/10 backdrop-blur-md md:hidden">
+        <div id="mobile-menu" className="border-b border-white/10 backdrop-blur-md desktop-nav:hidden">
           <div className="space-y-2 px-4 pt-2 pb-6">
             <Link
               to="/$lang"

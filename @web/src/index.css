@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Nav chrome: desktop row only when the viewport is both wide and tall enough;
+   everything else (phones portrait + landscape, short windows) gets the burger.
+   Mobile parts are gated with desktop-nav:hidden. */
+@custom-variant desktop-nav (@media (min-width: 48rem) and (min-height: 500px));
+
 @font-face {
   font-family: "Inter";
   font-style: normal;
