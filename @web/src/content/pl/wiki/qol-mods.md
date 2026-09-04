@@ -1,6 +1,6 @@
 ## :StarIcon: Mody Quality of Life
 
-Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, które wygładzają nierówności waniliowego Minecrafta - od lepszych informacji na HUDzie i narzędzi czatu, przez szybsze ładowanie, po ratunek po crashu. Wszystko poniżej jest dostępne od razu, bez żadnej konfiguracji.
+Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, które ulepszają i poprawiają Minecrafta - od lepszych informacji na HUDzie i narzędzi czatu, przez szybsze ładowanie. Wszystko opisane poniżej jest dostępne od razu, bez żadnej konfiguracji.
 
 :carouselStart:
 ![Nakładka Lighty z poziomem światła pokazująca bezpieczne ścieżki w jaskini](/smc/assets/content/mods/qol/lighty/caves.webp)
@@ -23,10 +23,10 @@ Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, któr
 | [Ping View](https://modrinth.com/mod/ping-view)                                      | Ping graczy na liście tab                          |
 | **Przedmioty i ekwipunek**                                                           |
 | [Just Enough Items](https://modrinth.com/mod/jei)                                    | Lista przedmiotów i podgląd receptur               |
-| [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip)                    | Zawartość kontenerów w podpowiedzi                 |
+| [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip)                    | Zawartość shulkerów w ekwipunku                |
 | **Czat i kontakty towarzyskie**                                                      |
 | [Chat Heads](https://modrinth.com/mod/chat-heads)                                    | Głowy graczy w wiadomościach na czacie             |
-| [Don't Clear Chat History](https://modrinth.com/mod/dcch)                            | Historia czatu przetrwa ponowne logowanie          |
+| [Don't Clear Chat History](https://modrinth.com/mod/dcch)                            | Historia czatu zachowana po ponownym logowaniu          |
 | [More Chat History](https://modrinth.com/mod/morechathistory)                        | Dłuższa historia czatu                             |
 | [No Chat Reports](https://modrinth.com/mod/no-chat-reports)                          | Sprawia, że czat nie może być zgłaszany            |
 | [Talk Balloons](https://modrinth.com/mod/talk-balloons)                              | Dymki czatu nad graczami                           |
@@ -51,19 +51,19 @@ Mody, które wyświetlają przydatne informacje bezpośrednio na ekranie, więc 
 
 #### :AppleLogoIcon: Appleskin
 
-Zastanawiałeś się kiedyś, dlaczego pasek głodu migaje? Appleskin wizualizuje ukryte mechaniki jedzenia w Minecraft. Trzymając dowolne jedzenie, zobaczysz dokładnie ile głodu i nasycenia przywróci, wraz z podglądem jak zmienią się Twoje paski głodu i zdrowia po zjedzeniu. Mod dodaje też wartości odżywcze do podpowiedzi przedmiotów oraz informacje o głodzie/nasyceniu/wyczerpaniu na ekranie debugowania (F3).
+Appleskin wizualizuje ukryte mechaniki jedzenia w Minecraft. Trzymając dowolne jedzenie, zobaczysz dokładnie ile głodu i nasycenia przywróci, wraz z podglądem jak zmienią się Twoje paski głodu i zdrowia po zjedzeniu. Mod dodaje też wartości odżywcze do podpowiedzi przedmiotów.
 
 #### :ShieldCheckIcon: Durability Viewer
 
-Wyświetla założone elementy zbroi wraz z pozostałą wytrzymałością tuż nad hotbarem, więc zawsze wiesz, kiedy naprawić ekwipunek, zanim rozpadnie się w trakcie walki.
+Wyświetla założone elementy zbroi wraz z pozostałą wytrzymałością w prawym dolnym rogu, więc zawsze wiesz, kiedy naprawić ekwipunek.
 
 Naciśnij **H**, aby pokazać lub ukryć wyświetlanie - więcej w [Klawiszach i sterowaniu](/smc/pl/wiki/keybinds-and-controls).
 
-![Durability Viewer pokazujący zbroję wokół hotbara](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Wytrzymałość zbroi wyświetlona wokół hotbara")
+![Durability Viewer pokazujący zbroję w prawym dolnym rogu](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Wytrzymałość zbroi wyświetlona w prawym dolnym rogu")
 
 #### :HeartbeatIcon: Health Indicator TXF
 
-Dodaje kompaktowy wskaźnik obrażeń do HUDu, pozwalając mieć oko na swoje zdrowie przez cały czas, bez odrywania wzroku od akcji.
+Dodaje kompaktowy wskaźnik obrażeń do HUDu, pozwalając mieć oko na zdrowie innych stworzeń przez cały czas.
 
 ![Health Indicator TXF na HUDzie](/smc/assets/content/mods/qol/health-indicator/hud.webp)
 
@@ -103,7 +103,7 @@ Klasyczna przeglądarka receptur. Każdy przedmiot w grze jest na wyciągnięcie
 
 #### :PackageIcon: Shulker Box Tooltip
 
-Najedź kursorem na dowolną shulkerkę (lub inny kontener), aby podejrzeć jej zawartość bez stawiania. Świetne do organizowania magazynów i sprawdzania, co jest w środku skrzynek w ender chescie czy ekwipunku. W konfiguracji dostępnych jest kilka układów podglądu.
+Najedź kursorem na dowolnego shulkerka, aby podejrzeć jej zawartość bez stawiania. Świetne do organizowania magazynów i sprawdzania, co jest w środku. W konfiguracji dostępnych jest kilka układów podglądu.
 
 :carouselStart:
 ![Tryb pełnego podglądu Shulker Box Tooltip](/smc/assets/content/mods/qol/shulker-box-tooltip/full-preview.webp)
@@ -117,13 +117,13 @@ Narzędzia, które czynią komunikację w multiplayer przyjemniejszą i bezpiecz
 
 #### :UserCircleIcon: Chat Heads
 
-Pokazuje głowę ze skina każdego gracza obok jego wiadomości na czacie, więc od razu widasz, kto mówi, nawet gdy kilka osób pisze jednocześnie.
+Pokazuje głowę ze skina każdego gracza obok jego wiadomości na czacie.
 
 ![Wiadomość na czacie z głowami graczy i cieniem](/smc/assets/content/mods/qol/chat-heads/drop-shadow.webp)
 
 #### :ChatCenteredDotsIcon: Talk Balloons
 
-Gdy piszesz na czacie, Twoja wiadomość pojawia się też w dymku nad głową postaci - idealne do komunikowania się bez zaglądania do loga czatu.
+Gdy piszesz na czacie, Twoja wiadomość pojawia się też w dymku nad głową postaci - idealne do komunikowania się bez zaglądania do okna czatu.
 
 :carouselStart:
 ![Dymek czatu Talk Balloons nad graczem](/smc/assets/content/mods/qol/talk-balloons/balloon.webp)
@@ -132,7 +132,7 @@ Gdy piszesz na czacie, Twoja wiadomość pojawia się też w dymku nad głową p
 
 #### :ClockCounterClockwiseIcon: More Chat History
 
-Waniliowy Minecraft przechowuje tylko ostatnie 100 wiadomości. Ten mod znacząco zwiększa ten limit, więc możesz przewijać znacznie dłuższe rozmowy.
+Minecraft przechowuje tylko ostatnie 100 wiadomości. Ten mod znacząco zwiększa ten limit, więc możesz przewijać znacznie dłuższe rozmowy.
 
 #### :ArrowUUpLeftIcon: Don't Clear Chat History
 
@@ -156,7 +156,7 @@ Pozwala widzieć znacznie dalej, niż pozwala dystans widoczności serwera. Bobb
 
 #### :SunIcon: Gamma Utils
 
-Zwiększa jasność gry daleko poza waniliowy suwak. Przełącz pełną jasność jednym klawiszem **G** - idealne do eksploracji jaskiń bez zasypywania ich pochodniami. Suwak gamma sięga 1500%, a opcjonalne noktowizja i płynne przejścia są dostępne w konfiguracji.
+Zwiększa jasność gry do maksymalnej wartości. Przełącz pełną jasność jednym klawiszem **G** - idealne do eksploracji jaskiń bez zasypywania ich pochodniami. Suwak gamma sięga 1500%, a opcjonalne noktowizja i płynne przejścia są dostępne w konfiguracji.
 
 :carouselStart:
 ![Porównanie między 100% a 1500% gamma](/smc/assets/content/mods/qol/gamma-utils/comparison.webp)

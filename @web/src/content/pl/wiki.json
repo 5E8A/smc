@@ -14,7 +14,7 @@
     "slug": "performance-tweaks",
     "title": "Ustawienia Wydajności",
     "author": "5e8a",
-    "date": "2026-06-02",
+    "date": "2026-08-04",
     "category": "Optymalizacja",
     "coverImage": "/smc/assets/content/banners/wrench.webp",
     "summary": "Maksymalizuj swoje FPS, dostosowując określone opcje i ustawienia JVM."
@@ -54,7 +54,7 @@
     "slug": "qol-mods",
     "title": "Mody Quality of Life",
     "author": "5e8a",
-    "date": "2026-06-02",
+    "date": "2026-08-04",
     "category": "Mods",
     "coverImage": "/smc/assets/content/banners/QoL.webp",
     "summary": "Przegląd modów Quality of Life zawartych w Fabric Boosted."

@@ -55,11 +55,11 @@ Ever wondered why your hunger bar has that flickering outline? Appleskin visuali
 
 #### :ShieldCheckIcon: Durability Viewer
 
-Displays your equipped armor pieces with their remaining durability right above the hotbar, so you know exactly when it is time to repair before your gear breaks mid-fight.
+Displays your equipped armor pieces with their remaining durability in bottom right corner, so you know exactly when it is time to repair your gear.
 
 Press **H** to show or hide the display - see [Keybinds and Controls](/smc/en/wiki/keybinds-and-controls).
 
-![Durability Viewer showing armor around the hotbar](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Armor durability displayed around the hotbar")
+![Durability Viewer showing armor in bottom right corner](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Armor durability displayed in bottom right corner")
 
 #### :HeartbeatIcon: Health Indicator TXF
 

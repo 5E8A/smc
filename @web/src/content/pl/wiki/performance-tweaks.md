@@ -1,8 +1,9 @@
 ## :CpuIcon: Przydzielanie większej ilości RAM
 
-Jeśli masz wystarczającą ilość pamięci RAM w systemie, zalecamy przydzielenie od 4GB do 6GB RAM.
+> **Note:** Od lipca 2026 aplikacja Modrinth domyślnie przydziela 6 GB pamięci RAM, co w zupełności wystarcza do płynnego działania Fabric Boosted. Jeśli potrzebujesz przydzielić więcej pamięci na wymagające shadery lub duży dystans renderowania, wykonaj poniższe szybkie kroki.
 
-Aby to zrobić w Modrinth App, otwórz instancję Fabric Boosted, przejdź do Settings > Java and memory, wybierz Custom memory allocation i ustaw żądaną ilość RAM.
+
+Aby to zrobić w aplikacji Modrinth, otwórz instancję Fabric Boosted, przejdź do Ustawienia instancji > Sync overrides, przewiń w dół do sekcji `Przypisana pamięć`, włącz przełącznik i ustaw pożądaną ilość pamięci RAM.
 
 | RAM | MB |
 |-----|----|

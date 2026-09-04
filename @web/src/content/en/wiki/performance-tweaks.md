@@ -1,8 +1,8 @@
 ## :CpuIcon: Allocating more RAM
 
-If you have enough system RAM, we recommend allocating between 4GB to 6GB of RAM.
+> **Note:** Since July 2026, the Modrinth App defaults to 6 GB of allocated RAM, which is enough to run Fabric Boosted smoothly. If you need to allocate more memory for heavy shaders or high render distances, follow the quick steps below.
 
-To do this in Modrinth App, open your Fabric Boosted instance, go to Settings > Java and memory, select Custom memory allocation, and set desired amount of RAM.
+To do this in Modrinth App, open your Fabric Boosted instance, go to Instance settings > Sync overrides, scroll down to `Custom memory allocation`, toggle the button and set desired amount of RAM.
 
 | RAM | MB |
 |-----|----|

@@ -24,6 +24,7 @@
 - **N** - Nowy punkt nawigacyjny ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
 - **Z** - Zoom minimapy ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
 - **X** - Minimapa na pełnym ekranie ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
+- **O** - Pokaż/ukryj minimapę ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
 - **H** - Pokaż/ukryj wytrzymałość przedmiotów ([Durability Viewer](https://modrinth.com/mod/durability-viewer-updated))
 
 Więcej skrótów można znaleźć w menu Controls.

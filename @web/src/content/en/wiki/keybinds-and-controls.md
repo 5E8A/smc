@@ -24,6 +24,7 @@
 - **N** - New waypoint ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
 - **Z** - Minimap Zoom ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
 - **X** - Fullscreen Minimap ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
+- **O** - Show/hide Minimap ([VoxelMap](https://modrinth.com/mod/voxelmap-updated))
 - **H** - Show/hide Item Durability ([Durability Viewer](https://modrinth.com/mod/durability-viewer-updated))
 
 More keybinds can be found in Controls menu.
