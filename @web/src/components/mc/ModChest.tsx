@@ -121,8 +121,10 @@ const ModChest = () => {
     setTooltipPos({ left, top });
   }, [tooltip, mouse]);
 
+  // Tab name tooltip only for keyboard focus (the chest title already shows the active category;
+  // :focus-visible keeps mouse clicks and touch taps from showing the duplicate).
   const showTabTooltip = (el: HTMLElement, col: number) => {
-    if (coarse) anchorFromElement(el);
+    anchorFromElement(el);
     setTooltip({ kind: "tab", col });
   };
 
@@ -137,10 +139,10 @@ const ModChest = () => {
         setActiveCat(col);
         setUserControlled(true);
       }}
-      onFocus={(e) => showTabTooltip(e.currentTarget, col)}
+      onFocus={(e) => {
+        if (e.currentTarget.matches(":focus-visible")) showTabTooltip(e.currentTarget, col);
+      }}
       onBlur={() => setTooltip(null)}
-      onMouseEnter={(e) => showTabTooltip(e.currentTarget, col)}
-      onMouseLeave={() => setTooltip(null)}
       className="absolute cursor-pointer"
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
       aria-label={t.mods[CHESTS[col]!.key as keyof typeof t.mods]}
