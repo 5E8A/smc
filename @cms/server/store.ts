@@ -419,24 +419,51 @@ export async function loadContent(kind: Kind, lang: Lang): Promise<unknown> {
   return hydrated;
 }
 
-export async function saveContent(kind: Kind, lang: Lang, data: unknown): Promise<{ issues: Issue[] }> {
-  return mutex(`${kind}:${lang}`, () => saveContentUnlocked(kind, lang, data));
+async function formatMarkdown(source: string, filePath: string): Promise<string> {
+  try {
+    const prettier = await import("prettier");
+    return await prettier.format(source, { filepath: filePath });
+  } catch {
+    return source;
+  }
 }
 
-async function saveContentUnlocked(kind: Kind, lang: Lang, data: unknown): Promise<{ issues: Issue[] }> {
+export async function saveContent(
+  kind: Kind,
+  lang: Lang,
+  data: unknown,
+  dirtySlugs?: string[]
+): Promise<{ issues: Issue[]; formatted: Record<string, string> }> {
+  return mutex(`${kind}:${lang}`, () => saveContentUnlocked(kind, lang, data, dirtySlugs));
+}
+
+async function saveContentUnlocked(
+  kind: Kind,
+  lang: Lang,
+  data: unknown,
+  dirtySlugs?: string[]
+): Promise<{ issues: Issue[]; formatted: Record<string, string> }> {
   const issues = await validateContent(kind, lang, data);
   const hasErrors = issues.some((i) => i.severity === "error");
+  const formatted: Record<string, string> = {};
   if (!hasErrors && Array.isArray(data)) {
-    // Write md files for each entry
+    // Collect incoming slugs and md contents
     const incomingSlugs = new Set<string>();
+    const contents = new Map<string, string>();
     for (const entry of data) {
       const slug = (entry as Record<string, unknown>)?.slug;
       if (typeof slug !== "string" || !slug.trim()) continue;
       incomingSlugs.add(slug);
       const content = (entry as Record<string, unknown>)?.content;
-      if (typeof content === "string") {
-        await writeMdAtomic(mdPath(kind, lang, slug), content);
-      }
+      if (typeof content === "string") contents.set(slug, content);
+    }
+    // Write md files only for dirty entries, formatted through prettier
+    for (const slug of dirtySlugs ?? []) {
+      const content = contents.get(slug);
+      if (content === undefined) continue;
+      const pretty = await formatMarkdown(content, mdPath(kind, lang, slug));
+      await writeMdAtomic(mdPath(kind, lang, slug), pretty);
+      formatted[slug] = pretty;
     }
     // Delete md files for removed entries
     const dir = mdDir(kind, lang);
@@ -459,7 +486,7 @@ async function saveContentUnlocked(kind: Kind, lang: Lang, data: unknown): Promi
     });
     await writeJsonAtomic(contentPath(kind, lang), meta);
   }
-  return { issues };
+  return { issues, formatted };
 }
 
 export async function validateContent(kind: Kind, lang: Lang, data: unknown): Promise<Issue[]> {

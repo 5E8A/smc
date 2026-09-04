@@ -24,10 +24,7 @@ for (const lang of ["en", "pl"]) {
   await page.close();
 
   const out = `${dir}/og-default${lang === "pl" ? "-pl" : ""}.png`;
-  await sharp(buf)
-    .resize(1200, 630, { fit: "cover", position: "top" })
-    .png()
-    .toFile(out);
+  await sharp(buf).resize(1200, 630, { fit: "cover", position: "top" }).png().toFile(out);
   console.log(`Saved ${lang}`);
 }
 

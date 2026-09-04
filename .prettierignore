@@ -7,5 +7,5 @@ package-lock.json
 @web/src/data/blurhash.json
 @web/src/data/media.json
 @web/src/components/icon-map.generated.ts
-@cms/src/components/icon-map.generated.ts
+@cms/src/components/editor/icon-map.generated.ts
 @shared/icon-catalog.ts

@@ -5,8 +5,8 @@
 
 Aby to zrobić w aplikacji Modrinth, otwórz instancję Fabric Boosted, przejdź do Ustawienia instancji > Sync overrides, przewiń w dół do sekcji `Przypisana pamięć`, włącz przełącznik i ustaw pożądaną ilość pamięci RAM.
 
-| RAM | MB |
-|-----|----|
+| RAM | MB      |
+| --- | ------- |
 | 2GB | 2048 MB |
 | 4GB | 4096 MB |
 | 6GB | 6144 MB |

@@ -24,8 +24,6 @@ One-shot mod-icon pipeline:
 
 Phosphor icon pipeline:
 
-- Regenerates `@shared/icon-catalog.ts` (full metadata: names/tags/categories from `@phosphor-icons/core`, version-stamped), `@cms/src/components/icon-map.generated.tsx` (ALL icons - local CMS tool, size irrelevant) and `@web/src/components/icon-map.generated.ts` (**only icons referenced by content markdown** - keeps the bundle lean; prunes unused entries automatically).
+- Regenerates `@shared/icon-catalog.ts` (full metadata: names/tags/categories from `@phosphor-icons/core`, version-stamped), `@cms/src/components/editor/icon-map.generated.ts` (ALL icons - local CMS tool, size irrelevant) and `@web/src/components/icon-map.generated.ts` (**only icons referenced by content markdown** - keeps the bundle lean; prunes unused entries automatically).
 - The CMS runs it automatically after every entry save and icon insert (streams into the runner console, source "icons"); use manually after hand-editing content JSON or `.md` files or bumping `@phosphor-icons/*` (bump core + react together).
 - Cross-checks every name against the installed react package's exports. Exit 1 on unknown placeholders in content.
-
-

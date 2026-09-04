@@ -31,17 +31,9 @@ const ArticleView = ({ body }: ArticleViewProps) => {
 
   return (
     <div className="min-h-screen bg-transparent pb-20">
-      <div
-        aria-hidden
-        className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45"
-      />
+      <div aria-hidden className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 pt-8 sm:px-6 lg:px-8">
-        {/* Mobile-only back button */}
-        <div className="mb-6 md:hidden">
-          <BackButton fallbackTo="/$lang/archive" fallbackParams={{ lang: language }} />
-        </div>
-
         <div className="min-w-0 flex-1">
           <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
             {/* Cover image */}
@@ -53,16 +45,16 @@ const ArticleView = ({ body }: ArticleViewProps) => {
                 lazy={false}
                 priority="high"
               />
-              <div className="absolute top-4 left-4 z-10 hidden md:block">
+              <div className="absolute top-4 left-4 z-10">
                 <BackButton fallbackTo="/$lang/archive" fallbackParams={{ lang: language }} />
               </div>
             </div>
 
             {/* Title + metadata */}
-            <div className="border-b border-white/5 px-8 pt-8 pb-6 md:px-12">
+            <div className="border-b border-white/5 px-5 pt-8 pb-6 sm:px-8 md:px-12">
               <h1 className="mb-2 max-w-4xl text-3xl font-bold text-white md:text-4xl">{post.title}</h1>
               <p className="mb-4 max-w-3xl text-base text-mc-text">{post.summary}</p>
-              <div className="flex items-center justify-between text-sm text-mc-text-muted">
+              <div className="flex flex-wrap items-center justify-between gap-x-4 text-sm text-mc-text-muted">
                 <span className="flex items-center gap-1">
                   <CalendarIcon className="size-4" /> {formatDate(post.date, language) ?? post.date}
                 </span>
@@ -73,8 +65,8 @@ const ArticleView = ({ body }: ArticleViewProps) => {
             </div>
 
             {/* Content */}
-            <div className="px-8 md:px-12">
-              <article className="max-w-none">
+            <div className="p-5 sm:p-8 md:p-12">
+              <article className="max-w-none [overflow-wrap:anywhere]">
                 {content ? (
                   <ContentMarkdown content={content} />
                 ) : (

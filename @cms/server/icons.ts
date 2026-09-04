@@ -6,7 +6,7 @@ import { icons as coreIcons } from "@phosphor-icons/core";
 
 export const ICON_CATALOG_FILE = path.join(REPO_ROOT, "@shared", "icon-catalog.ts");
 export const WEB_ICON_MAP_FILE = path.join(REPO_ROOT, "@web", "src", "components", "icon-map.generated.ts");
-export const CMS_ICON_MAP_FILE = path.join(REPO_ROOT, "@cms", "src", "components", "icon-map.generated.ts");
+export const CMS_ICON_MAP_FILE = path.join(REPO_ROOT, "@cms", "src", "components", "editor", "icon-map.generated.ts");
 
 const MARKER_PATTERN = /:([A-Z][A-Za-z]+Icon):/g;
 const MARKER_SUFFIX = "Icon";

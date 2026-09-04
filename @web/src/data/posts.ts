@@ -19,8 +19,7 @@ const enBodies = buildMap(enRaw);
 const plBodies = buildMap(plRaw);
 const bodies: Record<"en" | "pl", Record<string, string>> = { en: enBodies, pl: plBodies };
 
-const sortPosts = (a: BlogPost, b: BlogPost): number =>
-  b.date.localeCompare(a.date) || parseInt(b.id) - parseInt(a.id);
+const sortPosts = (a: BlogPost, b: BlogPost): number => b.date.localeCompare(a.date) || parseInt(b.id) - parseInt(a.id);
 
 const withAuthor = (post: BlogPostRaw, lang: "en" | "pl"): BlogPost => ({
   ...post,

@@ -1,0 +1,138 @@
+import { ImageIcon } from "@phosphor-icons/react";
+import { useImagePicker } from "../components/media/useImagePicker";
+import type { ReactNode } from "react";
+import type { Author, AuthorSocials, SocialLink } from "../types";
+import { AssetThumb } from "../components/media/ImageLibrary";
+import { Field, TextArea, TextInput } from "../components/ui/fields";
+
+interface AuthorFormProps {
+  author: Author | null;
+  onChange: (next: Author) => void;
+  actions?: ReactNode;
+}
+
+export const AuthorForm = ({ author, onChange, actions }: AuthorFormProps) => {
+  if (!author) {
+    return (
+      <p className="text-sm text-zinc-500">
+        Authors are shared across languages. Picking one in the post/wiki editors links it by id, edits here propagate
+        to every page using them on the next site build.
+      </p>
+    );
+  }
+  return <AuthorEditor key={author.id} author={author} onChange={onChange} actions={actions} />;
+};
+
+function AuthorEditor({
+  author,
+  onChange,
+  actions,
+}: {
+  author: Author;
+  onChange: (next: Author) => void;
+  actions?: ReactNode;
+}) {
+  const { open, picker } = useImagePicker({ onPick: (path) => onChange({ ...author, avatar: path }) });
+
+  const loc = (field: "name" | "bio", l: "en" | "pl", v: string) =>
+    onChange({ ...author, [field]: { ...author[field], [l]: v } });
+
+  const socialField = (key: keyof AuthorSocials, field: keyof SocialLink, v: string) => {
+    const prev = author.socials?.[key] as SocialLink | undefined;
+    const next = { ...prev, [field]: v };
+    const hasValue = next.url || next.label;
+    onChange({
+      ...author,
+      socials: { ...author.socials, [key]: hasValue ? next : undefined },
+    });
+  };
+
+  const getSocial = (key: keyof AuthorSocials, field: keyof SocialLink): string => {
+    const link = author.socials?.[key] as SocialLink | undefined;
+    return link?.[field] ?? "";
+  };
+
+  return (
+    <div className="space-y-4">
+      {picker}
+
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-semibold tracking-wide text-zinc-400 uppercase">Id</span>
+        <code className="rounded border border-zinc-800 bg-black/40 px-2 py-0.5 font-mono text-xs text-green-300">
+          {author.id || "(generated on save)"}
+        </code>
+        {actions && <div className="ml-auto flex items-center gap-2">{actions}</div>}
+      </div>
+
+      <Field label="Avatar" variant="block">
+        <div className="flex items-stretch gap-2">
+          <AssetThumb path={author.avatar} onPick={() => open("avatar")} autoHeight />
+          <div className="relative min-w-0 flex-1">
+            <TextInput
+              value={author.avatar}
+              onChange={(e) => onChange({ ...author, avatar: e.target.value })}
+              placeholder="/smc/assets/avatars/…"
+              className="h-full pr-28"
+            />
+            <button
+              type="button"
+              onClick={() => open("avatar")}
+              className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1.5 rounded-md bg-zinc-800 px-2.5 py-2 text-xs text-zinc-300 hover:bg-zinc-700"
+            >
+              <ImageIcon size={14} /> Pick image
+            </button>
+          </div>
+        </div>
+      </Field>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Field label="Name (EN)">
+          <TextInput value={author.name.en} onChange={(e) => loc("name", "en", e.target.value)} />
+        </Field>
+        <Field label="Name (PL)">
+          <TextInput value={author.name.pl} onChange={(e) => loc("name", "pl", e.target.value)} />
+        </Field>
+        <Field label="Bio (EN)">
+          <TextArea rows={3} value={author.bio.en} onChange={(e) => loc("bio", "en", e.target.value)} />
+        </Field>
+        <Field label="Bio (PL)">
+          <TextArea rows={3} value={author.bio.pl} onChange={(e) => loc("bio", "pl", e.target.value)} />
+        </Field>
+      </div>
+
+      <div className="space-y-3">
+        <span className="block text-xs font-semibold tracking-wide text-zinc-400 uppercase">Social Links</span>
+        {(
+          [
+            ["twitter", "Twitter / X URL", "https://x.com/...", "@username"],
+            ["youtube", "YouTube URL", "https://youtube.com/...", "@handle"],
+            ["github", "GitHub URL", "https://github.com/...", "username"],
+            ["discord", "Discord Profile URL", "https://discord.com/users/...", "display name"],
+          ] as const
+        ).map(([key, urlLabel, urlPlaceholder, labelPlaceholder]) => (
+          <div key={key} className="grid grid-cols-[1fr_1fr] gap-3">
+            <Field label={urlLabel}>
+              <TextInput
+                value={getSocial(key, "url")}
+                onChange={(e) => socialField(key, "url", e.target.value)}
+                placeholder={urlPlaceholder}
+              />
+            </Field>
+            <Field label="Display Name" hint="Optional label next to the icon">
+              <TextInput
+                value={getSocial(key, "label")}
+                onChange={(e) => socialField(key, "label", e.target.value)}
+                placeholder={labelPlaceholder}
+              />
+            </Field>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-[11px] text-zinc-600">
+        Posts and wiki docs reference this author by id, edits propagate everywhere on the next site build. Ids are
+        generated automatically and never editable.
+      </p>
+    </div>
+  );
+}

@@ -9,11 +9,13 @@ interface ChestProps {
   mods: ModData[];
   g: Geometry;
   sprite: string;
-  onHover: (mod: ModData | null) => void;
+  onHover: (mod: ModData | null, el?: HTMLElement) => void;
+  asLink?: boolean;
+  onActivate?: () => void;
 }
 
-const Chest = ({ title, mods, g, sprite, onHover }: ChestProps) => {
-  const handleSlotHover = useCallback((mod: ModData) => onHover(mod), [onHover]);
+const Chest = ({ title, mods, g, sprite, onHover, asLink = true, onActivate }: ChestProps) => {
+  const handleSlotHover = useCallback((mod: ModData, index: number, el: HTMLElement) => onHover(mod, el), [onHover]);
   const handleSlotLeave = useCallback(() => onHover(null), [onHover]);
 
   const slots: (ModData | null)[] = Array.from({ length: 27 }, (_, i) => mods[i] ?? null);
@@ -22,8 +24,13 @@ const Chest = ({ title, mods, g, sprite, onHover }: ChestProps) => {
     <div className="relative" style={{ width: g.chestWidth, height: g.chestHeight }}>
       <ChestFrame className="absolute inset-0 size-full select-none" />
       <h3
-        className="pointer-events-none absolute font-mc leading-none whitespace-nowrap text-[#404040]"
-        style={{ left: g.titleLeft, top: g.titleTop, fontSize: g.titleFontSize }}
+        className="pointer-events-none absolute font-mc leading-none whitespace-nowrap overflow-hidden text-[#404040]"
+        style={{
+          left: g.titleLeft,
+          top: g.titleTop,
+          fontSize: g.titleFontSize,
+          maxWidth: g.chestWidth - g.titleLeft - g.playBtnRight - g.playBtnSize,
+        }}
       >
         {title}
       </h3>
@@ -36,6 +43,8 @@ const Chest = ({ title, mods, g, sprite, onHover }: ChestProps) => {
           sprite={sprite}
           onHover={handleSlotHover}
           onLeave={handleSlotLeave}
+          asLink={asLink}
+          onActivate={onActivate}
         />
       ))}
     </div>

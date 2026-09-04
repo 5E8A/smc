@@ -16,10 +16,7 @@ const LanguageMissingCard = ({ kind, slug, availableLang, title }: LanguageMissi
 
   return (
     <div className="relative flex min-h-[70vh] flex-1 flex-col items-center justify-center px-4">
-      <div
-        aria-hidden
-        className="-z-10 fixed mc-bg-tiled inset-0 bg-bedrock opacity-45"
-      />
+      <div aria-hidden className="-z-10 fixed mc-bg-tiled inset-0 bg-bedrock opacity-45" />
       <h1 className="mb-3 text-center text-3xl font-bold text-white md:text-4xl">{u.title}</h1>
       <p className="mb-2 max-w-md text-center text-lg text-mc-text">{u.description}</p>
       <p className="mb-8 max-w-md text-center font-semibold text-white">&ldquo;{title}&rdquo;</p>

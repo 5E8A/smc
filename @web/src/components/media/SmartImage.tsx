@@ -122,6 +122,7 @@ const VideoSmartImage = ({
 }: VideoSmartImageProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [controlsVisible, setControlsVisible] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(true);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const showControls = useCallback(() => {
@@ -141,9 +142,15 @@ const VideoSmartImage = ({
 
   useEffect(() => {
     const el = videoRef.current;
-    if (!el || !controls) return;
-    const onPause = () => setControlsVisible(true);
-    const onPlay = () => showControls();
+    if (!el) return;
+    const onPause = () => {
+      setVideoPlaying(false);
+      if (controls) setControlsVisible(true);
+    };
+    const onPlay = () => {
+      setVideoPlaying(true);
+      if (controls) showControls();
+    };
     el.addEventListener("pause", onPause);
     el.addEventListener("play", onPlay);
     return () => {
@@ -205,15 +212,24 @@ const VideoSmartImage = ({
           />
         </>
       ) : (
-        <video
-          ref={(el) => {
-            videoRef.current = el;
-            onVideoRef?.(el);
-          }}
-          {...videoProps}
-          aria-label={alt}
-          autoPlay
-        />
+        <>
+          <video
+            ref={(el) => {
+              videoRef.current = el;
+              onVideoRef?.(el);
+            }}
+            {...videoProps}
+            aria-label={alt}
+            autoPlay
+          />
+          {!controls && (
+            <PlaybackToggleButton
+              playing={videoPlaying}
+              onToggle={togglePlay}
+              className="absolute right-2 bottom-2 z-10"
+            />
+          )}
+        </>
       )}
       {controls && <MediaControls videoRef={videoRef} visible={controlsVisible} />}
     </div>

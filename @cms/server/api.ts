@@ -100,16 +100,17 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       }
 
       if (method === "PUT") {
-        let parsed: unknown;
+        let parsed: { entries?: unknown; dirtySlugs?: unknown };
         try {
           const body = await readRawBody(req, MAX_JSON_BODY);
           parsed = JSON.parse(body.toString("utf8"));
         } catch (err) {
           return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
         }
-        const { issues } = await saveContent(kind, lang, parsed);
+        const dirtySlugs = Array.isArray(parsed.dirtySlugs) ? parsed.dirtySlugs.filter((s): s is string => typeof s === "string") : [];
+        const { issues, formatted } = await saveContent(kind, lang, parsed.entries, dirtySlugs);
         const hasErrors = issues.some((i) => i.severity === "error");
-        return void sendJson(res, hasErrors ? 400 : 200, { ok: !hasErrors, issues });
+        return void sendJson(res, hasErrors ? 400 : 200, { ok: !hasErrors, issues, formatted });
       }
 
       res.writeHead(405);

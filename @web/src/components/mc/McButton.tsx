@@ -13,21 +13,21 @@ const VARIANT_CLASSES: Record<Variant, string> = {
 const BASE = "font-semibold uppercase tracking-wider btn-press";
 
 type McButtonProps =
-  | ({
+  | {
       as?: "button";
       variant?: Variant;
       children: ReactNode;
       className?: string;
       type?: "button" | "submit" | "reset";
       onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-    })
+    }
   | ({
       as: "link";
       variant?: Variant;
       children: ReactNode;
       className?: string;
     } & Omit<LinkProps, "children"> & { rel?: string })
-  | ({
+  | {
       as: "a";
       variant?: Variant;
       children: ReactNode;
@@ -36,7 +36,7 @@ type McButtonProps =
       target?: string;
       rel?: string;
       onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-    });
+    };
 
 const McButton = ({ variant = "primary", className = "", children, ...rest }: McButtonProps) => {
   const classes = [BASE, VARIANT_CLASSES[variant], className].join(" ");

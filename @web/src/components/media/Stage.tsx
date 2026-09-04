@@ -226,14 +226,11 @@ export const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) =
     [onClose, video]
   );
 
-  const onContextMenu = useCallback(
-    (event: ReactMouseEvent<HTMLDivElement>) => {
-      if (rightButtonArmed.current || zoomRef.current > MIN_ZOOM || gesture.current) {
-        event.preventDefault();
-      }
-    },
-    []
-  );
+  const onContextMenu = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
+    if (rightButtonArmed.current || zoomRef.current > MIN_ZOOM || gesture.current) {
+      event.preventDefault();
+    }
+  }, []);
 
   return (
     <div
@@ -247,7 +244,7 @@ export const Stage = ({ src, alt, initialTime, onClose, onSwipe }: StageProps) =
       onMouseEnter={video ? resetHideTimer : undefined}
       onMouseLeave={video ? hideControls : undefined}
       {...(video ? {} : gate.hoverProps)}
-      className="flex size-full min-h-0 select-none items-center justify-center"
+      className="flex size-full min-h-0 touch-none select-none items-center justify-center"
     >
       <div
         ref={stageRef}

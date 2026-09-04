@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CircleNotchIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
+import { CircleNotchIcon, EyeIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -12,25 +12,25 @@ import {
   type WikiDoc,
 } from "./types";
 import { todayIso } from "./lib/dates";
-import { ListPanel } from "./components/ListPanel";
-import { EntryList } from "./components/EntryList";
-import { PostEditor } from "./components/PostEditor";
-import { WikiEditor } from "./components/WikiEditor";
-import { AuthorForm } from "./components/AuthorsView";
-import { AssetsView } from "./components/AssetsView";
-import { ConverterView } from "./components/ConverterView";
-import { ModsBoard } from "./components/ModsBoard";
-import { GitView } from "./components/GitView";
-import { PreviewTab } from "./components/PreviewTab";
-import { RunConsole } from "./components/RunConsole";
+import { ListPanel } from "./components/ui/ListPanel";
+import { EntryList } from "./components/editor/EntryList";
+import { PostEditor } from "./components/editor/PostEditor";
+import { WikiEditor } from "./components/editor/WikiEditor";
+import { AuthorForm } from "./views/AuthorsView";
+import { AssetsView } from "./views/AssetsView";
+import { ConverterView } from "./views/ConverterView";
+import { ModsBoard } from "./views/ModsBoard";
+import { GitView } from "./views/GitView";
+import { PreviewTab } from "./views/PreviewTab";
+import { RunConsole } from "./components/ui/RunConsole";
 import { invalidateAuthorCache } from "./lib/authorCache";
-import { useIconsSync } from "./lib/useIconsSync";
-import { usePing } from "./lib/usePing";
-import { useDevServerProbe } from "./lib/useDevServerProbe";
-import { ServerIndicator } from "./components/ServerIndicator";
-import { OfflineBanner } from "./components/OfflineBanner";
-import { Banner } from "./components/Banner";
-import { Button } from "./components/fields";
+import { useIconsSync } from "./hooks/useIconsSync";
+import { usePing } from "./hooks/usePing";
+import { useDevServerProbe } from "./hooks/useDevServerProbe";
+import { ServerIndicator } from "./components/ui/ServerIndicator";
+import { OfflineBanner } from "./components/ui/OfflineBanner";
+import { Banner } from "./components/ui/Banner";
+import { Button } from "./components/ui/fields";
 
 type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy" | "preview";
 const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter", "deploy", "preview"];
@@ -52,6 +52,7 @@ interface BootState {
   tab: Tab;
   lang: Lang;
   entryHint: string | null;
+  path: string | null;
 }
 
 const bootState = (): BootState => {
@@ -62,7 +63,13 @@ const bootState = (): BootState => {
     tab: TABS.includes(rawTab as Tab) ? (rawTab as Tab) : "posts",
     lang: LANGS_URL.includes(rawLang as Lang) ? (rawLang as Lang) : "en",
     entryHint: p.get("entry"),
+    path: p.get("path"),
   };
+};
+
+const previewPathFor = (tab: Tab, entry: Entry | null, lang: Lang): string | null => {
+  if (!entry?.slug || (tab !== "posts" && tab !== "wiki")) return null;
+  return `/smc/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(entry.slug)}`;
 };
 
 const numericPart = (id: string): number => {
@@ -74,6 +81,22 @@ const nextIdFor = (entries: Entry[], kind: Kind, lang: Lang): string =>
   kind === "posts"
     ? String(entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1)
     : `wiki-${lang}-${entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1}`;
+
+const dirtySlugsFor = (st: TabState): string[] => {
+  let saved: Entry[] | null = null;
+  try {
+    saved = JSON.parse(st.snapshot) as Entry[];
+  } catch {
+    saved = null;
+  }
+  return st.entries
+    .filter((e) => {
+      if (!e.slug) return false;
+      const original = saved?.find((s) => s.id === e.id);
+      return !original || original.content !== e.content || original.slug !== e.slug;
+    })
+    .map((e) => e.slug);
+};
 
 function useLiveValidation(tab: Tab, lang: Lang, entries: Entry[] | null): Issue[] | null {
   const [result, setResult] = useState<{ key: string; issues: Issue[] | null }>({ key: "", issues: null });
@@ -108,11 +131,7 @@ export const App = () => {
   const [justSaved, setJustSaved] = useState(false);
   const inflight = useRef<Set<string>>(new Set());
   const syncIcons = useIconsSync();
-
-  const switchTab = useCallback((t: Tab) => {
-    setTab(t);
-    setLoadError(null);
-  }, []);
+  const [previewPath, setPreviewPath] = useState<string | null>(BOOT.path);
 
   const switchLang = useCallback((l: Lang) => {
     setLang(l);
@@ -131,6 +150,20 @@ export const App = () => {
   const state = tabs[key];
   const selected = state?.entries.find((e) => e.id === state.selectedId) ?? null;
 
+  const switchTab = useCallback(
+    (t: Tab) => {
+      if (t === "preview") {
+        const next = previewPathFor(tab, selected, lang);
+        if (next) setPreviewPath(next);
+      }
+      setTab(t);
+      setLoadError(null);
+    },
+    [tab, selected, lang]
+  );
+
+  const openPreview = useCallback(() => switchTab("preview"), [switchTab]);
+
   useEffect(() => {
     const p = new URLSearchParams();
     p.set("tab", tab);
@@ -138,9 +171,10 @@ export const App = () => {
       p.set("lang", lang);
       if (state?.selectedId) p.set("entry", state.selectedId);
     }
+    if (tab === "preview" && previewPath) p.set("path", previewPath);
     const qs = p.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
-  }, [tab, lang, contentTab, state?.selectedId]);
+  }, [tab, lang, contentTab, state?.selectedId, previewPath]);
 
   useEffect(() => {
     if (!contentTab) return;
@@ -302,12 +336,16 @@ export const App = () => {
     if (!st || st.snapshot === JSON.stringify(st.entries)) return;
     setSaving(true);
     try {
-      const result = await putContent(kindOf(tab), lang, st.entries);
+      const result = await putContent(kindOf(tab), lang, st.entries, dirtySlugsFor(st));
       if (result.ok) {
         setTabs((prev) => {
           const cur = prev[key];
           if (!cur) return prev;
-          return { ...prev, [key]: { ...cur, snapshot: JSON.stringify(cur.entries) } };
+          const formatted = result.formatted ?? {};
+          const entries = cur.entries.map((e) =>
+            typeof formatted[e.slug] === "string" ? { ...e, content: formatted[e.slug] } : e
+          );
+          return { ...prev, [key]: { ...cur, entries, snapshot: JSON.stringify(entries) } };
         });
         setJustSaved(true);
         window.setTimeout(() => setJustSaved(false), 2000);
@@ -325,8 +363,14 @@ export const App = () => {
     }
   }, [saving, tab, authors, authorsSnapshot, tabs, key, lang, syncIcons]);
 
-  const saveActions = (dirty: boolean) => (
+  const saveActions = (dirty: boolean, onPreview?: () => void) => (
     <>
+      {onPreview && (
+        <Button variant="ghost" className="px-2.5 py-1 text-xs" title="Open in preview tab" onClick={onPreview}>
+          <EyeIcon size={13} />
+          Preview
+        </Button>
+      )}
       {dirty && <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">unsaved</span>}
       {justSaved && <span className="text-xs font-semibold text-green-400">Saved ✓</span>}
       <Button variant="primary" className="px-2.5 py-1 text-xs" onClick={() => void save()} disabled={!dirty || saving}>
@@ -505,11 +549,6 @@ export const App = () => {
     !!selected &&
     !!saveIssues?.some((i) => i.severity === "error" && i.entry >= 0 && state?.entries[i.entry] === selected);
 
-  const entryPreviewPath = useMemo(() => {
-    if (!contentTab || !selected || !selected.slug) return null;
-    return `/smc/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(selected.slug)}`;
-  }, [contentTab, selected, tab, lang]);
-
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center gap-4 border-b border-zinc-800 bg-zinc-950 px-5 py-2.5">
@@ -656,11 +695,7 @@ export const App = () => {
             <>
               {activeIssues && activeIssues.length > 0 && (
                 <Banner
-                  variant={
-                    activeIssues.some((i) => i.severity === "error")
-                      ? "error"
-                      : "warn"
-                  }
+                  variant={activeIssues.some((i) => i.severity === "error") ? "error" : "warn"}
                   className="mx-6 mt-4"
                   title={
                     <>
@@ -697,11 +732,7 @@ export const App = () => {
                 </Banner>
               )}
 
-              <div
-                className={
-                  contentTab || tab === "preview" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"
-                }
-              >
+              <div className={contentTab || tab === "preview" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"}>
                 {(tab === "posts" || tab === "wiki") && (
                   <>
                     {!selected && (
@@ -717,8 +748,8 @@ export const App = () => {
                           </Button>
                         }
                       >
-                        No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry
-                        is invisible in {otherLang.toUpperCase()}.
+                        No {otherLang.toUpperCase()} counterpart with slug &quot;{selected.slug}&quot;, so this entry is
+                        invisible in {otherLang.toUpperCase()}.
                       </Banner>
                     )}
                     {selected && isBlogPost(selected) && tab === "posts" && (
@@ -727,7 +758,7 @@ export const App = () => {
                         lang={lang}
                         categories={categories}
                         onChange={updateSelected}
-                        actions={saveActions(viewDirty)}
+                        actions={saveActions(viewDirty, openPreview)}
                       />
                     )}
                     {selected && !isBlogPost(selected) && tab === "wiki" && (
@@ -736,7 +767,7 @@ export const App = () => {
                         lang={lang}
                         categories={categories}
                         onChange={updateSelected}
-                        actions={saveActions(viewDirty)}
+                        actions={saveActions(viewDirty, openPreview)}
                       />
                     )}
                     {selectedHasErrors && (
@@ -779,7 +810,7 @@ export const App = () => {
                 </div>
 
                 {tab === "preview" && (
-                  <PreviewTab entryPath={entryPreviewPath} online={webProbe.online} onRetry={webProbe.retry} />
+                  <PreviewTab entryPath={previewPath} online={webProbe.online} onRetry={webProbe.retry} />
                 )}
               </div>
             </>

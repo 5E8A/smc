@@ -15,6 +15,7 @@ export const translations = {
       skip_to_content: "Skip to content",
       open_menu: "Open menu",
       close_menu: "Close menu",
+      no_images: "No images available",
     },
     meta: {
       title: "SMC - Seba Modding Community",
@@ -56,6 +57,7 @@ export const translations = {
       utility: "Utility",
       pause_autoplay: "Pause rotation",
       resume_autoplay: "Resume rotation",
+      open_mod: "Open on Modrinth",
     },
     latest: {
       title: "LATEST LOGS",
@@ -68,6 +70,7 @@ export const translations = {
       subtitle: "Browse all past updates, guides, and community news.",
       search_placeholder: "Search articles...",
       no_results: "No results found.",
+      results_count: "Results: {n}",
     },
     wiki: {
       title: "DOCUMENTATION",
@@ -75,8 +78,10 @@ export const translations = {
       search_placeholder: "Search documentation...",
       read_doc: "Read Guide",
       no_results: "No results found.",
+      results_count: "Results: {n}",
       toc_contents: "Contents",
       toc_hide: "Hide",
+      toc_on_this_page: "On this page",
     },
     about_page: {
       title: "About The Project",
@@ -152,12 +157,14 @@ export const translations = {
       close: "Close",
       prev: "Previous image",
       next: "Next image",
+      slide: "Slide {n}",
     },
     media: {
       play: "Play animation",
       pause: "Pause",
       stop: "Stop animation",
       seek: "Seek",
+      speed: "Playback speed",
       enter_fullscreen: "Enter fullscreen",
       exit_fullscreen: "Exit fullscreen",
     },
@@ -176,6 +183,7 @@ export const translations = {
       skip_to_content: "Przejdź do treści",
       open_menu: "Otwórz menu",
       close_menu: "Zamknij menu",
+      no_images: "Brak dostępnych obrazów",
     },
     meta: {
       title: "SMC - Seba Modding Community",
@@ -219,6 +227,7 @@ export const translations = {
       utility: "Narzędzia",
       pause_autoplay: "Wstrzymaj rotację",
       resume_autoplay: "Wznów rotację",
+      open_mod: "Otwórz w Modrinth",
     },
     latest: {
       title: "OSTATNIE LOGI",
@@ -231,6 +240,7 @@ export const translations = {
       subtitle: "Przeglądaj wszystkie poprzednie aktualizacje, poradniki i wieści.",
       search_placeholder: "Szukaj artykułów...",
       no_results: "Nie znaleziono wyników.",
+      results_count: "Wyniki: {n}",
     },
     wiki: {
       title: "DOKUMENTACJA",
@@ -238,8 +248,10 @@ export const translations = {
       search_placeholder: "Szukaj w dokumentacji...",
       read_doc: "Czytaj Poradnik",
       no_results: "Nie znaleziono wyników.",
+      results_count: "Wyniki: {n}",
       toc_contents: "Spis treści",
       toc_hide: "Ukryj",
+      toc_on_this_page: "Na tej stronie",
     },
     about_page: {
       title: "O Projekcie",
@@ -315,12 +327,14 @@ export const translations = {
       close: "Zamknij",
       prev: "Poprzedni obraz",
       next: "Następny obraz",
+      slide: "Obraz {n}",
     },
     media: {
       play: "Odtwórz animację",
       pause: "Pauza",
       stop: "Zatrzymaj animację",
       seek: "Przewiń",
+      speed: "Prędkość odtwarzania",
       enter_fullscreen: "Tryb pełnoekranowy",
       exit_fullscreen: "Wyjdź z pełnego ekranu",
     },

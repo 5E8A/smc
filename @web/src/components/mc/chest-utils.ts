@@ -46,7 +46,7 @@ export const geometry = (s: number): Geometry => ({
   titleFontSize: Math.round(12 * s),
   playBtnTop: 5 * s,
   playBtnRight: 7 * s,
-  playBtnSize: 11 * s,
+  playBtnSize: 12 * s,
   playIconSize: 8 * s,
 });
 

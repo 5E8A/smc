@@ -1,12 +1,13 @@
 import { useCallback, useRef, useState } from "react";
 import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosphor-icons/react";
+import type { CarouselImage } from "@smc/shared/markdown";
 import SmartImage from "@/components/media/SmartImage";
 import Lightbox from "@/components/media/Lightbox";
 import { useLanguage } from "@/context/useLanguage";
 import { focusRing } from "@/utils/focusRing";
 
 interface CarouselProps {
-  images: string[];
+  images: CarouselImage[];
 }
 
 const Carousel = ({ images }: CarouselProps) => {
@@ -15,6 +16,12 @@ const Carousel = ({ images }: CarouselProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [initialTime, setInitialTime] = useState(0);
   const videoElRef = useRef<HTMLVideoElement | null>(null);
+
+  const slideAlt = (index: number) => {
+    const alt = images[index]?.alt?.trim();
+    return alt || t.lightbox.slide.replace("{n}", String(index + 1));
+  };
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const openLightbox = useCallback(() => {
     const el = videoElRef.current;
@@ -67,13 +74,34 @@ const Carousel = ({ images }: CarouselProps) => {
     setCurrentIndex(slideIndex);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0]!;
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0]!;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) nextSlide();
+    else prevSlide();
+  };
+
   return (
     <div className="group relative size-full">
       {/* Main Image Container */}
-      <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
+      <div
+        className="relative aspect-video w-full touch-pan-y overflow-hidden bg-[#050505]"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <SmartImage
-          src={images[currentIndex]!}
-          alt={`Slide ${currentIndex + 1}`}
+          src={images[currentIndex]!.src}
+          alt={slideAlt(currentIndex)}
           className="size-full"
           priority="low"
           controls={false}
@@ -84,6 +112,8 @@ const Carousel = ({ images }: CarouselProps) => {
         <button
           type="button"
           onClick={openLightbox}
+          aria-hidden="true"
+          tabIndex={-1}
           aria-label={t.lightbox.open}
           className={`absolute inset-0 z-10 cursor-zoom-in ${focusRing}`}
         ></button>
@@ -98,11 +128,11 @@ const Carousel = ({ images }: CarouselProps) => {
           <CornersOutIcon size={20} />
         </button>
       </div>
-      {/* Navigation Buttons - Hidden by default, show on hover */}
+      {/* Navigation Buttons - Hidden by default, show on hover; hidden on touch devices (swipe instead) */}
       <button
         type="button"
         aria-label={t.lightbox.prev}
-        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+        className={`pointer-coarse:hidden absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={prevSlide}
       >
         <CaretLeftIcon size={24} />
@@ -111,25 +141,29 @@ const Carousel = ({ images }: CarouselProps) => {
       <button
         type="button"
         aria-label={t.lightbox.next}
-        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+        className={`pointer-coarse:hidden absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={nextSlide}
       >
         <CaretRightIcon size={24} />
       </button>
 
       {/* Modern Dots */}
-      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/50 px-3 py-2 backdrop-blur-sm">
+      <div className="absolute bottom-2 left-1/2 z-20 flex max-w-[90%] -translate-x-1/2 items-center gap-1 overflow-x-auto rounded-full bg-black/50 px-1.5 py-1.5 backdrop-blur-sm">
         {images.map((slide, slideIndex) => (
           <button
             key={slideIndex}
             type="button"
-            aria-label={`Slide ${slideIndex + 1}`}
+            aria-label={slideAlt(slideIndex)}
             aria-current={currentIndex === slideIndex || undefined}
             onClick={() => goToSlide(slideIndex)}
-            className={`h-2 cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-              currentIndex === slideIndex ? "w-6 bg-white" : "w-2 bg-white/30 hover:bg-white/60"
-            }`}
-          ></button>
+            className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <span
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentIndex === slideIndex ? "w-6 bg-white" : "w-2 bg-white/30 hover:bg-white/60"
+              }`}
+            />
+          </button>
         ))}
       </div>
 

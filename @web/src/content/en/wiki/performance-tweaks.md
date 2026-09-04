@@ -4,8 +4,8 @@
 
 To do this in Modrinth App, open your Fabric Boosted instance, go to Instance settings > Sync overrides, scroll down to `Custom memory allocation`, toggle the button and set desired amount of RAM.
 
-| RAM | MB |
-|-----|----|
+| RAM | MB      |
+| --- | ------- |
 | 2GB | 2048 MB |
 | 4GB | 4096 MB |
 | 6GB | 6144 MB |
