@@ -82,6 +82,22 @@ const nextIdFor = (entries: Entry[], kind: Kind, lang: Lang): string =>
     ? String(entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1)
     : `wiki-${lang}-${entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1}`;
 
+const dirtySlugsFor = (st: TabState): string[] => {
+  let saved: Entry[] | null = null;
+  try {
+    saved = JSON.parse(st.snapshot) as Entry[];
+  } catch {
+    saved = null;
+  }
+  return st.entries
+    .filter((e) => {
+      if (!e.slug) return false;
+      const original = saved?.find((s) => s.id === e.id);
+      return !original || original.content !== e.content || original.slug !== e.slug;
+    })
+    .map((e) => e.slug);
+};
+
 function useLiveValidation(tab: Tab, lang: Lang, entries: Entry[] | null): Issue[] | null {
   const [result, setResult] = useState<{ key: string; issues: Issue[] | null }>({ key: "", issues: null });
   const serialized = useMemo(() => (entries ? JSON.stringify(entries) : null), [entries]);
@@ -320,12 +336,16 @@ export const App = () => {
     if (!st || st.snapshot === JSON.stringify(st.entries)) return;
     setSaving(true);
     try {
-      const result = await putContent(kindOf(tab), lang, st.entries);
+      const result = await putContent(kindOf(tab), lang, st.entries, dirtySlugsFor(st));
       if (result.ok) {
         setTabs((prev) => {
           const cur = prev[key];
           if (!cur) return prev;
-          return { ...prev, [key]: { ...cur, snapshot: JSON.stringify(cur.entries) } };
+          const formatted = result.formatted ?? {};
+          const entries = cur.entries.map((e) =>
+            typeof formatted[e.slug] === "string" ? { ...e, content: formatted[e.slug] } : e
+          );
+          return { ...prev, [key]: { ...cur, entries, snapshot: JSON.stringify(entries) } };
         });
         setJustSaved(true);
         window.setTimeout(() => setJustSaved(false), 2000);

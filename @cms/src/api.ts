@@ -26,17 +26,22 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 export interface SaveResult {
   ok: boolean;
   issues: Issue[];
+  /** Prettier-formatted markdown keyed by slug - present only when entries were written. */
+  formatted?: Record<string, string>;
 }
 
 export const getContent = <T>(kind: Kind, lang: Lang): Promise<T[]> =>
   request<{ data: T[] }>(`/api/content?kind=${kind}&lang=${lang}`).then((r) => r.data);
 
-export const putContent = (kind: Kind, lang: Lang, data: unknown[]): Promise<SaveResult> =>
-  request<{ ok: boolean; issues: Issue[] }>(`/api/content?kind=${kind}&lang=${lang}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+export const putContent = (kind: Kind, lang: Lang, data: unknown[], dirtySlugs: string[]): Promise<SaveResult> =>
+  request<{ ok: boolean; issues: Issue[]; formatted?: Record<string, string> }>(
+    `/api/content?kind=${kind}&lang=${lang}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entries: data, dirtySlugs }),
+    }
+  );
 
 export const getAuthors = (): Promise<Author[]> => request<{ data: Author[] }>("/api/authors").then((r) => r.data);
 
