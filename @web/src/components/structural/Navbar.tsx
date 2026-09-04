@@ -15,10 +15,23 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [offset, setOffset] = useState(0);
   const navRef = useRef<HTMLElement | null>(null);
+  const burgerRef = useRef<HTMLButtonElement | null>(null);
   const { language, setLanguage, t } = useLanguage();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeMenu();
+        burgerRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, closeMenu]);
 
   useEffect(() => {
     const compactMq = window.matchMedia(COMPACT_MQ);
@@ -139,6 +152,7 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <div className="-mr-2 flex desktop-nav:hidden">
             <button
+              ref={burgerRef}
               onClick={toggleMenu}
               type="button"
               aria-expanded={isOpen}
