@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { createPortal } from "react-dom";
 import { CaretLeftIcon, CaretRightIcon, XIcon } from "@phosphor-icons/react";
+import type { CarouselImage } from "@smc/shared/markdown";
 import SmartImage from "@/components/media/SmartImage";
 import { Stage } from "@/components/media/Stage";
 import { useLanguage } from "@/context/useLanguage";
@@ -9,7 +10,7 @@ import { focusRing } from "@/utils/focusRing";
 import { isVideoAsset, posterSrc } from "@/utils/media";
 
 interface LightboxProps {
-  images: string[];
+  images: CarouselImage[];
   index: number;
   initialTime?: number;
   onIndexChange: (index: number) => void;
@@ -22,6 +23,11 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
   const closeRef = useRef<HTMLButtonElement>(null);
   const activeThumbRef = useRef<HTMLButtonElement>(null);
   const [openingIndex] = useState(index);
+
+  const slideAlt = (slideIndex: number) => {
+    const alt = images[slideIndex]?.alt?.trim();
+    return alt || t.lightbox.slide.replace("{n}", String(slideIndex + 1));
+  };
 
   const go = useCallback(
     (dir: 1 | -1) => onIndexChange((index + dir + images.length) % images.length),
@@ -41,6 +47,15 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
     const opener = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     return () => opener?.focus();
+  }, []);
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (!root) return;
+    root.inert = true;
+    return () => {
+      root.inert = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -69,8 +84,9 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
         return;
       }
       if (event.key === "Tab") {
-        const focusables = dialogRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
-        if (!focusables || focusables.length === 0) return;
+        const allFocusables = dialogRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)") ?? [];
+        const focusables = Array.from(allFocusables).filter((el) => !el.closest("[inert]"));
+        if (focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
         if (first && event.shiftKey && document.activeElement === first) {
@@ -92,7 +108,7 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
 
   useEffect(() => {
     [-1, 1].forEach((delta) => {
-      new Image().src = images[(index + delta + images.length) % images.length]!;
+      new Image().src = images[(index + delta + images.length) % images.length]!.src;
     });
   }, [images, index]);
 
@@ -116,10 +132,7 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
         </button>
       </div>
 
-      <div
-        className="relative flex min-h-0 flex-1 items-center justify-center"
-        onClick={onBackdropClick}
-      >
+      <div className="relative flex min-h-0 flex-1 items-center justify-center" onClick={onBackdropClick}>
         {images.length > 1 && (
           <>
             <button
@@ -143,8 +156,8 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
 
         <Stage
           key={index}
-          src={images[index]!}
-          alt={`Slide ${index + 1}`}
+          src={images[index]!.src}
+          alt={slideAlt(index)}
           initialTime={index === openingIndex ? initialTime : 0}
           onClose={onClose}
           onSwipe={onSwipe}
@@ -155,22 +168,22 @@ const Lightbox = ({ images, index, initialTime = 0, onIndexChange, onClose }: Li
         <nav aria-label={t.lightbox.label} className="shrink-0 border-t border-white/10 bg-black/60 p-3">
           <div className="flex justify-center">
             <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
-              {images.map((src, slide) => (
+              {images.map((image, slide) => (
                 <button
-                  key={`${src}-${slide}`}
+                  key={`${image.src}-${slide}`}
                   ref={slide === index ? activeThumbRef : undefined}
                   type="button"
                   onClick={() => onIndexChange(slide)}
                   aria-current={slide === index || undefined}
-                  aria-label={`Slide ${slide + 1}`}
+                  aria-label={slideAlt(slide)}
                   className={`relative h-14 w-24 shrink-0 overflow-hidden rounded-md border transition-opacity ${
                     slide === index ? "border-mc-green opacity-100" : "border-white/10 opacity-50 hover:opacity-90"
                   } ${focusRing}`}
                 >
-                  {isVideoAsset(src) ? (
-                    <img src={posterSrc(src)} alt="" className="size-full object-cover" draggable={false} />
+                  {isVideoAsset(image.src) ? (
+                    <img src={posterSrc(image.src)} alt="" className="size-full object-cover" draggable={false} />
                   ) : (
-                    <SmartImage src={src} alt="" fit="cover" className="size-full" priority="low" />
+                    <SmartImage src={image.src} alt="" fit="cover" className="size-full" priority="low" />
                   )}
                 </button>
               ))}

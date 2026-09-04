@@ -26,6 +26,7 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
   const [speedOpen, setSpeedOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const speedMenuRef = useRef<HTMLDivElement>(null);
+  const speedButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const el = videoRef.current;
@@ -58,8 +59,19 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
     const onPointerDown = (e: PointerEvent) => {
       if (speedMenuRef.current && !speedMenuRef.current.contains(e.target as Node)) setSpeedOpen(false);
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        setSpeedOpen(false);
+        speedButtonRef.current?.focus();
+      }
+    };
     document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [speedOpen]);
 
   useEffect(() => {
@@ -162,18 +174,28 @@ export const MediaControls = ({ videoRef, visible }: MediaControlsProps) => {
           {/* speed */}
           <div className="relative" ref={speedMenuRef}>
             <button
+              ref={speedButtonRef}
               type="button"
               onClick={() => setSpeedOpen((o) => !o)}
+              aria-expanded={speedOpen || undefined}
+              aria-haspopup="menu"
+              aria-label={t.media.speed}
               className="rounded bg-black/50 px-2 py-1 font-mono text-xs text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {speed}x
             </button>
             {speedOpen && (
-              <div className="absolute bottom-full right-0 mb-1 min-w-12 overflow-hidden rounded-md border border-zinc-700 bg-zinc-900 py-1 shadow-xl">
+              <div
+                role="menu"
+                aria-label={t.media.speed}
+                className="absolute bottom-full right-0 mb-1 min-w-12 overflow-hidden rounded-md border border-zinc-700 bg-zinc-900 py-1 shadow-xl"
+              >
                 {SPEEDS.map((r) => (
                   <button
                     key={r}
                     type="button"
+                    role="menuitemradio"
+                    aria-checked={r === speed || undefined}
                     onClick={() => cycleSpeed(r)}
                     className={`block w-full px-3 py-1 text-left font-mono text-xs transition-colors hover:bg-zinc-800 ${
                       r === speed ? "font-bold text-white" : "text-zinc-300"

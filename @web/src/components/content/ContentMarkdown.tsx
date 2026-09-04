@@ -36,7 +36,7 @@ const components: MarkdownComponents = {
     if (imgs.length === 0) return null;
     return (
       <div className="my-8 overflow-hidden rounded-xl border border-white/10 shadow-lg" {...rest}>
-        <Carousel images={imgs.map((i) => i.src)} />
+        <Carousel images={imgs} />
       </div>
     );
   },
@@ -68,12 +68,18 @@ const components: MarkdownComponents = {
     </h1>
   ),
   h2: ({ children, node, ...props }) => (
-    <h2 className="mt-10 mb-4 scroll-mt-28 border-b border-white/10 pb-2 text-2xl font-bold text-white" {...props}>
+    <h2
+      className="mt-10 mb-4 scroll-mt-28 border-b border-white/10 pb-2 text-2xl font-bold text-white focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white"
+      {...props}
+    >
       {children}
     </h2>
   ),
   h3: ({ children, node, ...props }) => (
-    <h3 className="mt-8 mb-3 scroll-mt-28 text-xl font-bold text-white" {...props}>
+    <h3
+      className="mt-8 mb-3 scroll-mt-28 text-xl font-bold text-white focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white"
+      {...props}
+    >
       {children}
     </h3>
   ),
@@ -166,7 +172,10 @@ const components: MarkdownComponents = {
     </th>
   ),
   td: ({ children, node, className: tdClassName, ...props }) => (
-    <td className={`border-r border-b border-white/5 px-4 py-2.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`} {...props}>
+    <td
+      className={`border-r border-b border-white/5 px-4 py-2.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`}
+      {...props}
+    >
       {children}
     </td>
   ),
@@ -179,8 +188,19 @@ const components: MarkdownComponents = {
   ),
 };
 
-const remarkPlugins: PluggableList = [remarkGfm, remarkBreaks, remarkNoH1, remarkTableCategoryHeader, remarkUnwrapBlocks];
-const rehypePlugins: PluggableList = [rehypeSlug, rehypeRaw, rehypeRemoveEmptyColSpanCells, [rehypeSanitize, smcSanitizeSchema]];
+const remarkPlugins: PluggableList = [
+  remarkGfm,
+  remarkBreaks,
+  remarkNoH1,
+  remarkTableCategoryHeader,
+  remarkUnwrapBlocks,
+];
+const rehypePlugins: PluggableList = [
+  rehypeSlug,
+  rehypeRaw,
+  rehypeRemoveEmptyColSpanCells,
+  [rehypeSanitize, smcSanitizeSchema],
+];
 
 const ContentMarkdown = ({ content }: ContentMarkdownProps) => (
   <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={components}>

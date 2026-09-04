@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { slug as githubSlug } from "github-slugger";
 import Icon from "./IconMap";
+import { useLanguage } from "@/context/useLanguage";
 
 interface TocItem {
   id: string;
@@ -33,6 +34,7 @@ function renderTextWithIcons(text: string): React.ReactNode[] {
 const slugify = (text: string): string => githubSlug(text);
 
 const WikiTOC = ({ content }: WikiTOCProps) => {
+  const { t } = useLanguage();
   const [activeId, setActiveId] = useState<string>("");
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -96,9 +98,12 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border border-white/5 bg-mc-surface/60 p-4">
+    <nav
+      aria-label={t.wiki.toc_on_this_page}
+      className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border border-white/5 bg-mc-surface/60 p-4"
+    >
       <p className="mb-3 border-b border-white/5 pb-2 text-xs font-bold tracking-wider text-white/60 uppercase">
-        On this page
+        {t.wiki.toc_on_this_page}
       </p>
       <ul className="space-y-0.5">
         {headings.map((h) => {
@@ -115,7 +120,13 @@ const WikiTOC = ({ content }: WikiTOCProps) => {
                   scrollTimeout.current = setTimeout(() => {
                     scrollTimeout.current = null;
                   }, 800);
-                  document.getElementById(h.id)?.scrollIntoView({ behavior: "smooth" });
+                  const target = document.getElementById(h.id);
+                  if (!target) return;
+                  target.scrollIntoView({
+                    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+                  });
+                  target.tabIndex = -1;
+                  target.focus({ preventScroll: true });
                 }}
                 className={`block truncate rounded px-2 py-1 text-sm transition-colors ${
                   isActive

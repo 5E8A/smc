@@ -1,12 +1,13 @@
 import { useCallback, useRef, useState } from "react";
 import { CaretLeftIcon, CaretRightIcon, CornersOutIcon, ImageIcon } from "@phosphor-icons/react";
+import type { CarouselImage } from "@smc/shared/markdown";
 import SmartImage from "@/components/media/SmartImage";
 import Lightbox from "@/components/media/Lightbox";
 import { useLanguage } from "@/context/useLanguage";
 import { focusRing } from "@/utils/focusRing";
 
 interface CarouselProps {
-  images: string[];
+  images: CarouselImage[];
 }
 
 const Carousel = ({ images }: CarouselProps) => {
@@ -15,6 +16,11 @@ const Carousel = ({ images }: CarouselProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [initialTime, setInitialTime] = useState(0);
   const videoElRef = useRef<HTMLVideoElement | null>(null);
+
+  const slideAlt = (index: number) => {
+    const alt = images[index]?.alt?.trim();
+    return alt || t.lightbox.slide.replace("{n}", String(index + 1));
+  };
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const openLightbox = useCallback(() => {
@@ -94,8 +100,8 @@ const Carousel = ({ images }: CarouselProps) => {
         onTouchEnd={handleTouchEnd}
       >
         <SmartImage
-          src={images[currentIndex]!}
-          alt={`Slide ${currentIndex + 1}`}
+          src={images[currentIndex]!.src}
+          alt={slideAlt(currentIndex)}
           className="size-full"
           priority="low"
           controls={false}
@@ -106,6 +112,8 @@ const Carousel = ({ images }: CarouselProps) => {
         <button
           type="button"
           onClick={openLightbox}
+          aria-hidden="true"
+          tabIndex={-1}
           aria-label={t.lightbox.open}
           className={`absolute inset-0 z-10 cursor-zoom-in ${focusRing}`}
         ></button>
@@ -140,18 +148,22 @@ const Carousel = ({ images }: CarouselProps) => {
       </button>
 
       {/* Modern Dots */}
-      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/50 px-3 py-2 backdrop-blur-sm">
+      <div className="absolute bottom-2 left-1/2 z-20 flex max-w-[90%] -translate-x-1/2 items-center gap-1 overflow-x-auto rounded-full bg-black/50 px-1.5 py-1.5 backdrop-blur-sm">
         {images.map((slide, slideIndex) => (
           <button
             key={slideIndex}
             type="button"
-            aria-label={`Slide ${slideIndex + 1}`}
+            aria-label={slideAlt(slideIndex)}
             aria-current={currentIndex === slideIndex || undefined}
             onClick={() => goToSlide(slideIndex)}
-            className={`h-2 cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-              currentIndex === slideIndex ? "w-6 bg-white" : "w-2 bg-white/30 hover:bg-white/60"
-            }`}
-          ></button>
+            className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <span
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentIndex === slideIndex ? "w-6 bg-white" : "w-2 bg-white/30 hover:bg-white/60"
+              }`}
+            />
+          </button>
         ))}
       </div>
 
