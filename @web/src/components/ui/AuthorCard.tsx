@@ -34,8 +34,8 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
   ].filter(Boolean) as SocialEntry[];
 
   return (
-    <div className="mx-8 mb-8 flex items-center space-x-6 rounded-xl border border-white/5 bg-white/5 p-6 md:mx-12 md:mb-12">
-      <img src={author.avatar} alt={author.name} className="size-16 rounded-full object-cover" />
+    <div className="mx-4 mb-8 flex flex-col gap-4 rounded-xl border border-white/5 bg-white/5 p-6 sm:flex-row sm:items-center sm:space-x-6 sm:gap-0 sm:p-6 md:mx-12 md:mb-12">
+      <img src={author.avatar} alt="" className="size-16 shrink-0 rounded-full object-cover" />
       <div>
         <h3 className="mb-1 text-lg font-bold text-white">{author.name}</h3>
         <p className="text-sm text-mc-text-muted">{author.bio}</p>

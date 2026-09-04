@@ -51,10 +51,10 @@ const ArticleView = ({ body }: ArticleViewProps) => {
             </div>
 
             {/* Title + metadata */}
-            <div className="border-b border-white/5 px-8 pt-8 pb-6 md:px-12">
+            <div className="border-b border-white/5 px-5 pt-8 pb-6 sm:px-8 md:px-12">
               <h1 className="mb-2 max-w-4xl text-3xl font-bold text-white md:text-4xl">{post.title}</h1>
               <p className="mb-4 max-w-3xl text-base text-mc-text">{post.summary}</p>
-              <div className="flex items-center justify-between text-sm text-mc-text-muted">
+              <div className="flex flex-wrap items-center justify-between gap-x-4 text-sm text-mc-text-muted">
                 <span className="flex items-center gap-1">
                   <CalendarIcon className="size-4" /> {formatDate(post.date, language) ?? post.date}
                 </span>
@@ -65,8 +65,8 @@ const ArticleView = ({ body }: ArticleViewProps) => {
             </div>
 
             {/* Content */}
-            <div className="px-8 md:px-12">
-              <article className="max-w-none">
+            <div className="p-5 sm:p-8 md:p-12">
+              <article className="max-w-none [overflow-wrap:anywhere]">
                 {content ? (
                   <ContentMarkdown content={content} />
                 ) : (

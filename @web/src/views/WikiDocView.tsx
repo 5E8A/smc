@@ -39,7 +39,10 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
         {/* Mobile TOC drawer */}
         {tocOpen && content && (
-          <div className="mb-6 rounded-xl border border-white/5 bg-mc-surface/95 p-4 backdrop-blur-md xl:hidden">
+          <div
+            id="wiki-toc-drawer"
+            className="mb-6 rounded-xl border border-white/5 bg-mc-surface/95 p-4 backdrop-blur-md xl:hidden"
+          >
             <WikiTOC content={content} />
           </div>
         )}
@@ -62,17 +65,19 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
                 <button
                   type="button"
                   onClick={() => setTocOpen(!tocOpen)}
-                  className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/80 backdrop-blur-sm transition-colors hover:text-white xl:hidden"
+                  aria-expanded={tocOpen || undefined}
+                  aria-controls="wiki-toc-drawer"
+                  className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/80 backdrop-blur-sm transition-colors hover:text-white xl:hidden max-sm:px-2.5"
                 >
                   <ListIcon className="size-4" />
-                  {tocOpen ? t.wiki.toc_hide : t.wiki.toc_contents}
+                  <span className="max-sm:hidden">{tocOpen ? t.wiki.toc_hide : t.wiki.toc_contents}</span>
                 </button>
               </div>
 
               <div className="border-b border-white/5 px-5 pt-8 pb-6 sm:px-8 md:px-12">
                 <h1 className="mb-2 max-w-4xl text-3xl font-bold text-white md:text-4xl">{doc.title}</h1>
                 <p className="mb-4 max-w-3xl text-base text-mc-text">{doc.summary}</p>
-                <div className="flex items-center justify-between text-sm text-mc-text-muted">
+                <div className="flex flex-wrap items-center justify-between gap-x-4 text-sm text-mc-text-muted">
                   <span className="flex items-center gap-1">
                     <CalendarIcon className="size-4" /> {formatDate(doc.date, language) ?? doc.date}
                   </span>
@@ -83,7 +88,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
               </div>
 
               <div className="p-5 sm:p-8 md:p-12">
-                <article className="max-w-none">
+                <article className="max-w-none [overflow-wrap:anywhere]">
                   {content ? (
                     <ContentMarkdown content={content} />
                   ) : (

@@ -32,7 +32,7 @@ const PostCard = ({ post }: PostCardProps) => {
 
       {/* Content */}
       <div className="relative -mt-12 flex grow flex-col p-6 justify-between">
-        <div className="mb-3 flex items-center gap-2 text-xs">
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
           <div className="mb-3 flex items-center space-x-2 bg-black/30 p-2 rounded border border-white/10">
             <CalendarIcon className="size-[1em] mr-2" />
             {formatDate(post.date, language) ?? post.date}

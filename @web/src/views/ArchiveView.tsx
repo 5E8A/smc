@@ -19,10 +19,7 @@ const ArchiveView = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-transparent pt-10 pb-20">
-      <div
-        aria-hidden
-        className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45"
-      />
+      <div aria-hidden className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45" />
       <SearchHeader
         title={t.archive.title}
         subtitle={t.archive.subtitle}
@@ -33,11 +30,14 @@ const ArchiveView = () => {
 
       {/* Grid */}
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <p role="status" aria-live="polite" className="sr-only">
+          {t.archive.results_count.replace("{n}", String(filteredPosts.length))}
+        </p>
         <div className="grid min-h-75 grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
           ) : (
-            <div role="status" aria-live="polite" className="col-span-full py-20 text-center text-mc-text-muted">{t.archive.no_results}</div>
+            <div className="col-span-full py-20 text-center text-mc-text-muted">{t.archive.no_results}</div>
           )}
         </div>
       </div>
