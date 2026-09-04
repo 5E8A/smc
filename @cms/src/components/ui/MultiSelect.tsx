@@ -26,17 +26,12 @@ export const MultiSelect = ({ options, value, onChange, placeholder = "Select…
     <Select.Trigger
       className={`flex w-36 items-center gap-1.5 truncate rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-[11px] font-medium text-zinc-300 outline-none transition-colors hover:border-zinc-600 hover:text-zinc-100 focus-visible:border-green-500 data-[popup-open]:border-green-500 ${className ?? ""}`}
     >
-      <Select.Value
-        className="min-w-0 flex-1 truncate text-left"
-        placeholder={placeholder}
-      >
+      <Select.Value className="min-w-0 flex-1 truncate text-left" placeholder={placeholder}>
         {(val: string[]) => {
           if (!val || val.length === 0) return placeholder;
           if (val.length === options.length) return "All";
           if (val.length <= 2) {
-            return val
-              .map((v) => options.find((o) => o.value === v)?.label ?? v)
-              .join(", ");
+            return val.map((v) => options.find((o) => o.value === v)?.label ?? v).join(", ");
           }
           return `${val.length} selected`;
         }}

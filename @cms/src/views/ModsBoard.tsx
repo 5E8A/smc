@@ -152,7 +152,9 @@ export function ModsBoard() {
     if (!columns) return;
     const missing = columns.flatMap((c) => c.slugs).filter((s) => !meta.has(s));
     if (missing.length === 0) return;
-    void fetchProjects(missing).then((found) => setMeta((prev) => new Map([...prev, ...found]))).catch(() => {});
+    void fetchProjects(missing)
+      .then((found) => setMeta((prev) => new Map([...prev, ...found])))
+      .catch(() => {});
   }, [columns, meta]);
 
   const dirty = columns !== null && snapshot !== JSON.stringify(columns);

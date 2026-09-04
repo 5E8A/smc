@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  ArrowsCounterClockwiseIcon,
-  CircleNotchIcon,
-  GitBranchIcon,
-  RocketLaunchIcon,
-} from "@phosphor-icons/react";
+import { ArrowsCounterClockwiseIcon, CircleNotchIcon, GitBranchIcon, RocketLaunchIcon } from "@phosphor-icons/react";
 import { getGitStatus, type GitStatus } from "../api";
 import { useRunConsole, defaultMapDone } from "../lib/runConsole";
 import { Button } from "../components/ui/fields";

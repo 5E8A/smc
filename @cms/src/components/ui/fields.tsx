@@ -58,7 +58,9 @@ export const Button = ({
   variant = "default",
   className = "",
   ...props
-}: { variant?: "default" | "primary" | "danger" | "ghost" | "warn" } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+}: {
+  variant?: "default" | "primary" | "danger" | "ghost" | "warn";
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const variants: Record<string, string> = {
     default: "border border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700",
     primary: "bg-green-600 text-white hover:bg-green-500",

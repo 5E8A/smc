@@ -57,8 +57,7 @@ export const PreviewTab = ({ entryPath, online, onRetry }: PreviewTabProps) => {
     }
   };
 
-  const reloadAll = () =>
-    setApplied((cur) => `${cur}${cur.includes("?") ? "&" : "?"}_r=${Date.now()}`);
+  const reloadAll = () => setApplied((cur) => `${cur}${cur.includes("?") ? "&" : "?"}_r=${Date.now()}`);
 
   const handleCustomChange = useCallback((w: number, h: number) => {
     setCustomApplied((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
@@ -74,7 +73,12 @@ export const PreviewTab = ({ entryPath, online, onRetry }: PreviewTabProps) => {
         </div>
         <div className="mx-auto flex w-full min-w-0 flex-1 items-center justify-center">
           <div className="flex w-full max-w-lg items-center rounded-md border border-zinc-700 bg-zinc-900">
-            <Button variant="ghost" className="rounded-r-none border-none px-1.5 py-1.5" title="Reload all" onClick={reloadAll}>
+            <Button
+              variant="ghost"
+              className="rounded-r-none border-none px-1.5 py-1.5"
+              title="Reload all"
+              onClick={reloadAll}
+            >
               <ArrowClockwiseIcon size={13} />
             </Button>
             <Button
@@ -105,12 +109,7 @@ export const PreviewTab = ({ entryPath, online, onRetry }: PreviewTabProps) => {
         </div>
 
         <div className="flex w-36 shrink-0 items-center justify-center">
-          <MultiSelect
-            options={GROUP_OPTIONS}
-            value={selected}
-            onChange={setSelected}
-            placeholder="All"
-          />
+          <MultiSelect options={GROUP_OPTIONS} value={selected} onChange={setSelected} placeholder="All" />
         </div>
       </div>
 
@@ -127,7 +126,12 @@ export const PreviewTab = ({ entryPath, online, onRetry }: PreviewTabProps) => {
             </Button>
           </div>
         ) : (
-          <PreviewStage presets={presets} url={applied} onCustomChange={handleCustomChange} onLoadedCountChange={handleLoadedCountChange} />
+          <PreviewStage
+            presets={presets}
+            url={applied}
+            onCustomChange={handleCustomChange}
+            onLoadedCountChange={handleLoadedCountChange}
+          />
         )}
       </div>
     </div>

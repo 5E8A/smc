@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import { CheckCircleIcon, CircleNotchIcon, InfoIcon, WarningCircleIcon, WarningIcon, XIcon } from "@phosphor-icons/react";
+import {
+  CheckCircleIcon,
+  CircleNotchIcon,
+  InfoIcon,
+  WarningCircleIcon,
+  WarningIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 
 export type BannerVariant = "error" | "warn" | "success" | "info";
 

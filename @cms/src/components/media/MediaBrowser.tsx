@@ -278,11 +278,7 @@ const PreviewInfoPanel = ({ img }: { img: ImageInfo }) => {
               title="Copy full path"
               className="shrink-0 rounded p-0.5 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
             >
-              {copied ? (
-                <CheckIcon size={13} weight="bold" className="text-green-400" />
-              ) : (
-                <CopyIcon size={13} />
-              )}
+              {copied ? <CheckIcon size={13} weight="bold" className="text-green-400" /> : <CopyIcon size={13} />}
             </button>
           </div>
         </div>
@@ -320,7 +316,7 @@ const ImagePreviewOverlay = ({ img, tileRect, onHover, onLeave }: ImagePreviewOv
     const maxW = Math.min(
       img.width,
       PREVIEW_TOTAL_MAX_WIDTH - PREVIEW_PANEL_WIDTH,
-      Math.max(window.innerWidth - 32 - PREVIEW_PANEL_WIDTH, 120),
+      Math.max(window.innerWidth - 32 - PREVIEW_PANEL_WIDTH, 120)
     );
     const maxH = Math.min(img.height, window.innerHeight * PREVIEW_MAX_HEIGHT_RATIO);
     const ratio = img.width / img.height;
@@ -468,12 +464,7 @@ const MediaTile = ({
 
   const preview =
     previewVisible && tileRect ? (
-      <ImagePreviewOverlay
-        img={img}
-        tileRect={tileRect}
-        onHover={cancelHide}
-        onLeave={handleLeave}
-      />
+      <ImagePreviewOverlay img={img} tileRect={tileRect} onHover={cancelHide} onLeave={handleLeave} />
     ) : null;
 
   if (onSelect) {
@@ -574,7 +565,8 @@ export const MediaBrowser = ({
 
   const [menu, setMenu] = useState<{ x: number; y: number; img: ImageInfo } | null>(null);
 
-  const anyModalOpen = !!pending || !!imgDelete || !!dirDelete || !!folderPrompt || !!filePrompt || !!replaceTarget || pruneOpen;
+  const anyModalOpen =
+    !!pending || !!imgDelete || !!dirDelete || !!folderPrompt || !!filePrompt || !!replaceTarget || pruneOpen;
 
   const tree = useMemo(() => buildDirTree(dirs), [dirs]);
 
