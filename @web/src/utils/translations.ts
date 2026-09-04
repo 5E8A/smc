@@ -57,6 +57,7 @@ export const translations = {
       utility: "Utility",
       pause_autoplay: "Pause rotation",
       resume_autoplay: "Resume rotation",
+      open_mod: "Open on Modrinth",
     },
     latest: {
       title: "LATEST LOGS",
@@ -226,6 +227,7 @@ export const translations = {
       utility: "Narzędzia",
       pause_autoplay: "Wstrzymaj rotację",
       resume_autoplay: "Wznów rotację",
+      open_mod: "Otwórz w Modrinth",
     },
     latest: {
       title: "OSTATNIE LOGI",

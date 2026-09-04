@@ -9,11 +9,12 @@ interface ChestProps {
   mods: ModData[];
   g: Geometry;
   sprite: string;
-  onHover: (mod: ModData | null) => void;
+  onHover: (mod: ModData | null, el?: HTMLElement) => void;
+  asLink?: boolean;
 }
 
-const Chest = ({ title, mods, g, sprite, onHover }: ChestProps) => {
-  const handleSlotHover = useCallback((mod: ModData) => onHover(mod), [onHover]);
+const Chest = ({ title, mods, g, sprite, onHover, asLink = true }: ChestProps) => {
+  const handleSlotHover = useCallback((mod: ModData, index: number, el: HTMLElement) => onHover(mod, el), [onHover]);
   const handleSlotLeave = useCallback(() => onHover(null), [onHover]);
 
   const slots: (ModData | null)[] = Array.from({ length: 27 }, (_, i) => mods[i] ?? null);
@@ -41,6 +42,7 @@ const Chest = ({ title, mods, g, sprite, onHover }: ChestProps) => {
           sprite={sprite}
           onHover={handleSlotHover}
           onLeave={handleSlotLeave}
+          asLink={asLink}
         />
       ))}
     </div>

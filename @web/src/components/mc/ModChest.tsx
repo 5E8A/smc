@@ -48,6 +48,18 @@ const useSpritePreload = () => {
 
 const AUTOPLAY_MS = 7000;
 
+const useCoarsePointer = () => {
+  const [coarse, setCoarse] = useState(false);
+  useLayoutEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const apply = () => setCoarse(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return coarse;
+};
+
 const ModChest = () => {
   const { t } = useLanguage();
   const { scale, wrapperRef } = useChestScale();
@@ -56,6 +68,7 @@ const ModChest = () => {
   const [paused, setPaused] = useState(false);
   const [userControlled, setUserControlled] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
+  const coarse = useCoarsePointer();
 
   const [tooltip, setTooltip] = useState<TooltipState>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -64,7 +77,28 @@ const ModChest = () => {
 
   useSpritePreload();
 
-  const handleSlotHover = useCallback((mod: ModData | null) => setTooltip(mod ? { kind: "slot", mod } : null), []);
+  // On touch there is no cursor: anchor the tooltip to the tapped element instead.
+  const anchorFromElement = useCallback((el: HTMLElement) => {
+    const rect = el.getBoundingClientRect();
+    setMouse({ x: rect.right, y: rect.top + rect.height / 2 });
+  }, []);
+
+  const handleSlotHover = useCallback(
+    (mod: ModData | null, el?: HTMLElement) => {
+      if (mod && coarse && el) anchorFromElement(el);
+      setTooltip(mod ? { kind: "slot", mod } : null);
+    },
+    [coarse, anchorFromElement]
+  );
+
+  useEffect(() => {
+    if (!coarse || !tooltip) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setTooltip(null);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [coarse, tooltip, wrapperRef]);
 
   useEffect(() => {
     if (paused || userControlled || reducedMotion) return;
@@ -87,6 +121,11 @@ const ModChest = () => {
     setTooltipPos({ left, top });
   }, [tooltip, mouse]);
 
+  const showTabTooltip = (el: HTMLElement, col: number) => {
+    if (coarse) anchorFromElement(el);
+    setTooltip({ kind: "tab", col });
+  };
+
   const renderTab = (col: number) => (
     <button
       key={CHESTS[col]!.key}
@@ -98,9 +137,9 @@ const ModChest = () => {
         setActiveCat(col);
         setUserControlled(true);
       }}
-      onFocus={() => setTooltip({ kind: "tab", col })}
+      onFocus={(e) => showTabTooltip(e.currentTarget, col)}
       onBlur={() => setTooltip(null)}
-      onMouseEnter={() => setTooltip({ kind: "tab", col })}
+      onMouseEnter={(e) => showTabTooltip(e.currentTarget, col)}
       onMouseLeave={() => setTooltip(null)}
       className="absolute cursor-pointer"
       style={{ left: col * g.tabColumnWidth, width: g.tabWidth, height: g.tabHeight }}
@@ -155,6 +194,7 @@ const ModChest = () => {
                 g={g}
                 sprite={SPRITE_URLS[i]!}
                 onHover={handleSlotHover}
+                asLink={!coarse}
               />
             </div>
           ))}
@@ -196,6 +236,11 @@ const ModChest = () => {
               tooltip.kind === "slot" ? tooltip.mod.title : t.mods[CHESTS[tooltip.col]!.key as keyof typeof t.mods]
             }
             description={tooltip.kind === "slot" ? tooltip.mod.description : undefined}
+            action={
+              coarse && tooltip.kind === "slot"
+                ? { label: t.mods.open_mod, href: `https://modrinth.com/mod/${tooltip.mod.slug}` }
+                : undefined
+            }
           />
         )}
       </div>
