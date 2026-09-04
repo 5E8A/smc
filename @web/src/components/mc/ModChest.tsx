@@ -74,6 +74,7 @@ const ModChest = () => {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [tooltipPos, setTooltipPos] = useState({ left: 0, top: 0 });
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const pendingActionFocus = useRef(false);
 
   useSpritePreload();
 
@@ -90,6 +91,19 @@ const ModChest = () => {
     },
     [coarse, anchorFromElement]
   );
+
+  useEffect(() => {
+    if (!coarse || !tooltip) {
+      pendingActionFocus.current = false;
+      return;
+    }
+    // Keyboard/tap activation moves focus straight to the tooltip's Modrinth button,
+    // so keyboard users reach the link without tabbing through every slot.
+    if (pendingActionFocus.current) {
+      pendingActionFocus.current = false;
+      tooltipRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    }
+  }, [coarse, tooltip]);
 
   useEffect(() => {
     if (!coarse || !tooltip) return;
@@ -168,7 +182,10 @@ const ModChest = () => {
         }}
         onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
         onFocusCapture={() => setPaused(true)}
-        onBlurCapture={() => {
+        onBlurCapture={(e) => {
+          // Keep the tooltip (and its Modrinth link) mounted while focus moves into it.
+          const next = e.relatedTarget as HTMLElement | null;
+          if (next && tooltipRef.current?.contains(next)) return;
           setPaused(false);
           setTooltip(null);
         }}
@@ -197,6 +214,7 @@ const ModChest = () => {
                 sprite={SPRITE_URLS[i]!}
                 onHover={handleSlotHover}
                 asLink={!coarse}
+                onActivate={coarse ? () => (pendingActionFocus.current = true) : undefined}
               />
             </div>
           ))}

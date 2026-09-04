@@ -11,9 +11,10 @@ interface ChestSlotProps {
   onHover: (mod: ModData, index: number, el: HTMLElement) => void;
   onLeave: () => void;
   asLink?: boolean;
+  onActivate?: () => void;
 }
 
-const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave, asLink = true }: ChestSlotProps) => {
+const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave, asLink = true, onActivate }: ChestSlotProps) => {
   const col = index % 9;
   const row = Math.floor(index / 9);
   const left = g.slotOffsetX + col * g.slotPitch;
@@ -43,7 +44,14 @@ const ChestSlot = ({ mod, index, g, sprite, onHover, onLeave, asLink = true }: C
       <div className="pointer-events-none absolute inset-0 border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100"></div>
     </a>
   ) : (
-    <button type="button" onBlur={onLeave} {...props}>
+    <button
+      type="button"
+      onClick={(e) => {
+        onHover(mod, index, e.currentTarget);
+        onActivate?.();
+      }}
+      {...props}
+    >
       <ModIcon sprite={sprite} spriteIndex={index} size={g.modIconSize} className="rounded-none" />
       <div className="pointer-events-none absolute inset-0 border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100"></div>
     </button>
