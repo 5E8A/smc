@@ -31,17 +31,9 @@ const ArticleView = ({ body }: ArticleViewProps) => {
 
   return (
     <div className="min-h-screen bg-transparent pb-20">
-      <div
-        aria-hidden
-        className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45"
-      />
+      <div aria-hidden className="-z-10 fixed mc-bg-tiled inset-0 bg-dark-prismarine opacity-45" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 pt-8 sm:px-6 lg:px-8">
-        {/* Mobile-only back button */}
-        <div className="mb-6 md:hidden">
-          <BackButton fallbackTo="/$lang/archive" fallbackParams={{ lang: language }} />
-        </div>
-
         <div className="min-w-0 flex-1">
           <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
             {/* Cover image */}
@@ -53,7 +45,7 @@ const ArticleView = ({ body }: ArticleViewProps) => {
                 lazy={false}
                 priority="high"
               />
-              <div className="absolute top-4 left-4 z-10 hidden md:block">
+              <div className="absolute top-4 left-4 z-10">
                 <BackButton fallbackTo="/$lang/archive" fallbackParams={{ lang: language }} />
               </div>
             </div>

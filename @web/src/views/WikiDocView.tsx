@@ -34,25 +34,9 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
 
   return (
     <div className="min-h-screen bg-transparent pb-20">
-      <div
-        aria-hidden
-        className="-z-10 fixed mc-bg-tiled inset-0 bg-deepslate opacity-45"
-      />
+      <div aria-hidden className="-z-10 fixed mc-bg-tiled inset-0 bg-deepslate opacity-45" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-        {/* Mobile/tablet row: back button + TOC toggle */}
-        <div className="mb-6 flex items-center justify-between xl:hidden">
-          <BackButton fallbackTo="/$lang/wiki" fallbackParams={{ lang: language }} />
-          <button
-            type="button"
-            onClick={() => setTocOpen(!tocOpen)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/80 backdrop-blur-sm transition-colors hover:text-white"
-          >
-            <ListIcon className="size-4" />
-            {tocOpen ? t.wiki.toc_hide : t.wiki.toc_contents}
-          </button>
-        </div>
-
         {/* Mobile TOC drawer */}
         {tocOpen && content && (
           <div className="mb-6 rounded-xl border border-white/5 bg-mc-surface/95 p-4 backdrop-blur-md xl:hidden">
@@ -62,7 +46,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
 
         <div className="flex gap-8">
           {/* Main card */}
-          <div className="min-w-[880px] flex-1">
+          <div className="min-w-0 flex-1">
             <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
               <div className="relative w-full overflow-hidden aspect-3/1">
                 <SmartImage
@@ -72,12 +56,20 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
                   lazy={false}
                   priority="high"
                 />
-                <div className="absolute top-4 left-4 z-10 hidden md:block">
+                <div className="absolute top-4 left-4 z-10">
                   <BackButton fallbackTo="/$lang/wiki" fallbackParams={{ lang: language }} />
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setTocOpen(!tocOpen)}
+                  className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/80 backdrop-blur-sm transition-colors hover:text-white xl:hidden"
+                >
+                  <ListIcon className="size-4" />
+                  {tocOpen ? t.wiki.toc_hide : t.wiki.toc_contents}
+                </button>
               </div>
 
-              <div className="border-b border-white/5 px-8 pt-8 pb-6 md:px-12">
+              <div className="border-b border-white/5 px-5 pt-8 pb-6 sm:px-8 md:px-12">
                 <h1 className="mb-2 max-w-4xl text-3xl font-bold text-white md:text-4xl">{doc.title}</h1>
                 <p className="mb-4 max-w-3xl text-base text-mc-text">{doc.summary}</p>
                 <div className="flex items-center justify-between text-sm text-mc-text-muted">
@@ -90,9 +82,13 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
                 </div>
               </div>
 
-              <div className="p-8 md:p-12">
+              <div className="p-5 sm:p-8 md:p-12">
                 <article className="max-w-none">
-                  {content ? <ContentMarkdown content={content} /> : <div className="h-32 animate-pulse bg-white/5 rounded" />}
+                  {content ? (
+                    <ContentMarkdown content={content} />
+                  ) : (
+                    <div className="h-32 animate-pulse bg-white/5 rounded" />
+                  )}
                 </article>
               </div>
 
@@ -101,9 +97,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
           </div>
 
           {/* Desktop sidebar TOC - right side */}
-          <aside className="hidden w-64 shrink-0 xl:block">
-            {content && <WikiTOC content={content} />}
-          </aside>
+          <aside className="hidden w-64 shrink-0 xl:block">{content && <WikiTOC content={content} />}</aside>
         </div>
       </div>
     </div>
