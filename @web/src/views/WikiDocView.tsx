@@ -51,11 +51,11 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
           {/* Main card */}
           <div className="min-w-0 flex-1">
             <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
-              <div className="relative w-full overflow-hidden aspect-3/1">
+              <div className="relative w-full overflow-hidden aspect-2/1">
                 <SmartImage
                   src={doc.coverImage}
                   alt={doc.title}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-full"
+                  className="absolute inset-0 size-full"
                   lazy={false}
                   priority="high"
                 />

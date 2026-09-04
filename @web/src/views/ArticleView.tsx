@@ -37,11 +37,11 @@ const ArticleView = ({ body }: ArticleViewProps) => {
         <div className="min-w-0 flex-1">
           <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
             {/* Cover image */}
-            <div className="relative w-full overflow-hidden aspect-3/1">
+            <div className="relative w-full overflow-hidden aspect-2/1">
               <SmartImage
                 src={post.coverImage}
                 alt={post.title}
-                className="absolute left-1/2 -translate-x-1/2 size-full"
+                className="absolute inset-0 size-full"
                 lazy={false}
                 priority="high"
               />
