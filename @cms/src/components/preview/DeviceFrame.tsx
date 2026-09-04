@@ -1,28 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowClockwiseIcon, MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon } from "@phosphor-icons/react";
+import {
+  ArrowClockwiseIcon,
+  DeviceRotateIcon,
+  MagnifyingGlassMinusIcon,
+  MagnifyingGlassPlusIcon,
+} from "@phosphor-icons/react";
 import type { DevicePreset, DeviceType } from "../../lib/presets";
 import { MIN_DIM, MAX_DIM } from "../../lib/presets";
 
 const ZOOM_MIN = 0.5;
-const ZOOM_MAX = 2;
+const ZOOM_MAX = 3;
 const ZOOM_STEP = 0.25;
 
 const clamp = (v: number) => Math.min(Math.max(v, MIN_DIM), MAX_DIM);
 
 const CHROME: Record<DeviceType, string> = {
-  phone:
-    "rounded-[44px] bg-zinc-900 p-3.5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] ring-2 ring-zinc-700/60",
+  phone: "rounded-[44px] bg-zinc-900 p-3.5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] ring-2 ring-zinc-700/60",
   android:
     "rounded-[36px] bg-zinc-900 pt-10 pr-3 pb-11 pl-3 shadow-[0_20px_50px_rgba(0,0,0,0.6)] ring-2 ring-zinc-700/60",
   tablet: "rounded-[22px] bg-zinc-900 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
-  "tablet-android":
-    "rounded-[22px] bg-zinc-900 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
-  laptop:
-    "rounded-t-[14px] bg-zinc-900 pt-3 pr-3 pl-3 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] ring-2 ring-zinc-700/60",
-  desktop:
-    "rounded-[14px] bg-zinc-900 p-3.5 pb-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
-  custom:
-    "rounded-[14px] bg-zinc-900 p-3.5 pb-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
+  "tablet-android": "rounded-[22px] bg-zinc-900 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
+  laptop: "rounded-t-[14px] bg-zinc-900 pt-3 pr-3 pl-3 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] ring-2 ring-zinc-700/60",
+  desktop: "rounded-[14px] bg-zinc-900 p-3.5 pb-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
+  custom: "rounded-[14px] bg-zinc-900 p-3.5 pb-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-2 ring-zinc-700/60",
 };
 
 const SCREEN_RADIUS: Record<DeviceType, string> = {
@@ -59,7 +59,8 @@ export const DeviceFrame = ({
   onCustomChange,
 }: DeviceFrameProps) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(preset.zoom ?? 1);
+  const [rotated, setRotated] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [token, setToken] = useState(0);
   const loadedRef = useRef(false);
@@ -95,10 +96,12 @@ export const DeviceFrame = ({
   const shownW = focused ? draftW : String(preset.w);
   const shownH = focused ? draftH : String(preset.h);
 
-  const wide = preset.type === "laptop" || preset.type === "desktop";
-  const cssScale = wide ? maxDeviceW / preset.w : maxDeviceH / preset.h;
-  const displayW = preset.w * cssScale * zoom;
-  const displayH = preset.h * cssScale * zoom;
+  const effW = rotated ? preset.h : preset.w;
+  const effH = rotated ? preset.w : preset.h;
+  // true 1:1 by default; scale down only to fit the stage (80vh / width caps)
+  const fit = Math.min(1, maxDeviceH / effH, maxDeviceW / effW);
+  const displayW = effW * fit;
+  const displayH = effH * fit;
   const radius = SCREEN_RADIUS[preset.type];
 
   useEffect(() => {
@@ -165,7 +168,7 @@ export const DeviceFrame = ({
           </span>
         ) : (
           <span className="font-mono text-zinc-600">
-            {preset.w}×{preset.h}
+            {effW}×{effH}
           </span>
         )}
       </div>
@@ -191,17 +194,14 @@ export const DeviceFrame = ({
           <div className="absolute top-1/2 -right-1 z-10 h-6 w-[3px] -translate-y-1/2 rounded-r bg-zinc-700" />
         )}
 
-        <div
-          className={`relative overflow-hidden bg-black ${radius}`}
-          style={{ width: displayW, height: displayH }}
-        >
+        <div className={`relative overflow-hidden bg-black ${radius}`} style={{ width: displayW, height: displayH }}>
           {renderIframe && (
             <div
               className="origin-top-left"
               style={{
-                width: preset.w,
-                height: preset.h,
-                transform: `scale(${cssScale * zoom})`,
+                width: effW / zoom,
+                height: effH / zoom,
+                transform: `scale(${fit * zoom})`,
               }}
             >
               <iframe
@@ -236,6 +236,18 @@ export const DeviceFrame = ({
         <div className="flex items-center gap-1">
           <button
             type="button"
+            title="Rotate orientation"
+            onClick={() => setRotated((r) => !r)}
+            className={
+              rotated
+                ? "rounded bg-green-800 px-1 py-0.5 text-white hover:bg-green-700"
+                : "rounded bg-zinc-800 px-1 py-0.5 text-zinc-300 hover:bg-zinc-700"
+            }
+          >
+            <DeviceRotateIcon size={11} />
+          </button>
+          <button
+            type="button"
             title="Zoom out"
             disabled={zoom <= ZOOM_MIN}
             onClick={() => setZoom((z) => Math.max(ZOOM_MIN, Math.round((z - ZOOM_STEP) * 100) / 100))}
@@ -243,7 +255,12 @@ export const DeviceFrame = ({
           >
             <MagnifyingGlassMinusIcon size={11} />
           </button>
-          <span className="w-8 text-center font-mono text-[9px] text-zinc-500">{Math.round(zoom * 100)}%</span>
+          <span
+            className="w-8 text-center font-mono text-[9px] text-zinc-500"
+            title={preset.zoom ? `recommended ${Math.round(preset.zoom * 100)}%` : undefined}
+          >
+            {Math.round(zoom * 100)}%
+          </span>
           <button
             type="button"
             title="Zoom in"

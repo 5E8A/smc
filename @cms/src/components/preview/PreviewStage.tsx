@@ -20,11 +20,7 @@ const isTablet = (t: DeviceType): boolean => t === "tablet" || t === "tablet-and
 const MAX_DEVICE_H_FRACTION = 0.8;
 const MAX_DEVICE_W_FRACTION = 0.4;
 
-function withFrame(
-  prev: StageState,
-  id: string,
-  patch: (f: FrameState) => FrameState
-): StageState {
+function withFrame(prev: StageState, id: string, patch: (f: FrameState) => FrameState): StageState {
   const frames = { ...prev.frames, [id]: patch(prev.frames[id]) };
   return { frames, loadingId: prev.loadingId };
 }
@@ -126,22 +122,14 @@ export const PreviewStage = ({ presets, url, onCustomChange, onLoadedCountChange
   };
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col items-center gap-4 p-4">
       {phones.length > 0 && (
-        <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] justify-items-center gap-6 pb-2">
-          {phones.map(renderFrame)}
-        </div>
+        <div className="flex flex-wrap justify-center items-end gap-6">{phones.map(renderFrame)}</div>
       )}
       {tablets.length > 0 && (
-        <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] justify-items-center gap-6 pb-2">
-          {tablets.map(renderFrame)}
-        </div>
+        <div className="flex flex-wrap justify-center items-end gap-6">{tablets.map(renderFrame)}</div>
       )}
-      {wide.length > 0 && (
-        <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] justify-items-center gap-6 pb-2">
-          {wide.map(renderFrame)}
-        </div>
-      )}
+      {wide.length > 0 && <div className="flex flex-wrap justify-center items-end gap-6">{wide.map(renderFrame)}</div>}
     </div>
   );
 };

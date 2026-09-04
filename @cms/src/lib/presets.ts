@@ -5,6 +5,8 @@ export interface DevicePreset {
   w: number;
   h: number;
   type: DeviceType;
+  /** Recommended internal zoom (browser-zoom style), simulating real OS scaling. */
+  zoom?: number;
 }
 
 export interface DeviceGroup {
@@ -25,8 +27,8 @@ export const DEVICE_GROUPS: DeviceGroup[] = [
   {
     label: "iPad",
     presets: [
-      { name: "iPad Pro 13\" M4", w: 1032, h: 1376, type: "tablet" },
-      { name: "iPad Air 11\"", w: 820, h: 1180, type: "tablet" },
+      { name: 'iPad Pro 13" M4', w: 1032, h: 1376, type: "tablet" },
+      { name: 'iPad Air 11"', w: 820, h: 1180, type: "tablet" },
     ],
   },
   {
@@ -48,11 +50,11 @@ export const DEVICE_GROUPS: DeviceGroup[] = [
   {
     label: "Laptop & Desktop",
     presets: [
-      { name: "MacBook Pro 14\"", w: 1512, h: 982, type: "laptop" },
-      { name: "MacBook Air 13\"", w: 1280, h: 832, type: "laptop" },
+      { name: 'MacBook Pro 14"', w: 1512, h: 982, type: "laptop" },
+      { name: 'MacBook Air 13"', w: 1280, h: 832, type: "laptop" },
       { name: "Desktop 1080p", w: 1920, h: 1080, type: "desktop" },
-      { name: "Desktop 1440p", w: 2560, h: 1440, type: "desktop" },
-      { name: "Desktop 4K", w: 3840, h: 2160, type: "desktop" },
+      { name: "Desktop 1440p", w: 2560, h: 1440, type: "desktop", zoom: 1.25 },
+      { name: "Desktop 4K", w: 3840, h: 2160, type: "desktop", zoom: 1.5 },
     ],
   },
   {
