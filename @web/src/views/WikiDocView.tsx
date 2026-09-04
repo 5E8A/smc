@@ -40,8 +40,8 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-        {/* Mobile-only row: back button + TOC toggle */}
-        <div className="mb-6 flex items-center justify-between md:hidden">
+        {/* Mobile/tablet row: back button + TOC toggle */}
+        <div className="mb-6 flex items-center justify-between xl:hidden">
           <BackButton fallbackTo="/$lang/wiki" fallbackParams={{ lang: language }} />
           <button
             type="button"
@@ -55,14 +55,14 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
 
         {/* Mobile TOC drawer */}
         {tocOpen && content && (
-          <div className="mb-6 rounded-xl border border-white/5 bg-mc-surface/95 p-4 backdrop-blur-md md:hidden">
+          <div className="mb-6 rounded-xl border border-white/5 bg-mc-surface/95 p-4 backdrop-blur-md xl:hidden">
             <WikiTOC content={content} />
           </div>
         )}
 
         <div className="flex gap-8">
           {/* Main card */}
-          <div className="min-w-0 flex-1">
+          <div className="min-w-[880px] flex-1">
             <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
               <div className="relative w-full overflow-hidden aspect-3/1">
                 <SmartImage
@@ -101,7 +101,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
           </div>
 
           {/* Desktop sidebar TOC - right side */}
-          <aside className="hidden w-64 shrink-0 md:block">
+          <aside className="hidden w-64 shrink-0 xl:block">
             {content && <WikiTOC content={content} />}
           </aside>
         </div>
