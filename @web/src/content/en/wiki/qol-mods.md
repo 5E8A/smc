@@ -13,43 +13,43 @@ Fabric Boosted ships with a curated set of 22 Quality of Life mods that smooth o
 
 ### :ClipboardTextIcon: Quick Reference
 
-| Mod | What it does |
-|-----|--------------|
-| **HUD & Overlays** |
-| [Appleskin](https://modrinth.com/mod/appleskin) | Food, hunger and saturation values |
-| [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated) | Armor durability on the HUD |
-| [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf) | Damage indicator on the HUD |
-| [Lighty](https://modrinth.com/mod/lighty) | Light level overlay |
-| [Ping View](https://modrinth.com/mod/ping-view) | Player ping in the tab list |
-| **Items & Inventory** |
-| [Just Enough Items](https://modrinth.com/mod/jei) | Item list and recipe viewer |
-| [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip) | Container contents in the tooltip |
-| **Chat & Social** |
-| [Chat Heads](https://modrinth.com/mod/chat-heads) | Player heads in chat messages |
-| [Don't Clear Chat History](https://modrinth.com/mod/dcch) | Chat history survives relogs |
-| [More Chat History](https://modrinth.com/mod/morechathistory) | Longer chat scrollback |
-| [No Chat Reports](https://modrinth.com/mod/no-chat-reports) | Makes chat unreportable |
-| [Talk Balloons](https://modrinth.com/mod/talk-balloons) | Chat bubbles above players |
-| **Visuals & Rendering** |
-| [Bobby](https://modrinth.com/mod/bobby) | Render distance beyond the server's limit |
-| [Gamma Utils](https://modrinth.com/mod/gamma-utils) | Fullbright toggle |
-| [Smooth Skies](https://modrinth.com/mod/smooth-skies) | Smooth skybox colors |
-| **Loading & Stability** |
-| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Skips the loading terrain screen |
-| [Fast Quit](https://modrinth.com/mod/fastquit) | Instant world saving in the background |
-| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) | Keep playing after a crash |
-| [Remove Reloading Screen](https://modrinth.com/mod/rrls) | Resource packs load in the background |
-| **Account & Online** |
-| [Auth Me](https://modrinth.com/mod/auth-me) | In-game account authentication |
-| [Essential](https://modrinth.com/mod/essential) | Friends, world hosting, skins & screenshots |
-| **Map & Navigation** |
-| [VoxelMap](https://modrinth.com/mod/voxelmap-updated) | Minimap, world map and waypoints |
+| Mod                                                                                  | What it does                                |
+| ------------------------------------------------------------------------------------ | ------------------------------------------- |
+| **HUD & Overlays**                                                                   |
+| [Appleskin](https://modrinth.com/mod/appleskin)                                      | Food, hunger and saturation values          |
+| [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated)              | Armor durability on the HUD                 |
+| [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf)                | Damage indicator on the HUD                 |
+| [Lighty](https://modrinth.com/mod/lighty)                                            | Light level overlay                         |
+| [Ping View](https://modrinth.com/mod/ping-view)                                      | Player ping in the tab list                 |
+| **Items & Inventory**                                                                |
+| [Just Enough Items](https://modrinth.com/mod/jei)                                    | Item list and recipe viewer                 |
+| [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip)                    | Container contents in the tooltip           |
+| **Chat & Social**                                                                    |
+| [Chat Heads](https://modrinth.com/mod/chat-heads)                                    | Player heads in chat messages               |
+| [Don't Clear Chat History](https://modrinth.com/mod/dcch)                            | Chat history survives relogs                |
+| [More Chat History](https://modrinth.com/mod/morechathistory)                        | Longer chat scrollback                      |
+| [No Chat Reports](https://modrinth.com/mod/no-chat-reports)                          | Makes chat unreportable                     |
+| [Talk Balloons](https://modrinth.com/mod/talk-balloons)                              | Chat bubbles above players                  |
+| **Visuals & Rendering**                                                              |
+| [Bobby](https://modrinth.com/mod/bobby)                                              | Render distance beyond the server's limit   |
+| [Gamma Utils](https://modrinth.com/mod/gamma-utils)                                  | Fullbright toggle                           |
+| [Smooth Skies](https://modrinth.com/mod/smooth-skies)                                | Smooth skybox colors                        |
+| **Loading & Stability**                                                              |
+| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Skips the loading terrain screen            |
+| [Fast Quit](https://modrinth.com/mod/fastquit)                                       | Instant world saving in the background      |
+| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes)                      | Keep playing after a crash                  |
+| [Remove Reloading Screen](https://modrinth.com/mod/rrls)                             | Resource packs load in the background       |
+| **Account & Online**                                                                 |
+| [Auth Me](https://modrinth.com/mod/auth-me)                                          | In-game account authentication              |
+| [Essential](https://modrinth.com/mod/essential)                                      | Friends, world hosting, skins & screenshots |
+| **Map & Navigation**                                                                 |
+| [VoxelMap](https://modrinth.com/mod/voxelmap-updated)                                | Minimap, world map and waypoints            |
 
 ### :GaugeIcon: HUD & Overlays
 
 Mods that put useful information directly on your screen, so you never have to guess.
 
-#### :AppleLogoIcon:  Appleskin
+#### :AppleLogoIcon: Appleskin
 
 Ever wondered why your hunger bar has that flickering outline? Appleskin visualizes Minecraft's hidden food mechanics. Hold any food item to see exactly how much hunger and saturation it will restore, complete with a preview of how your hunger and health bars will change after eating. It also adds food values to item tooltips and hunger/saturation/exhaustion info to the debug screen (F3).
 
@@ -57,7 +57,7 @@ Ever wondered why your hunger bar has that flickering outline? Appleskin visuali
 
 Displays your equipped armor pieces with their remaining durability right above the hotbar, so you know exactly when it is time to repair before your gear breaks mid-fight.
 
-Press **H** to show or hide the display - see [Keybinds and Controls](/wiki/keybinds-and-controls).
+Press **H** to show or hide the display - see [Keybinds and Controls](/smc/en/wiki/keybinds-and-controls).
 
 ![Durability Viewer showing armor around the hotbar](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Armor durability displayed around the hotbar")
 
@@ -152,7 +152,7 @@ Squeeze more out of your graphics settings.
 
 #### :BinocularsIcon: Bobby
 
-Lets you see much further than the server's view distance allows. Bobby stores chunks the server has already sent you and keeps rendering them beyond the view-distance limit, effectively giving you a huge render distance on any server. Works great together with Nvidium (see [Performance Tweaks](/wiki/performance-tweaks)).
+Lets you see much further than the server's view distance allows. Bobby stores chunks the server has already sent you and keeps rendering them beyond the view-distance limit, effectively giving you a huge render distance on any server. Works great together with Nvidium (see [Performance Tweaks](/smc/en/wiki/performance-tweaks)).
 
 #### :SunIcon: Gamma Utils
 
@@ -204,7 +204,7 @@ If your Microsoft session expires, Auth Me lets you re-authenticate your account
 
 #### :SparkleIcon: Essential
 
-An all-in-one social layer: add friends, send DMs, host your singleplayer worlds for others to join (see [World Hosting](/wiki/world-hosting)), manage skins with the wardrobe, take and share enhanced screenshots, and customize your look with free cosmetics.
+An all-in-one social layer: add friends, send DMs, host your singleplayer worlds for others to join (see [World Hosting](/smc/en/wiki/world-hosting)), manage skins with the wardrobe, take and share enhanced screenshots, and customize your look with free cosmetics.
 
 :carouselStart:
 ![Essential world hosting - invite friends to your world](/smc/assets/content/mods/qol/essential/world-hosting.webp)
@@ -224,4 +224,3 @@ Never get lost again.
 A full mapping suite: a minimap in the corner of your screen, a fullscreen world map (**M**), and unlimited waypoints (**N**) that render in-world so you can navigate home, to that village, or to your friend's base. Zoom the minimap with **Z** and toggle the fullscreen map with **X**.
 
 More keybinds can be found in [Keybinds and Controls](/smc/en/wiki/keybinds-and-controls).
-

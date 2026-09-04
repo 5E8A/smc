@@ -13,37 +13,37 @@ Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, któr
 
 ### :ClipboardTextIcon: Ściągawka
 
-| Mod | Do czego służy |
-|-----|----------------|
-| **HUD i nakładki** |
-| [Appleskin](https://modrinth.com/mod/appleskin) | Wartości jedzenia, głodu i nasycenia |
-| [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated) | Wytrzymałość zbroi na HUDzie |
-| [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf) | Wskaźnik obrażeń na HUDzie |
-| [Lighty](https://modrinth.com/mod/lighty) | Nakładka poziomu oświetlenia |
-| [Ping View](https://modrinth.com/mod/ping-view) | Ping graczy na liście tab |
-| **Przedmioty i ekwipunek** |
-| [Just Enough Items](https://modrinth.com/mod/jei) | Lista przedmiotów i podgląd receptur |
-| [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip) | Zawartość kontenerów w podpowiedzi |
-| **Czat i kontakty towarzyskie** |
-| [Chat Heads](https://modrinth.com/mod/chat-heads) | Głowy graczy w wiadomościach na czacie |
-| [Don't Clear Chat History](https://modrinth.com/mod/dcch) | Historia czatu przetrwa ponowne logowanie |
-| [More Chat History](https://modrinth.com/mod/morechathistory) | Dłuższa historia czatu |
-| [No Chat Reports](https://modrinth.com/mod/no-chat-reports) | Sprawia, że czat nie może być zgłaszany |
-| [Talk Balloons](https://modrinth.com/mod/talk-balloons) | Dymki czatu nad graczami |
-| **Grafika i renderowanie** |
-| [Bobby](https://modrinth.com/mod/bobby) | Dystans renderowania większy niż limit serwera |
-| [Gamma Utils](https://modrinth.com/mod/gamma-utils) | Przełącznik pełnej jasności |
-| [Smooth Skies](https://modrinth.com/mod/smooth-skies) | Gładkie kolory nieba |
-| **Ładowanie i stabilność** |
-| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Pomija ekran ładowania terenu |
-| [Fast Quit](https://modrinth.com/mod/fastquit) | Natychmiastowy zapis świata w tle |
-| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes) | Dalsza gra po crashu |
-| [Remove Reloading Screen](https://modrinth.com/mod/rrls) | Paczki zasobów ładują się w tle |
-| **Konto i gra online** |
-| [Auth Me](https://modrinth.com/mod/auth-me) | Uwierzytelnianie konta w grze |
-| [Essential](https://modrinth.com/mod/essential) | Znajomi, hostowanie światów, skiny i zrzuty ekranu |
-| **Mapa i nawigacja** |
-| [VoxelMap](https://modrinth.com/mod/voxelmap-updated) | Minimapa, mapa świata i waypointy |
+| Mod                                                                                  | Do czego służy                                     |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| **HUD i nakładki**                                                                   |
+| [Appleskin](https://modrinth.com/mod/appleskin)                                      | Wartości jedzenia, głodu i nasycenia               |
+| [Durability Viewer](https://modrinth.com/mod/durability-viewer-updated)              | Wytrzymałość zbroi na HUDzie                       |
+| [Health Indicator TXF](https://modrinth.com/mod/health-indicator-txf)                | Wskaźnik obrażeń na HUDzie                         |
+| [Lighty](https://modrinth.com/mod/lighty)                                            | Nakładka poziomu oświetlenia                       |
+| [Ping View](https://modrinth.com/mod/ping-view)                                      | Ping graczy na liście tab                          |
+| **Przedmioty i ekwipunek**                                                           |
+| [Just Enough Items](https://modrinth.com/mod/jei)                                    | Lista przedmiotów i podgląd receptur               |
+| [Shulker Box Tooltip](https://modrinth.com/mod/shulkerboxtooltip)                    | Zawartość kontenerów w podpowiedzi                 |
+| **Czat i kontakty towarzyskie**                                                      |
+| [Chat Heads](https://modrinth.com/mod/chat-heads)                                    | Głowy graczy w wiadomościach na czacie             |
+| [Don't Clear Chat History](https://modrinth.com/mod/dcch)                            | Historia czatu przetrwa ponowne logowanie          |
+| [More Chat History](https://modrinth.com/mod/morechathistory)                        | Dłuższa historia czatu                             |
+| [No Chat Reports](https://modrinth.com/mod/no-chat-reports)                          | Sprawia, że czat nie może być zgłaszany            |
+| [Talk Balloons](https://modrinth.com/mod/talk-balloons)                              | Dymki czatu nad graczami                           |
+| **Grafika i renderowanie**                                                           |
+| [Bobby](https://modrinth.com/mod/bobby)                                              | Dystans renderowania większy niż limit serwera     |
+| [Gamma Utils](https://modrinth.com/mod/gamma-utils)                                  | Przełącznik pełnej jasności                        |
+| [Smooth Skies](https://modrinth.com/mod/smooth-skies)                                | Gładkie kolory nieba                               |
+| **Ładowanie i stabilność**                                                           |
+| [EpicForceCloseLoadingScreen](https://modrinth.com/mod/forcecloseworldloadingscreen) | Pomija ekran ładowania terenu                      |
+| [Fast Quit](https://modrinth.com/mod/fastquit)                                       | Natychmiastowy zapis świata w tle                  |
+| [Not Enough Crashes](https://modrinth.com/mod/notenoughcrashes)                      | Dalsza gra po crashu                               |
+| [Remove Reloading Screen](https://modrinth.com/mod/rrls)                             | Paczki zasobów ładują się w tle                    |
+| **Konto i gra online**                                                               |
+| [Auth Me](https://modrinth.com/mod/auth-me)                                          | Uwierzytelnianie konta w grze                      |
+| [Essential](https://modrinth.com/mod/essential)                                      | Znajomi, hostowanie światów, skiny i zrzuty ekranu |
+| **Mapa i nawigacja**                                                                 |
+| [VoxelMap](https://modrinth.com/mod/voxelmap-updated)                                | Minimapa, mapa świata i waypointy                  |
 
 ### :GaugeIcon: HUD i nakładki
 
@@ -57,7 +57,7 @@ Zastanawiałeś się kiedyś, dlaczego pasek głodu migaje? Appleskin wizualizuj
 
 Wyświetla założone elementy zbroi wraz z pozostałą wytrzymałością tuż nad hotbarem, więc zawsze wiesz, kiedy naprawić ekwipunek, zanim rozpadnie się w trakcie walki.
 
-Naciśnij **H**, aby pokazać lub ukryć wyświetlanie - więcej w [Klawiszach i sterowaniu](/wiki/keybinds-and-controls).
+Naciśnij **H**, aby pokazać lub ukryć wyświetlanie - więcej w [Klawiszach i sterowaniu](/smc/pl/wiki/keybinds-and-controls).
 
 ![Durability Viewer pokazujący zbroję wokół hotbara](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Wytrzymałość zbroi wyświetlona wokół hotbara")
 
@@ -152,7 +152,7 @@ Wyciśnij więcej ze swoich ustawień graficznych.
 
 #### :BinocularsIcon: Bobby
 
-Pozwala widzieć znacznie dalej, niż pozwala dystans widoczności serwera. Bobby zapisuje chunki, które serwer już Ci wysłał, i renderuje je poza limitem dystansu widoczności, dzięki czemu otrzymujesz ogromny dystans renderowania na każdym serwerze. Świetnie współgra z Nvidium (zobacz [Optymalizację](/wiki/performance-tweaks)).
+Pozwala widzieć znacznie dalej, niż pozwala dystans widoczności serwera. Bobby zapisuje chunki, które serwer już Ci wysłał, i renderuje je poza limitem dystansu widoczności, dzięki czemu otrzymujesz ogromny dystans renderowania na każdym serwerze. Świetnie współgra z Nvidium (zobacz [Optymalizację](/smc/pl/wiki/performance-tweaks)).
 
 #### :SunIcon: Gamma Utils
 
@@ -204,7 +204,7 @@ Jeśli Twoja sesja Microsoft wygasła, Auth Me pozwala ponownie uwierzytelnić k
 
 #### :SparkleIcon: Essential
 
-Wszechstronna warstwa społecznościowa: dodawaj znajomych, wysyłaj wiadomości prywatne, hostuj swoje światy singleplayer dla innych (zobacz [Hostowanie światów](/wiki/world-hosting)), zarządzaj skinami w szafie, rób i udostępniaj ulepszone zrzuty ekranu oraz personalizuj wygląd darmowymi kosmetykami.
+Wszechstronna warstwa społecznościowa: dodawaj znajomych, wysyłaj wiadomości prywatne, hostuj swoje światy singleplayer dla innych (zobacz [Hostowanie światów](/smc/pl/wiki/world-hosting)), zarządzaj skinami w szafie, rób i udostępniaj ulepszone zrzuty ekranu oraz personalizuj wygląd darmowymi kosmetykami.
 
 :carouselStart:
 ![Essential world hosting - zaproś znajomych do swojego świata](/smc/assets/content/mods/qol/essential/world-hosting.webp)
@@ -224,4 +224,3 @@ Już nigdy się nie zgub.
 Pełny zestaw mapowy: minimapa w rogu ekranu, pełnoekranowa mapa świata (**M**) i nielimitowane waypointy (**N**) renderowane w świecie, dzięki którym trafisz do domu, do tej wioski albo do bazy kolegi. Przybliż minimapę klawiszem **Z** i przełącz pełnoekranową mapę klawiszem **X**.
 
 Więcej skrótów znajdziesz w [Klawiszach i sterowaniu](/smc/pl/wiki/keybinds-and-controls).
-
