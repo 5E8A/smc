@@ -15,6 +15,7 @@ const Carousel = ({ images }: CarouselProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [initialTime, setInitialTime] = useState(0);
   const videoElRef = useRef<HTMLVideoElement | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const openLightbox = useCallback(() => {
     const el = videoElRef.current;
@@ -67,10 +68,31 @@ const Carousel = ({ images }: CarouselProps) => {
     setCurrentIndex(slideIndex);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0]!;
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0]!;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) nextSlide();
+    else prevSlide();
+  };
+
   return (
     <div className="group relative size-full">
       {/* Main Image Container */}
-      <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
+      <div
+        className="relative aspect-video w-full touch-pan-y overflow-hidden bg-[#050505]"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <SmartImage
           src={images[currentIndex]!}
           alt={`Slide ${currentIndex + 1}`}
@@ -98,11 +120,11 @@ const Carousel = ({ images }: CarouselProps) => {
           <CornersOutIcon size={20} />
         </button>
       </div>
-      {/* Navigation Buttons - Hidden by default, show on hover */}
+      {/* Navigation Buttons - Hidden by default, show on hover; hidden on touch devices (swipe instead) */}
       <button
         type="button"
         aria-label={t.lightbox.prev}
-        className={`absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+        className={`pointer-coarse:hidden absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={prevSlide}
       >
         <CaretLeftIcon size={24} />
@@ -111,7 +133,7 @@ const Carousel = ({ images }: CarouselProps) => {
       <button
         type="button"
         aria-label={t.lightbox.next}
-        className={`absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
+        className={`pointer-coarse:hidden absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-100 backdrop-blur-sm transition-all focus-visible:opacity-100 hover:bg-white hover:text-black ${focusRing}`}
         onClick={nextSlide}
       >
         <CaretRightIcon size={24} />
