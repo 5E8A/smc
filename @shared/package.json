@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
+    "./constants": "./constants.ts",
     "./content": "./content.ts",
     "./hue": "./hue.ts",
     "./icon-catalog": "./icon-catalog.ts",
