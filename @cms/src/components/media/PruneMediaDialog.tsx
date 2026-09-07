@@ -247,7 +247,8 @@ export const PruneMediaDialog = ({ onClose, onDone }: { onClose: () => void; onD
         applyResult(res);
         if (res.deleted.length > 0) onDone();
         if (res.errors.length > 0) {
-          setError(`${res.errors[0].path}: ${res.errors[0].error}`);
+          const first = res.errors[0];
+          if (first) setError(`${first.path}: ${first.error}`);
         }
       } catch (err) {
         setError(err instanceof ApiError ? err.message : String(err));

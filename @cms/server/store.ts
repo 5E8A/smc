@@ -235,7 +235,7 @@ function validateMarkdownContent(index: number, content: unknown, issues: Issue[
   const iconRegex = /:([A-Z][A-Za-z]+Icon):/g;
   let m: RegExpExecArray | null;
   while ((m = iconRegex.exec(content)) !== null) {
-    if (!isKnownIcon(m[1])) unknownIcons.add(m[1]);
+    if (m[1] && !isKnownIcon(m[1])) unknownIcons.add(m[1]);
   }
   if (unknownIcons.size > 0) {
     issues.push({
@@ -261,7 +261,7 @@ function validateMarkdownContent(index: number, content: unknown, issues: Issue[
     CAROUSEL_BLOCK.lastIndex = 0;
     let block: RegExpExecArray | null;
     while ((block = CAROUSEL_BLOCK.exec(content)) !== null) {
-      const inner = block[1];
+      const inner = block[1] ?? "";
       const images = [...inner.matchAll(/!\[([^\]]*)\]\(([^)\s]+)\)/g)];
       if (images.length === 0) {
         issues.push({
@@ -279,7 +279,7 @@ function validateMarkdownContent(index: number, content: unknown, issues: Issue[
         issues.push({
           entry: index,
           field: "content",
-          message: `Carousel blocks may only contain image lines (![alt](src)); ignoring: ${junkLines[0].slice(0, 40)}`,
+          message: `Carousel blocks may only contain image lines (![alt](src)); ignoring: ${(junkLines[0] ?? "").slice(0, 40)}`,
           severity: "warning",
         });
       }
@@ -302,14 +302,14 @@ function validateMarkdownStructure(index: number, content: string, issues: Issue
   const lines = content.split("\n");
   let prevDepth = 0;
   for (let i = 0; i < lines.length; i++) {
-    const h = /^(#{1,6})(\s+.*)?$/.exec(lines[i].trim());
+    const h = /^(#{1,6})(\s+.*)?$/.exec((lines[i] ?? "").trim());
     if (!h) continue;
-    const depth = h[1].length;
+    const depth = (h[1] ?? "").length;
     if (!h[2] || !h[2].trim()) {
       issues.push({
         entry: index,
         field: `content (line ${i + 1})`,
-        message: `Empty heading ("${h[1]}") - add text or remove the line`,
+        message: `Empty heading ("${h[1] ?? ""}") - add text or remove the line`,
         severity: "error",
       });
       continue;
@@ -326,7 +326,7 @@ function validateMarkdownStructure(index: number, content: string, issues: Issue
   }
 
   for (const img of content.matchAll(/!\[([^\]]*)\]\(([^)\s]+)\)/g)) {
-    if (!assetExists(img[2])) {
+    if (img[2] && !assetExists(img[2])) {
       issues.push({
         entry: index,
         field: "content",
@@ -339,7 +339,7 @@ function validateMarkdownStructure(index: number, content: string, issues: Issue
   const allowedTags = new Set(["icon", "carousel"]);
   const rawTags = new Set<string>();
   for (const tag of content.matchAll(/<\/?([a-zA-Z][a-zA-Z0-9-]*)(?=[\s/>])/g)) {
-    if (!allowedTags.has(tag[1].toLowerCase())) rawTags.add(tag[1]);
+    if (tag[1] && !allowedTags.has(tag[1].toLowerCase())) rawTags.add(tag[1]);
   }
   if (rawTags.size > 0) {
     issues.push({

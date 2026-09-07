@@ -74,7 +74,7 @@ const previewPathFor = (tab: Tab, entry: Entry | null, lang: Language): string |
 
 const numericPart = (id: string): number => {
   const m = /^(?:wiki-\w\w-)?(\d+)$/.exec(id);
-  return m ? Number.parseInt(m[1], 10) : 0;
+  return m ? Number.parseInt(m[1] ?? "0", 10) : 0;
 };
 
 const nextIdFor = (entries: Entry[], kind: Kind, lang: Language): string =>
@@ -224,7 +224,7 @@ export const App = () => {
   const dirtyTabs = useMemo(() => {
     const set = new Set<string>();
     for (const [k, t] of Object.entries(tabs)) {
-      if (t && t.snapshot !== JSON.stringify(t.entries)) set.add(k.split(":")[1]);
+      if (t && t.snapshot !== JSON.stringify(t.entries)) set.add(k.split(":")[1] ?? "");
     }
     if (authorsDirty) set.add("authors");
     return set;
@@ -343,7 +343,7 @@ export const App = () => {
           if (!cur) return prev;
           const formatted = result.formatted ?? {};
           const entries = cur.entries.map((e) =>
-            typeof formatted[e.slug] === "string" ? { ...e, content: formatted[e.slug] } : e
+            typeof formatted[e.slug] === "string" ? { ...e, content: formatted[e.slug]! } : e
           );
           return { ...prev, [key]: { ...cur, entries, snapshot: JSON.stringify(entries) } };
         });
@@ -474,7 +474,7 @@ export const App = () => {
       if (authors === null || saving) return;
       if (index < 0 || index >= authors.length) return;
       const previous = authors;
-      const target = previous[index];
+      const target = previous[index]!;
       const next = previous.filter((_, i) => i !== index);
       setAuthors(next);
       setSelectedAuthorIndex((cur) => {

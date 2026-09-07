@@ -198,7 +198,7 @@ async function loadReactExportNames(log: LogFn): Promise<Set<string> | null> {
     const mod = (await import("@phosphor-icons/react")) as Record<string, unknown>;
     return new Set(Object.keys(mod).filter((key) => isRenderable(mod[key])));
   } catch (err) {
-    log(`note: could not cross-check against @phosphor-icons/react (${(err as Error).message.split("\n")[0]})`);
+    log(`note: could not cross-check against @phosphor-icons/react (${(err as Error).message.split("\n")[0] ?? ""})`);
     return null;
   }
 }

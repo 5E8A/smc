@@ -21,7 +21,7 @@ const MAX_DEVICE_H_FRACTION = 0.8;
 const MAX_DEVICE_W_FRACTION = 0.4;
 
 function withFrame(prev: StageState, id: string, patch: (f: FrameState) => FrameState): StageState {
-  const frames = { ...prev.frames, [id]: patch(prev.frames[id]) };
+  const frames = { ...prev.frames, [id]: patch(prev.frames[id] ?? { visible: false, loaded: false }) };
   return { frames, loadingId: prev.loadingId };
 }
 

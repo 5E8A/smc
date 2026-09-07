@@ -25,7 +25,7 @@ export interface MultipartResult {
 export function parseMultipart(body: Buffer, contentType: string | undefined): MultipartResult {
   const match = /boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType ?? "");
   if (!match) throw new Error("Missing multipart boundary");
-  const boundary = Buffer.from(`--${(match[1] ?? match[2]).trim()}`);
+  const boundary = Buffer.from(`--${(match[1] ?? match[2] ?? "").trim()}`);
   const fields: Record<string, string> = {};
   const files: MultipartFile[] = [];
 

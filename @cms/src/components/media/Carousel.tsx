@@ -11,6 +11,9 @@ const Carousel = ({ images }: { images: string[] }) => {
 
   if (!images || images.length === 0) return null;
 
+  const current = images[currentIndex] ?? "";
+  if (!current) return null;
+
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
@@ -26,11 +29,11 @@ const Carousel = ({ images }: { images: string[] }) => {
   return (
     <div className="group relative size-full">
       <div className="relative aspect-video w-full overflow-hidden bg-[#050505]">
-        {isVideoSrc(images[currentIndex]) ? (
+        {isVideoSrc(current) ? (
           <video
-            key={images[currentIndex]}
-            src={resolveSrc(images[currentIndex])}
-            poster={resolveSrc(videoPosterSrc(images[currentIndex]))}
+            key={current}
+            src={resolveSrc(current)}
+            poster={resolveSrc(videoPosterSrc(current))}
             muted
             loop
             autoPlay
@@ -39,7 +42,7 @@ const Carousel = ({ images }: { images: string[] }) => {
           />
         ) : (
           <img
-            src={resolveSrc(images[currentIndex])}
+            src={resolveSrc(current)}
             alt={`Slide ${currentIndex + 1}`}
             loading="lazy"
             className="size-full object-cover"

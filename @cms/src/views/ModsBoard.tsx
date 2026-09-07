@@ -213,14 +213,22 @@ export function ModsBoard() {
       if (!draft) return;
       const slug = slugFromInput(draft.input);
       if (!slug) {
-        setDrafts((d) => ({
-          ...d,
-          [key]: { ...d[key], error: "Enter a modrinth slug or a modrinth.com/mod/<slug> URL" },
-        }));
+        setDrafts((d) => {
+          const cur = d[key];
+          if (!cur) return d;
+          return {
+            ...d,
+            [key]: { ...cur, error: "Enter a modrinth slug or a modrinth.com/mod/<slug> URL" },
+          };
+        });
         return;
       }
       if (slugSet.has(slug)) {
-        setDrafts((d) => ({ ...d, [key]: { ...d[key], error: `${slug} is already on the board` } }));
+        setDrafts((d) => {
+          const cur = d[key];
+          if (!cur) return d;
+          return { ...d, [key]: { ...cur, error: `${slug} is already on the board` } };
+        });
         return;
       }
       addSlug(key, slug);

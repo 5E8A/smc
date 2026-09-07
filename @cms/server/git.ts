@@ -48,13 +48,13 @@ function parsePorcelain(out: string): Omit<GitStatus, "lastCommit"> {
   let behind = 0;
   const changes: GitChange[] = [];
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+    const line = lines[i] ?? "";
     if (i === 0 && line.startsWith("## ")) {
       const rest = line.slice(3);
       const [names, metaBracket] = rest.split(" [");
-      const parts = names.split("...");
+      const parts = (names ?? "").split("...");
       branch = parts[0] ?? branch;
-      upstream = parts.length === 2 ? parts[1] : null;
+      upstream = parts.length === 2 ? (parts[1] ?? null) : null;
       const meta = metaBracket?.replace(/\]$/, "");
       if (meta) {
         if (/ahead/.test(meta)) ahead = Number(/ahead (\d+)/.exec(meta)?.[1]) || 0;

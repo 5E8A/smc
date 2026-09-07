@@ -101,7 +101,9 @@ export function useMediaLibrary() {
         while (cursor < items.length) {
           const index = cursor++;
           const job = jobs[index];
-          const { file, format } = items[index];
+          const item = items[index];
+          if (!job || !item) continue;
+          const { file, format } = item;
           patchJob(job.id, { status: "uploading", stage: "sending", pct: null, speed: null });
           try {
             const result = await uploadImage(file, dir, {

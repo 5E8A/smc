@@ -713,9 +713,11 @@ export const MediaBrowser = ({
 
   const startReplace = async () => {
     if (!pending || !replaceTarget) return;
-    const file = pending[0].file;
+    const first = pending[0];
+    if (!first) return;
+    const file = first.file;
     const target = replaceTarget;
-    const format = pending[0].format;
+    const format = first.format;
     cancelStaging();
     setReplaceTarget(null);
     try {
@@ -948,7 +950,7 @@ export const MediaBrowser = ({
     const el = gridElRef.current;
     if (!el) return;
     setGridWidth(el.clientWidth);
-    const ro = new ResizeObserver(([entry]) => setGridWidth(entry.contentRect.width));
+    const ro = new ResizeObserver(([entry]) => entry && setGridWidth(entry.contentRect.width));
     ro.observe(el);
     return () => ro.disconnect();
   }, [hasGrid]);
@@ -1179,7 +1181,7 @@ export const MediaBrowser = ({
                 const ratioSum = row.reduce((sum, img) => sum + aspectRatioOf(img), 0);
                 const rowHeight = isLast ? TARGET_ROW_HEIGHT : (gridWidth - (row.length - 1) * GRID_GAP) / ratioSum;
                 return (
-                  <div key={row[0].path} className="flex" style={{ gap: GRID_GAP }}>
+                  <div key={row[0]?.path ?? rowIndex} className="flex" style={{ gap: GRID_GAP }}>
                     {row.map((img) => renderTile(img, rowHeight, isLast))}
                   </div>
                 );
