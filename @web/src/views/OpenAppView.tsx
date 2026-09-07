@@ -1,5 +1,4 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { Route } from "@/routes/$lang/modrinth";
 import { ArrowSquareOutIcon, CircleNotchIcon, DownloadIcon } from "@phosphor-icons/react";
 import McButton from "@/components/mc/McButton";
 import { useLanguage } from "@/context/useLanguage";
@@ -9,9 +8,10 @@ const SLUG_RE = /^[a-z0-9-]+$/;
 
 const emptySubscribe = () => () => {};
 
-const OpenAppView = () => {
+type OpenAppViewProps = { search: { type: string | null; slug: string | null } };
+
+const OpenAppView = ({ search }: OpenAppViewProps) => {
   const { t } = useLanguage();
-  const search = Route.useSearch();
 
   const isClient = useSyncExternalStore(
     emptySubscribe,
