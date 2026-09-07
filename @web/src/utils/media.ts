@@ -1,10 +1,11 @@
+import { SITE_BASE_PATH } from "@smc/shared/constants";
 import media from "@/data/media.json";
 
 const animatedIndex = media as { animated?: string[]; videos?: string[] };
 const animatedSet = new Set(animatedIndex.animated ?? []);
 const videoSet = new Set(animatedIndex.videos ?? []);
 
-const toKey = (src: string) => src.replace(/^\/smc\//, "");
+const toKey = (src: string) => src.replace(`${SITE_BASE_PATH}/`, "");
 
 export const isAnimatedAsset = (src: string): boolean => animatedSet.has(toKey(src));
 

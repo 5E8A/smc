@@ -1,12 +1,10 @@
+import { DISCORD_API_BASE, MODRINTH_API_BASE } from "@smc/shared/constants";
 import { VersionData } from "@/types";
 
 const REQUEST_TIMEOUT_MS = 10000;
 const MAX_RETRIES = 2;
 const RETRY_DELAYS_MS = [500, 1000];
 const CACHE_TTL_MS = 10 * 60 * 1000;
-
-const DISCORD_BASE_URL = "https://discord.com/api/v10";
-const MODRINTH_BASE_URL = "https://api.modrinth.com/v2";
 
 interface ModrinthProject {
   downloads: number;
@@ -85,7 +83,7 @@ const createCachedGetter = <T>(label: string, loader: () => Promise<T>, onError:
 const getDiscordMembers = createCachedGetter(
   "Discord members",
   () =>
-    request<{ approximate_member_count: number }>(DISCORD_BASE_URL, "/invites/uaX8D5jQp2", {
+    request<{ approximate_member_count: number }>(DISCORD_API_BASE, "/invites/uaX8D5jQp2", {
       with_counts: true,
     }).then((data) => data.approximate_member_count),
   () => 0
@@ -99,7 +97,7 @@ const getProjectData = (id: string): Promise<ModrinthProject | null> => {
   if (!getter) {
     getter = createCachedGetter<ModrinthProject | null>(
       "project data",
-      () => request<ModrinthProject>(MODRINTH_BASE_URL, `/project/${id}`),
+      () => request<ModrinthProject>(MODRINTH_API_BASE, `/project/${id}`),
       () => null
     );
     projectGetters.set(id, getter);
@@ -117,7 +115,7 @@ export const getLatestVersionData = (id: string): Promise<VersionData | null> =>
         const projectData = await getProjectData(id);
         if (projectData && projectData.versions && projectData.versions.length > 0) {
           const version = await request<ModrinthVersion>(
-            MODRINTH_BASE_URL,
+            MODRINTH_API_BASE,
             `/version/${projectData.versions[projectData.versions.length - 1]}`
           );
           return { version_number: version.version_number, game_version: version.game_versions[0]! };

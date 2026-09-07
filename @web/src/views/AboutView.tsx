@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { MODRINTH_PROJECT_ID } from "@smc/shared/constants";
 import { useLanguage } from "@/context/useLanguage";
 import { CodeIcon, CpuIcon } from "@phosphor-icons/react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
@@ -12,7 +13,7 @@ const AboutView = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const downloads = await getTotalDownloads("dOLVvHgi");
+      const downloads = await getTotalDownloads(MODRINTH_PROJECT_ID);
       setDownloads(downloads.toLocaleString());
     };
     fetchData();
@@ -28,7 +29,7 @@ const AboutView = () => {
 
   useEffect(() => {
     const fetchLatestVersion = async () => {
-      const version = await getLatestVersionData("dOLVvHgi");
+      const version = await getLatestVersionData(MODRINTH_PROJECT_ID);
       if (version) {
         setLatestVersion(version.version_number);
       } else {

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ASSETS_BASE_PATH } from "@smc/shared/constants";
 import { useLanguage } from "@/context/useLanguage";
 
 interface VersionBadgeProps {
@@ -13,7 +14,7 @@ const VersionBadge = ({ version, gameVersion }: VersionBadgeProps) => {
     <div className="toast mb-8 w-80 max-w-full select-none">
       <div className="flex min-h-12 items-center gap-4 px-2.5 py-2">
         <img
-          src="/smc/assets/static/grass-block.webp"
+          src={`${ASSETS_BASE_PATH}/static/grass-block.webp`}
           alt=""
           className="size-8 shrink-0"
           style={{ imageRendering: "pixelated" }}

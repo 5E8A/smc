@@ -1,10 +1,11 @@
 import { createRouter } from "@tanstack/react-router";
+import { SITE_BASE_PATH } from "@smc/shared/constants";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
   const router = createRouter({
     routeTree,
-    basepath: "/smc",
+    basepath: SITE_BASE_PATH,
     scrollRestoration: true,
     defaultViewTransition: true,
   });

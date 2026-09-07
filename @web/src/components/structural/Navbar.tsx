@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ListIcon, XIcon, DownloadIcon } from "@phosphor-icons/react";
+import { ASSETS_BASE_PATH } from "@smc/shared/constants";
 import { Link } from "@tanstack/react-router";
 import McButton from "@/components/mc/McButton";
 import { useLanguage } from "@/context/useLanguage";
@@ -78,7 +79,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/$lang" params={langParams} preload="intent" className="group flex items-center space-x-3">
             <SmartImage
-              src="/smc/assets/static/smc.webp"
+              src={`${ASSETS_BASE_PATH}/static/smc.webp`}
               alt="SMC Logo"
               className="size-10 rounded-squircle"
               lazy={false}

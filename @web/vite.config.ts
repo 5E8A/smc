@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
+import { SITE_BASE_PATH } from "@smc/shared/constants";
 
 export default defineConfig(async ({ mode }) => {
   const analyze = mode === "analyze";
@@ -33,7 +34,7 @@ export default defineConfig(async ({ mode }) => {
           },
         ],
       }),
-      nitro({ baseURL: "/smc" }),
+      nitro({ baseURL: SITE_BASE_PATH }),
       react(),
       tailwindcss(),
       ...(visualizer ? [visualizer({ filename: "dist/stats.html", open: true, gzipSize: true })] : []),
@@ -64,6 +65,6 @@ export default defineConfig(async ({ mode }) => {
         },
       },
     },
-    base: "/smc",
+    base: SITE_BASE_PATH,
   };
 });

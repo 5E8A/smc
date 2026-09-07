@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowCounterClockwiseIcon, HouseIcon } from "@phosphor-icons/react";
+import { SITE_BASE_PATH } from "@smc/shared/constants";
 import McButton from "@/components/mc/McButton";
 import { translations } from "@/utils/translations";
 
 // Must work without the language context (this replaces the whole tree on
 // error), so the language is read straight from the URL, like the router's
 // $lang segment does: /smc/pl/... is Polish, everything else is English.
-const errorLanguage = () => (window.location.pathname.replace(/^\/smc/, "").startsWith("/pl") ? "pl" : "en");
+const errorLanguage = () => (window.location.pathname.replace(SITE_BASE_PATH, "").startsWith("/pl") ? "pl" : "en");
 
 const ErrorFallback = () => {
   const language = errorLanguage();

@@ -1,3 +1,4 @@
+import { ASSETS_BASE_PATH } from "@smc/shared/constants";
 import type { ModData } from "@/data/mods";
 import { modCategories } from "@/data/mods";
 import type { ItemIconId } from "./ItemIcon";
@@ -66,7 +67,7 @@ export const positionSlotTooltip = (anchor: DOMRect, tip: { width: number; heigh
 
 export const CATEGORY_ICONS: ItemIconId[] = ["blaze_powder", "spyglass", "golden_apple", "experience_bottle"];
 
-export const SPRITE_URLS = modCategories.map((cat) => `/smc/assets/mod-sprites/${cat.key}.webp`);
+export const SPRITE_URLS = modCategories.map((cat) => `${ASSETS_BASE_PATH}/mod-sprites/${cat.key}.webp`);
 
 export const CHESTS = [
   { key: "performance", mods: modCategories[0]!.mods },

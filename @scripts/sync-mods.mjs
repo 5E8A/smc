@@ -3,6 +3,7 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import { MODRINTH_API_BASE } from "@smc/shared/constants";
 import { slugHue } from "@smc/shared/hue";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -13,7 +14,6 @@ const spritesDir = path.join(root, "@web", "public", "assets", "mod-sprites");
 const modsFile = path.join(root, "@web", "src", "data", "mods.ts");
 const blurhashScript = path.join(root, "@scripts", "generate-blurhash.mjs");
 
-const MODRINTH_API = "https://api.modrinth.com/v2";
 const USER_AGENT = "SMCSite/sync-mods (https://github.com/5E8A/smc)";
 
 import { SPRITE_COLS } from "@smc/shared/sprite";
@@ -91,7 +91,7 @@ const cachePath = (slug) => path.join(cacheDir, `${slug}.img`);
 const forcedFail = (slug, attempt) => failSlugs.has(slug) || (flakySlugs.has(slug) && attempt < retries);
 
 const fetchMetaBatch = async (slugs) => {
-  const url = `${MODRINTH_API}/projects?ids=${encodeURIComponent(JSON.stringify(slugs))}`;
+  const url = `${MODRINTH_API_BASE}/projects?ids=${encodeURIComponent(JSON.stringify(slugs))}`;
   const res = await fetch(url, {
     headers: { "User-Agent": USER_AGENT },
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),

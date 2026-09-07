@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { ASSETS_BASE_PATH } from "@smc/shared/constants";
 import RootLayout from "@/components/structural/RootLayout";
 import NotFound from "@/components/error/NotFound";
 import ErrorFallback from "@/components/error/ErrorFallback";
@@ -13,13 +14,13 @@ export const Route = createRootRoute({
       {
         rel: "icon",
         type: "image/png",
-        href: "/smc/assets/static/smc2.png",
+        href: `${ASSETS_BASE_PATH}/static/smc2.png`,
       },
       {
         rel: "preload",
         as: "font",
         type: "font/woff2",
-        href: "/smc/assets/fonts/modern-age-latin.woff2",
+        href: `${ASSETS_BASE_PATH}/fonts/modern-age-latin.woff2`,
         crossOrigin: "anonymous",
       },
       { rel: "preconnect", href: "https://api.modrinth.com" },

@@ -1,4 +1,5 @@
 import { startTransition, useEffect, useState } from "react";
+import { MODRINTH_PROJECT_ID, ASSETS_BASE_PATH } from "@smc/shared/constants";
 import { getRecentPosts } from "@/data/posts";
 import { BlogPost } from "@/types";
 import PostCard from "@/components/ui/PostCard";
@@ -28,7 +29,7 @@ const HomeView = () => {
     const fetchVersion = async () => {
       if (done) return;
       done = true;
-      const latestVersion = await getLatestVersionData("dOLVvHgi");
+      const latestVersion = await getLatestVersionData(MODRINTH_PROJECT_ID);
       if (latestVersion !== null) {
         startTransition(() => setVersion(latestVersion));
       } else {
@@ -146,7 +147,7 @@ const HomeView = () => {
             >
               {/* Banner Image */}
               <SmartImage
-                src="/smc/assets/static/Artboard_3.webp"
+                src={`${ASSETS_BASE_PATH}/static/Artboard_3.webp`}
                 alt="Sponsored Content"
                 lazy={false}
                 priority="high"
