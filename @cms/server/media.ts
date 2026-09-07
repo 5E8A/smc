@@ -3,13 +3,12 @@ import path from "path";
 import { spawn } from "child_process";
 import sharp from "sharp";
 import { ASSETS_BASE_PATH } from "@smc/shared/constants";
+import { KINDS, languages } from "@smc/shared/content";
 import {
   CONTENT_ASSETS_DIR,
   CONTENT_DIR,
   PUBLIC_ASSETS_DIR,
   REPO_ROOT,
-  KINDS,
-  LANGS,
   contentPath,
   isResponseClosed,
   mdDir,
@@ -463,7 +462,7 @@ interface RefSource {
 }
 
 const REF_SOURCES: RefSource[] = [
-  ...LANGS.flatMap((lang) => KINDS.map((kind) => ({ label: `${lang}/${kind}`, file: contentPath(kind, lang) }))),
+  ...languages.flatMap((lang) => KINDS.map((kind) => ({ label: `${lang}/${kind}`, file: contentPath(kind, lang) }))),
   { label: "authors", file: path.join(CONTENT_DIR, "authors.json") },
 ];
 
@@ -505,7 +504,7 @@ export function findRefs(publicPaths: string[]): Record<string, string[]> {
     }
   }
   // Scan md files for image references
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     for (const kind of KINDS) {
       const dir = mdDir(kind, lang);
       try {
@@ -557,7 +556,7 @@ async function rewriteRefsInContent(apply: (value: string) => StringRewrite): Pr
     if (changed) await writeJsonAtomic(src.file, next);
   }
   // Rewrite md files
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     for (const kind of KINDS) {
       const dir = mdDir(kind, lang);
       try {
@@ -827,7 +826,7 @@ function collectReferencedPaths(): Set<string> {
       }
     }
   }
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     for (const kind of KINDS) {
       const dir = mdDir(kind, lang);
       try {
@@ -838,7 +837,7 @@ function collectReferencedPaths(): Set<string> {
           let m: RegExpExecArray | null;
           while ((m = re.exec(content)) !== null) {
             const p = m[1];
-            if (p.startsWith(CONTENT_PUBLIC_PREFIX)) referenced.add(p);
+            if (p && p.startsWith(CONTENT_PUBLIC_PREFIX)) referenced.add(p);
           }
         }
       } catch {

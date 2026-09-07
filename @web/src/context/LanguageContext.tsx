@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useParams, useLocation, useNavigate } from "@tanstack/react-router";
-import { translations, type Language } from "../utils/translations";
+import { translations } from "../utils/translations";
+import { type Language } from "@smc/shared/content";
 import { LanguageContext, type LanguageContextType } from "./useLanguage";
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {

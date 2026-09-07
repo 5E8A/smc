@@ -10,16 +10,12 @@ import {
   deleteMd,
   assetExists,
   createKeyedMutex,
-  KINDS,
-  LANGS,
-  type Kind,
-  type Lang,
 } from "./util.ts";
 import fs from "fs";
 import { isKnownIcon } from "@smc/shared/icon-catalog";
 import { SLUG_PATTERN } from "@smc/shared/slug";
 import path from "path";
-import type { Author } from "@smc/shared/content";
+import { KINDS, languages, type Kind, type Language, type Author } from "@smc/shared/content";
 
 export type { LocalizedText, Author } from "@smc/shared/content";
 
@@ -75,7 +71,7 @@ function validateAuthorFields(index: number, a: Record<string, unknown>, issues:
       continue;
     }
     const loc = t as Record<string, unknown>;
-    for (const lang of ["en", "pl"] as const) {
+    for (const lang of languages) {
       const v = loc[lang];
       if (!asString(v)) {
         issues.push({
@@ -143,7 +139,7 @@ const generateAuthorId = (): string => {
 
 async function findAuthorUsages(ids: string[]): Promise<Record<string, string[]>> {
   const usages: Record<string, string[]> = {};
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     for (const kind of KINDS) {
       try {
         const arr = await readJson(contentPath(kind, lang));
@@ -405,7 +401,7 @@ function checkAsset(
   }
 }
 
-export async function loadContent(kind: Kind, lang: Lang): Promise<unknown> {
+export async function loadContent(kind: Kind, lang: Language): Promise<unknown> {
   const data = await readJson(contentPath(kind, lang));
   if (!Array.isArray(data)) return data;
   const hydrated = await Promise.all(
@@ -430,7 +426,7 @@ async function formatMarkdown(source: string, filePath: string): Promise<string>
 
 export async function saveContent(
   kind: Kind,
-  lang: Lang,
+  lang: Language,
   data: unknown,
   dirtySlugs?: string[]
 ): Promise<{ issues: Issue[]; formatted: Record<string, string> }> {
@@ -439,7 +435,7 @@ export async function saveContent(
 
 async function saveContentUnlocked(
   kind: Kind,
-  lang: Lang,
+  lang: Language,
   data: unknown,
   dirtySlugs?: string[]
 ): Promise<{ issues: Issue[]; formatted: Record<string, string> }> {
@@ -489,7 +485,7 @@ async function saveContentUnlocked(
   return { issues, formatted };
 }
 
-export async function validateContent(kind: Kind, lang: Lang, data: unknown): Promise<Issue[]> {
+export async function validateContent(kind: Kind, lang: Language, data: unknown): Promise<Issue[]> {
   const knownAuthorIds = await loadKnownAuthorIds();
   const issues: Issue[] = [];
   if (!asArray(data)) {
@@ -499,7 +495,7 @@ export async function validateContent(kind: Kind, lang: Lang, data: unknown): Pr
   if (kind === "posts") validatePosts(data, knownAuthorIds, issues);
   else validateWiki(data, lang, knownAuthorIds, issues);
 
-  const otherLang: Lang = lang === "en" ? "pl" : "en";
+  const otherLang: Language = lang === "en" ? "pl" : "en";
   let otherSlugs: Set<string> | null = null;
   try {
     const otherData = await readJson(contentPath(kind, otherLang));
@@ -588,7 +584,7 @@ function validatePosts(data: unknown[], knownAuthorIds: Set<string>, issues: Iss
   });
 }
 
-function validateWiki(data: unknown[], lang: Lang, knownAuthorIds: Set<string>, issues: Issue[]): void {
+function validateWiki(data: unknown[], lang: Language, knownAuthorIds: Set<string>, issues: Issue[]): void {
   const slugs = new Map<string, number>();
   const ids = new Map<string, number>();
 

@@ -1,7 +1,8 @@
 import path from "path";
 import fs from "fs";
 import type { ServerResponse } from "http";
-import { REPO_ROOT, CONTENT_DIR, isResponseClosed, KINDS, LANGS, mdDir } from "./util.ts";
+import { REPO_ROOT, CONTENT_DIR, isResponseClosed, mdDir } from "./util.ts";
+import { KINDS, languages } from "@smc/shared/content";
 import { icons as coreIcons } from "@phosphor-icons/core";
 
 export const ICON_CATALOG_FILE = path.join(REPO_ROOT, "@shared", "icon-catalog.ts");
@@ -136,13 +137,15 @@ function mapKeysFromRendered(source: string): string[] {
   const bodyStart = source.indexOf("= {");
   const bodyEnd = source.lastIndexOf("};");
   if (bodyStart < 0 || bodyEnd < 0) return [];
-  return [...source.slice(bodyStart + 3, bodyEnd).matchAll(/\b([A-Z][A-Za-z]+Icon)\b/g)].map((m) => m[1]);
+  return [...source.slice(bodyStart + 3, bodyEnd).matchAll(/\b([A-Z][A-Za-z]+Icon)\b/g)]
+    .map((m) => m[1])
+    .filter((x): x is string => x !== undefined);
 }
 
 export async function scanUsedMarkers(log: LogFn): Promise<Set<string>> {
   const markers = new Set<string>();
   let files = 0;
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     for (const kind of KINDS) {
       // Scan metadata JSON (may still have some markers in titles/descriptions)
       const jsonPath = path.join(CONTENT_DIR, lang, `${kind}.json`);
@@ -151,7 +154,10 @@ export async function scanUsedMarkers(log: LogFn): Promise<Set<string>> {
         files += 1;
         const visit = (node: unknown): void => {
           if (typeof node === "string") {
-            for (const match of node.matchAll(MARKER_PATTERN)) markers.add(match[1]);
+            for (const match of node.matchAll(MARKER_PATTERN)) {
+              const marker = match[1];
+              if (marker) markers.add(marker);
+            }
           } else if (Array.isArray(node)) {
             for (const item of node) visit(item);
           } else if (typeof node === "object" && node !== null) {
@@ -170,7 +176,10 @@ export async function scanUsedMarkers(log: LogFn): Promise<Set<string>> {
           if (!file.endsWith(".md")) continue;
           const content = await fs.promises.readFile(path.join(dir, file), "utf8");
           files += 1;
-          for (const match of content.matchAll(MARKER_PATTERN)) markers.add(match[1]);
+          for (const match of content.matchAll(MARKER_PATTERN)) {
+            const marker = match[1];
+            if (marker) markers.add(marker);
+          }
         }
       } catch {
         // dir may not exist

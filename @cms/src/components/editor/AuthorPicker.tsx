@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
-import type { Author, Lang } from "../../types";
+import type { Author, Language } from "../../types";
 import { loadAuthorsList, getCachedAuthors } from "../../lib/authorCache";
 import { AssetThumb } from "../media/ImageLibrary";
 import { Button } from "../ui/fields";
 
 interface PickerProps {
-  lang: Lang;
+  lang: Language;
   onClose: () => void;
   onSelect: (id: string) => void;
 }
@@ -87,7 +87,7 @@ const AuthorPickerModal = ({ lang, onClose, onSelect }: PickerProps) => {
 
 interface AuthorPickerProps {
   value: string;
-  lang: Lang;
+  lang: Language;
   onChange: (id: string) => void;
 }
 

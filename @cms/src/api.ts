@@ -1,4 +1,4 @@
-import type { Author, ImageInfo, ImagesPayload, Issue, Kind, Lang, ModListColumn, RefUsages } from "./types";
+import type { Author, ImageInfo, ImagesPayload, Issue, Kind, Language, ModListColumn, RefUsages } from "./types";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -30,10 +30,10 @@ export interface SaveResult {
   formatted?: Record<string, string>;
 }
 
-export const getContent = <T>(kind: Kind, lang: Lang): Promise<T[]> =>
+export const getContent = <T>(kind: Kind, lang: Language): Promise<T[]> =>
   request<{ data: T[] }>(`/api/content?kind=${kind}&lang=${lang}`).then((r) => r.data);
 
-export const putContent = (kind: Kind, lang: Lang, data: unknown[], dirtySlugs: string[]): Promise<SaveResult> =>
+export const putContent = (kind: Kind, lang: Language, data: unknown[], dirtySlugs: string[]): Promise<SaveResult> =>
   request<{ ok: boolean; issues: Issue[]; formatted?: Record<string, string> }>(
     `/api/content?kind=${kind}&lang=${lang}`,
     {
@@ -90,7 +90,7 @@ export const putAuthors = (data: Author[]): Promise<AuthorsSaveResult> =>
 
 export const getMedia = (): Promise<ImagesPayload> => request<ImagesPayload>("/api/images");
 
-export const validateContent = (kind: Kind, lang: Lang, data: unknown[]): Promise<SaveResult> =>
+export const validateContent = (kind: Kind, lang: Language, data: unknown[]): Promise<SaveResult> =>
   request<{ ok: boolean; issues: Issue[] }>("/api/validate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

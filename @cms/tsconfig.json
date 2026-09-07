@@ -11,6 +11,10 @@
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "strict": true,
+    // FIXME: big change — enabling noUncheckedIndexedAccess surfaces ~40 "possibly
+    // undefined" errors across @cms/server and @cms/src. Deferred to a dedicated
+    // future commit; keep typecheck green in the meantime.
+    // "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,

@@ -1,14 +1,13 @@
 import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "http";
 import path from "path";
+import { isKind, isLanguage, languages } from "@smc/shared/content";
 import {
   attachHttpGuards,
   BodyTooLargeError,
   CONTENT_DIR,
   cleanupOrphanTmp,
   installProcessGuards,
-  isKind,
-  isLang,
   isResponseClosed,
   readRawBody,
   sendJson,
@@ -47,7 +46,7 @@ export const CMS_PORT = 4000;
 async function cleanupOrphanTmpFiles(): Promise<void> {
   let removed = 0;
   try {
-    for (const lang of ["en", "pl"]) {
+    for (const lang of languages) {
       removed += await cleanupOrphanTmp(path.join(CONTENT_DIR, lang));
       for (const kind of ["posts", "wiki"]) {
         removed += await cleanupOrphanTmp(path.join(CONTENT_DIR, lang, kind));
@@ -92,7 +91,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
 
     case "/content": {
       if (!isKind(kind)) return void sendJson(res, 400, { error: "kind must be posts or wiki" });
-      if (!isLang(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
+      if (!isLanguage(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
 
       if (method === "GET" || method === "HEAD") {
         const data = await loadContent(kind, lang);
@@ -421,7 +420,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       const kind = parsed.kind ?? null;
       const lang = parsed.lang ?? null;
       if (!isKind(kind)) return void sendJson(res, 400, { error: "kind must be posts or wiki" });
-      if (!isLang(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
+      if (!isLanguage(lang)) return void sendJson(res, 400, { error: "lang must be en or pl" });
       const issues = await validateContent(kind, lang, parsed.data);
       return void sendJson(res, 200, { issues });
     }

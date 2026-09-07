@@ -1,5 +1,6 @@
 import { BlogPost, BlogPostRaw } from "../types";
 import { resolveAuthor } from "./authors";
+import { type Language } from "@smc/shared/content";
 import enPosts from "../content/en/posts.json";
 import plPosts from "../content/pl/posts.json";
 
@@ -17,25 +18,25 @@ function buildMap(entries: Record<string, string>): Record<string, string> {
 
 const enBodies = buildMap(enRaw);
 const plBodies = buildMap(plRaw);
-const bodies: Record<"en" | "pl", Record<string, string>> = { en: enBodies, pl: plBodies };
+const bodies: Record<Language, Record<string, string>> = { en: enBodies, pl: plBodies };
 
 const sortPosts = (a: BlogPost, b: BlogPost): number => b.date.localeCompare(a.date) || parseInt(b.id) - parseInt(a.id);
 
-const withAuthor = (post: BlogPostRaw, lang: "en" | "pl"): BlogPost => ({
+const withAuthor = (post: BlogPostRaw, lang: Language): BlogPost => ({
   ...post,
   author: resolveAuthor(post.author, lang),
 });
 
-const postsByLanguage: Record<"en" | "pl", BlogPost[]> = {
+const postsByLanguage: Record<Language, BlogPost[]> = {
   en: (enPosts as BlogPostRaw[]).map((p) => withAuthor(p, "en")).sort(sortPosts),
   pl: (plPosts as BlogPostRaw[]).map((p) => withAuthor(p, "pl")).sort(sortPosts),
 };
 
-export const getPosts = (language: "en" | "pl"): BlogPost[] => postsByLanguage[language];
+export const getPosts = (language: Language): BlogPost[] => postsByLanguage[language];
 
-export const getRecentPosts = (language: "en" | "pl", limit: number): BlogPost[] => getPosts(language).slice(0, limit);
+export const getRecentPosts = (language: Language, limit: number): BlogPost[] => getPosts(language).slice(0, limit);
 
-export const getPostBySlug = (slug: string, language: "en" | "pl"): BlogPost | undefined =>
+export const getPostBySlug = (slug: string, language: Language): BlogPost | undefined =>
   getPosts(language).find((p) => p.slug === slug);
 
 export const getPostAvailability = (slug: string): { en: BlogPost | null; pl: BlogPost | null } => ({
@@ -43,6 +44,6 @@ export const getPostAvailability = (slug: string): { en: BlogPost | null; pl: Bl
   pl: getPostBySlug(slug, "pl") ?? null,
 });
 
-export const getPostBody = (slug: string, lang: "en" | "pl"): string | null => {
+export const getPostBody = (slug: string, lang: Language): string | null => {
   return bodies[lang][slug] ?? null;
 };

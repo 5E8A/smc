@@ -1,5 +1,3 @@
-export type Language = "en" | "pl";
-
 export const translations = {
   en: {
     nav: {

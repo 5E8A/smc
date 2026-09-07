@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { ImageIcon } from "@phosphor-icons/react";
 import { ASSETS_BASE_PATH } from "@smc/shared/constants";
-import type { Lang, WikiDoc } from "../../types";
+import type { Language, WikiDoc } from "../../types";
 import { slugify } from "@smc/shared/slug";
 import { AssetThumb } from "../media/ImageLibrary";
 import { useImagePicker } from "../media/useImagePicker";
@@ -11,7 +11,7 @@ import { ComboInput, Field, TextArea, TextInput } from "../ui/fields";
 
 interface WikiEditorProps {
   doc: WikiDoc;
-  lang: Lang;
+  lang: Language;
   categories: string[];
   onChange: (next: WikiDoc) => void;
   actions?: ReactNode;

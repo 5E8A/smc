@@ -1,24 +1,22 @@
 import path from "path";
 import fs from "fs";
 import { ASSETS_BASE_PATH } from "@smc/shared/constants";
-import { LANGS, KINDS, type Lang, type Kind, isLang, isKind } from "@smc/shared/content";
-
-export { LANGS, KINDS, type Lang, type Kind, isLang, isKind };
+import { type Language, type Kind } from "@smc/shared/content";
 
 export const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..");
 export const CONTENT_DIR = path.join(REPO_ROOT, "@web", "src", "content");
 export const PUBLIC_ASSETS_DIR = path.join(REPO_ROOT, "@web", "public", "assets");
 export const CONTENT_ASSETS_DIR = path.join(PUBLIC_ASSETS_DIR, "content");
 
-export function contentPath(kind: Kind, lang: Lang): string {
+export function contentPath(kind: Kind, lang: Language): string {
   return path.join(CONTENT_DIR, lang, `${kind}.json`);
 }
 
-export function mdDir(kind: Kind, lang: Lang): string {
+export function mdDir(kind: Kind, lang: Language): string {
   return path.join(CONTENT_DIR, lang, kind);
 }
 
-export function mdPath(kind: Kind, lang: Lang, slug: string): string {
+export function mdPath(kind: Kind, lang: Language, slug: string): string {
   return path.join(mdDir(kind, lang), `${slug}.md`);
 }
 

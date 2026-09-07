@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CircleNotchIcon, EyeIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
 import { SITE_BASE_PATH } from "@smc/shared/constants";
+import { languages } from "@smc/shared/content";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -9,7 +10,7 @@ import {
   type Entry,
   type Issue,
   type Kind,
-  type Lang,
+  type Language,
   type WikiDoc,
 } from "./types";
 import { todayIso } from "./lib/dates";
@@ -44,14 +45,12 @@ interface TabState {
 
 type TabMap = Record<string, TabState | undefined>;
 
-const tabKey = (lang: Lang, tab: Tab): string => `${lang}:${tab}`;
+const tabKey = (lang: Language, tab: Tab): string => `${lang}:${tab}`;
 const kindOf = (tab: Tab): Kind => (tab === "wiki" ? "wiki" : "posts");
-
-const LANGS_URL: Lang[] = ["en", "pl"];
 
 interface BootState {
   tab: Tab;
-  lang: Lang;
+  lang: Language;
   entryHint: string | null;
   path: string | null;
 }
@@ -62,13 +61,13 @@ const bootState = (): BootState => {
   const rawLang = p.get("lang");
   return {
     tab: TABS.includes(rawTab as Tab) ? (rawTab as Tab) : "posts",
-    lang: LANGS_URL.includes(rawLang as Lang) ? (rawLang as Lang) : "en",
+    lang: languages.includes(rawLang as Language) ? (rawLang as Language) : "en",
     entryHint: p.get("entry"),
     path: p.get("path"),
   };
 };
 
-const previewPathFor = (tab: Tab, entry: Entry | null, lang: Lang): string | null => {
+const previewPathFor = (tab: Tab, entry: Entry | null, lang: Language): string | null => {
   if (!entry?.slug || (tab !== "posts" && tab !== "wiki")) return null;
   return `${SITE_BASE_PATH}/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(entry.slug)}`;
 };
@@ -78,7 +77,7 @@ const numericPart = (id: string): number => {
   return m ? Number.parseInt(m[1], 10) : 0;
 };
 
-const nextIdFor = (entries: Entry[], kind: Kind, lang: Lang): string =>
+const nextIdFor = (entries: Entry[], kind: Kind, lang: Language): string =>
   kind === "posts"
     ? String(entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1)
     : `wiki-${lang}-${entries.reduce((m, e) => Math.max(m, numericPart(e.id)), 0) + 1}`;
@@ -99,7 +98,7 @@ const dirtySlugsFor = (st: TabState): string[] => {
     .map((e) => e.slug);
 };
 
-function useLiveValidation(tab: Tab, lang: Lang, entries: Entry[] | null): Issue[] | null {
+function useLiveValidation(tab: Tab, lang: Language, entries: Entry[] | null): Issue[] | null {
   const [result, setResult] = useState<{ key: string; issues: Issue[] | null }>({ key: "", issues: null });
   const serialized = useMemo(() => (entries ? JSON.stringify(entries) : null), [entries]);
   const key = `${tab}:${lang}`;
@@ -121,7 +120,7 @@ const BOOT = bootState();
 
 export const App = () => {
   const [tab, setTab] = useState<Tab>(BOOT.tab);
-  const [lang, setLang] = useState<Lang>(BOOT.lang);
+  const [lang, setLang] = useState<Language>(BOOT.lang);
   const ping = usePing();
   const webProbe = useDevServerProbe();
   const [tabs, setTabs] = useState<TabMap>({});
@@ -134,7 +133,7 @@ export const App = () => {
   const syncIcons = useIconsSync();
   const [previewPath, setPreviewPath] = useState<string | null>(BOOT.path);
 
-  const switchLang = useCallback((l: Lang) => {
+  const switchLang = useCallback((l: Language) => {
     setLang(l);
     setLoadError(null);
   }, []);
@@ -146,7 +145,7 @@ export const App = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const contentTab = tab === "posts" || tab === "wiki";
-  const otherLang: Lang = lang === "en" ? "pl" : "en";
+  const otherLang: Language = lang === "en" ? "pl" : "en";
   const key = tabKey(lang, tab);
   const state = tabs[key];
   const selected = state?.entries.find((e) => e.id === state.selectedId) ?? null;
@@ -179,7 +178,7 @@ export const App = () => {
 
   useEffect(() => {
     if (!contentTab) return;
-    for (const l of ["en", "pl"] as Lang[]) {
+    for (const l of languages) {
       const k = tabKey(l, tab);
       if (tabs[k] || inflight.current.has(k)) continue;
       inflight.current.add(k);
@@ -590,7 +589,7 @@ export const App = () => {
                   <>
                     <div className="border-b border-zinc-800 p-3">
                       <div className="flex rounded-lg border border-zinc-800 p-0.5">
-                        {(["en", "pl"] as const).map((l) => (
+                        {languages.map((l) => (
                           <button
                             key={l}
                             type="button"

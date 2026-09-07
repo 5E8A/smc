@@ -16,7 +16,7 @@ try {
   throw err;
 }
 const { validateContent } = store;
-const { KINDS, LANGS } = await import("@smc/cms/server/util");
+const { KINDS, languages } = await import("@smc/shared/content");
 
 let errors = 0;
 let warnings = 0;
@@ -33,7 +33,7 @@ const fail = (label, issues) => {
 const contentDir = path.join(root, "@web", "src", "content");
 
 for (const kind of KINDS) {
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     const label = `${lang}/${kind}`;
     let meta;
     try {
@@ -100,7 +100,7 @@ const MARKER_PATTERN = /:([A-Z][A-Za-z]+Icon):/g;
 const usedIcons = new Set();
 const contentRoot = path.join(root, "@web", "src", "content");
 for (const kind of KINDS) {
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     const dir = path.join(contentRoot, lang, kind);
     try {
       const mdFiles = readdirSync(dir, { recursive: false }).filter((f) => f.endsWith(".md"));
@@ -149,7 +149,7 @@ if (stale.length > 0) {
 
 console.log(
   errors === 0 && warnings === 0
-    ? `check-content: ok (${KINDS.length * LANGS.length} files + authors, ${usedIcons.size} icons)`
+    ? `check-content: ok (${KINDS.length * languages.length} files + authors, ${usedIcons.size} icons)`
     : `check-content: ${errors} error(s), ${warnings} warning(s)`
 );
 process.exit(errors === 0 ? 0 : 1);

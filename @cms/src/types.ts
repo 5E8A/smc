@@ -1,4 +1,4 @@
-export type { Lang, Kind, LocalizedText, SocialLink, AuthorSocials, Author } from "@smc/shared/content";
+export type { Language, Kind, LocalizedText, SocialLink, AuthorSocials, Author } from "@smc/shared/content";
 
 export interface BlogPost {
   id: string;

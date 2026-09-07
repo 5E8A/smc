@@ -1,10 +1,10 @@
-export const LANGS = ["en", "pl"] as const;
-export type Lang = (typeof LANGS)[number];
+export const languages = ["en", "pl"] as const;
+export type Language = (typeof languages)[number];
 
 export const KINDS = ["posts", "wiki"] as const;
 export type Kind = (typeof KINDS)[number];
 
-export const isLang = (v: string | null): v is Lang => LANGS.includes(v as Lang);
+export const isLanguage = (v: string | null): v is Language => languages.includes(v as Language);
 export const isKind = (v: string | null): v is Kind => KINDS.includes(v as Kind);
 
 export interface LocalizedText {

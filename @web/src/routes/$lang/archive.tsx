@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { translations, type Language } from "../../utils/translations";
+import { translations } from "../../utils/translations";
+import { type Language } from "@smc/shared/content";
 
 export const Route = createFileRoute("/$lang/archive")({
   head: ({ params }) => {

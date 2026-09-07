@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
-import { translations, Language } from "../utils/translations";
+import { translations } from "../utils/translations";
+import { type Language } from "@smc/shared/content";
 
 export interface LanguageContextType {
   language: Language;

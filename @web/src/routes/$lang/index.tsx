@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ASSETS_BASE_PATH } from "@smc/shared/constants";
-import { translations, type Language } from "../../utils/translations";
+import { translations } from "../../utils/translations";
+import { type Language } from "@smc/shared/content";
 import HomeView from "@/views/HomeView";
 
 export const Route = createFileRoute("/$lang/")({
