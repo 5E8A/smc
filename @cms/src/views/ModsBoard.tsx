@@ -9,6 +9,7 @@ import {
   TrashIcon,
   XIcon,
 } from "@phosphor-icons/react";
+import { MODRINTH_API_BASE, MODRINTH_CDN } from "@smc/shared/constants";
 import { getModList, putModList } from "../api";
 import type { Issue, ModListColumn } from "../types";
 import { useRunConsole } from "../lib/runConsole";
@@ -23,8 +24,6 @@ interface ModrinthProject {
   icon_url?: string | null;
 }
 
-const MODRINTH_API = "https://api.modrinth.com/v2";
-const MODRINTH_CDN = "https://cdn.modrinth.com/";
 const USER_AGENT = "SMCSite/cms-mods";
 
 const safeIconUrl = (url: string | null | undefined): string | null =>
@@ -53,7 +52,7 @@ const fetchProjects = async (slugs: string[]): Promise<Map<string, ModrinthProje
   if (slugs.length === 0) return out;
   for (let i = 0; i < slugs.length; i += 100) {
     const batch = slugs.slice(i, i + 100);
-    const res = await fetch(`${MODRINTH_API}/projects?ids=${encodeURIComponent(JSON.stringify(batch))}`, {
+    const res = await fetch(`${MODRINTH_API_BASE}/projects?ids=${encodeURIComponent(JSON.stringify(batch))}`, {
       headers: { "User-Agent": USER_AGENT },
     });
     if (!res.ok) return out;
@@ -70,7 +69,7 @@ const searchProjects = async (query: string): Promise<ModrinthProject[]> => {
     facets: JSON.stringify([["project_type:mod"]]),
     limit: "10",
   });
-  const res = await fetch(`${MODRINTH_API}/search?${params}`, { headers: { "User-Agent": USER_AGENT } });
+  const res = await fetch(`${MODRINTH_API_BASE}/search?${params}`, { headers: { "User-Agent": USER_AGENT } });
   if (!res.ok) return [];
   const body = (await res.json()) as { hits?: ModrinthProject[] };
   return Array.isArray(body.hits) ? body.hits : [];

@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { ImageIcon } from "@phosphor-icons/react";
+import { ASSETS_BASE_PATH } from "@smc/shared/constants";
 import type { BlogPost, Lang } from "../../types";
 import { slugify } from "@smc/shared/slug";
 import { AssetThumb } from "../media/ImageLibrary";
@@ -81,7 +82,7 @@ export const PostEditor = ({ post, lang, categories, onChange, actions }: PostEd
                 <TextInput
                   value={post.coverImage}
                   onChange={(e) => onChange({ ...post, coverImage: e.target.value })}
-                  placeholder="/smc/assets/posts/…"
+                  placeholder={`${ASSETS_BASE_PATH}/posts/…`}
                   className="h-[74px] pr-20"
                 />
                 <button

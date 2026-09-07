@@ -14,6 +14,7 @@ import {
   remarkTableCategoryHeader,
   remarkUnwrapBlocks,
 } from "@smc/shared/markdown";
+import { ASSETS_BASE_PATH } from "@smc/shared/constants";
 import { assetUrl } from "../../api";
 import { isVideoSrc, videoPosterSrc } from "../../lib/videoAsset";
 import { remarkLineAttrs } from "../../lib/remarkLineAttrs";
@@ -177,7 +178,7 @@ const components: MarkdownComponents = {
   hr: ({ node, ...props }) => <hr className="my-5 border-white/5" {...props} />,
   img: ({ src, alt, title, node, "data-md-line": mdLine, ...props }) => {
     const raw = typeof src === "string" ? src : "";
-    const resolve = (p: string): string => (p.startsWith("/smc/assets/") ? assetUrl(p) : p);
+    const resolve = (p: string): string => (p.startsWith(`${ASSETS_BASE_PATH}/`) ? assetUrl(p) : p);
     return (
       <figure data-md-line={mdLine} className="my-4 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
         {isVideoSrc(raw) ? (

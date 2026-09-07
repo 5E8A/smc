@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CircleNotchIcon, EyeIcon, FloppyDiskIcon, TrashIcon } from "@phosphor-icons/react";
+import { SITE_BASE_PATH } from "@smc/shared/constants";
 import { ApiError, getAuthors, getContent, putAuthors, putContent, validateContent } from "./api";
 import {
   isBlogPost,
@@ -69,7 +70,7 @@ const bootState = (): BootState => {
 
 const previewPathFor = (tab: Tab, entry: Entry | null, lang: Lang): string | null => {
   if (!entry?.slug || (tab !== "posts" && tab !== "wiki")) return null;
-  return `/smc/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(entry.slug)}`;
+  return `${SITE_BASE_PATH}/${lang}/${tab === "wiki" ? "wiki" : "post"}/${encodeURIComponent(entry.slug)}`;
 };
 
 const numericPart = (id: string): number => {
