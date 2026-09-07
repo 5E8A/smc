@@ -42,6 +42,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "blurhash": "^2.0.5",
     "koffi": "^3.1.6",
     "oxlint": "^1.79.0",
     "oxlint-tsgolint": "^7.0.2001",
@@ -49,6 +50,9 @@
     "rollup-plugin-visualizer": "^7.0.1",
     "sharp": "^0.35.3",
     "typescript": "^6.0.3"
+  },
+  "optionalDependencies": {
+    "playwright": "^1.63.0"
   },
   "allowScripts": {
     "ffmpeg-static@5.3.0": true,

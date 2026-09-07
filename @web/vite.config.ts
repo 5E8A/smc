@@ -19,7 +19,6 @@ export default defineConfig(async ({ mode }) => {
           enabled: true,
           crawlLinks: true,
           autoSubfolderIndex: true,
-          // filter: ({ path }) => !path.includes("/modrinth"),
         },
         pages: [
           { path: "/" },

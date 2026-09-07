@@ -170,10 +170,7 @@
       }
     },
     {
-      "files": [
-        "scripts/**/*.mjs"
-        // "cms/server/**/*.ts"
-      ],
+      "files": ["@scripts/**/*.mjs"],
       "env": {
         "node": true
       }
