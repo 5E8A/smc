@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "@tanstack/react-router";
 import { MODRINTH_PROJECT_ID } from "@smc/shared/constants";
 import { useLanguage } from "@/context/useLanguage";
 import { CodeIcon, CpuIcon } from "@phosphor-icons/react";
 import { getActiveDiscordMembers, getTotalDownloads, getLatestVersionData } from "@/services/api";
+import { AnimatedInt } from "@/components/ui/AnimatedNumber";
+import { AnimatedVersion } from "@/components/ui/AnimatedVersionNumber";
 
 const AboutView = () => {
   const { t } = useLanguage();
+  const { pathname } = useLocation();
 
-  const [downloads, setDownloads] = useState<string | null>(null);
+  const [downloads, setDownloads] = useState<number | null>(null);
   const [activeMembers, setActiveMembers] = useState<number | null>(null);
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const downloads = await getTotalDownloads(MODRINTH_PROJECT_ID);
-      setDownloads(downloads.toLocaleString());
+      const count = await getTotalDownloads(MODRINTH_PROJECT_ID);
+      setDownloads(count);
     };
     fetchData();
   }, []);
@@ -29,12 +33,8 @@ const AboutView = () => {
 
   useEffect(() => {
     const fetchLatestVersion = async () => {
-      const version = await getLatestVersionData(MODRINTH_PROJECT_ID);
-      if (version) {
-        setLatestVersion(version.version_number);
-      } else {
-        setLatestVersion("N/A");
-      }
+      const v = await getLatestVersionData(MODRINTH_PROJECT_ID);
+      setLatestVersion(v ? v.version_number : "N/A");
     };
     fetchLatestVersion();
   }, []);
@@ -58,23 +58,33 @@ const AboutView = () => {
         {/* Stats Row */}
         <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="group relative overflow-hidden rounded-xl border border-white/5 bg-mc-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg hover:shadow-black/30">
-            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-500 to-emerald-400" />
-            <div className="mb-2 font-mc text-4xl font-bold text-mc-green-text">
-              {downloads !== null ? downloads : "Loading..."}
+            <div className="absolute top-0 left-0 h-1 w-full bg-linear-to-r from-emerald-500 to-emerald-400" />
+            <div className="mb-2 flex min-h-10 items-center justify-center font-mc text-4xl font-bold text-mc-green-text">
+              <AnimatedInt
+                key={`${pathname}-dl`}
+                value={downloads}
+                ariaLabel={downloads !== null ? new Intl.NumberFormat().format(downloads) : ""}
+              />
             </div>
             <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_downloads}</div>
           </div>
           <div className="group relative overflow-hidden rounded-xl border border-white/5 bg-mc-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg hover:shadow-black/30">
-            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-white/60 to-white/40" />
-            <div className="mb-2 font-mc text-4xl font-bold text-white">
-              {activeMembers !== null ? activeMembers : "Loading..."}
+            <div className="absolute top-0 left-0 h-1 w-full bg-linear-to-r from-white/60 to-white/40" />
+            <div className="mb-2 flex min-h-10 items-center justify-center font-mc text-4xl font-bold text-white">
+              <AnimatedInt
+                key={`${pathname}-mem`}
+                value={activeMembers}
+                ariaLabel={activeMembers !== null ? new Intl.NumberFormat().format(activeMembers) : ""}
+                loadingHead={10000}
+                loadingTail={100}
+              />
             </div>
             <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_users}</div>
           </div>
           <div className="group relative overflow-hidden rounded-xl border border-white/5 bg-mc-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg hover:shadow-black/30">
-            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-[#90d5ff] to-[#6bb8e8]" />
-            <div className="mb-2 font-mc text-4xl font-bold text-mc-accent">
-              {latestVersion !== null ? latestVersion : "Loading..."}
+            <div className="absolute top-0 left-0 h-1 w-full bg-linear-to-r from-mc-accent to-[#6bb8e8]" />
+            <div className="mb-2 flex min-h-10 items-center justify-center font-mc text-4xl font-bold text-mc-accent">
+              <AnimatedVersion key={`${pathname}-ver`} version={latestVersion} />
             </div>
             <div className="text-sm tracking-wider text-mc-text-muted uppercase">{t.about_page.stats_version}</div>
           </div>
@@ -85,7 +95,7 @@ const AboutView = () => {
           {/* Mission */}
           <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 transition-all duration-300 hover:border-white/20">
             <div className="absolute -top-16 -right-16 size-48 rounded-full bg-emerald-500/5 blur-3xl transition-all duration-500 group-hover:bg-emerald-500/10 group-hover:blur-2xl" />
-            <div className="relative z-10 mb-6 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 ring-1 ring-emerald-500/20">
+            <div className="relative z-10 mb-6 flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500/15 to-emerald-500/5 ring-1 ring-emerald-500/20">
               <CpuIcon className="size-6 text-emerald-400" />
             </div>
             <h2 className="relative z-10 mb-4 text-2xl font-bold text-white">{t.about_page.mission_title}</h2>
@@ -95,7 +105,7 @@ const AboutView = () => {
           {/* Creator */}
           <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-mc-surface p-8 transition-all duration-300 hover:border-white/20">
             <div className="absolute -top-16 -right-16 size-48 rounded-full bg-indigo-500/5 blur-3xl transition-all duration-500 group-hover:bg-indigo-500/10 group-hover:blur-2xl" />
-            <div className="relative z-10 mb-6 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/15 to-indigo-500/5 ring-1 ring-indigo-500/20">
+            <div className="relative z-10 mb-6 flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500/15 to-indigo-500/5 ring-1 ring-indigo-500/20">
               <CodeIcon className="size-6 text-indigo-400" />
             </div>
             <h2 className="relative z-10 mb-4 text-2xl font-bold text-white">{t.about_page.creator_title}</h2>
