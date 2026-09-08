@@ -6,12 +6,12 @@
       "sodium-extra",
       "lithium",
       "ferrite-core",
-      "entity-culling",
+      "entityculling",
       "moreculling",
       "immediatelyfast",
       "nvidium",
+      "modernfix-mvus",
       "krypton",
-      "modernfix",
       "vmp-fabric",
       "c2me-fabric",
       "zfastnoise",
@@ -46,6 +46,7 @@
       "gamma-utils",
       "talk-balloons",
       "durability-viewer-updated",
+      "appleskin",
       "ping-view",
       "chat-heads",
       "rrls",
@@ -58,7 +59,8 @@
       "bobby",
       "health-indicator-txf",
       "forcecloseworldloadingscreen",
-      "smooth-skies"
+      "smooth-skies",
+      "lighty"
     ]
   },
   {
