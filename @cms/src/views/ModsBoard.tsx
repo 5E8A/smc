@@ -7,9 +7,10 @@ import {
   LightningIcon,
   PlusIcon,
   TrashIcon,
+  WarningIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { MODRINTH_API_BASE, MODRINTH_CDN } from "@smc/shared/constants";
+import { MODRINTH_API_BASE, MODRINTH_CDN, MODRINTH_PROJECT_ID } from "@smc/shared/constants";
 import { getModList, putModList } from "../api";
 import type { Issue, ModListColumn } from "../types";
 import { useRunConsole } from "../lib/runConsole";
@@ -75,6 +76,48 @@ const searchProjects = async (query: string): Promise<ModrinthProject[]> => {
   return Array.isArray(body.hits) ? body.hits : [];
 };
 
+interface ModrinthVersion {
+  id: string;
+  project_id: string;
+  version_number: string;
+  dependencies: { project_id: string; dependency_type: string }[];
+}
+
+const fetchPackSlugs = async (): Promise<string[]> => {
+  const projectRes = await fetch(`${MODRINTH_API_BASE}/project/${MODRINTH_PROJECT_ID}`, {
+    headers: { "User-Agent": USER_AGENT },
+  });
+  if (!projectRes.ok) throw new Error(`Modrinth project ${projectRes.status}`);
+  const project = (await projectRes.json()) as { versions: string[] };
+  if (!project.versions?.length) throw new Error("No versions found for modpack");
+
+  const versionId = project.versions[project.versions.length - 1]!;
+  const versionRes = await fetch(`${MODRINTH_API_BASE}/version/${versionId}`, {
+    headers: { "User-Agent": USER_AGENT },
+  });
+  if (!versionRes.ok) throw new Error(`Modrinth version ${versionRes.status}`);
+  const version = (await versionRes.json()) as ModrinthVersion;
+
+  const depIds = [
+    ...new Set(version.dependencies.filter((d) => d.dependency_type === "embedded").map((d) => d.project_id)),
+  ];
+  if (depIds.length === 0) return [];
+
+  const slugs: string[] = [];
+  for (let i = 0; i < depIds.length; i += 100) {
+    const batch = depIds.slice(i, i + 100);
+    const res = await fetch(`${MODRINTH_API_BASE}/projects?ids=${encodeURIComponent(JSON.stringify(batch))}`, {
+      headers: { "User-Agent": USER_AGENT },
+    });
+    if (!res.ok) continue;
+    const body = (await res.json()) as { slug: string }[];
+    if (Array.isArray(body)) {
+      for (const p of body) slugs.push(p.slug);
+    }
+  }
+  return [...new Set(slugs)];
+};
+
 interface Draft {
   input: string;
   hits: ModrinthProject[];
@@ -100,8 +143,25 @@ export function ModsBoard() {
   const [dragOver, setDragOver] = useState<{ col: string; index: number } | null>(null);
   const searchTimers = useRef<Record<string, number>>({});
 
+  const [packSlugs, setPackSlugs] = useState<string[] | null>(null);
+  const [packLoading, setPackLoading] = useState(true);
+  const [packError, setPackError] = useState<string | null>(null);
+
   const slack = useMemo(() => (columns ? columns.flatMap((c) => c.slugs) : []), [columns]);
   const slugSet = useMemo(() => new Set(slack), [slack]);
+
+  const categorizedSlugs = useMemo(() => new Set(columns?.flatMap((c) => c.slugs) ?? []), [columns]);
+  const uncategorizedSlugs = useMemo(
+    () => (packSlugs ? packSlugs.filter((s) => !categorizedSlugs.has(s)) : []),
+    [packSlugs, categorizedSlugs]
+  );
+  const staleSlugs = useMemo(
+    () =>
+      packSlugs
+        ? new Set(columns?.flatMap((c) => c.slugs).filter((s) => !packSlugs.includes(s)) ?? [])
+        : new Set<string>(),
+    [packSlugs, columns]
+  );
 
   const cancelSearch = useCallback((key: string) => {
     window.clearTimeout(searchTimers.current[key]);
@@ -138,6 +198,13 @@ export function ModsBoard() {
       .catch((err) => setError(String(err)));
   }, []);
 
+  useEffect(() => {
+    fetchPackSlugs()
+      .then(setPackSlugs)
+      .catch((err) => setPackError(err instanceof Error ? err.message : String(err)))
+      .finally(() => setPackLoading(false));
+  }, []);
+
   const refreshMeta = useCallback(async (list: ModListColumn[]) => {
     try {
       const found = await fetchProjects(list.flatMap((c) => c.slugs));
@@ -149,12 +216,12 @@ export function ModsBoard() {
 
   useEffect(() => {
     if (!columns) return;
-    const missing = columns.flatMap((c) => c.slugs).filter((s) => !meta.has(s));
+    const missing = [...columns.flatMap((c) => c.slugs), ...uncategorizedSlugs].filter((s) => !meta.has(s));
     if (missing.length === 0) return;
     void fetchProjects(missing)
       .then((found) => setMeta((prev) => new Map([...prev, ...found])))
       .catch(() => {});
-  }, [columns, meta]);
+  }, [columns, meta, uncategorizedSlugs]);
 
   const dirty = columns !== null && snapshot !== JSON.stringify(columns);
   useEffect(() => {
@@ -167,10 +234,21 @@ export function ModsBoard() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
 
+  const UNCATEGORIZED_KEY = "__uncategorized";
+
   const moveCard = useCallback((slug: string, fromKey: string, toKey: string, toIndex: number) => {
     setColumns((cols) => {
       if (!cols) return cols;
       const next = cols.map((c) => ({ key: c.key, slugs: [...c.slugs] }));
+
+      if (fromKey === UNCATEGORIZED_KEY) {
+        const to = next.find((c) => c.key === toKey);
+        if (!to) return cols;
+        if (to.slugs.includes(slug)) return cols;
+        to.slugs.splice(toIndex, 0, slug);
+        return next;
+      }
+
       const from = next.find((c) => c.key === fromKey);
       const to = next.find((c) => c.key === toKey);
       if (!from || !to) return cols;
@@ -303,6 +381,26 @@ export function ModsBoard() {
         </span>
       </div>
 
+      {packLoading && (
+        <div className="flex items-center gap-2 text-[11px] text-zinc-500">
+          <CircleNotchIcon size={12} className="animate-spin" /> Fetching modpack data…
+        </div>
+      )}
+      {packError && !packLoading && (
+        <Banner variant="warn" dismissable onDismiss={() => setPackError(null)}>
+          <span className="font-mono">Pack metadata: {packError}</span>
+        </Banner>
+      )}
+      {packSlugs && !packLoading && (
+        <div className="flex items-center gap-3 text-[11px] text-zinc-500">
+          <span>
+            📦 {packSlugs.length} mods in pack · {categorizedSlugs.size} categorized · {uncategorizedSlugs.length}{" "}
+            uncategorized
+            {staleSlugs.size > 0 && <span className="text-amber-400"> · {staleSlugs.size} stale</span>}
+          </span>
+        </div>
+      )}
+
       {error && (
         <Banner variant="error" dismissable onDismiss={() => setError(null)}>
           <span className="font-mono break-all">{error}</span>
@@ -319,7 +417,7 @@ export function ModsBoard() {
         </Banner>
       )}
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
         {columns.map((col) => {
           const draft = drafts[col.key];
           return (
@@ -351,6 +449,7 @@ export function ModsBoard() {
                   const project = meta.get(slug);
                   const iconUrl = safeIconUrl(project?.icon_url);
                   const isDragging = drag?.slug === slug;
+                  const isStale = staleSlugs.has(slug);
                   return (
                     <li
                       key={slug}
@@ -377,7 +476,9 @@ export function ModsBoard() {
                           ? "border-green-700 bg-green-950/40 opacity-40"
                           : dragOver?.col === col.key && dragOver.index === index
                             ? "border-green-700 bg-zinc-900"
-                            : "border-zinc-800 bg-zinc-900"
+                            : isStale
+                              ? "border-l-2 border-amber-600 bg-zinc-900"
+                              : "border-zinc-800 bg-zinc-900"
                       }`}
                     >
                       {iconUrl ? (
@@ -400,6 +501,11 @@ export function ModsBoard() {
                           <div className="truncate text-[10px] text-zinc-500">{project.description}</div>
                         )}
                       </div>
+                      {isStale && (
+                        <span title="Not in current pack">
+                          <WarningIcon size={14} className="shrink-0 text-amber-500" />
+                        </span>
+                      )}
                       <div className="flex shrink-0 items-center gap-0.5">
                         <button
                           type="button"
@@ -542,6 +648,69 @@ export function ModsBoard() {
             </section>
           );
         })}
+
+        {packSlugs && uncategorizedSlugs.length > 0 && (
+          <section
+            key={UNCATEGORIZED_KEY}
+            className="min-h-48 rounded-lg border border-dashed border-amber-800 bg-amber-950/20 p-3"
+            onDragOver={(e) => {
+              e.preventDefault();
+              if (dragOver?.col !== UNCATEGORIZED_KEY) setDragOver({ col: UNCATEGORIZED_KEY, index: 0 });
+            }}
+            onDragLeave={() => setDragOver((d) => (d?.col === UNCATEGORIZED_KEY ? null : d))}
+            onDrop={() => setDragOver(null)}
+          >
+            <header className="mb-2 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-amber-400">Uncategorized</h3>
+              <span className="rounded bg-amber-900/50 px-1.5 py-0.5 text-[10px] font-bold text-amber-400">
+                {uncategorizedSlugs.length}
+              </span>
+            </header>
+
+            <ul className="space-y-1.5">
+              {uncategorizedSlugs.map((slug) => {
+                const project = meta.get(slug);
+                const iconUrl = safeIconUrl(project?.icon_url);
+                const isDragging = drag?.slug === slug;
+                return (
+                  <li
+                    key={slug}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = "move";
+                      setDrag({ slug, from: UNCATEGORIZED_KEY });
+                    }}
+                    onDragEnd={() => setDrag(null)}
+                    className={`flex items-center gap-2 rounded-md border p-2 ${
+                      isDragging ? "border-amber-600 bg-amber-950/40 opacity-40" : "border-amber-800/50 bg-amber-950/30"
+                    }`}
+                  >
+                    {iconUrl ? (
+                      <img
+                        src={iconUrl}
+                        alt=""
+                        width={24}
+                        height={24}
+                        loading="lazy"
+                        className="h-6 w-6 shrink-0 rounded object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-amber-900/30 text-[10px] text-amber-600">
+                        cube
+                      </span>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-xs font-semibold text-white">{project?.title ?? slug}</div>
+                      {project?.description && (
+                        <div className="truncate text-[10px] text-zinc-500">{project.description}</div>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );
