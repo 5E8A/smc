@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { MarkdownPreview } from "../editor/MarkdownPreview";
 import DocsTOC from "./DocsTOC";
@@ -46,8 +46,23 @@ function buildDocs(entries: Record<string, string>): DocPage[] {
 
 const docs = buildDocs(docModules);
 
-export const DocsTab = () => {
-  const [selected, setSelected] = useState(docs[0]?.slug ?? "getting-started");
+interface DocsTabProps {
+  initialSlug?: string | null;
+  onSlugChange?: (slug: string) => void;
+}
+
+export const DocsTab = ({ initialSlug, onSlugChange }: DocsTabProps) => {
+  const [selected, setSelected] = useState(() => {
+    if (initialSlug && docs.some((d) => d.slug === initialSlug)) return initialSlug;
+    return docs[0]?.slug ?? "getting-started";
+  });
+  const select = useCallback(
+    (slug: string) => {
+      setSelected(slug);
+      onSlugChange?.(slug);
+    },
+    [onSlugChange]
+  );
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -103,7 +118,7 @@ export const DocsTab = () => {
                         <button
                           key={doc.slug}
                           type="button"
-                          onClick={() => setSelected(doc.slug)}
+                          onClick={() => select(doc.slug)}
                           className={`w-full cursor-pointer rounded-lg border px-2.5 py-2 text-left transition-colors ${
                             isActive ? "border-green-600/60 bg-green-950/30" : "border-transparent hover:bg-zinc-900"
                           }`}

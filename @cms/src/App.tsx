@@ -133,6 +133,7 @@ export const App = () => {
   const inflight = useRef<Set<string>>(new Set());
   const syncIcons = useIconsSync();
   const [previewPath, setPreviewPath] = useState<string | null>(BOOT.path);
+  const [selectedDocSlug, setSelectedDocSlug] = useState<string | null>(BOOT.entryHint);
 
   const switchLang = useCallback((l: Language) => {
     setLang(l);
@@ -173,9 +174,10 @@ export const App = () => {
       if (state?.selectedId) p.set("entry", state.selectedId);
     }
     if (tab === "preview" && previewPath) p.set("path", previewPath);
+    if (tab === "docs" && selectedDocSlug) p.set("entry", selectedDocSlug);
     const qs = p.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
-  }, [tab, lang, contentTab, state?.selectedId, previewPath]);
+  }, [tab, lang, contentTab, state?.selectedId, previewPath, selectedDocSlug]);
 
   useEffect(() => {
     if (!contentTab) return;
@@ -818,7 +820,7 @@ export const App = () => {
                   <PreviewTab entryPath={previewPath} online={webProbe.online} onRetry={webProbe.retry} />
                 )}
 
-                {tab === "docs" && <DocsTab />}
+                {tab === "docs" && <DocsTab initialSlug={selectedDocSlug} onSlugChange={setSelectedDocSlug} />}
               </div>
             </>
           )}
