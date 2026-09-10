@@ -106,7 +106,9 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
         } catch (err) {
           return void sendJson(res, 400, { error: `Invalid JSON body: ${(err as Error).message}` });
         }
-        const dirtySlugs = Array.isArray(parsed.dirtySlugs) ? parsed.dirtySlugs.filter((s): s is string => typeof s === "string") : [];
+        const dirtySlugs = Array.isArray(parsed.dirtySlugs)
+          ? parsed.dirtySlugs.filter((s): s is string => typeof s === "string")
+          : [];
         const { issues, formatted } = await saveContent(kind, lang, parsed.entries, dirtySlugs);
         const hasErrors = issues.some((i) => i.severity === "error");
         return void sendJson(res, hasErrors ? 400 : 200, { ok: !hasErrors, issues, formatted });

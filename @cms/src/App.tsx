@@ -24,6 +24,7 @@ import { ConverterView } from "./views/ConverterView";
 import { ModsBoard } from "./views/ModsBoard";
 import { GitView } from "./views/GitView";
 import { PreviewTab } from "./views/PreviewTab";
+import { DocsTab } from "./components/docs/DocsTab";
 import { RunConsole } from "./components/ui/RunConsole";
 import { invalidateAuthorCache } from "./lib/authorCache";
 import { useIconsSync } from "./hooks/useIconsSync";
@@ -34,8 +35,8 @@ import { OfflineBanner } from "./components/ui/OfflineBanner";
 import { Banner } from "./components/ui/Banner";
 import { Button } from "./components/ui/fields";
 
-type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy" | "preview";
-const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter", "deploy", "preview"];
+type Tab = "posts" | "wiki" | "mods" | "authors" | "assets" | "converter" | "deploy" | "preview" | "docs";
+const TABS: Tab[] = ["posts", "wiki", "mods", "authors", "assets", "converter", "deploy", "preview", "docs"];
 
 interface TabState {
   entries: Entry[];
@@ -539,7 +540,7 @@ export const App = () => {
 
   const viewDirty = tab === "authors" ? authorsDirty : dirty;
   const paneReady =
-    tab === "assets" || tab === "converter" || tab === "mods" || tab === "deploy" || tab === "preview"
+    tab === "assets" || tab === "converter" || tab === "mods" || tab === "deploy" || tab === "preview" || tab === "docs"
       ? true
       : tab === "authors"
         ? !!authors
@@ -732,7 +733,11 @@ export const App = () => {
                 </Banner>
               )}
 
-              <div className={contentTab || tab === "preview" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"}>
+              <div
+                className={
+                  contentTab || tab === "preview" || tab === "docs" ? "flex h-full min-h-0 flex-col" : "p-6 pb-16"
+                }
+              >
                 {(tab === "posts" || tab === "wiki") && (
                   <>
                     {!selected && (
@@ -812,6 +817,8 @@ export const App = () => {
                 {tab === "preview" && (
                   <PreviewTab entryPath={previewPath} online={webProbe.online} onRetry={webProbe.retry} />
                 )}
+
+                {tab === "docs" && <DocsTab />}
               </div>
             </>
           )}

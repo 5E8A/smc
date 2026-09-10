@@ -7,16 +7,65 @@ const escapeAttr = (value: string): string => value.replaceAll("&", "&amp;").rep
 
 export const CAROUSEL_RE = /:carouselStart:\s*\n([\s\S]*?)\n?\s*:carouselEnd:/gi;
 
-export const processCarousel = (content: string) =>
-  content.replace(CAROUSEL_RE, (_, inner: string) => {
+export const processCarousel = (content: string) => {
+  const CODE_FENCE = /^```[\s\S]*?^```/gm;
+  let result = "";
+  let lastIdx = 0;
+  for (const m of content.matchAll(CODE_FENCE)) {
+    result += processCarouselOutsideCode(content.slice(lastIdx, m.index!)) + m[0];
+    lastIdx = m.index! + m[0].length;
+  }
+  result += processCarouselOutsideCode(content.slice(lastIdx));
+  return result;
+};
+
+function processCarouselOutsideCode(text: string): string {
+  const BACKTICK = /(`+)([\s\S]*?)\1/g;
+  let out = "";
+  let lastIdx = 0;
+  for (const m of text.matchAll(BACKTICK)) {
+    out += replaceCarousels(text.slice(lastIdx, m.index!)) + m[0];
+    lastIdx = m.index! + m[0].length;
+  }
+  return out + replaceCarousels(text.slice(lastIdx));
+}
+
+function replaceCarousels(text: string): string {
+  return text.replace(CAROUSEL_RE, (_, inner: string) => {
     const images: CarouselImage[] = [...inner.matchAll(/!\[([^\]]*)\]\(([^)\s]+)\)/g)].map((m) => ({
       src: m[2] ?? "",
       alt: m[1] ?? "",
     }));
     return `<carousel images="${escapeAttr(JSON.stringify(images))}"></carousel>`;
   });
+}
 
-export const processIcons = (content: string) => content.replace(/:([A-Z][A-Za-z]+Icon):/g, '<icon name="$1"></icon>');
+export const processIcons = (content: string) => {
+  const CODE_FENCE = /^```[\s\S]*?^```/gm;
+  let result = "";
+  let lastIdx = 0;
+  for (const m of content.matchAll(CODE_FENCE)) {
+    result += processOutsideCode(content.slice(lastIdx, m.index!)) + m[0];
+    lastIdx = m.index! + m[0].length;
+  }
+  result += processOutsideCode(content.slice(lastIdx));
+  return result;
+};
+
+function processOutsideCode(text: string): string {
+  const BACKTICK = /(`+)([\s\S]*?)\1/g;
+  let out = "";
+  let lastIdx = 0;
+  for (const m of text.matchAll(BACKTICK)) {
+    out += replaceIcons(text.slice(lastIdx, m.index!)) + m[0];
+    lastIdx = m.index! + m[0].length;
+  }
+  return out + replaceIcons(text.slice(lastIdx));
+}
+
+function replaceIcons(text: string): string {
+  return text.replace(/:([A-Z][A-Za-z]+Icon):/g, '<icon name="$1"></icon>');
+}
 
 export const parseCarouselImages = (raw?: string): CarouselImage[] => {
   try {
@@ -106,6 +155,12 @@ export function remarkTableCategoryHeader() {
         if (first?.type !== "strong" || !first.children?.length) continue;
         const text = first.children[0];
         if (text?.type !== "text" || !text.value) continue;
+
+        const restEmpty = row.children.slice(1).every((c) => {
+          if (c.type !== "tableCell") return true;
+          return !c.children?.length || c.children.every((ch) => !ch.value?.trim());
+        });
+        if (!restEmpty) continue;
 
         row.children = [
           {
