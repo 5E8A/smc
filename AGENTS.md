@@ -12,17 +12,16 @@ Single hoisted `node_modules` + root `package-lock.json`. Deployed to GitHub Pag
 - `@cms/` - standalone CMS sub-app (package `@smc/cms`), edits `@web/src/content/…` and `@web/public/assets/…` via API middleware; exports `@smc/cms/server/store` + `@smc/cms/server/util` (used by `@scripts/check-content.mjs`). CMS details: `@cms/AGENTS.md` - read it when working on the CMS.
 - `@shared/` - package `@smc/shared` (hue/icons/months/slug helpers, `.ts` sources exported directly).
 - `@scripts/` - repo-root tooling (`check-content`, `generate-blurhash`, `sync-mods`, `sync-icons`). Node >= 22.7 (native TS stripping for `@smc/cms` imports). Pipeline details: `@scripts/AGENTS.md` - read it when working on those scripts.
-- Root `package.json` (`@smc`, private) is a delegator: `npm run dev`, `web:*`, `cms:*` wrappers; real per-workspace scripts live in each package. Workspace selectors use package names (`npm -w @smc/web …`).
+- Root `package.json` (`@smc`, private) is a mix of workspace delegates (`dev`, `web:*`, `cms:*` wrappers) and direct `@scripts/` calls (`generate-lqip`, `check-content`, `sync-mods`, `sync-icons`); real per-workspace scripts live in each package. Workspace selectors use package names (`npm -w @smc/web …`).
 
 ## Commands
 
-- `npm install` / `npm run web:install` / `npm run cms:install` - install all workspaces into the single root `node_modules` (no per-package installs).
-- `npm run dev` / `build` / `preview` / `start` - site (delegate to `@smc/web`). `check-content` gate runs inside the build.
+- `npm install` - install all workspaces into the single root `node_modules` (no per-package installs).
+- `npm run dev` / `build` / `start` - site (delegate to `@smc/web`). `check-content` gate runs inside the build.
 - `npm run web:ci` - `npm ci -w @smc/web` + lint + check-content + vite build.
 - `npm run cms` - local-only CMS at `127.0.0.1:4000` (details: `@cms/AGENTS.md`); `cms:ffmpeg` verifies ffmpeg for video uploads.
 - `npm run lint` / `lint:fix` - oxlint over all workspaces + `@scripts/`, type-aware; also enforces the Conventions below.
 - `npm run generate-lqip` / `sync-mods` / `sync-icons` - content/asset pipelines (details: `@scripts/AGENTS.md`).
-- `npm run analyze` - bundle size visualizer (writes `@web/dist/stats.html`).
 
 - `npm run format` / `format:check` - Prettier over the whole repo (root config).
 

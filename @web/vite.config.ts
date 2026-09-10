@@ -6,9 +6,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 import { SITE_BASE_PATH } from "@smc/shared/constants";
 
-export default defineConfig(async ({ mode }) => {
-  const analyze = mode === "analyze";
-  const visualizer = analyze ? (await import("rollup-plugin-visualizer")).visualizer : null;
+export default defineConfig(() => {
   return {
     server: {
       port: 3000,
@@ -37,7 +35,6 @@ export default defineConfig(async ({ mode }) => {
       nitro({ baseURL: SITE_BASE_PATH }),
       react(),
       tailwindcss(),
-      ...(visualizer ? [visualizer({ filename: "dist/stats.html", open: true, gzipSize: true })] : []),
     ],
     resolve: {
       alias: {
