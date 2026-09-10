@@ -17,7 +17,18 @@ interface ChestProps {
   actionLabel?: string;
 }
 
-const Chest = ({ title, mods, g, sprite, onHover, asLink = true, activeSlotIdx = null, onSlotTap, tooltipScale = 2, actionLabel }: ChestProps) => {
+const Chest = ({
+  title,
+  mods,
+  g,
+  sprite,
+  onHover,
+  asLink = true,
+  activeSlotIdx = null,
+  onSlotTap,
+  tooltipScale = 2,
+  actionLabel,
+}: ChestProps) => {
   const handleSlotHover = useCallback((mod: ModData, index: number, el: HTMLElement) => onHover(mod, el), [onHover]);
 
   const slots: (ModData | null)[] = Array.from({ length: 27 }, (_, i) => mods[i] ?? null);

@@ -7,7 +7,11 @@ const emptySubscribe = () => () => {};
 export const Route = createLazyFileRoute("/$lang/modrinth")({
   component: function LangModrinthComponent() {
     const { type, slug } = Route.useSearch();
-    const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(
+      emptySubscribe,
+      () => true,
+      () => false
+    );
     return <OpenAppView search={isClient ? { type, slug } : { type: null, slug: null }} />;
   },
 });
