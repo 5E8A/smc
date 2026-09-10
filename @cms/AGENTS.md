@@ -30,8 +30,8 @@ Details for `npm run cms` (runs at `127.0.0.1:4000`; edits `@web` content in pla
 
 ### Markdown image syntax
 
-- Standard: `![alt](/smc/assets/content/path.webp)`
-- With caption: `![alt](/smc/assets/content/path.webp "Caption text")` - renders `<figcaption>` below the image via `ContentMarkdown`.
+- Standard: `![alt](/assets/content/path.webp)`
+- With caption: `![alt](/assets/content/path.webp "Caption text")` - renders `<figcaption>` below the image via `ContentMarkdown`.
 - Icons: `:NameIcon:` - inline Phosphor icon.
 - Carousel: `:carouselStart:` ... `:carouselEnd:` block wrapping multiple images.
 

@@ -38,7 +38,7 @@ The preview tab embeds an iframe pointing to the Vite dev server at `http://127.
 
 When you switch to the Preview tab from a content tab (Posts or Wiki), the preview automatically navigates to the path of the currently selected entry. For example:
 
-- Switching from a post with slug `ender-io-guide` in EN → Preview loads `/smc/en/post/ender-io-guide`
+- Switching from a post with slug `ender-io-guide` in EN → Preview loads `/en/post/ender-io-guide`
 - Switching from a wiki page → Preview loads the corresponding wiki path
 
 When you switch back to the content tab, the entry context is preserved so you don't lose your place.

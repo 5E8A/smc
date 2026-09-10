@@ -55,7 +55,7 @@ The two content tabs serve different purposes:
 |                     | Posts                     | Wiki                      |
 | ------------------- | ------------------------- | ------------------------- |
 | **Categories**      | Blog post categories      | Wiki categories           |
-| **URL pattern**     | `/smc/{lang}/post/{slug}` | `/smc/{lang}/wiki/{slug}` |
+| **URL pattern**     | `/{lang}/post/{slug}`    | `/{lang}/wiki/{slug}`    |
 | **JSON store**      | `posts.json`              | `wiki.json`               |
 | **Markdown folder** | `posts/{slug}.md`         | `wiki/{slug}.md`          |
 

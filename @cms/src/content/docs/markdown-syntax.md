@@ -19,10 +19,10 @@ All standard GFM features work:
 ### Basic Image
 
 ```
-![Alt text](/smc/assets/content/banners/wrench.webp)
+![Alt text](/assets/content/banners/wrench.webp)
 ```
 
-![Alt text](/smc/assets/content/banners/wrench.webp)
+![Alt text](/assets/content/banners/wrench.webp)
 
 Images are rendered with lazy loading and rounded corners. The path should be relative to the site root.
 
@@ -31,12 +31,12 @@ Images are rendered with lazy loading and rounded corners. The path should be re
 Add a title attribute to display a caption below the image:
 
 ```
-![Alt text](/smc/assets/content/banners/wrench.webp "Attribution / caption")
+![Alt text](/assets/content/banners/wrench.webp "Attribution / caption")
 ```
 
 The title renders below the image, useful for attributions and explanations.
 
-![Alt text](/smc/assets/content/banners/wrench.webp "Attribution / caption")
+![Alt text](/assets/content/banners/wrench.webp "Attribution / caption")
 
 ## Icons
 
@@ -79,7 +79,7 @@ Example from real content:
 
 - `## :StarIcon: Quality of Life Mods` renders as a heading with an icon
 - `:carouselStart:` begins the carousel block
-- `![alt](/smc/assets/content/image.webp)` each image on its own line
+- `![alt](/assets/content/image.webp)` each image on its own line
 - `:carouselEnd:` ends the carousel block
 
 ### Carousel Tips
@@ -87,7 +87,7 @@ Example from real content:
 - Use 2-6 images per carousel for the best experience
 - All images should have similar dimensions for consistent display
 - Add titles to each image for accessibility and context
-- Paths should start with `/smc/assets/content/`
+- Paths should start with `/assets/content/`
 
 ## Tables
 
@@ -141,10 +141,10 @@ Headings use standard `#` syntax. Note that `# H1` headings are automatically de
 
 ### Internal Links
 
-Links to other pages on the site use the `/smc/` base path:
+Links to other pages on the site:
 
 ```
-[Read the wiki](/smc/en/wiki/ender-io)
+[Read the wiki](/en/wiki/ender-io)
 ```
 
 ### External Links
