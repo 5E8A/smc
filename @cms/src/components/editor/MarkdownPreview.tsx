@@ -4,12 +4,15 @@ import remarkBreaks from "remark-breaks";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import { smcSanitizeSchema } from "@smc/shared/rehype-sanitize-schema";
+import { toString } from "hast-util-to-string";
 import rehypeSlug from "rehype-slug";
 import { ArrowSquareOutIcon } from "@phosphor-icons/react";
+import { CodeBlock } from "./CodeBlock";
 import {
   parseCarouselImages,
   processCarousel,
   processIcons,
+  rehypeRemoveEmptyColSpanCells,
   remarkNoH1,
   remarkTableCategoryHeader,
   remarkUnwrapBlocks,
@@ -19,6 +22,7 @@ import { assetUrl } from "../../api";
 import { isVideoSrc, videoPosterSrc } from "../../lib/videoAsset";
 import { remarkLineAttrs } from "../../lib/remarkLineAttrs";
 import type { PluggableList } from "unified";
+import type { Element } from "hast";
 import Carousel from "../media/Carousel";
 import { ICON_COMPONENTS } from "./icon-map.generated";
 
@@ -109,24 +113,37 @@ const components: MarkdownComponents = {
       {children}
     </del>
   ),
-  code: ({ className: codeClassName, children, node, ...props }) =>
-    codeClassName?.includes("language-") ? (
-      <code className="block overflow-x-auto rounded-lg bg-black/40 p-3 text-xs text-green-300" {...props}>
-        {children}
-      </code>
-    ) : (
+  code: ({ className: codeClassName, children, node, ...props }) => {
+    const isBlock = codeClassName?.includes("language-") || (typeof children === "string" && children.includes("\n"));
+    if (isBlock) {
+      return (
+        <code className="block font-mono text-xs leading-relaxed text-green-300" {...props}>
+          {children}
+        </code>
+      );
+    }
+    return (
       <code
         className="rounded border border-white/10 bg-black/30 px-1 py-0.5 font-mono text-xs text-green-300"
         {...props}
       >
         {children}
       </code>
-    ),
-  pre: ({ children, node, ...props }) => (
-    <pre className="mb-4 overflow-x-auto rounded-xl border border-white/5 bg-black/20 p-3" {...props}>
-      {children}
-    </pre>
-  ),
+    );
+  },
+  pre: ({ children, node, ...props }) => {
+    const codeElement = node?.children.find(
+      (child): child is Element => child.type === "element" && child.tagName === "code"
+    );
+    const classList = codeElement?.properties.className;
+    const language = Array.isArray(classList)
+      ? classList
+          .map(String)
+          .find((className) => className.startsWith("language-"))
+          ?.slice("language-".length)
+      : undefined;
+    return <CodeBlock code={codeElement ? toString(codeElement) : ""} language={language} {...props} />;
+  },
   blockquote: ({ children, node, ...props }) => (
     <blockquote className="my-4 border-l-4 border-green-500/50 pl-3 text-sm text-gray-400 italic" {...props}>
       {children}
@@ -148,28 +165,43 @@ const components: MarkdownComponents = {
     </li>
   ),
   input: ({ checked, node, ...props }) => (
-    <input type="checkbox" checked={checked} readOnly className="mr-2 accent-green-500" {...props} />
+    <label className="mr-1.5 inline-flex cursor-pointer items-center align-text-bottom">
+      <input type="checkbox" checked={checked} readOnly className="peer sr-only" {...props} />
+      <span className="flex size-4 items-center justify-center rounded border border-zinc-600 bg-zinc-800 transition-colors peer-checked:border-green-500 peer-checked:bg-green-600">
+        {checked && (
+          <svg viewBox="0 0 16 16" fill="none" className="size-3 text-white">
+            <path
+              d="M3 8.5L6.5 12L13 4"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </span>
+    </label>
   ),
   table: ({ children, node, ...props }) => (
-    <div className="my-4 overflow-x-auto rounded-lg border border-white/5">
+    <div className="my-4 overflow-x-auto rounded-xl border border-zinc-700 bg-zinc-800">
       <table className="w-full border-collapse text-xs" {...props}>
         {children}
       </table>
     </div>
   ),
   thead: ({ children, node, ...props }) => (
-    <thead className="border-b border-white/10 bg-black/20" {...props}>
+    <thead className="border-b border-zinc-700 bg-black/20" {...props}>
       {children}
     </thead>
   ),
   th: ({ children, node, className: thClassName, ...props }) => (
-    <th className={`px-2.5 py-1.5 text-left font-bold text-white${thClassName ? ` ${thClassName}` : ""}`} {...props}>
+    <th className={`border-r border-zinc-700 px-2.5 py-1.5 text-left font-bold text-white${thClassName ? ` ${thClassName}` : ""}`} {...props}>
       {children}
     </th>
   ),
   td: ({ children, node, className: tdClassName, ...props }) => (
     <td
-      className={`border-r border-b border-white/5 px-2.5 py-1.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`}
+      className={`border-r border-b border-zinc-700 px-2.5 py-1.5 text-gray-300${tdClassName ? ` ${tdClassName}` : ""}`}
       {...props}
     >
       {children}
@@ -200,7 +232,7 @@ const components: MarkdownComponents = {
             {...props}
           />
         )}
-        {title && <figcaption className="bg-black/40 p-1.5 text-center text-[11px] text-zinc-400">{title}</figcaption>}
+        {title && <figcaption className="bg-zinc-800 p-1.5 text-center text-[11px] text-zinc-400">{title}</figcaption>}
       </figure>
     );
   },
@@ -214,7 +246,12 @@ const remarkPlugins: PluggableList = [
   remarkUnwrapBlocks,
   remarkLineAttrs,
 ];
-const rehypePlugins: PluggableList = [rehypeSlug, rehypeRaw, [rehypeSanitize, smcSanitizeSchema]];
+const rehypePlugins: PluggableList = [
+  rehypeSlug,
+  rehypeRaw,
+  rehypeRemoveEmptyColSpanCells,
+  [rehypeSanitize, smcSanitizeSchema],
+];
 export const MarkdownPreview = ({ content }: { content: string }) => (
   <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={components}>
     {processIcons(processCarousel(content))}
