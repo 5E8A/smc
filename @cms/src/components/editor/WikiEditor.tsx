@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { ImageIcon } from "@phosphor-icons/react";
-import { ASSETS_BASE_PATH } from "@smc/shared/constants";
+import { CONTENT_ASSETS_PREFIX } from "@smc/shared/constants";
 import type { Language, WikiDoc } from "../../types";
 import { slugify } from "@smc/shared/slug";
 import { AssetThumb } from "../media/ImageLibrary";
@@ -84,7 +84,7 @@ export const WikiEditor = ({ doc, lang, categories, onChange, actions }: WikiEdi
                 <TextInput
                   value={doc.coverImage}
                   onChange={(e) => onChange({ ...doc, coverImage: e.target.value })}
-                  placeholder={`${ASSETS_BASE_PATH}/banners/…`}
+                  placeholder={`${CONTENT_ASSETS_PREFIX}/banners/…`}
                   className="h-[74px] pr-20"
                 />
                 <button

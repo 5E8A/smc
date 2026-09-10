@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
 import sharp from "sharp";
-import { ASSETS_BASE_PATH } from "@smc/shared/constants";
+import { CONTENT_ASSETS_PREFIX } from "@smc/shared/constants";
 import { KINDS, languages } from "@smc/shared/content";
 import {
   CONTENT_ASSETS_DIR,
@@ -56,7 +56,7 @@ export interface ImageInfo {
   staticSize?: number;
 }
 
-export const CONTENT_PUBLIC_PREFIX = `${ASSETS_BASE_PATH}/content/`;
+export const CONTENT_PUBLIC_PREFIX = `${CONTENT_ASSETS_PREFIX}/content/`;
 
 const HEADER_BYTES = 32;
 
@@ -106,7 +106,7 @@ function readWebpDimensions(file: string): { width: number; height: number; anim
 }
 
 const toPublicPath = (abs: string): string =>
-  `${ASSETS_BASE_PATH}/` + path.relative(PUBLIC_ASSETS_DIR, abs).replace(/\\/g, "/");
+  `${CONTENT_ASSETS_PREFIX}/` + path.relative(PUBLIC_ASSETS_DIR, abs).replace(/\\/g, "/");
 
 function walk(dir: string): string[] {
   let entries: fs.Dirent[];
@@ -215,8 +215,8 @@ export function listDirs(): string[] {
 }
 
 export function serveAsset(publicPath: string, res: import("http").ServerResponse): boolean {
-  if (!publicPath.startsWith(`${ASSETS_BASE_PATH}/`)) return false;
-  const abs = path.resolve(PUBLIC_ASSETS_DIR, publicPath.slice(`${ASSETS_BASE_PATH}/`.length));
+  if (!publicPath.startsWith(`${CONTENT_ASSETS_PREFIX}/`)) return false;
+  const abs = path.resolve(PUBLIC_ASSETS_DIR, publicPath.slice(`${CONTENT_ASSETS_PREFIX}/`.length));
   if (!abs.startsWith(PUBLIC_ASSETS_DIR + path.sep)) return false;
   let stat: fs.Stats;
   try {

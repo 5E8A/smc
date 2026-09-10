@@ -8,6 +8,7 @@ import { formatDate } from "@smc/shared/months";
 import { useLanguage } from "@/context/useLanguage";
 import ContentMarkdown from "@/components/content/ContentMarkdown";
 import LanguageMissingCard from "@/components/ui/LanguageMissingCard";
+import { assetPath } from "@smc/shared/constants";
 import SmartImage from "@/components/media/SmartImage";
 
 interface ArticleViewProps {
@@ -39,7 +40,7 @@ const ArticleView = ({ body }: ArticleViewProps) => {
             {/* Cover image */}
             <div className="relative w-full overflow-hidden aspect-2/1">
               <SmartImage
-                src={post.coverImage}
+                src={assetPath(post.coverImage)}
                 alt={post.title}
                 className="absolute inset-0 size-full"
                 lazy={false}

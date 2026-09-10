@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
-import { ASSETS_BASE_PATH } from "@smc/shared/constants";
+import { CONTENT_ASSETS_PREFIX } from "@smc/shared/constants";
 import { assetUrl } from "../../api";
 import { isVideoSrc, videoPosterSrc } from "../../lib/videoAsset";
 
-const resolveSrc = (src: string) => (src.startsWith(`${ASSETS_BASE_PATH}/`) ? assetUrl(src) : src);
+const resolveSrc = (src: string) => (src.startsWith(`${CONTENT_ASSETS_PREFIX}/`) ? assetUrl(src) : src);
 
 const Carousel = ({ images }: { images: string[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

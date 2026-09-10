@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getPostAvailability, getPostBody, getPostBySlug } from "../../data/posts";
+import { SITE_BASE_PATH } from "@smc/shared/constants";
 
 const suffix = " | SMC";
 
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/$lang/post/$slug")({
       coverImage: string | undefined;
     };
     const pageTitle = title ? `${title}${suffix}` : undefined;
-    const imageUrl = coverImage ? `https://5e8a.github.io${coverImage}` : undefined;
+    const imageUrl = coverImage ? `https://5e8a.github.io${SITE_BASE_PATH === "/" ? "" : SITE_BASE_PATH}${coverImage}` : undefined;
     return {
       meta: [
         { title: pageTitle },

@@ -8,6 +8,7 @@ import { formatDate } from "@smc/shared/months";
 import { useLanguage } from "@/context/useLanguage";
 import SmartImage from "@/components/media/SmartImage";
 import ContentMarkdown from "@/components/content/ContentMarkdown";
+import { assetPath } from "@smc/shared/constants";
 import LanguageMissingCard from "@/components/ui/LanguageMissingCard";
 import WikiTOC from "@/components/content/WikiTOC";
 import { useState } from "react";
@@ -53,7 +54,7 @@ const WikiDocView = ({ body }: WikiDocViewProps) => {
             <div className="overflow-hidden rounded-2xl border border-white/5 bg-mc-surface shadow-2xl">
               <div className="relative w-full overflow-hidden aspect-2/1">
                 <SmartImage
-                  src={doc.coverImage}
+                  src={assetPath(doc.coverImage)}
                   alt={doc.title}
                   className="absolute inset-0 size-full"
                   lazy={false}

@@ -4,6 +4,7 @@ import { formatDate } from "@smc/shared/months";
 import { BlogPost } from "@/types";
 import { useLanguage } from "@/context/useLanguage";
 import SmartImage from "@/components/media/SmartImage";
+import { assetPath } from "@smc/shared/constants";
 
 interface PostCardProps {
   post: BlogPost;
@@ -22,7 +23,7 @@ const PostCard = ({ post }: PostCardProps) => {
       {/* Image Container */}
       <div className="relative h-56 overflow-hidden">
         <SmartImage
-          src={post.coverImage}
+          src={assetPath(post.coverImage)}
           alt={post.title}
           className="size-full transition-transform duration-700 will-change-transform group-hover:cover-zoom"
           priority="low"
@@ -53,7 +54,7 @@ const PostCard = ({ post }: PostCardProps) => {
         <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
           <div className="flex items-center text-xs text-mc-text-muted">
             {/* Avatar Section: Using the image and reducing its size */}
-            <img src={post.author.avatar} alt={post.author.name} className="mr-2 size-6 rounded-full object-cover" />
+            <img src={assetPath(post.author.avatar)} alt={post.author.name} className="mr-2 size-6 rounded-full object-cover" />
 
             {/* Author Name */}
             {post.author.name}

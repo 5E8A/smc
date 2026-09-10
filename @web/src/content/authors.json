@@ -1,7 +1,7 @@
 [
   {
     "id": "5e8a",
-    "avatar": "/smc/assets/content/avatars/seba.webp",
+    "avatar": "/assets/content/avatars/seba.webp",
     "name": {
       "en": "5E8A",
       "pl": "5E8A"
@@ -22,7 +22,7 @@
   },
   {
     "id": "a-tui4m8pck",
-    "avatar": "/smc/assets/content/avatars/logy.webp",
+    "avatar": "/assets/content/avatars/logy.webp",
     "name": {
       "en": "logy",
       "pl": "logy"

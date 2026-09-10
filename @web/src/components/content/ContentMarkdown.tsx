@@ -22,6 +22,7 @@ import {
 import Icon from "@/components/content/IconMap";
 import Carousel from "@/components/media/Carousel";
 import SmartImage from "@/components/media/SmartImage";
+import { assetPath } from "@smc/shared/constants";
 
 type MarkdownComponents = Components & {
   icon: React.ComponentType<{ name?: string; className?: string; node?: unknown }>;
@@ -35,7 +36,7 @@ interface ContentMarkdownProps {
 const components: MarkdownComponents = {
   icon: ({ name: iconName, node, ...rest }) => <Icon name={iconName ?? ""} {...rest} />,
   carousel: ({ images, node, ...rest }) => {
-    const imgs = parseCarouselImages(images);
+    const imgs = parseCarouselImages(images).map((img) => ({ ...img, src: assetPath(img.src) }));
     if (imgs.length === 0) return null;
     return (
       <div className="my-8 overflow-hidden rounded-xl border border-white/10 shadow-lg" {...rest}>
@@ -60,7 +61,7 @@ const components: MarkdownComponents = {
       );
     }
     return (
-      <a href={href} className="text-green-400 hover:text-white" {...props}>
+      <a href={href ? assetPath(href) : href} className="text-green-400 hover:text-white" {...props}>
         {children}
       </a>
     );
@@ -208,7 +209,7 @@ const components: MarkdownComponents = {
   hr: ({ node, ...props }) => <hr className="my-8 border-white/5" {...props} />,
   img: ({ src, alt, title }) => (
     <figure className="my-6 w-fit max-w-full overflow-hidden rounded-xl border border-white/10">
-      <SmartImage src={typeof src === "string" ? src : ""} alt={alt || ""} fit="natural" controls />
+      <SmartImage src={assetPath(typeof src === "string" ? src : "")} alt={alt || ""} fit="natural" controls />
       {title && <figcaption className="bg-zinc-800 p-2 text-center text-xs text-mc-text-muted">{title}</figcaption>}
     </figure>
   ),

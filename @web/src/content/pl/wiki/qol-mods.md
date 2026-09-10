@@ -3,12 +3,12 @@
 Fabric Boosted zawiera starannie dobrany zestaw 22 modów Quality of Life, które ulepszają i poprawiają Minecrafta - od lepszych informacji na HUDzie i narzędzi czatu, przez szybsze ładowanie. Wszystko opisane poniżej jest dostępne od razu, bez żadnej konfiguracji.
 
 :carouselStart:
-![Nakładka Lighty z poziomem światła pokazująca bezpieczne ścieżki w jaskini](/smc/assets/content/mods/qol/lighty/caves.webp)
-![Ekran hostowania świata Essential](/smc/assets/content/mods/qol/essential/world-hosting.webp)
-![Interfejs receptur Just Enough Items](/smc/assets/content/mods/qol/jei/recipe-gui.webp)
-![Pełny podgląd zawartości Shulker Box Tooltip](/smc/assets/content/mods/qol/shulker-box-tooltip/full-preview.webp)
-![Gradient nieba z Smooth Skies przy dużym dystansie renderowania](/smc/assets/content/mods/qol/smooth-skies/with.webp)
-![Porównanie jasności Gamma Utils](/smc/assets/content/mods/qol/gamma-utils/comparison.webp)
+![Nakładka Lighty z poziomem światła pokazująca bezpieczne ścieżki w jaskini](/assets/content/mods/qol/lighty/caves.webp)
+![Ekran hostowania świata Essential](/assets/content/mods/qol/essential/world-hosting.webp)
+![Interfejs receptur Just Enough Items](/assets/content/mods/qol/jei/recipe-gui.webp)
+![Pełny podgląd zawartości Shulker Box Tooltip](/assets/content/mods/qol/shulker-box-tooltip/full-preview.webp)
+![Gradient nieba z Smooth Skies przy dużym dystansie renderowania](/assets/content/mods/qol/smooth-skies/with.webp)
+![Porównanie jasności Gamma Utils](/assets/content/mods/qol/gamma-utils/comparison.webp)
 :carouselEnd:
 
 ### :ClipboardTextIcon: Ściągawka
@@ -57,24 +57,24 @@ Appleskin wizualizuje ukryte mechaniki jedzenia w Minecraft. Trzymając dowolne 
 
 Wyświetla założone elementy zbroi wraz z pozostałą wytrzymałością w prawym dolnym rogu, więc zawsze wiesz, kiedy naprawić ekwipunek.
 
-Naciśnij **H**, aby pokazać lub ukryć wyświetlanie - więcej w [Klawiszach i sterowaniu](/smc/pl/wiki/keybinds-and-controls).
+Naciśnij **H**, aby pokazać lub ukryć wyświetlanie - więcej w [Klawiszach i sterowaniu](/pl/wiki/keybinds-and-controls).
 
-![Durability Viewer pokazujący zbroję w prawym dolnym rogu](/smc/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Wytrzymałość zbroi wyświetlona w prawym dolnym rogu")
+![Durability Viewer pokazujący zbroję w prawym dolnym rogu](/assets/content/mods/qol/durability-viewer/armor-hotbar.webp "Wytrzymałość zbroi wyświetlona w prawym dolnym rogu")
 
 #### :HeartbeatIcon: Health Indicator TXF
 
 Dodaje kompaktowy wskaźnik obrażeń do HUDu, pozwalając mieć oko na zdrowie innych stworzeń przez cały czas.
 
-![Health Indicator TXF na HUDzie](/smc/assets/content/mods/qol/health-indicator/hud.webp)
+![Health Indicator TXF na HUDzie](/assets/content/mods/qol/health-indicator/hud.webp)
 
 #### :LightbulbFilamentIcon: Lighty
 
 Rysuje kolorową nakładkę na powierzchni bloków pokazującą, czy moby mogą się tam spawnować - zielony oznacza bezpiecznie, czerwony, że mob może się pojawić. Niezastąpiony przy oświetlaniu bazy i zabezpieczaniu budowli przed mobami. Przełącz nakładkę klawiszem **L**.
 
 :carouselStart:
-![Nakładka Lighty podświetlająca bezpieczne powierzchnie w jaskini](/smc/assets/content/mods/qol/lighty/caves.webp)
-![Tryb liczbowy Lighty pokazujący surowe poziomy światła](/smc/assets/content/mods/qol/lighty/number-mode.webp)
-![Świecący porost naturalnie blokujący spawny pod nakładką Lighty](/smc/assets/content/mods/qol/lighty/glow-lichen.webp)
+![Nakładka Lighty podświetlająca bezpieczne powierzchnie w jaskini](/assets/content/mods/qol/lighty/caves.webp)
+![Tryb liczbowy Lighty pokazujący surowe poziomy światła](/assets/content/mods/qol/lighty/number-mode.webp)
+![Świecący porost naturalnie blokujący spawny pod nakładką Lighty](/assets/content/mods/qol/lighty/glow-lichen.webp)
 :carouselEnd:
 
 #### :WifiHighIcon: Ping View
@@ -82,9 +82,9 @@ Rysuje kolorową nakładkę na powierzchni bloków pokazującą, czy moby mogą 
 Pokazuje ping każdego gracza jako liczbę na liście tab, więc zawsze wiesz, kto ma lagi - przydatne podczas gry na serwerach.
 
 :carouselStart:
-![Ping View pokazujący ping graczy na liście tab](/smc/assets/content/mods/qol/ping-view/tab-list-1.webp)
-![Alternatywny wygląd listy tab z Ping View](/smc/assets/content/mods/qol/ping-view/tab-list-2.webp)
-![Ekran konfiguracji Ping View](/smc/assets/content/mods/qol/ping-view/config.webp)
+![Ping View pokazujący ping graczy na liście tab](/assets/content/mods/qol/ping-view/tab-list-1.webp)
+![Alternatywny wygląd listy tab z Ping View](/assets/content/mods/qol/ping-view/tab-list-2.webp)
+![Ekran konfiguracji Ping View](/assets/content/mods/qol/ping-view/config.webp)
 :carouselEnd:
 
 ### :BasketIcon: Przedmioty i ekwipunek
@@ -96,9 +96,9 @@ Lepsze sposoby na przeglądanie przedmiotów, receptur i kontenerów.
 Klasyczna przeglądarka receptur. Każdy przedmiot w grze jest na wyciągnięcie klawisza: otwórz ekwipunek, a lista przedmiotów pojawi się po prawej stronie. Kliknij dowolny przedmiot, aby zobaczyć, jak jest tworzony, naciśnij **U** (lub prawy przycisk myszy), aby sprawdzić, do czego służy, i naciśnij **R** na wyniku, aby wrócić do jego receptury. Obsługuje wyszukiwanie po nazwie i modzie filtrami z `@`.
 
 :carouselStart:
-![Interfejs JEI z recepturą craftingową](/smc/assets/content/mods/qol/jei/recipe-gui.webp)
-![Receptury mikstur w JEI](/smc/assets/content/mods/qol/jei/potions.webp)
-![Tryb edycji listy przedmiotów JEI](/smc/assets/content/mods/qol/jei/item-list-edit-mode.webp)
+![Interfejs JEI z recepturą craftingową](/assets/content/mods/qol/jei/recipe-gui.webp)
+![Receptury mikstur w JEI](/assets/content/mods/qol/jei/potions.webp)
+![Tryb edycji listy przedmiotów JEI](/assets/content/mods/qol/jei/item-list-edit-mode.webp)
 :carouselEnd:
 
 #### :PackageIcon: Shulker Box Tooltip
@@ -106,9 +106,9 @@ Klasyczna przeglądarka receptur. Każdy przedmiot w grze jest na wyciągnięcie
 Najedź kursorem na dowolnego shulkerka, aby podejrzeć jej zawartość bez stawiania. Świetne do organizowania magazynów i sprawdzania, co jest w środku. W konfiguracji dostępnych jest kilka układów podglądu.
 
 :carouselStart:
-![Tryb pełnego podglądu Shulker Box Tooltip](/smc/assets/content/mods/qol/shulker-box-tooltip/full-preview.webp)
-![Tryb kompaktowego podglądu Shulker Box Tooltip](/smc/assets/content/mods/qol/shulker-box-tooltip/compact-preview.webp)
-![Podgląd innych typów kontenerów, takich jak torby i skrzynie](/smc/assets/content/mods/qol/shulker-box-tooltip/other-containers.webp)
+![Tryb pełnego podglądu Shulker Box Tooltip](/assets/content/mods/qol/shulker-box-tooltip/full-preview.webp)
+![Tryb kompaktowego podglądu Shulker Box Tooltip](/assets/content/mods/qol/shulker-box-tooltip/compact-preview.webp)
+![Podgląd innych typów kontenerów, takich jak torby i skrzynie](/assets/content/mods/qol/shulker-box-tooltip/other-containers.webp)
 :carouselEnd:
 
 ### :ChatsCircleIcon: Czat i kontakty towarzyskie
@@ -119,15 +119,15 @@ Narzędzia, które czynią komunikację w multiplayer przyjemniejszą i bezpiecz
 
 Pokazuje głowę ze skina każdego gracza obok jego wiadomości na czacie.
 
-![Wiadomość na czacie z głowami graczy i cieniem](/smc/assets/content/mods/qol/chat-heads/drop-shadow.webp)
+![Wiadomość na czacie z głowami graczy i cieniem](/assets/content/mods/qol/chat-heads/drop-shadow.webp)
 
 #### :ChatCenteredDotsIcon: Talk Balloons
 
 Gdy piszesz na czacie, Twoja wiadomość pojawia się też w dymku nad głową postaci - idealne do komunikowania się bez zaglądania do okna czatu.
 
 :carouselStart:
-![Dymek czatu Talk Balloons nad graczem](/smc/assets/content/mods/qol/talk-balloons/balloon.webp)
-![Ciemno-złote dymki czatu](/smc/assets/content/mods/qol/talk-balloons/qsmp-balloons.webp)
+![Dymek czatu Talk Balloons nad graczem](/assets/content/mods/qol/talk-balloons/balloon.webp)
+![Ciemno-złote dymki czatu](/assets/content/mods/qol/talk-balloons/qsmp-balloons.webp)
 :carouselEnd:
 
 #### :ClockCounterClockwiseIcon: More Chat History
@@ -142,9 +142,9 @@ Normalnie historia wysłanych wiadomości znika przy każdym ponownym logowaniu 
 
 Wyłącza podpisywanie wiadomości czatu, przez co Twoje wiadomości nie mogą być zgłaszane przez system raportowania czatu Minecraft. Dodaje małe ikony statusu do czatu, dzięki którym zawsze wiesz, czy serwer na którym grasz jest chroniony.
 
-![Ikony statusu No Chat Reports na czacie](/smc/assets/content/mods/qol/no-chat-reports/chat-icons.webp)
+![Ikony statusu No Chat Reports na czacie](/assets/content/mods/qol/no-chat-reports/chat-icons.webp)
 
-![Stan nieinwazyjny No Chat Reports](/smc/assets/content/mods/qol/no-chat-reports/unintrusive.webp)
+![Stan nieinwazyjny No Chat Reports](/assets/content/mods/qol/no-chat-reports/unintrusive.webp)
 
 ### :MountainsIcon: Grafika i renderowanie
 
@@ -152,16 +152,16 @@ Wyciśnij więcej ze swoich ustawień graficznych.
 
 #### :BinocularsIcon: Bobby
 
-Pozwala widzieć znacznie dalej, niż pozwala dystans widoczności serwera. Bobby zapisuje chunki, które serwer już Ci wysłał, i renderuje je poza limitem dystansu widoczności, dzięki czemu otrzymujesz ogromny dystans renderowania na każdym serwerze. Świetnie współgra z Nvidium (zobacz [Optymalizację](/smc/pl/wiki/performance-tweaks)).
+Pozwala widzieć znacznie dalej, niż pozwala dystans widoczności serwera. Bobby zapisuje chunki, które serwer już Ci wysłał, i renderuje je poza limitem dystansu widoczności, dzięki czemu otrzymujesz ogromny dystans renderowania na każdym serwerze. Świetnie współgra z Nvidium (zobacz [Optymalizację](/pl/wiki/performance-tweaks)).
 
 #### :SunIcon: Gamma Utils
 
 Zwiększa jasność gry do maksymalnej wartości. Przełącz pełną jasność jednym klawiszem **G** - idealne do eksploracji jaskiń bez zasypywania ich pochodniami. Suwak gamma sięga 1500%, a opcjonalne noktowizja i płynne przejścia są dostępne w konfiguracji.
 
 :carouselStart:
-![Porównanie między 100% a 1500% gamma](/smc/assets/content/mods/qol/gamma-utils/comparison.webp)
-![Kliencka noktowizja połączona z shaderami](/smc/assets/content/mods/qol/gamma-utils/night-vision.webp)
-![Opcjonalny efekt statusu gamma na HUDzie](/smc/assets/content/mods/qol/gamma-utils/status-effect.webp)
+![Porównanie między 100% a 1500% gamma](/assets/content/mods/qol/gamma-utils/comparison.webp)
+![Kliencka noktowizja połączona z shaderami](/assets/content/mods/qol/gamma-utils/night-vision.webp)
+![Opcjonalny efekt statusu gamma na HUDzie](/assets/content/mods/qol/gamma-utils/status-effect.webp)
 :carouselEnd:
 
 #### :CloudSunIcon: Smooth Skies
@@ -169,9 +169,9 @@ Zwiększa jasność gry do maksymalnej wartości. Przełącz pełną jasność j
 Przy dużym dystansie renderowania waniliowe niebo pokazuje ostrą linię między błękitnym niebem a białą mgłą horyzontu. Smooth Skies łączy te kolory w gładki gradient i naprawia też problemy z rysowaniem nieba przy małym dystansie renderowania.
 
 :carouselStart:
-![Ostre pasy kolorów nieba bez Smooth Skies](/smc/assets/content/mods/qol/smooth-skies/without.webp)
-![Czysty gradient nieba z włączonym Smooth Skies](/smc/assets/content/mods/qol/smooth-skies/with.webp)
-![Niebo i mgła płynnie łączące się w mglistym lesie](/smc/assets/content/mods/qol/smooth-skies/foggy-forest.webp)
+![Ostre pasy kolorów nieba bez Smooth Skies](/assets/content/mods/qol/smooth-skies/without.webp)
+![Czysty gradient nieba z włączonym Smooth Skies](/assets/content/mods/qol/smooth-skies/with.webp)
+![Niebo i mgła płynnie łączące się w mglistym lesie](/assets/content/mods/qol/smooth-skies/foggy-forest.webp)
 :carouselEnd:
 
 ### :LightningIcon: Ładowanie i stabilność
@@ -204,15 +204,15 @@ Jeśli Twoja sesja Microsoft wygasła, Auth Me pozwala ponownie uwierzytelnić k
 
 #### :SparkleIcon: Essential
 
-Wszechstronna warstwa społecznościowa: dodawaj znajomych, wysyłaj wiadomości prywatne, hostuj swoje światy singleplayer dla innych (zobacz [Hostowanie światów](/smc/pl/wiki/world-hosting)), zarządzaj skinami w szafie, rób i udostępniaj ulepszone zrzuty ekranu oraz personalizuj wygląd darmowymi kosmetykami.
+Wszechstronna warstwa społecznościowa: dodawaj znajomych, wysyłaj wiadomości prywatne, hostuj swoje światy singleplayer dla innych (zobacz [Hostowanie światów](/pl/wiki/world-hosting)), zarządzaj skinami w szafie, rób i udostępniaj ulepszone zrzuty ekranu oraz personalizuj wygląd darmowymi kosmetykami.
 
 :carouselStart:
-![Essential world hosting - zaproś znajomych do swojego świata](/smc/assets/content/mods/qol/essential/world-hosting.webp)
-![Menu społecznościowe Essential z wiadomościami i czatami grupowymi](/smc/assets/content/mods/qol/essential/social-menu.webp)
-![Podgląd zrzutu ekranu z szybkimi akcjami](/smc/assets/content/mods/qol/essential/screenshot-preview.webp)
-![Przeglądarka obrazów do oglądania i udostępniania zrzutów ekranu](/smc/assets/content/mods/qol/essential/picture-browser.webp)
-![Biblioteka strojów w szafie](/smc/assets/content/mods/qol/essential/outfits-library.webp)
-![Customowe menu główne Essential](/smc/assets/content/mods/qol/essential/custom-main-menu.webp)
+![Essential world hosting - zaproś znajomych do swojego świata](/assets/content/mods/qol/essential/world-hosting.webp)
+![Menu społecznościowe Essential z wiadomościami i czatami grupowymi](/assets/content/mods/qol/essential/social-menu.webp)
+![Podgląd zrzutu ekranu z szybkimi akcjami](/assets/content/mods/qol/essential/screenshot-preview.webp)
+![Przeglądarka obrazów do oglądania i udostępniania zrzutów ekranu](/assets/content/mods/qol/essential/picture-browser.webp)
+![Biblioteka strojów w szafie](/assets/content/mods/qol/essential/outfits-library.webp)
+![Customowe menu główne Essential](/assets/content/mods/qol/essential/custom-main-menu.webp)
 :carouselEnd:
 
 ### :MapTrifoldIcon: Mapa i nawigacja
@@ -223,4 +223,4 @@ Już nigdy się nie zgub.
 
 Pełny zestaw mapowy: minimapa w rogu ekranu, pełnoekranowa mapa świata (**M**) i nielimitowane waypointy (**N**) renderowane w świecie, dzięki którym trafisz do domu, do tej wioski albo do bazy kolegi. Przybliż minimapę klawiszem **Z** i przełącz pełnoekranową mapę klawiszem **X**.
 
-Więcej skrótów znajdziesz w [Klawiszach i sterowaniu](/smc/pl/wiki/keybinds-and-controls).
+Więcej skrótów znajdziesz w [Klawiszach i sterowaniu](/pl/wiki/keybinds-and-controls).

@@ -4,6 +4,9 @@ import tailwindcss from "@tailwindcss/vite";
 import { CMS_PORT, cmsApi } from "./server/api.ts";
 
 export default defineConfig({
+  define: {
+    "process.env.BASE_PATH": JSON.stringify(process.env.BASE_PATH ?? "/smc"),
+  },
   plugins: [cmsApi(), react(), tailwindcss()],
   server: {
     port: CMS_PORT,

@@ -6,7 +6,7 @@
     "author": "5e8a",
     "date": "2025-12-16",
     "category": "Pierwsze Kroki",
-    "coverImage": "/smc/assets/content/banners/download.webp",
+    "coverImage": "/assets/content/banners/download.webp",
     "summary": "Instrukcje dotyczące instalacji i aktualizacji Fabric Boosted przy użyciu Modrinth App."
   },
   {
@@ -16,7 +16,7 @@
     "author": "5e8a",
     "date": "2026-08-04",
     "category": "Optymalizacja",
-    "coverImage": "/smc/assets/content/banners/wrench.webp",
+    "coverImage": "/assets/content/banners/wrench.webp",
     "summary": "Maksymalizuj swoje FPS, dostosowując określone opcje i ustawienia JVM."
   },
   {
@@ -26,7 +26,7 @@
     "author": "5e8a",
     "date": "2025-12-16",
     "category": "Shaders",
-    "coverImage": "/smc/assets/content/banners/shader.webp",
+    "coverImage": "/assets/content/banners/shader.webp",
     "summary": "Przewodnik po pobieraniu i włączaniu shaderów."
   },
   {
@@ -36,7 +36,7 @@
     "author": "5e8a",
     "date": "2026-02-20",
     "category": "Mods",
-    "coverImage": "/smc/assets/content/banners/add.webp",
+    "coverImage": "/assets/content/banners/add.webp",
     "summary": "Instrukcje, jak dodać dodatkowe mody do Fabric Boosted."
   },
   {
@@ -46,7 +46,7 @@
     "author": "5e8a",
     "date": "2025-12-16",
     "category": "Optifine",
-    "coverImage": "/smc/assets/content/banners/opti.webp",
+    "coverImage": "/assets/content/banners/opti.webp",
     "summary": "Przegląd funkcji Optifine"
   },
   {
@@ -56,7 +56,7 @@
     "author": "5e8a",
     "date": "2026-08-04",
     "category": "Mods",
-    "coverImage": "/smc/assets/content/banners/QoL.webp",
+    "coverImage": "/assets/content/banners/QoL.webp",
     "summary": "Przegląd modów Quality of Life zawartych w Fabric Boosted."
   },
   {
@@ -66,7 +66,7 @@
     "author": "5e8a",
     "date": "2025-12-18",
     "category": "Online",
-    "coverImage": "/smc/assets/content/banners/hosting.webp",
+    "coverImage": "/assets/content/banners/hosting.webp",
     "summary": "Poradnik, jak grać na swoim świecie Minecraft ze znajomymi."
   },
   {
@@ -76,7 +76,7 @@
     "author": "5e8a",
     "date": "2025-12-16",
     "category": "Controls",
-    "coverImage": "/smc/assets/content/banners/controls.webp",
+    "coverImage": "/assets/content/banners/controls.webp",
     "summary": "Skróty klawiszowe i sterowanie w Fabric Boosted."
   }
 ]

@@ -1,5 +1,5 @@
 import { ImageIcon } from "@phosphor-icons/react";
-import { ASSETS_BASE_PATH } from "@smc/shared/constants";
+import { CONTENT_ASSETS_PREFIX } from "@smc/shared/constants";
 import { useImagePicker } from "../components/media/useImagePicker";
 import type { ReactNode } from "react";
 import type { Author, AuthorSocials, SocialLink } from "../types";
@@ -72,7 +72,7 @@ function AuthorEditor({
             <TextInput
               value={author.avatar}
               onChange={(e) => onChange({ ...author, avatar: e.target.value })}
-              placeholder={`${ASSETS_BASE_PATH}/avatars/…`}
+              placeholder={`${CONTENT_ASSETS_PREFIX}/avatars/…`}
               className="h-full pr-28"
             />
             <button

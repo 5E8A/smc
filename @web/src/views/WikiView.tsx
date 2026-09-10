@@ -6,6 +6,7 @@ import { BookIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import SmartImage from "@/components/media/SmartImage";
 import SearchHeader from "@/components/ui/SearchHeader";
+import { assetPath } from "@smc/shared/constants";
 
 const WikiView = () => {
   const { t, language } = useLanguage();
@@ -49,7 +50,7 @@ const WikiView = () => {
                   <div className="relative h-48 overflow-hidden md:aspect-square md:h-auto md:w-1/3">
                     <div className="absolute inset-0 z-10 bg-black/2 transition-colors group-hover:bg-transparent"></div>
                     <SmartImage
-                      src={doc.coverImage}
+                      src={assetPath(doc.coverImage)}
                       alt={doc.title}
                       className="size-full transition-transform duration-300 will-change-transform group-hover:cover-zoom"
                       priority="low"

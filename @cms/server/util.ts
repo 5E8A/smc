@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { ASSETS_BASE_PATH } from "@smc/shared/constants";
+import { CONTENT_ASSETS_PREFIX } from "@smc/shared/constants";
 import { type Language, type Kind } from "@smc/shared/content";
 
 export const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..");
@@ -94,7 +94,7 @@ export async function cleanupOrphanTmp(dir: string): Promise<number> {
   return removed;
 }
 
-const ASSET_PREFIX = `${ASSETS_BASE_PATH}/`;
+const ASSET_PREFIX = `${CONTENT_ASSETS_PREFIX}/`;
 
 export function resolveAssetPath(publicPath: string): string | null {
   if (!publicPath.startsWith(ASSET_PREFIX)) return null;

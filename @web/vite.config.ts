@@ -8,6 +8,9 @@ import { SITE_BASE_PATH } from "@smc/shared/constants";
 
 export default defineConfig(() => {
   return {
+    define: {
+      "process.env.BASE_PATH": JSON.stringify(process.env.BASE_PATH ?? "/smc"),
+    },
     server: {
       port: 3000,
       host: "127.0.0.1",
