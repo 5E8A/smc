@@ -29,11 +29,18 @@ Choose your target output format:
 | GIF / Animated WebP | WebP (animated) or WebM |
 | Video / APNG        | WebM                    |
 
-### 3. Convert
+### 3. Settings
+
+Before converting, you can adjust:
+
+- **Quality** - Encoding quality for WebP/WebM output (1-100, default 80)
+- **Resize** - Toggle this on and set a **max width** to downscale all images proportionally during conversion
+
+### 4. Convert
 
 Click the convert button to start processing. Each file shows its own progress indicator. Files are processed sequentially with status updates.
 
-### 4. Download
+### 5. Download
 
 Once conversion is complete, click **Download ZIP** to get all converted files in a single zip archive. The archive preserves the original file names with new extensions.
 
@@ -45,6 +52,6 @@ Once conversion is complete, click **Download ZIP** to get all converted files i
 | **Output destination**  | ZIP download            | Directly into `@web/public/assets/content/` |
 | **Parallel processing** | No (sequential)         | Yes (up to 3 concurrent uploads)            |
 | **Use case**            | Offline bulk conversion | Uploading content for the site              |
-| **Poster generation**   | No                      | Yes (auto-generates `.static.webp`)         |
+| **Poster generation**   | Yes (`.static.webp` in ZIP) | Yes (auto-generates `.static.webp`)         |
 
 The Converter is a standalone utility, converted files are not automatically added to the media library. Download the ZIP and manually place files where needed, or upload them through the Assets tab for automatic placement.

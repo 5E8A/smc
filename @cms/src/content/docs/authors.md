@@ -21,14 +21,15 @@ The sidebar shows all author profiles. Each entry displays:
 
 When an author is selected, the main area shows the profile form:
 
-| Field         | Description                                                     |
-| ------------- | --------------------------------------------------------------- |
-| **ID**        | Unique identifier (used internally to link posts to authors)    |
-| **Avatar**    | Open the ImagePicker to select an avatar from the media library |
-| **Name (EN)** | Author name in English                                          |
-| **Name (PL)** | Author name in Polish                                           |
-| **Bio (EN)**  | Short biography in English                                      |
-| **Bio (PL)**  | Short biography in Polish                                       |
+| Field             | Description                                                     |
+| ----------------- | --------------------------------------------------------------- |
+| **ID**            | Unique identifier (used internally to link posts to authors)    |
+| **Avatar**        | Open the ImagePicker to select an avatar from the media library |
+| **Name (EN)**     | Author name in English                                          |
+| **Name (PL)**     | Author name in Polish                                           |
+| **Bio (EN)**      | Short biography in English                                      |
+| **Bio (PL)**      | Short biography in Polish                                       |
+| **Social Links**  | Optional links to Twitter/X, YouTube, GitHub, and Discord. Each has a URL field and an optional Display Name label |
 
 Authors have bilingual names and bios because they appear on the site in both languages. Fill in both language versions for the best experience.
 

@@ -20,6 +20,15 @@ Each column contains mod cards showing:
 - Mod name
 - Modrinth slug/ID
 - Brief description (when available)
+- **Stale indicator** (amber left-border + ⚠ icon), shown when a mod is no longer in the current Modrinth pack
+
+### Pack Stats
+
+Below the toolbar, a status bar shows how many mods are in the Modrinth pack, how many are categorized into columns, and how many are still uncategorized. Pack data is fetched live from Modrinth on each page load, so stale indicators reflect the current pack contents.
+
+### Uncategorized Mods
+
+Mods from the Modrinth pack that haven't been placed in any column appear in a separate **Uncategorized** section with an amber border. Drag these into the appropriate column to categorize them.
 
 ## Adding Mods
 
@@ -32,24 +41,25 @@ To add a new mod:
 
 The mod card appears immediately in the column. You can drag it to a different category if needed.
 
-## Drag and Drop
+## Card Actions
 
-Mods can be moved between columns by dragging their cards. This changes the mod's category assignment. The board re-renders immediately, changes are local until you save.
+Each mod card supports dragging and has three action buttons:
 
-## Editing Mods
+| Action              | How                                                           |
+| ------------------- | ------------------------------------------------------------- |
+| **Drag and drop**   | Drag a card to another column to change its category          |
+| **Move up**         | Click the up arrow to move the mod higher in its column       |
+| **Move down**       | Click the down arrow to move the mod lower in its column      |
+| **Remove**          | Click the trash icon to remove the mod from the column        |
 
-Click a mod card to expand its details. From there you can:
-
-- Edit the mod's display name
-- Change the description
-- Remove the mod from the list
+Changes take effect immediately on the board but are only persisted when you save.
 
 ## Saving
 
 When you make changes to the mod board:
 
-1. Changes are stored locally in `@scripts/mod-list.json`
-2. To apply changes to the live site, run **sync-mods** from the runner console
+1. Click the **Save** button to write changes to `@scripts/mod-list.json`
+2. To fetch updated metadata and icons from Modrinth, click **Sync sprites** (or run `sync-mods` from the runner console)
 
 The sync-mods script fetches updated mod metadata from Modrinth and regenerates the mod data used by the site.
 

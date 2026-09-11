@@ -6,14 +6,15 @@ The Preview tab renders a live preview of the site in responsive device frames. 
 
 Select a device preset from the dropdown to see the site rendered at that device's viewport size:
 
-| Preset      | Description                            |
-| ----------- | -------------------------------------- |
-| **iOS**     | iPhone viewport                        |
-| **Android** | Android phone viewport                 |
-| **iPad**    | Tablet viewport in portrait/landscape  |
-| **Laptop**  | Laptop screen viewport                 |
-| **Desktop** | Full desktop viewport                  |
-| **Custom**  | Enter your own width and height values |
+| Group                | Devices included                                                          |
+| -------------------- | ------------------------------------------------------------------------- |
+| **iOS**              | iPhone 17 Pro, iPhone 17 Pro Max, iPhone Air, iPhone 16                   |
+| **iPad**             | iPad Pro 13" M4, iPad Air 11"                                             |
+| **Android**          | Galaxy S25 Ultra, Galaxy S25, Pixel 10 Pro, OnePlus 13                    |
+| **Fold & Tablet**    | Galaxy Z Fold 6, Galaxy Tab S10                                           |
+| **Laptop & Desktop** | MacBook Pro 14", MacBook Air 13", Desktop 1080p, Desktop 1440p, Desktop 4K |
+| **Legacy**           | iPhone SE 2022, Galaxy S9, Moto G Power, iPad 6th Gen, Laptop 768p        |
+| **Custom**           | Enter your own width and height values                                    |
 
 ## Device Frames
 
@@ -21,10 +22,25 @@ Each device preset renders the site inside a styled device frame, a visual bezel
 
 ## Controls
 
+Each device frame has controls below it:
+
 | Control    | Action                                                      |
 | ---------- | ----------------------------------------------------------- |
 | **Zoom**   | Zoom in/out to inspect details or see the full device frame |
 | **Rotate** | Switch between portrait and landscape orientation           |
+| **Reload** | Reload the iframe for that specific device                  |
+
+## Toolbar
+
+The toolbar above the device grid provides:
+
+| Control                 | Action                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| **Reload all**          | Reload all device iframes at once                                              |
+| **Home**                | Navigate all frames back to the default URL                                    |
+| **URL bar**             | Type a URL or path to navigate all frames to a specific page (press Enter)     |
+| **Device group filter** | Multi-select dropdown to show/hide device groups (iOS, Android, etc.)           |
+| **Loaded counter**      | Shows how many device frames have finished loading (e.g. "5/12 loaded")        |
 
 ## How It Works
 

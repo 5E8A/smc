@@ -1,6 +1,6 @@
 # Code Blocks
 
-Fenced code blocks get syntax highlighting, a language label in the top-left corner, and a copy button in the top-right. The language identifier after the opening triple backticks decides both the highlighting and the label.
+Fenced code blocks get syntax highlighting, a language label in the top-left corner, and a copy button in the top-right. The language identifier after the opening triple backticks decides both the highlighting and the label. Most common languages are supported, if a language identifier isn't recognized, the block renders as plain monospace text.
 
 ## Inline Code
 

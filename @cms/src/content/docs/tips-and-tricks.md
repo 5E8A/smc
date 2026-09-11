@@ -7,7 +7,7 @@ A collection of shortcuts, hidden features, and workflow advice for getting the 
 | Shortcut | Action               | Context                    |
 | -------- | -------------------- | -------------------------- |
 | `Ctrl+B` | Toggle sidebar       | Posts, Wiki, Authors tabs  |
-| `Ctrl+S` | Save current changes | Any tab with unsaved edits |
+| `Ctrl+S` | Save current changes | Posts, Wiki, Authors, Mods tabs |
 
 ## Dirty Tab Indicator
 
@@ -15,7 +15,7 @@ When a tab has unsaved changes, its button text turns **amber** in the header. T
 
 ## Runner Console
 
-The runner console at the bottom of the screen shows output from background tasks. It automatically expands when a task starts and can be collapsed/expanded by clicking its header.
+The runner console starts collapsed at the bottom of the screen. It shows output from background tasks, automatically expands when a task starts, and can be collapsed/expanded by clicking its header.
 
 ### What Streams into the Console
 

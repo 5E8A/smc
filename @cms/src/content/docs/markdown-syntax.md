@@ -84,6 +84,8 @@ Example from real content:
 
 ### Carousel Tips
 
+- Use the **Carousel** toolbar button to open a multi-image picker, no syntax to memorize
+- If you select text first, the button wraps it in carousel markers instead
 - Use 2-6 images per carousel for the best experience
 - All images should have similar dimensions for consistent display
 - Add titles to each image for accessibility and context
@@ -135,7 +137,7 @@ Fenced code blocks, inline code, syntax highlighting, and the diff trick moved t
 
 ## Headings
 
-Headings use standard `#` syntax. Note that `# H1` headings are automatically demoted to `## H2`. The site reserves H1 for page titles. Use `##` as your top-level heading in content.
+Headings use standard `#` syntax. The CMS automatically demotes `# H1` headings to `## H2`. Use `##` as your top-level heading in content.
 
 ## Links
 

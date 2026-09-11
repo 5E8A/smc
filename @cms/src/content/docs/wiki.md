@@ -28,6 +28,10 @@ The editor form uses the same fields as the post editor:
 
 The markdown editor panel is identical to the Posts tab, split pane with raw markdown on the left and live preview on the right, plus the same toolbar for inserting icons, media, and carousels.
 
+## Translation Counterpart
+
+When a wiki page exists in one language but not the other, a **warning banner** appears above the editor with a **Create {LANG} translation** button. Clicking it clones the current entry into the other language with a fresh date, so you can immediately start translating without recreating metadata from scratch.
+
 ## Saving
 
 Saving follows the same pattern as Posts:

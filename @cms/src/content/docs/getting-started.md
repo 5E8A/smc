@@ -16,6 +16,7 @@ The server starts at `http://127.0.0.1:4000`. Open this URL in your browser.
 
 - **Node.js >= 22.7**, required to run the CMS server
 - **ffmpeg** (optional), needed for video uploads. Run `npm run cms:ffmpeg` to verify or set up ffmpeg. Without it, image uploads still work but video files will fail
+- **Dev server** (recommended), start `npm run dev` in a separate terminal for live preview in the Preview tab and hot-reload of saved changes
 
 ## Layout
 
@@ -43,7 +44,7 @@ The header contains these tabs:
 | **Converter** | Batch convert media files to webp/webm                         |
 | **Deploy**    | View git status, stage files, commit, and push to GitHub Pages |
 | **Preview**   | Live device preview of the site                                |
-| **Docs**      | This documentation                                             |
+| **Docs**      | Built-in reference with grouped sidebar and per-page table of contents |
 
 ## Posts vs Wiki
 

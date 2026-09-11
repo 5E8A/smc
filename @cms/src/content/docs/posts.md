@@ -31,13 +31,13 @@ When an entry is selected, the left side of the main area shows the metadata for
 
 | Field           | Description                                                              |
 | --------------- | ------------------------------------------------------------------------ |
-| **Slug**        | URL-safe identifier (auto-generated from title, editable)                |
 | **Title**       | Post title                                                               |
-| **Summary**     | Short summary shown in post previews and meta tags (multiline text area) |
-| **Date**        | Publication date (format: YYYY-MM-DD)                                    |
-| **Author**      | Select from existing author profiles via the author picker               |
-| **Cover image** | Open the ImagePicker to select from the media library                    |
+| **Slug**        | URL-safe identifier (auto-generated from title, editable)                |
 | **Category**    | Content category for site organization                                   |
+| **Date**        | Publication date (format: YYYY-MM-DD)                                    |
+| **Cover image** | Open the ImagePicker to select from the media library                    |
+| **Summary**     | Short summary shown in post previews and meta tags (multiline text area) |
+| **Author**      | Select from existing author profiles via the author picker               |
 
 ## Markdown Editor
 
@@ -79,6 +79,10 @@ Before saving, the CMS validates the entry for common issues:
 - Missing counterpart in the other language (warning, not error)
 
 Validation issues appear as a banner above the main content area. Errors block saving; warnings are informational.
+
+## Translation Counterpart
+
+When a post exists in one language but not the other, a **warning banner** appears above the editor with a **Create {LANG} translation** button. Clicking it clones the current entry into the other language with a fresh date, so you can immediately start translating without recreating metadata from scratch.
 
 ## File Mapping
 
