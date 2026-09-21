@@ -38,5 +38,15 @@
     "category": "Updates",
     "coverImage": "/assets/content/posts/3.3.0-alpha1.webp",
     "summary": "We are excited to announce the release of Fabric Boosted 3.3.0-Alpha1 which supports 26.2"
+  },
+  {
+    "id": "5",
+    "slug": "fabric-boosted-26-3-released",
+    "title": "Fabric Boosted 26.3 Released!",
+    "author": "5e8a",
+    "date": "2026-09-21",
+    "category": "Updates",
+    "coverImage": "/assets/content/posts/3.4.0-beta1.webp",
+    "summary": "We are excited to announce the release of Fabric Boosted 3.4.0-Beta1 which supports 26.3"
   }
 ]

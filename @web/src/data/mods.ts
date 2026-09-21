@@ -90,6 +90,7 @@ export const modCategories: ModCategory[] = [
       { title: "Main Menu Credits", slug: "main-menu-credits", description: "Adds a way of adding information to the user's title screen." },
       { title: "Debugify", slug: "debugify", description: "Fixes Minecraft bugs found on the bug tracker" },
       { title: "MixinTrace", slug: "mixintrace", description: "Adds a list of mixins in the stack trace to crash reports " },
+      { title: "Your Options Shall Be Respected (YOSBR)", slug: "yosbr", description: "Your options shall be respected." },
     ],
   },
 ];
