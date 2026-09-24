@@ -48,5 +48,15 @@
     "category": "Aktualizacje",
     "coverImage": "/assets/content/posts/3.4.0-beta1.webp",
     "summary": "Z radością ogłaszamy wydanie Fabric Boosted 3.4.0-Beta1, który obsługuje wersję 26.3"
+  },
+  {
+    "id": "6",
+    "slug": "40k-downloads-milestone",
+    "title": "Kamień milowy: 40 000 pobrań!",
+    "author": "5e8a",
+    "date": "2026-09-24",
+    "category": "Ogłoszenia",
+    "coverImage": "/assets/content/posts/40k.webp",
+    "summary": "Z radością ogłaszamy, że Fabric Boosted osiągnął 40 000 pobrań w serwisie Modrinth!"
   }
 ]

@@ -48,5 +48,15 @@
     "category": "Updates",
     "coverImage": "/assets/content/posts/3.4.0-beta1.webp",
     "summary": "We are excited to announce the release of Fabric Boosted 3.4.0-Beta1 which supports 26.3"
+  },
+  {
+    "id": "7",
+    "slug": "40k-downloads-milestone",
+    "title": "40k Downloads Milestone!",
+    "author": "5e8a",
+    "date": "2026-09-24",
+    "category": "Announcements",
+    "coverImage": "/assets/content/posts/40k.webp",
+    "summary": "We are excited to announce that Fabric Boosted has reached 40,000 downloads on Modrinth!"
   }
 ]
