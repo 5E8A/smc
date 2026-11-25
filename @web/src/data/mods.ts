@@ -44,7 +44,7 @@ export const modCategories: ModCategory[] = [
       { title: "OptiGUI", slug: "optigui", description: "Blazing fast custom GUI textures on Fabric and Quilt with built-in OptiFine custom GUI resource pack support" },
       { title: "Skyboxify", slug: "skyboxify", description: "A skybox mod that allows you to use OptiFine skies in Fabric 1.21+" },
       { title: "Iris Shaders", slug: "iris", description: "A modern shader pack loader for Minecraft intended to be compatible with existing OptiFine shader packs" },
-      { title: "Polytone", slug: "polytone", description: "Customize Map Color, Block Colors, Colormaps and Block Sounds, Biome Colors, Dye Colors. Supports Optifine format. For Resource Packs" },
+      { title: "Polytone", slug: "polytone", description: "Customize Map Color, Block Colors, Colormaps and Block Sounds, Biome Colors, dynamic colored lights, Dye Colors. Supports Optifine format. For Resource Packs" },
       { title: "BetterGrassify", slug: "bettergrassify", description: "Gamers can finally touch grass!?\n\nOptiFine's Fancy and Fast better grass implemented on Fabric and NeoForge!" },
     ],
   },
